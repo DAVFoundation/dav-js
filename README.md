@@ -4,7 +4,7 @@
 
 The Captain is the logic that runs onboard vehicles, gives commands to the vehicle, negotiates missions, and communicates with the blockchain.
 
-Mission Control demonstrates how a third party might build their own product, while integrating technologies provided by DAV. For example, a drone manufacturer could build DAV tech directly in their drone, or a third-party could develop control software that would be installed on other companies drones to help them participate in an autonomous economy.
+It demonstrates how a third party might build their own product, while integrating technologies provided by DAV. For example, a drone manufacturer could build DAV tech directly in their drone, or a third-party could develop control software that would be installed on other companies drones to help them participate in an autonomous economy.
 
 ### The Captain is currently under heavy construction!
 
