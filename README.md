@@ -1,3 +1,4 @@
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/DAVFoundation/DAV-Contributors)
 # Captain
 
 <img src="./resources/images/logo-captain.jpg" align="right" />
