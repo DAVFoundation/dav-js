@@ -1,5 +1,5 @@
 # Captain
-
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/DAVFoundation/DAV-Contributors)
 <img src="./resources/images/logo-captain.jpg" align="right" />
 
 The Captain is the logic that runs onboard vehicles, gives commands to the vehicle, negotiates missions, and communicates with the blockchain.
