@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  captain-server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      LOG_THRESHOLD: INFO
+      SERVER_HOST: localhost
+      SERVER_PORT: 4800
+      MISSION_CONTROL_HOST: mc
+      MISSION_CONTROL_PORT: 9090
+    links:
+      - redis:redis
+    external_links:
+      - missioncontrol_missioncontrol_1:mc
+    networks:
+      - dav
+  captain-simulation-worker:
+    build:
+      context: .
+      dockerfile: simulator/Dockerfile
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      LOG_THRESHOLD: INFO
+      SIMULATOR_WORKER_INTERVAL: 1000
+      MISSION_CONTROL_HOST: mc
+      MISSION_CONTROL_PORT: 9090
+    links:
+      - redis:redis
+    external_links:
+      - missioncontrol_missioncontrol_1:mc
+    networks:
+      - dav
+  redis:
+    image: redis
+    networks:
+      - dav
+
+networks:
+  dav:
+    external: true
