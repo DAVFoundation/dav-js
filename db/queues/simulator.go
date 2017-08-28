@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 )
 
-const QUEUE_SIMULATOR_KEY = "queues:simulator"
+const QUEUE_STATUS_SIMULATOR_KEY = "queues:status_simulator"
 
-func AddSimulatorMessage(msg models.SimulatorMessage) error {
+func AddSimulatorMessage(msg models.StatusSimulatorMessage) error {
 
 	bytes, err := json.Marshal(msg)
 
@@ -16,19 +16,19 @@ func AddSimulatorMessage(msg models.SimulatorMessage) error {
 		return err
 	}
 
-	return db.ZAdd(QUEUE_SIMULATOR_KEY, msg.Timestamp, string(bytes))
+	return db.ZAdd(QUEUE_STATUS_SIMULATOR_KEY, msg.Timestamp, string(bytes))
 
 }
 
-func PollSimulatorMessage() (*models.SimulatorMessage, error) {
+func PollSimulatorMessage() (*models.StatusSimulatorMessage, error) {
 
-	item, err := db.ZPop(QUEUE_SIMULATOR_KEY)
+	item, err := db.ZPop(QUEUE_STATUS_SIMULATOR_KEY)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var msg models.SimulatorMessage
+	var msg models.StatusSimulatorMessage
 
 	err = json.Unmarshal([]byte(item), &msg)
 

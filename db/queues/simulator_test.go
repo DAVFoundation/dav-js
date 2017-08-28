@@ -11,12 +11,12 @@ func TestAddMessagePollMessage(t *testing.T) {
 
 	db.Init()
 
-	msg := models.SimulatorMessage{
+	msg := models.StatusSimulatorMessage{
 		Timestamp: time.Now().Unix(),
 		Type: "test",
 	}
 
-	err := db.Del(QUEUE_SIMULATOR_KEY)
+	err := db.Del(QUEUE_STATUS_SIMULATOR_KEY)
 
 	if err != nil {
 		t.Error(err)

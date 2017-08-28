@@ -7,11 +7,13 @@ import (
 	"time"
 )
 
-func generateVehicleState (message *models.SimulatorMessage) *vehicle.VehicleState {
+func generateVehicleState (message *models.StatusSimulatorMessage) *vehicle.VehicleState {
 
 	vehicleState := vehicle.NewVehicleState()
 
 	batteryLevel := int8(rand.Intn(100))
+
+	vehicleState.MissionStatus = message.MissionStatus
 
 	vehicleState.BatteryLevel = &batteryLevel
 
@@ -19,11 +21,24 @@ func generateVehicleState (message *models.SimulatorMessage) *vehicle.VehicleSta
 
 }
 
-func generateNextMessage (message *models.SimulatorMessage) *models.SimulatorMessage {
+func generateNextMessage (message *models.StatusSimulatorMessage) *models.StatusSimulatorMessage {
 
 	newMessage := *message
 
-	newMessage.Timestamp = time.Now().Unix() + 1
+	message.RegisterVehicle = false
+
+	var timestamp = time.Now().Unix()
+
+	switch *message.MissionStatus {
+	case "available_for_missions":
+		timestamp += 60
+		break
+	case "on_a_mission":
+		timestamp += 1
+		break
+	}
+
+	newMessage.Timestamp = timestamp
 
 	return &newMessage
 
