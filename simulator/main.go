@@ -13,6 +13,7 @@ import (
 	"time"
 	"github.com/DAVFoundation/captain/config"
 	"github.com/DAVFoundation/captain/protocols/registration"
+	"github.com/garyburd/redigo/redis"
 )
 
 var logger = util.GetCurrentPackageLogger()
@@ -71,8 +72,12 @@ func doWork() (err error) {
 	msg, err := queues.PollSimulatorMessage()
 
 	if err != nil {
-		logger.Error(err)
-		return
+		if err == redis.ErrNil {
+			logger.Info("queue is empty")
+			return nil
+		} else {
+			return err
+		}
 	}
 
 	if msg.Timestamp > time.Now().Unix() {
