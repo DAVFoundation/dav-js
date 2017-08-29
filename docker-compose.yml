@@ -15,7 +15,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       LOG_THRESHOLD: INFO
-      SERVER_HOST: localhost
+      SERVER_HOST: "0.0.0.0"
       SERVER_PORT: 4800
       MISSION_CONTROL_HOST: mc
       MISSION_CONTROL_PORT: 9090
