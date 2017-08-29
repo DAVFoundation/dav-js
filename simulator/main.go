@@ -30,21 +30,13 @@ func main () {
 		panic(err)
 	}
 
-	statusReportClient, err = missioncontrol.GetStatusReportClient()
-
-	if err != nil {
-		panic(err)
-	}
-
-	registrationClient, err = missioncontrol.GetRegistrationClient()
-
-	if err != nil {
-		panic(err)
-	}
-
 	for {
 
-		doWork()
+		err = doWork()
+
+		if err != nil {
+			logger.Error(err)
+		}
 
 		time.Sleep(time.Millisecond * time.Duration(config.Simulator.WorkerInterval))
 
@@ -54,7 +46,27 @@ func main () {
 
 // every iteration of the queue worker polls a message from the queue and checks whether it's the time for processing it
 // and processes it. otherwise the message is returned to the queue
-func doWork() {
+func doWork() (err error) {
+
+	if statusReportClient == nil || !statusReportClient.Transport.IsOpen() {
+
+		statusReportClient, err = missioncontrol.GetStatusReportClient()
+
+		if err != nil {
+			return err
+		}
+
+	}
+
+	if registrationClient == nil || !registrationClient.Transport.IsOpen() {
+
+		registrationClient, err = missioncontrol.GetRegistrationClient()
+
+		if err != nil {
+			return err
+		}
+
+	}
 
 	msg, err := queues.PollSimulatorMessage()
 
@@ -64,11 +76,12 @@ func doWork() {
 	}
 
 	if msg.Timestamp > time.Now().Unix() {
-		queues.AddSimulatorMessage(*msg)
+		err = queues.AddSimulatorMessage(*msg)
 	} else {
-		processMessage(msg)
+		err = processMessage(msg)
 	}
 
+	return err
 }
 
 // message process:
@@ -76,7 +89,7 @@ func doWork() {
 //	- reports the simulated state to mission control
 //	- if ordered, registers vehicle for missions in mission control
 //	- generates the next message and adding it to the queue
-func processMessage (msg *models.StatusSimulatorMessage) {
+func processMessage (msg *models.StatusSimulatorMessage) error {
 
 	state := generateVehicleState(msg)
 
@@ -84,7 +97,7 @@ func processMessage (msg *models.StatusSimulatorMessage) {
 
 	if err != nil {
 		logger.Error(err)
-		return
+		return err
 	}
 
 	if msg.RegisterVehicle {
@@ -111,6 +124,9 @@ func processMessage (msg *models.StatusSimulatorMessage) {
 
 	if err != nil {
 		logger.Error(err)
+		return err
 	}
+
+	return nil
 
 }
