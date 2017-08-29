@@ -11,4 +11,4 @@ const (
 var Logging = struct {
 	LevelOrder []string
 	Threshold string
-}{[]string{INFO, WARNING, ERROR, FATAL}, INFO}
+}{[]string{INFO, WARNING, ERROR, FATAL}, ERROR}
