@@ -1,5 +1,7 @@
 package db
 
+// persisted vehicle details repository manager
+
 import (
 	"github.com/DAVFoundation/captain/protocols/vehicle"
 	"encoding/json"
@@ -7,6 +9,7 @@ import (
 
 const KEY_PREFIX_VEHICLE_DETAILS = "vehicle_details:"
 
+// persists vehicle details item in db by its vehicle uid
 func StoreVehicleDetails (vehicleDetails vehicle.VehicleDetails) error {
 
 	serialized, err := json.Marshal(vehicleDetails)
@@ -19,6 +22,7 @@ func StoreVehicleDetails (vehicleDetails vehicle.VehicleDetails) error {
 
 }
 
+// fetches vehicle details item from db by its vehicle uid
 func GetVehicleDetails (vehicleUID string) (*vehicle.VehicleDetails, error) {
 
 	var vehicleDetails vehicle.VehicleDetails

@@ -1,5 +1,7 @@
 package missioncontrol
 
+// provides a thrift client of the StatusReport service client used to send vehicle state mission control
+
 import (
 	"github.com/DAVFoundation/captain/protocols/statusreport"
 	"git.apache.org/thrift.git/lib/go/thrift"

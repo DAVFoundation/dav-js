@@ -1,5 +1,7 @@
 package config
 
+// Helper functions to load configurations from program arguments with fallback to environment variables
+
 import (
 	"os"
 	"strconv"
@@ -8,6 +10,12 @@ import (
 	"fmt"
 )
 
+// Loads string value from program argument with fallback to environment variable
+// expects parameters:
+// 	- holder: a pointer to the parameter value holder
+// 	- envKey: the name of the environment variable to look for the value in
+//  - flagName: the program argument name to expect
+//	- flagDescription: will be printed out in the package help output
 func LoadString(holder *string, envKey string, flagName string, flagDescription string) {
 
 	envVal := os.Getenv(envKey)
@@ -20,6 +28,12 @@ func LoadString(holder *string, envKey string, flagName string, flagDescription 
 
 }
 
+// Loads int64 value from program argument with fallback to environment variable
+// expects parameters:
+// 	- holder: a pointer to the parameter value holder
+// 	- envKey: the name of the environment variable to look for the value in
+//  - flagName: the program argument name to expect
+//	- flagDescription: will be printed out in the package help output
 func LoadInt64(holder *int64, envKey string, flagName string, flagDescription string) {
 
 	envVal := os.Getenv(envKey)
@@ -38,6 +52,12 @@ func LoadInt64(holder *int64, envKey string, flagName string, flagDescription st
 
 }
 
+// Loads int value from program argument with fallback to environment variable
+// expects parameters:
+// 	- holder: a pointer to the parameter value holder
+// 	- envKey: the name of the environment variable to look for the value in
+//  - flagName: the program argument name to expect
+//	- flagDescription: will be printed out in the package help output
 func LoadInt(holder *int, envKey string, flagName string, flagDescription string) {
 
 	envVal := os.Getenv(envKey)
@@ -57,6 +77,12 @@ func LoadInt(holder *int, envKey string, flagName string, flagDescription string
 
 }
 
+// Loads bool value from program argument with fallback to environment variable
+// expects parameters:
+// 	- holder: a pointer to the parameter value holder
+// 	- envKey: the name of the environment variable to look for the value in
+//  - flagName: the program argument name to expect
+//	- flagDescription: will be printed out in the package help output
 func LoadBool(holder *bool, envKey string, flagName string, flagDescription string) {
 
 	envVal := os.Getenv(envKey)

@@ -1,5 +1,7 @@
 package util
 
+// helper functions
+
 import (
 	"path"
 	"runtime"
@@ -13,6 +15,7 @@ type CallInfo struct {
 	Line        int
 }
 
+// retrieves the stack trace of the current call in euntime
 func retrieveCallInfo(skip int) *CallInfo {
 	pc, file, line, _ := runtime.Caller(skip)
 	_, fileName := path.Split(file)

@@ -1,17 +1,20 @@
 package missioncontrol
 
+// initiates a thrift protocol for mission control service clients
+
 import (
 	"git.apache.org/thrift.git/lib/go/thrift"
 	"fmt"
 	"github.com/DAVFoundation/captain/config"
 )
 
+// stores an initiated protocol for mission control service clients
 var protocol thrift.TProtocol
 
-func initProtocol () error {
+// initiates the protocol
+func initProtocol () (_protocol thrift.TProtocol, err error) {
 
 	var transport thrift.TTransport
-	var err error
 
 	addr := fmt.Sprintf("%s:%d", config.MissionControl.Host, config.MissionControl.Port)
 
@@ -19,27 +22,28 @@ func initProtocol () error {
 
 	if err != nil {
 		fmt.Println("Error opening socket:", err)
-		return err
+		return _protocol, err
 	}
 
 
 	transport = thrift.NewTBufferedTransport(socket, 1024)
 
 	if err := transport.Open(); err != nil {
-		return err
+		return _protocol, err
 	}
 
-	protocol = thrift.NewTBinaryProtocolTransport(transport)
+	_protocol = thrift.NewTBinaryProtocolTransport(transport)
 
-	return nil
+	return _protocol, err
 
 }
 
+// returns the initiated protocol or initiating an saving a protocol for later usages
 func getProtocol () (thrift.TProtocol, error) {
 
 	var err error
 	if protocol == nil {
-		err = initProtocol()
+		protocol, err = initProtocol()
 	}
 	return protocol, err
 

@@ -5,6 +5,7 @@ import (
 	"github.com/DAVFoundation/captain/db/models"
 	"time"
 	"github.com/DAVFoundation/captain/db"
+	"github.com/DAVFoundation/captain/protocols/davuser"
 )
 
 func TestAddMessagePollMessage(t *testing.T) {
@@ -13,7 +14,9 @@ func TestAddMessagePollMessage(t *testing.T) {
 
 	msg := models.StatusSimulatorMessage{
 		Timestamp: time.Now().Unix(),
-		Type: "test",
+		VehicleID: &davuser.DAVUser{
+			UID: "test",
+		},
 	}
 
 	err := db.Del(QUEUE_STATUS_SIMULATOR_KEY)
@@ -37,8 +40,8 @@ func TestAddMessagePollMessage(t *testing.T) {
 		t.FailNow()
 	}
 
-	if polledMsg.Type != "test" {
-		t.Errorf("expected polled message type to equal %s. got %s", "test", polledMsg.Type)
+	if polledMsg.VehicleID.GetUID() != "test" {
+		t.Errorf("expected polled message vehicle uid to equal %s. got %s", "test", polledMsg.VehicleID.GetUID())
 		t.FailNow()
 
 	}

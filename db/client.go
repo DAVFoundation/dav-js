@@ -1,5 +1,7 @@
 package db
 
+// redis api
+
 import (
 	"time"
 	"fmt"
@@ -9,6 +11,7 @@ import (
 
 var conn redis.Conn
 
+// initiates a connection to redis. It should be called once in every captain service
 func Init() error {
 
 	addr := fmt.Sprintf("%s:%d", config.Redis.Host, config.Redis.Port)
@@ -27,6 +30,7 @@ func Init() error {
 
 }
 
+// an atomic implementation of pop an item from a sorted set using MULTI command
 func ZPop(key string) (result string, err error) {
 
 	defer func() {
@@ -66,6 +70,7 @@ func ZPop(key string) (result string, err error) {
 	return result, nil
 }
 
+// adds a string to a sorted set
 func ZAdd (key string, score int64, value string) error {
 
 	_, err := conn.Do("ZADD", key, score, value)
@@ -74,6 +79,7 @@ func ZAdd (key string, score int64, value string) error {
 
 }
 
+// gets an value by its key
 func Get (key string) ([]byte, error) {
 
 	data, err := redis.Bytes(conn.Do("GET", key))
@@ -86,6 +92,7 @@ func Get (key string) ([]byte, error) {
 
 }
 
+// sets a value for a key
 func Set (key string, value []byte) error {
 
 	_, err := conn.Do("SET", key, value)
@@ -94,6 +101,7 @@ func Set (key string, value []byte) error {
 
 }
 
+// sets a value for a key and sets an expiration on the key
 func SetEx (key string, value []byte, expiration time.Duration) error {
 
 	_, err := conn.Do("SETEX", key, expiration, value)
@@ -102,6 +110,7 @@ func SetEx (key string, value []byte, expiration time.Duration) error {
 
 }
 
+// deletes an item by its key
 func Del (key string) error {
 
 	_, err := conn.Do("DEL", key)

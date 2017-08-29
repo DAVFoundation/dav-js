@@ -1,5 +1,7 @@
 package util
 
+// logger for usage by any of the captain services. it uses 'glog' to output events to stdout
+
 import (
 	"fmt"
 	"github.com/golang/glog"
@@ -7,9 +9,7 @@ import (
 )
 
 type Scribe interface {
-
 	Log(identifier *string)
-
 }
 
 type Info struct {
@@ -106,9 +106,7 @@ type Logger struct {
 
 
 func (l *Logger) log (scribe Scribe) {
-
 	scribe.Log(l.identifier)
-
 }
 
 var levelFlags = map[string]bool{}
@@ -119,12 +117,12 @@ func (l *Logger) shouldLog (level string) bool {
 		return val
 	}
 
-	for i := len(config.Log.LevelOrder)-1; i >= 0; i-- {
-		if config.Log.LevelOrder[i] == level {
+	for i := len(config.Logging.LevelOrder)-1; i >= 0; i-- {
+		if config.Logging.LevelOrder[i] == level {
 			levelFlags[level] = true
 			return true
 		}
-		if config.Log.LevelOrder[i] == config.Log.Threshold {
+		if config.Logging.LevelOrder[i] == config.Logging.Threshold {
 			levelFlags[level] = false
 			return false
 		}

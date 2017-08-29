@@ -8,7 +8,7 @@ const (
 )
 
 
-var Log = struct {
+var Logging = struct {
 	LevelOrder []string
 	Threshold string
 }{[]string{INFO, WARNING, ERROR, FATAL}, INFO}

@@ -1,5 +1,7 @@
 package main
 
+// captain-server entry point. captain-server serves mission control and manages all active vehicles
+
 import (
 	"git.apache.org/thrift.git/lib/go/thrift"
 	"crypto/tls"

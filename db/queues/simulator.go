@@ -1,5 +1,7 @@
 package queues
 
+// helper functions for managing status simulation queue
+
 import (
 	"github.com/DAVFoundation/captain/db"
 	"github.com/DAVFoundation/captain/db/models"
@@ -8,6 +10,7 @@ import (
 
 const QUEUE_STATUS_SIMULATOR_KEY = "queues:status_simulator"
 
+// adds a message to simulation queue
 func AddSimulatorMessage(msg models.StatusSimulatorMessage) error {
 
 	bytes, err := json.Marshal(msg)
@@ -20,6 +23,7 @@ func AddSimulatorMessage(msg models.StatusSimulatorMessage) error {
 
 }
 
+// pops one simulation messages from queue
 func PollSimulatorMessage() (*models.StatusSimulatorMessage, error) {
 
 	item, err := db.ZPop(QUEUE_STATUS_SIMULATOR_KEY)

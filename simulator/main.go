@@ -1,5 +1,8 @@
 package main
 
+// captain-simulation-worker entry point. captain-simulation-worker processes status simulation queue messages,
+// generating vehicle states and reports mission control
+
 import (
 	"github.com/DAVFoundation/captain/missioncontrol"
 	"github.com/DAVFoundation/captain/db"
@@ -49,6 +52,8 @@ func main () {
 
 }
 
+// every iteration of the queue worker polls a message from the queue and checks whether it's the time for processing it
+// and processes it. otherwise the message is returned to the queue
 func doWork() {
 
 	msg, err := queues.PollSimulatorMessage()
@@ -66,6 +71,11 @@ func doWork() {
 
 }
 
+// message process:
+//	- generates a simulated state for the vehicle described in the message
+//	- reports the simulated state to mission control
+//	- if ordered, registers vehicle for missions in mission control
+//	- generates the next message and adding it to the queue
 func processMessage (msg *models.StatusSimulatorMessage) {
 
 	state := generateVehicleState(msg)

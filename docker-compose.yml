@@ -1,6 +1,12 @@
 version: '3'
 
+# Captain consists of 3 services:
+# 1. captain-server
+# 2. captain-simulation-worker
+# 3. redis
+
 services:
+  # captain-server initiates a thrift server that listens to Mission Control commands
   captain-server:
     build:
       context: .
@@ -19,6 +25,8 @@ services:
       - missioncontrol_missioncontrol_1:mc
     networks:
       - dav
+  # captain-simulation-worker processes captain-server simulation jobs
+  # and updates status on Mission Control for every active vehicle
   captain-simulation-worker:
     build:
       context: .
@@ -36,11 +44,14 @@ services:
       - missioncontrol_missioncontrol_1:mc
     networks:
       - dav
+  # redis server persists active vehicle details and manages the simulations queue
   redis:
     image: redis
     networks:
       - dav
 
+# a docker network must be set with the name 'dav' on the machine running this docker-compose.
+# the purpose of this network is to link between docker instances running both Captain and Mission Control simultaneously.
 networks:
   dav:
     external: true
