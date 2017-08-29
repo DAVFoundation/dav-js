@@ -14,6 +14,7 @@ import (
 	"github.com/DAVFoundation/captain/config"
 	"github.com/DAVFoundation/captain/protocols/registration"
 	"github.com/garyburd/redigo/redis"
+	"fmt"
 )
 
 var logger = util.GetCurrentPackageLogger()
@@ -98,6 +99,8 @@ func processMessage (msg *models.StatusSimulatorMessage) error {
 
 	state := generateVehicleState(msg)
 
+	logger.Debug(fmt.Sprintf("[%s] -> reporting status to mission control: ", msg.VehicleID.GetUID()), state)
+
 	err := statusReportClient.ReportStatus(msg.VehicleID, state)
 
 	if err != nil {
@@ -112,6 +115,8 @@ func processMessage (msg *models.StatusSimulatorMessage) error {
 		if err != nil {
 			logger.Error(err)
 		} else {
+
+			logger.Debug(fmt.Sprintf("[%s] -> registring vehicle in control: ", msg.VehicleID.GetUID()), vehicleDetails)
 
 			err = registrationClient.RegisterVehicle(vehicleDetails)
 

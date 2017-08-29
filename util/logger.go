@@ -12,6 +12,14 @@ type Scribe interface {
 	Log(identifier *string)
 }
 
+type Debug struct {
+	Args *[]interface{}
+}
+
+func (i Debug) Log (identifier *string)  {
+	glog.Info("DEBUG: " + *identifier, *i.Args)
+}
+
 type Info struct {
 	Args *[]interface{}
 }
@@ -133,6 +141,13 @@ func (l *Logger) shouldLog (level string) bool {
 
 func (l *Logger) SetIdentifier(identifier string) {
 	l.identifier = &identifier
+}
+
+func (l *Logger) Debug (args ...interface{}) {
+	if !l.shouldLog(config.DEBUG) {
+		return
+	}
+	l.log(Debug{&args})
 }
 
 func (l *Logger) Info (args ...interface{}) {

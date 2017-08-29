@@ -8,7 +8,10 @@ import (
 	"github.com/DAVFoundation/captain/db/models"
 	"time"
 	"github.com/DAVFoundation/captain/db/queues"
+	"github.com/DAVFoundation/captain/util"
 )
+
+var vehicleCreationHandlerLogger = util.GetNamedLogger("VehicleCreationHandler")
 
 type VehicleCreationHandler struct {
 
@@ -21,6 +24,8 @@ func NewVehicleCreationHandler() *VehicleCreationHandler {
 // persists vehicle in db and adds messages for the simulation worker to register vehicle for missions on mission control
 // and to start reporting vehicle state to Mission Control in a periodic manner
 func (v VehicleCreationHandler) CreateVehicle(vehicleDetails *vehicle.VehicleDetails) (err error) {
+
+	vehicleCreationHandlerLogger.Debug("received CreateVehicle from mission control: ", vehicleDetails)
 
 	err = db.StoreVehicleDetails(*vehicleDetails)
 

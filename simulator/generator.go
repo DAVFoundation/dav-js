@@ -27,7 +27,7 @@ func generateNextMessage (message *models.StatusSimulatorMessage) *models.Status
 
 	message.RegisterVehicle = false
 
-	var timestamp = time.Now().Unix()
+	timestamp := time.Now().Unix()
 
 	switch *message.MissionStatus {
 	case "available_for_missions":

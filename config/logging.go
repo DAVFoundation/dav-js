@@ -1,6 +1,7 @@
 package config
 
 const (
+	DEBUG = "DEBUG"
 	INFO = "INFO"
 	WARNING = "WARNING"
 	ERROR = "ERROR"
@@ -11,4 +12,4 @@ const (
 var Logging = struct {
 	LevelOrder []string
 	Threshold string
-}{[]string{INFO, WARNING, ERROR, FATAL}, ERROR}
+}{[]string{DEBUG, INFO, WARNING, ERROR, FATAL}, ERROR}

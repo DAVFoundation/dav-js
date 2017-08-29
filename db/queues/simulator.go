@@ -6,12 +6,17 @@ import (
 	"github.com/DAVFoundation/captain/db"
 	"github.com/DAVFoundation/captain/db/models"
 	"encoding/json"
+	"github.com/DAVFoundation/captain/util"
 )
 
 const QUEUE_STATUS_SIMULATOR_KEY = "queues:status_simulator"
 
+var logger = util.GetCurrentPackageLogger()
+
 // adds a message to simulation queue
 func AddSimulatorMessage(msg models.StatusSimulatorMessage) error {
+
+	logger.Debug("adding message to simulation queue: ", msg, " MissionStatus: ", *msg.MissionStatus)
 
 	bytes, err := json.Marshal(msg)
 
