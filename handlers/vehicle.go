@@ -24,10 +24,12 @@ func (v VehicleCreationHandler) CreateVehicle(vehicleDetails *vehicle.VehicleDet
 		return err
 	}
 
+	var status = "available_for_missions"
+
 	msg := models.StatusSimulatorMessage{
 		Timestamp:       time.Now().Unix(),
 		VehicleID:       vehicleDetails.VehicleId,
-		MissionStatus:   &string("available_for_missions"),
+		MissionStatus:   &status,
 		RegisterVehicle: true,
 	}
 
