@@ -20,4 +20,4 @@ COPY . /go/src/github.com/DAVFoundation/captain
 # Compile code
 RUN go build -o captain-server github.com/DAVFoundation/captain/server
 
-CMD ["./captain-server"]
+CMD ["./captain-server", "--logtostderr=1"]
