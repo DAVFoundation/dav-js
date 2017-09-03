@@ -18,6 +18,5 @@ RUN dep ensure -v --vendor-only
 COPY . /go/src/github.com/DAVFoundation/captain
 
 # Compile code
+RUN go build -o captain-server github.com/DAVFoundation/captain/server
 RUN go build -o captain-simulator github.com/DAVFoundation/captain/simulator
-
-CMD ["./captain-simulator", "--logtostderr=1"]

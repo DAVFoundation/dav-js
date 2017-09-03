@@ -8,9 +8,8 @@ version: '3'
 services:
   # captain-server initiates a thrift server that listens to Mission Control commands
   captain-server:
-    build:
-      context: .
-      dockerfile: server/Dockerfile
+    build: .
+    command: ["./captain-server", "--logtostderr=1"]
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -28,9 +27,8 @@ services:
   # captain-simulation-worker processes captain-server simulation jobs
   # and updates status on Mission Control for every active vehicle
   captain-simulation-worker:
-    build:
-      context: .
-      dockerfile: simulator/Dockerfile
+    build: .
+    command: ["./captain-simulator", "--logtostderr=1"]
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
