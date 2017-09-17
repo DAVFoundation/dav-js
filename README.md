@@ -1,7 +1,6 @@
 # Captain
 [![Gitter](https://img.shields.io/gitter/room/DAVFoundation/DAV-Contributors.svg?style=flat-square)](https://gitter.im/DAVFoundation/DAV-Contributors)
-[![license](https://img.shields.io/github/license/DAVFoundation/captain.svg?style=flat-square)](https://github.com/DAVFoundation/captain/blob/master/LICENSE)`
-
+[![license](https://img.shields.io/github/license/DAVFoundation/captain.svg?style=flat-square)](https://github.com/DAVFoundation/captain/blob/master/LICENSE)
 <img src="./resources/images/logo-captain.jpg" align="right" />
 
 The Captain is the logic that runs onboard vehicles, gives commands to the vehicle, negotiates missions, and communicates with the blockchain.
