@@ -4,16 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DAVFoundation/captain.git"
   },
-  "author": "DAV Foundation",
+  "author": "Timi Ajiboye <timi@helloworld.ng>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/DAVFoundation/captain/issues"
   },
-  "homepage": "https://github.com/DAVFoundation/captain#readme"
+  "homepage": "https://github.com/DAVFoundation/captain#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.2",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-shell": "^0.6.5",
+    "jest-cli": "^22.4.0"
+  },
+  "dependencies": {
+    "ajv": "^6.2.0"
+  }
 }
