@@ -1,0 +1,19 @@
+{
+  "name": "dav.js",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DAVFoundation/captain.git"
+  },
+  "author": "DAV Foundation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DAVFoundation/captain/issues"
+  },
+  "homepage": "https://github.com/DAVFoundation/captain#readme"
+}
