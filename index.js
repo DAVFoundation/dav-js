@@ -12,5 +12,6 @@ async function MissionControl(needTypes, notificationURL, missionControlURL = "h
 }
 
 MissionControl.prototype.bid = async function (needId, bids){
-
+  const bidCreationResponse = await axios.post(this.missionControlURL + `/bids/${needId}`, bids);
+  this.bidId = bidCreationResponse.bid_id;
 }
