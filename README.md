@@ -14,7 +14,3 @@ If you see anything that can be improved, please feel free to suggest it or send
 Feel free to **Star** and **Watch** the Captain, but watch out for falling debris, and a wildly changing API.
 
 Feedback and contributions are always welcome and appreciated.
-
-### License
-
-Licensed under [MIT](https://github.com/DAVFoundation/captain/blob/master/LICENSE).
