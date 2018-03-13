@@ -1,6 +1,6 @@
 {
   "name": "dav.js",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -29,5 +29,9 @@
   },
   "dependencies": {
     "ajv": "^6.2.0"
-  }
+  },
+  "files": [
+    "index.js",
+    "lib/"
+  ]
 }
