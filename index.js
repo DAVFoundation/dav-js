@@ -19,15 +19,23 @@ function davJS(davId) {
   this.server.use(bodyParser.json());
   this.needTypes = {};
   this.bids = {};
+  this.contracts = {};
 
   this.server.post('/', (req, res) => {
     const params = req.body;
-    if (params.notification_type === 'new_need') {
-      const need = params.data.need;
-      this.needTypes[need.need_type].onNext(need);
-    } else if (params.notification_type === 'bid') {
-      const bid = params.data.bid;
-      this.bids[bid.need_id].onNext(bid);
+    switch (params.notification_type) {
+      case 'new_need':
+        const need = params.data.need;
+        this.needTypes[need.need_type].onNext(need);
+        break;
+      case 'bid':
+        const bid = params.data.bid;
+        this.bids[bid.need_id].onNext(bid);
+        break;
+      case 'contract':
+        const contract = params.data.contract;
+        this.contracts[contract.bid_id].onNext(contract);
+        break;
     }
     res.sendStatus(200);
   });
@@ -72,6 +80,20 @@ davJS.prototype.bid = function () {
     }
   };
 };
+
+davJS.prototype.contract = function () {
+  return {
+    forBid: (bidId, contract) => {
+      this.contracts[bidId] = new rx.Subject;
+      contract.dav_id = this.davId;
+      axios.post(this.missionControlURL + `/contracts/${bidId}`, contract)
+        .catch((err) => {
+          console.error(err);
+        })
+      return this.contracts[bidId];
+    }
+  }
+}
 
 module.exports = davJS;
 

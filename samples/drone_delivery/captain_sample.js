@@ -1,7 +1,7 @@
-const davJS = require('../index');
+const davJS = require('../dav-js');
 
 process.env['MISSION_CONTROL_URL'] = 'http://localhost:8888';
-process.env['NOTIFICATION_URL'] = 'https://9991eaca.ngrok.io'; // I used ngrok to point this to localhost:7000, I was having issues making requests to localhost from docker
+process.env['NOTIFICATION_URL'] = 'https://8c68cd34.ngrok.io'; // I used ngrok to point this to localhost:7000, I was having issues making requests to localhost from docker
 
 
 const dav = new davJS('12345');
@@ -16,13 +16,13 @@ const droneDelivery = dav.needs().forType('drone_delivery', {
 // the above line can be used to change the coordinates, it won't create multiple registrations on Mission Control. So there's no need for the .update function
 
 droneDelivery.subscribe(
-  needOnNext,
+  onNeedTypeRegistered,
   () => console.log('completed'),
   err => console.log(err)
 );
 
 
-function needOnNext(need) {
+function onNeedTypeRegistered(need) {
   const bid = dav.bid().forNeed(need.id, {
     price: '13000',
     price_type: 'flat',
@@ -31,20 +31,33 @@ function needOnNext(need) {
     time_to_dropoff: Date.now() + 3600000,
   });
   bid.subscribe(
-    bidOnNext,
+    onBidUpdated,
     () => console.log('Bid completed'),
     err => console.log(err)
   );
+};
 
-
-}
-
-function bidOnNext(bid) {
-  console.log(bid);
-
+function onBidUpdated(bid) {
   if (bid.stage === 'awarded') {
-    console.log('Yay, we have been awarded');
-  } else if (bid.stage == 'signed') {
-    // do stuff
+    const contract = dav.contract().forBid(bid.id, {
+      id: '0x98782738712387623876',
+      ttl: 240
+    });
+    contract.subscribe(
+      onContractUpdated,
+      () => console.log('Contract completed'),
+      err => console.log(err)
+    );
   }
-}
+};
+
+function onContractUpdated(contract) {
+  switch (contract.state) {
+    case 'signed':
+      console.log('contract signed');
+      break;
+    case 'fullfilled':
+      console.log('We got some money! Hurray!');
+      break;
+  }
+};
