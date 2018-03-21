@@ -20,6 +20,7 @@ function davJS(davId) {
   this.needTypes = {};
   this.bids = {};
   this.contracts = {};
+  this.missions = {};
 
   this.server.post('/', (req, res) => {
     const params = req.body;
@@ -36,6 +37,11 @@ function davJS(davId) {
         const contract = params.data.contract;
         this.contracts[contract.bid_id].onNext(contract);
         break;
+      case 'mission':
+        const mission = params.data.mission;
+        mission.update = generateMissionUpdateFunction(mission, this);
+        this.missions[mission.bid_id].onNext(mission);
+        break;
     }
     res.sendStatus(200);
   });
@@ -49,6 +55,15 @@ function davJS(davId) {
       console.error(err);
     });
 
+}
+
+const generateMissionUpdateFunction = function (mission, davContext) {
+  return function ({status, latitude, longitude}) {
+    axios.put(davContext.missionControlURL + `/missions/${mission.mission_id}`, {status, latitude, longitude})
+      .then((response) => {
+        davContext.missions[mission.bid_id].onNext(response.data);
+      })
+  }
 }
 
 davJS.prototype.needs = function () {
@@ -91,6 +106,24 @@ davJS.prototype.contract = function () {
           console.error(err);
         })
       return this.contracts[bidId];
+    }
+  }
+}
+
+davJS.prototype.mission = function () {
+  return {
+    begin: (bidId, missionParams) => {
+      this.missions[bidId] = new rx.Subject;
+      missionParams.dav_id = this.davId;
+      axios.post(this.missionControlUrl + `/missions/${bidId}`)
+        .then((response) => {
+          const mission = response.data;
+          mission.update = generateMissionUpdateFunction(mission, this);
+          this.missions[bidId].onNext(mission);
+        }).catch((err) => {
+        console.error(err);
+      })
+      return this.missions[bidId];
     }
   }
 }
