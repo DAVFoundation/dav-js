@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DAVFoundation/captain.git"
+    "url": "git+https://github.com/DAVFoundation/dav-js.git"
   },
   "author": "Timi Ajiboye <timi@helloworld.ng>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DAVFoundation/captain/issues"
+    "url": "https://github.com/DAVFoundation/dav-js/issues"
   },
-  "homepage": "https://github.com/DAVFoundation/captain#readme",
+  "homepage": "https://github.com/DAVFoundation/dav-js#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.2",
