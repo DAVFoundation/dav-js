@@ -50,16 +50,15 @@ function davJS(davId) {
     console.log(`Listening on port ${port}`);
   });
 
-  axios.post(this.missionControlURL + '/captains', { dav_id: davId, notification_url: this.notificationURL })
+  axios.post(`${this.missionControlURL}/captains`, { dav_id: davId, notification_url: this.notificationURL })
     .catch((err) => {
       console.error(err);
     });
-
 }
 
 const generateMissionUpdateFunction = function (mission, davContext) {
   return function ({ status, latitude, longitude }) {
-    axios.put(davContext.missionControlURL + `/missions/${mission.mission_id}`, { status, latitude, longitude })
+    axios.put(`${davContext.missionControlURL}/missions/${mission.mission_id}`, { status, latitude, longitude })
       .then((response) => {
         davContext.missions[mission.bid_id].onNext(response.data);
       });
@@ -70,7 +69,8 @@ davJS.prototype.needs = function () {
   let dav = this;
   return {
     forType: (needType, region) => {
-      axios.post(dav.missionControlURL + `/captains/${dav.davId}`, { need_type: needType, region })
+      axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
+        .then(ts => { console.log(ts); })
         .catch((err) => {
           console.error(err);
         });
@@ -81,50 +81,53 @@ davJS.prototype.needs = function () {
 };
 
 davJS.prototype.bid = function () {
+  let dav = this;
   return {
     forNeed: (needId, bid) => {
-      this.bids[needId] = new rx.Subject;
-      bid.dav_id = this.davId;
-      axios.post(this.missionControlURL + `/bids/${needId}`, bid)
+      dav.bids[needId] = new rx.Subject;
+      bid.dav_id = dav.davId;
+      axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
         .then((response) => {
-          this.bids[needId].onNext(response.data);
+          dav.bids[needId].onNext(response.data);
         })
         .catch((err) => {
           console.error(err);
         });
-      return this.bids[needId];
+      return dav.bids[needId];
     }
   };
 };
 
 davJS.prototype.contract = function () {
+  let dav = this;
   return {
     forBid: (bidId, contract) => {
-      this.contracts[bidId] = new rx.Subject;
-      contract.dav_id = this.davId;
-      axios.post(this.missionControlURL + `/contracts/${bidId}`, contract)
+      dav.contracts[bidId] = new rx.Subject;
+      contract.dav_id = dav.davId;
+      axios.post(`${dav.missionControlURL}/contracts/${bidId}`, contract)
         .catch((err) => {
           console.error(err);
         });
-      return this.contracts[bidId];
+      return dav.contracts[bidId];
     }
   };
 };
 
 davJS.prototype.mission = function () {
+  let dav = this;
   return {
     begin: (bidId, missionParams) => {
-      this.missions[bidId] = new rx.Subject;
-      missionParams.dav_id = this.davId;
-      axios.post(this.missionControlUrl + `/missions/${bidId}`)
+      dav.missions[bidId] = new rx.Subject;
+      missionParams.dav_id = dav.davId;
+      axios.post(`${dav.missionControlURL}/missions/${bidId}`)
         .then((response) => {
           const mission = response.data;
           mission.update = generateMissionUpdateFunction(mission, this);
-          this.missions[bidId].onNext(mission);
+          dav.missions[bidId].onNext(mission);
         }).catch((err) => {
           console.error(err);
         });
-      return this.missions[bidId];
+      return dav.missions[bidId];
     }
   };
 };
