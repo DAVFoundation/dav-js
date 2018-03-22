@@ -70,7 +70,6 @@ davJS.prototype.needs = function () {
   return {
     forType: (needType, region) => {
       axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
-        .then(ts => { console.log(ts); })
         .catch((err) => {
           console.error(err);
         });
