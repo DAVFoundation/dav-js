@@ -14,6 +14,6 @@ axios.post(process.env.MISSION_CONTROL_URL + '/needs', {  // create a need so th
   setTimeout(async () => {
     const bidsForNeedResponse = await axios.get(process.env.MISSION_CONTROL_URL + `/bids/${needId}`); // gets all bids for need
     const bid = bidsForNeedResponse.data[0];
-    axios.put(process.env.MISSION_CONTROL_URL + `/bids/${bid.id}/choose?user_id=3`); // award the bid the mission
+    axios.put(process.env.MISSION_CONTROL_URL + `/bids/${bid.id}/choose?requester_id=3`); // award the bid the mission
   }, 10000)
 }).catch((err) => console.error(err));

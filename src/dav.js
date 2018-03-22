@@ -118,7 +118,7 @@ davJS.prototype.mission = function () {
     begin: (bidId, missionParams) => {
       dav.missions[bidId] = new rx.Subject;
       missionParams.dav_id = dav.davId;
-      axios.post(`${dav.missionControlURL}/missions/${bidId}`)
+      axios.post(`${dav.missionControlURL}/missions/${bidId}`, missionParams)
         .then((response) => {
           const mission = response.data;
           mission.update = generateMissionUpdateFunction(mission, this);
