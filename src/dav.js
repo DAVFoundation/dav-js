@@ -58,7 +58,7 @@ function davJS(davId) {
 
 const generateMissionUpdateFunction = function (mission, davContext) {
   return function ({ status, latitude, longitude }) {
-    axios.put(`${davContext.missionControlURL}/missions/${mission.mission_id}`, { status, latitude, longitude })
+    axios.put(`${davContext.missionControlURL}/missions/${mission.mission_id}`, { status, latitude, longitude, dav_id: davContext.davId })
       .then((response) => {
         davContext.missions[mission.bid_id].onNext(response.data);
       });
