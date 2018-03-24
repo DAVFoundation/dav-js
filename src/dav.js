@@ -69,6 +69,11 @@ davJS.prototype.needs = function () {
   let dav = this;
   return {
     forType: (needType, region) => {
+      if (!region.global){
+        if (!region.latitude) throw new Error('region latitude is not set');
+        if (!region.longitude) throw new Error('region longitude is not set');
+        if (!region.radius) throw new Error('region radius is not set');
+      }
       axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
         .catch((err) => {
           console.error(err);
