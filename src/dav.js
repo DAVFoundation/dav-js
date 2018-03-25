@@ -123,10 +123,11 @@ const generateMissionUpdateFunction = function (mission, davContext) {
 };
 
 davJS.prototype.getUpdate = function () {
+  let dav = this;
   axios.get(`${this.missionControlURL}/needs/${this.davId}`, {})
     .then(({ data }) => {
       data.forEach(need => {
-        this.this.needTypes[need.need_type].onNext(need);
+        dav.needTypes[need.need_type].onNext(need);
       });
       console.log(data);
     })
