@@ -28,6 +28,11 @@ function davJS(davId, wallet) {
 
   setInterval(this.getUpdate.bind(this), 1000);
 
+  axios.post(`${this.missionControlURL}/captains`, { dav_id: davId, notification_url: this.notificationURL })
+    .catch((err) => {
+      console.error(err);
+    });
+
   /* this.server.post('/', (req, res) => {
     const params = req.body;
     switch (params.notification_type) {
@@ -52,17 +57,17 @@ function davJS(davId, wallet) {
     res.sendStatus(200);
   }); */
 
-/*   this.listener = this.server.listen(port, function () {
-    console.log(`Listening on port ${port}`);
-  }); */
+  /*   this.listener = this.server.listen(port, function () {
+      console.log(`Listening on port ${port}`);
+    }); */
 }
 
 davJS.prototype.connect = function () {
   let dav = this;
-  axios.post(`${this.missionControlURL}/captains`, { dav_id: dav.davId, notification_url: this.notificationURL })
-    .catch((err) => {
-      console.error(err);
-    });
+  /*   axios.post(`${this.missionControlURL}/captains`, { dav_id: dav.davId, notification_url: this.notificationURL })
+      .catch((err) => {
+        console.error(err);
+      }); */
   if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
     return Promise.resolve({});
   }
@@ -77,7 +82,7 @@ davJS.prototype.connect = function () {
         return isRegistered;
       })
       .then(function (isRegistered) {
-        if(isRegistered === false) {
+        if (isRegistered === false) {
           const msg = 'DAV Identity Registration';
           const hash = web3.sha3(msg);
           let signature = web3.eth.sign(dav.davId, hash).substr(2);
@@ -132,7 +137,7 @@ davJS.prototype.needs = function () {
   let dav = this;
   return {
     forType: (needType, region) => {
-      if (!region.global){
+      if (!region.global) {
         if (!region.latitude) throw new Error('region latitude is not set');
         if (!region.longitude) throw new Error('region longitude is not set');
         if (!region.radius) throw new Error('region radius is not set');
