@@ -2,7 +2,7 @@ const davJS = require('../dav-js');
 const web3 = require('../../src/web3wrapper');
 
 process.env['MISSION_CONTROL_URL'] = 'http://localhost:8888';
-process.env['NOTIFICATION_URL'] = 'https://8c68cd34.ngrok.io'; // I used ngrok to point this to localhost:7000, I was having issues making requests to localhost from docker
+process.env['NOTIFICATION_URL'] = 'https://320652be.ngrok.io'; // I used ngrok to point this to localhost:7000, I was having issues making requests to localhost from docker
 
 let davId, wallet;
 if(web3.isConnected()) {
@@ -39,6 +39,7 @@ function onNeedTypeRegistered(need) {
     price_description: 'Flat fee',
     time_to_pickup: Date.now(),
     time_to_dropoff: Date.now() + 3600000,
+    ttl: 240
   });
   bid.subscribe(
     onBidUpdated,

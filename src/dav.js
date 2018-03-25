@@ -108,7 +108,7 @@ davJS.prototype.connect = function () {
 
 const generateMissionUpdateFunction = function (mission, davContext) {
   return function ({ status, latitude, longitude }) {
-    axios.put(`${davContext.missionControlURL}/missions/${mission.mission_id}`, { status, latitude, longitude })
+    axios.put(`${davContext.missionControlURL}/missions/${mission.mission_id}`, { status, latitude, longitude, dav_id: davContext.davId })
       .then((response) => {
         davContext.missions[mission.bid_id].onNext(response.data);
       });
@@ -119,10 +119,12 @@ davJS.prototype.needs = function () {
   let dav = this;
   return {
     forType: (needType, region) => {
+      if (!region.global){
+        if (!region.latitude) throw new Error('region latitude is not set');
+        if (!region.longitude) throw new Error('region longitude is not set');
+        if (!region.radius) throw new Error('region radius is not set');
+      }
       axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
-        .then(ts => { 
-          console.log(ts); 
-        })
         .catch((err) => {
           console.error(err);
         });
@@ -171,7 +173,7 @@ davJS.prototype.mission = function () {
     begin: (bidId, missionParams) => {
       dav.missions[bidId] = new rx.Subject;
       missionParams.dav_id = dav.davId;
-      axios.post(`${dav.missionControlURL}/missions/${bidId}`)
+      axios.post(`${dav.missionControlURL}/missions/${bidId}`, missionParams)
         .then((response) => {
           const mission = response.data;
           mission.update = generateMissionUpdateFunction(mission, this);
