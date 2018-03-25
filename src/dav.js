@@ -2,14 +2,18 @@ const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
 const rx = require('rx-lite');
+const web3 = require('./web3wrapper');
+const TruffleContract = require('truffle-contract');
+const IdentityContractArtifact = require('../build/contracts/Identity.json');
 
-function davJS(davId) {
+function davJS(davId, wallet) {
   if (!process.env.MISSION_CONTROL_URL) throw new Error('MISSION_CONTROL_URL is not set');
   if (!process.env.NOTIFICATION_URL) throw new Error('NOTIFICATION_URL is not set');
 
   const port = process.env.WEB_SERVER_PORT || 7000;
 
   this.davId = davId;
+  this.wallet = wallet;
 
 
   this.missionControlURL = process.env.MISSION_CONTROL_URL;
@@ -46,15 +50,61 @@ function davJS(davId) {
     res.sendStatus(200);
   });
 
-  this.server.listen(port, function () {
+  this.listener = this.server.listen(port, function () {
     console.log(`Listening on port ${port}`);
   });
+}
 
-  axios.post(`${this.missionControlURL}/captains`, { dav_id: davId, notification_url: this.notificationURL })
+davJS.prototype.connect = function () {
+  let dav = this;
+  axios.post(`${this.missionControlURL}/captains`, { dav_id: dav.davId, notification_url: this.notificationURL })
     .catch((err) => {
       console.error(err);
     });
-}
+  if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
+    return Promise.resolve({});
+  }
+  const identityContract = TruffleContract(IdentityContractArtifact);
+  this.identityContract = identityContract;
+  this.identityContract.setProvider(web3.currentProvider);
+  return new Promise (function (resolve, reject) {
+    // console.log(dav.wallet);   
+    var identityContractInstance;
+    return identityContract.deployed()
+      .then(function(instance) {
+        identityContractInstance = instance;
+        const isRegistered = instance.isRegistered.call(dav.davId);
+        return isRegistered;
+      })
+      .then(function (isRegistered) {
+        if(isRegistered === false) {
+          const msg = 'DAV Identity Registration';
+          const hash = web3.sha3(msg);
+          let signature = web3.eth.sign(dav.davId, hash).substr(2);
+          const r = '0x' + signature.slice(0, 64);
+          const s = '0x' + signature.slice(64, 128);
+          const v = web3.toDecimal(signature.slice(128, 130)) + 27;
+          // console.log('r', r);
+          // console.log('s', s);
+          // console.log('v', v);
+
+          return identityContractInstance
+            .register(dav.davId, dav.wallet, v, r, s, {from: dav.wallet})
+            .then(function (res) { 
+              console.log(res);
+              resolve({}); 
+            })
+            .catch(function (err) {
+              reject(err);
+            });
+        } else {
+          resolve({});
+        }
+      }).catch(function (err) {
+        reject(err);
+      });
+  });
+};
 
 const generateMissionUpdateFunction = function (mission, davContext) {
   return function ({ status, latitude, longitude }) {
@@ -70,7 +120,9 @@ davJS.prototype.needs = function () {
   return {
     forType: (needType, region) => {
       axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
-        .then(ts => { console.log(ts); })
+        .then(ts => { 
+          console.log(ts); 
+        })
         .catch((err) => {
           console.error(err);
         });

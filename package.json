@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start-testnet": "dav-cli --start",
     "test": "gulp js"
   },
   "repository": {
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/DAVFoundation/dav-js#readme",
   "devDependencies": {
+    "dav-cli": "^0.2.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.2",
     "gulp-nodemon": "^2.2.1",
@@ -25,10 +27,12 @@
   },
   "dependencies": {
     "ajv": "^6.2.0",
-    "rx-lite": "^4.0.8",
     "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "body-parser": "^1.18.2"
+    "rx-lite": "^4.0.8",
+    "truffle-contract": "^3.0.4",
+    "web3": "^0.20.6"
   },
   "files": [
     "index.js",
