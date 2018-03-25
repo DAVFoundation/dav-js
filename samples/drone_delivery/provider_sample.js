@@ -1,10 +1,20 @@
 const davJS = require('../dav-js');
+const web3 = require('../../src/web3wrapper');
 
 process.env['MISSION_CONTROL_URL'] = 'http://localhost:8888';
 process.env['NOTIFICATION_URL'] = 'https://320652be.ngrok.io'; // I used ngrok to point this to localhost:7000, I was having issues making requests to localhost from docker
 
-
-const dav = new davJS('12345');
+let davId, wallet;
+if(web3.isConnected()) {
+  davId = web3.eth.accounts[0];
+  wallet = web3.eth.accounts[0];
+}
+const dav = new davJS(davId, wallet);
+dav.connect().then((res) => {
+  console.log('done', res);
+}).catch((err) => {
+  console.log('err', err);
+});
 
 
 const droneDelivery = dav.needs().forType('drone_delivery', {
@@ -36,7 +46,7 @@ function onNeedTypeRegistered(need) {
     err => console.log(err),
     () => console.log('Bid completed')
   );
-};
+}
 
 function onBidUpdated(bid) {
   if (bid.status === 'awarded') {
@@ -50,7 +60,7 @@ function onBidUpdated(bid) {
       () => console.log('Contract completed')
     );
   }
-};
+}
 
 function onContractUpdated(contract) {
   switch (contract.status) {
@@ -61,7 +71,7 @@ function onContractUpdated(contract) {
       console.log('We got some money! Hurray!');
       break;
   }
-};
+}
 
 
 function beginMission(contract){
@@ -74,7 +84,7 @@ function beginMission(contract){
     onMissionUpdated,
     err => console.log(err),
     () => console.log('Mission completed')
-  )
+  );
 }
 
 function onMissionUpdated(mission){
