@@ -1,10 +1,10 @@
-const davJS = require('../../index');
+const davJS = require('../../src/index');
 const web3 = require('../../src/web3wrapper');
 
 describe('contract integration', () => {
 
   // const account;
-  // const PK; 
+  // const PK;
   beforeAll(() => {
     process.env.MISSION_CONTROL_URL = 'http://localhost:8888';
     process.env.NOTIFICATION_URL = 'http://localhost:7000';
@@ -20,6 +20,5 @@ describe('contract integration', () => {
     }
     const dav = new davJS(davId, wallet);
     await expect(dav.connect()).resolves.toEqual({});
-    dav.listener.close();
   });
 });
