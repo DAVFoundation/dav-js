@@ -20,6 +20,9 @@
   },
   "homepage": "https://github.com/DAVFoundation/dav-js#readme",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.2",
     "gulp-nodemon": "^2.2.1",
