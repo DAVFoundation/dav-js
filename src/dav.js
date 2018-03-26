@@ -72,11 +72,11 @@ davJS.prototype.connect = function () {
     return Promise.resolve({});
   }
 
-  return new Promise (function (resolve, reject) {
+  return new Promise(function (resolve, reject) {
     // console.log(dav.wallet);
     var identityContractInstance;
     return davContracts.getInstace('identity')
-      .then(function(instance) {
+      .then(function (instance) {
         identityContractInstance = instance;
         const isRegistered = instance.isRegistered.call(dav.davId);
         return isRegistered;
@@ -94,8 +94,8 @@ davJS.prototype.connect = function () {
           // console.log('v', v);
 
           return identityContractInstance
-            .register(dav.davId, v, r, s, {from: dav.wallet})
-            .then(function (res) { 
+            .register(dav.davId, v, r, s, { from: dav.wallet })
+            .then(function (res) {
               console.log(res);
               resolve({});
             })
@@ -132,6 +132,16 @@ davJS.prototype.getUpdate = function () {
     .catch(e =>
       console.log(e)
     );
+  axios.get(`${this.missionControlURL}/bids/${this.davId}/chosen`, {})
+    .then(({ data }) => {
+      data.forEach(bid => {
+        dav.bids[bid.id].onNext(bid);
+      });
+      console.log(data);
+    })
+    .catch(e =>
+      console.log(e)
+    );
 };
 
 davJS.prototype.needs = function () {
@@ -143,6 +153,7 @@ davJS.prototype.needs = function () {
         if (!region.longitude) throw new Error('region longitude is not set');
         if (!region.radius) throw new Error('region radius is not set');
       }
+      region.ttl = region.ttl || 120;
       axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
         .catch((err) => {
           console.error(err);
@@ -160,8 +171,8 @@ davJS.prototype.bid = function () {
       dav.bids[needId] = new rx.Subject;
       bid.dav_id = dav.davId;
       axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
-        .then((response) => {
-          dav.bids[needId].onNext(response.data);
+        .then((/* response */) => {
+          // dav.bids[needId].onNext(response.data);
         })
         .catch((err) => {
           console.error(err);
@@ -171,25 +182,25 @@ davJS.prototype.bid = function () {
   };
 };
 
-davJS.prototype.createMissionContract = function(vehicleId, missionCost) {
+davJS.prototype.createMissionContract = function (vehicleId, missionCost) {
   let dav = this;
   if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
     return Promise.resolve({});
   }
 
-  return new Promise (function (resolve, reject) {
+  return new Promise(function (resolve, reject) {
     var tokenContractInstance;
     var missionContractInstance;
     return davContracts.getInstace('token')
-      .then(function(instance) {
+      .then(function (instance) {
         tokenContractInstance = instance;
         return davContracts.getInstace('mission')
           .then((instance) => {
             missionContractInstance = instance;
-            return tokenContractInstance.approve(missionContractInstance.address, missionCost, {from: dav.wallet});
+            return tokenContractInstance.approve(missionContractInstance.address, missionCost, { from: dav.wallet });
           })
           .then(() => {
-            return missionContractInstance.create(vehicleId, dav.davId, missionCost, {from: dav.wallet});
+            return missionContractInstance.create(vehicleId, dav.davId, missionCost, { from: dav.wallet });
           });
       })
       .catch(function (err) {
