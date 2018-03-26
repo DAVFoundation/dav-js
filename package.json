@@ -2,7 +2,7 @@
   "name": "@davfoundation/dav-js",
   "version": "0.1.7",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "start-testnet": "dav-cli --start",
     "build-dev": "webpack --mode development",
