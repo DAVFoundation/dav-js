@@ -1,10 +1,10 @@
 const axios = require('axios');
-const express = require('express');
-const bodyParser = require('body-parser');
+// const express = require('express');
+// const bodyParser = require('body-parser');
 const rx = require('rx-lite');
 const web3 = require('./web3wrapper');
-// const TruffleContract = require('truffle-contract');
-// const IdentityContractArtifact = require('../build/contracts/Identity.json');
+const davContracts = require('./dav-contracts');
+
 
 function davJS(davId, wallet) {
   if (!process.env.MISSION_CONTROL_URL) throw new Error('MISSION_CONTROL_URL is not set');
@@ -14,13 +14,13 @@ function davJS(davId, wallet) {
 
   this.davId = davId;
   this.wallet = wallet;
-
+  this.web3 = web3;
 
   this.missionControlURL = process.env.MISSION_CONTROL_URL;
   this.notificationURL = process.env.NOTIFICATION_URL;
 
-  this.server = express();
-  this.server.use(bodyParser.json());
+  // this.server = express();
+  // this.server.use(bodyParser.json());
   this.needTypes = {};
   this.bids = {};
   this.contracts = {};
@@ -71,14 +71,12 @@ davJS.prototype.connect = function () {
   if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
     return Promise.resolve({});
   }
-  // const identityContract = TruffleContract(IdentityContractArtifact);
-  // this.identityContract = identityContract;
-  this.identityContract.setProvider(web3.currentProvider);
-  return new Promise(function (resolve, reject) {
+
+  return new Promise (function (resolve, reject) {
     // console.log(dav.wallet);
     var identityContractInstance;
-    return /* identityContract.deployed() */Promise.resolve({})
-      .then(function (instance) {
+    return davContracts.getInstace('identity')
+      .then(function(instance) {
         identityContractInstance = instance;
         const isRegistered = instance.isRegistered.call(dav.davId);
         return isRegistered;
@@ -96,8 +94,8 @@ davJS.prototype.connect = function () {
           // console.log('v', v);
 
           return identityContractInstance
-            .register(dav.davId, dav.wallet, v, r, s, { from: dav.wallet })
-            .then(function (res) {
+            .register(dav.davId, v, r, s, {from: dav.wallet})
+            .then(function (res) { 
               console.log(res);
               resolve({});
             })
@@ -171,6 +169,33 @@ davJS.prototype.bid = function () {
       return dav.bids[needId];
     }
   };
+};
+
+davJS.prototype.ctreateMissionContract = function(vehicleId, missionCost) {
+  let dav = this;
+  if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
+    return Promise.resolve({});
+  }
+
+  return new Promise (function (resolve, reject) {
+    var tokenContractInstance;
+    var missionContractInstance;
+    return davContracts.getInstace('token')
+      .then(function(instance) {
+        tokenContractInstance = instance;
+        return davContracts.getInstace('mission')
+          .then((instance) => {
+            missionContractInstance = instance;
+            return tokenContractInstance.approve(missionContractInstance.address, missionCost, {from: dav.wallet});
+          })
+          .then(() => {
+            return missionContractInstance.create(vehicleId, dav.davId, missionCost, {from: dav.wallet});
+          });
+      })
+      .catch(function (err) {
+        reject(err);
+      });
+  });
 };
 
 davJS.prototype.contract = function () {
