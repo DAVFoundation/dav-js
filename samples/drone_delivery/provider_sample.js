@@ -6,8 +6,8 @@ process.env['NOTIFICATION_URL'] = 'https://320652be.ngrok.io'; // I used ngrok t
 
 let davId, wallet;
 if(web3.isConnected()) {
-  davId = web3.eth.accounts[0];
-  wallet = web3.eth.accounts[0];
+  davId = web3.eth.accounts[1];
+  wallet = web3.eth.accounts[1];
 }
 const dav = new davJS(davId, wallet);
 dav.connect().then((res) => {
