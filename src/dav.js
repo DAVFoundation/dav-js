@@ -125,9 +125,11 @@ davJS.prototype.getUpdate = function () {
   axios.get(`${this.missionControlURL}/needs/${this.davId}`, {})
     .then(({ data }) => {
       data.forEach(need => {
-        dav.needTypes[need.need_type].onNext(need);
+        if (!dav.bids[need.id]) {
+          dav.needTypes[need.need_type].onNext(need);
+        }
       });
-      console.log(data);
+      // console.log(data);
     })
     .catch(e =>
       console.log(e)
@@ -137,7 +139,7 @@ davJS.prototype.getUpdate = function () {
       data.forEach(bid => {
         dav.bids[bid.id].onNext(bid);
       });
-      console.log(data);
+      // console.log(data);
     })
     .catch(e =>
       console.log(e)
@@ -168,15 +170,14 @@ davJS.prototype.bid = function () {
   let dav = this;
   return {
     forNeed: (needId, bid) => {
-      dav.bids[needId] = new rx.Subject;
-      bid.dav_id = dav.davId;
-      axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
-        .then((/* response */) => {
-          // dav.bids[needId].onNext(response.data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      if (!dav.bids[needId]) {
+        dav.bids[needId] = new rx.Subject;
+        bid.dav_id = dav.davId;
+        axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
+          .catch((err) => {
+            console.error(err);
+          });
+      }
       return dav.bids[needId];
     }
   };
