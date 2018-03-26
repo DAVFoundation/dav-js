@@ -171,7 +171,7 @@ davJS.prototype.bid = function () {
   };
 };
 
-davJS.prototype.ctreateMissionContract = function(vehicleId, missionCost) {
+davJS.prototype.createMissionContract = function(vehicleId, missionCost) {
   let dav = this;
   if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
     return Promise.resolve({});
