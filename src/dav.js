@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const rx = require('rx-lite');
 const web3 = require('./web3wrapper');
-const TruffleContract = require('truffle-contract');
+// const TruffleContract = require('truffle-contract');
 // const IdentityContractArtifact = require('../build/contracts/Identity.json');
 
 function davJS(davId, wallet) {
@@ -77,7 +77,7 @@ davJS.prototype.connect = function () {
   return new Promise(function (resolve, reject) {
     // console.log(dav.wallet);
     var identityContractInstance;
-    return identityContract.deployed()
+    return /* identityContract.deployed() */Promise.resolve({})
       .then(function (instance) {
         identityContractInstance = instance;
         const isRegistered = instance.isRegistered.call(dav.davId);
