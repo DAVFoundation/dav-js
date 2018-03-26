@@ -1,6 +1,6 @@
 {
-  "name": "dav-js",
-  "version": "0.1.6",
+  "name": "@davfoundation/dav-js",
+  "version": "0.1.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -29,12 +29,12 @@
     "gulp-nodemon": "^2.2.1",
     "gulp-shell": "^0.6.5",
     "i": "^0.3.6",
-    "jest-cli": "^22.4.0",
-    "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.13",
-    "webpack-merge": "^4.1.2"
+    "jest-cli": "^22.4.0"
   },
   "dependencies": {
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.13",
+    "webpack-merge": "^4.1.2",
     "ajv": "^6.2.0",
     "axios": "^0.18.0",
     "rx-lite": "^4.0.8",
@@ -44,6 +44,7 @@
   "files": [
     "index.js",
     "lib/",
-    "src/"
+    "src/",
+    "build/"
   ]
 }
