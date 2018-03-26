@@ -1,6 +1,6 @@
 const axios = require('axios');
-const express = require('express');
-const bodyParser = require('body-parser');
+// const express = require('express');
+// const bodyParser = require('body-parser');
 const rx = require('rx-lite');
 const web3 = require('./web3wrapper');
 const davContracts = require('./dav-contracts');
@@ -14,13 +14,13 @@ function davJS(davId, wallet) {
 
   this.davId = davId;
   this.wallet = wallet;
-
+  this.web3 = web3;
 
   this.missionControlURL = process.env.MISSION_CONTROL_URL;
   this.notificationURL = process.env.NOTIFICATION_URL;
 
-  this.server = express();
-  this.server.use(bodyParser.json());
+  // this.server = express();
+  // this.server.use(bodyParser.json());
   this.needTypes = {};
   this.bids = {};
   this.contracts = {};

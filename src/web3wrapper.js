@@ -3,9 +3,9 @@ const BLOCKCHAIN_TYPE = process.env.BLOCKCHAIN_TYPE || 'NONE';
 
 var web3Provider = null;
 // Use injected web3 instance
-if (BLOCKCHAIN_TYPE === 'ETH_MAINNET') {
-  web3Provider = web3.currentProvider;
-} else if(BLOCKCHAIN_TYPE === 'ETH_TESTNET') {
+if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
+  web3Provider = window.web3.currentProvider;
+} else if(BLOCKCHAIN_TYPE === 'ETH_LOCAL_TESTNET') {
   // If no injected web3 instance is detected, fall back to Ganache
   web3Provider = new Web3
     .providers

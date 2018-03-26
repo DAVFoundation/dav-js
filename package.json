@@ -28,8 +28,6 @@
   "dependencies": {
     "ajv": "^6.2.0",
     "axios": "^0.18.0",
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
     "rx-lite": "^4.0.8",
     "truffle-contract": "^3.0.4",
     "web3": "^0.20.6"
