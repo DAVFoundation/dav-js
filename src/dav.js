@@ -8,7 +8,6 @@ const davContracts = require('./dav-contracts');
 
 function davJS(davId, wallet) {
   if (!process.env.MISSION_CONTROL_URL) throw new Error('MISSION_CONTROL_URL is not set');
-  if (!process.env.NOTIFICATION_URL) throw new Error('NOTIFICATION_URL is not set');
 
   // const port = process.env.WEB_SERVER_PORT || 7000;
 
@@ -17,7 +16,6 @@ function davJS(davId, wallet) {
   this.web3 = web3;
 
   this.missionControlURL = process.env.MISSION_CONTROL_URL;
-  this.notificationURL = process.env.NOTIFICATION_URL;
 
   // this.server = express();
   // this.server.use(bodyParser.json());
@@ -28,7 +26,7 @@ function davJS(davId, wallet) {
 
   setInterval(this.getUpdate.bind(this), 1000);
 
-  axios.post(`${this.missionControlURL}/captains`, { dav_id: davId, notification_url: this.notificationURL })
+  axios.post(`${this.missionControlURL}/captains`, { dav_id: davId })
     .catch((err) => {
       console.error(err);
     });
@@ -160,8 +158,15 @@ davJS.prototype.needs = function () {
         .catch((err) => {
           console.error(err);
         });
-      dav.needTypes[needType] = new rx.Subject();
-      return dav.needTypes[needType];
+
+      const observable = new rx.Subject();
+      dav.needTypes[needType] = observable;
+
+      observable.update = async () => {
+        await axios.put(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region });
+      };
+
+      return observable;
     }
   };
 };
