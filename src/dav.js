@@ -137,7 +137,7 @@ davJS.prototype.getUpdate = function () {
   axios.get(`${this.missionControlURL}/bids/${this.davId}/chosen`, {})
     .then(({ data }) => {
       data.forEach(bid => {
-        dav.bids[bid.id].onNext(bid);
+        dav.bids[bid.need_id].onNext(bid);
       });
       // console.log(data);
     })
