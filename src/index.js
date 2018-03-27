@@ -1,4 +1,4 @@
 module.exports = {
-  dav: require('./dav'),
+  davJS: require('./dav'),
   web3: require('./web3wrapper')
 };
