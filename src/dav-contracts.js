@@ -17,7 +17,7 @@ function davContracts() {
     }
   };
 
-  this.getInstace = function(contract) {
+  this.getInstance = function(contract) {
     return new Promise (function (resolve, reject) {
       if(contracts[contract].instance) {
         resolve(contracts[contract].instance);
