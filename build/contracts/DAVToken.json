@@ -405,7 +405,7 @@
         "id": 155,
         "nodeType": "ImportDirective",
         "scope": 289,
-        "sourceUnit": 1126,
+        "sourceUnit": 1150,
         "src": "54:67:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -416,7 +416,7 @@
         "id": 156,
         "nodeType": "ImportDirective",
         "scope": 289,
-        "sourceUnit": 555,
+        "sourceUnit": 579,
         "src": "122:60:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -430,10 +430,10 @@
               "id": 157,
               "name": "StandardToken",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1125,
+              "referencedDeclaration": 1149,
               "src": "254:13:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_StandardToken_$1125",
+                "typeIdentifier": "t_contract$_StandardToken_$1149",
                 "typeString": "contract StandardToken"
               }
             },
@@ -448,10 +448,10 @@
               "id": 159,
               "name": "Pausable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 554,
+              "referencedDeclaration": 578,
               "src": "269:8:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Pausable_$554",
+                "typeIdentifier": "t_contract$_Pausable_$578",
                 "typeString": "contract Pausable"
               }
             },
@@ -461,12 +461,12 @@
           }
         ],
         "contractDependencies": [
-          554,
-          708,
-          804,
-          847,
-          879,
-          1125
+          578,
+          732,
+          828,
+          871,
+          903,
+          1149
         ],
         "contractKind": "contract",
         "documentation": "@title DAV Token\n@dev ERC20 token",
@@ -474,12 +474,12 @@
         "id": 288,
         "linearizedBaseContracts": [
           288,
-          554,
-          708,
-          1125,
-          804,
-          847,
-          879
+          578,
+          732,
+          1149,
+          828,
+          871,
+          903
         ],
         "name": "DAVToken",
         "nodeType": "ContractDefinition",
@@ -800,7 +800,7 @@
                       "name": "totalSupply_",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 723,
+                      "referencedDeclaration": 747,
                       "src": "846:12:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -848,7 +848,7 @@
                         "name": "balances",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 721,
+                        "referencedDeclaration": 745,
                         "src": "881:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
@@ -864,7 +864,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1137,
+                          "referencedDeclaration": 1161,
                           "src": "890:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1003,7 +1003,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "1176:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -1017,7 +1017,7 @@
                       "lValueRequested": false,
                       "memberName": "transfer",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 791,
+                      "referencedDeclaration": 815,
                       "src": "1176:14:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -1059,7 +1059,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "1134:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1168,7 +1168,7 @@
             "scope": 288,
             "src": "1080:128:1",
             "stateMutability": "nonpayable",
-            "superFunction": 791,
+            "superFunction": 815,
             "visibility": "public"
           },
           {
@@ -1242,7 +1242,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "1601:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -1256,7 +1256,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 979,
+                      "referencedDeclaration": 1003,
                       "src": "1601:18:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -1298,7 +1298,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "1559:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1433,7 +1433,7 @@
             "scope": 288,
             "src": "1486:158:1",
             "stateMutability": "nonpayable",
-            "superFunction": 979,
+            "superFunction": 1003,
             "visibility": "public"
           },
           {
@@ -1490,7 +1490,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "2370:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -1504,7 +1504,7 @@
                       "lValueRequested": false,
                       "memberName": "approve",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1007,
+                      "referencedDeclaration": 1031,
                       "src": "2370:13:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -1546,7 +1546,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "2328:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1655,7 +1655,7 @@
             "scope": 288,
             "src": "2270:136:1",
             "stateMutability": "nonpayable",
-            "superFunction": 1007,
+            "superFunction": 1031,
             "visibility": "public"
           },
           {
@@ -1712,7 +1712,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "2988:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -1726,7 +1726,7 @@
                       "lValueRequested": false,
                       "memberName": "increaseApproval",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1064,
+                      "referencedDeclaration": 1088,
                       "src": "2988:22:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -1768,7 +1768,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "2938:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1877,7 +1877,7 @@
             "scope": 288,
             "src": "2869:169:1",
             "stateMutability": "nonpayable",
-            "superFunction": 1064,
+            "superFunction": 1088,
             "visibility": "public"
           },
           {
@@ -1934,7 +1934,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "3627:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -1948,7 +1948,7 @@
                       "lValueRequested": false,
                       "memberName": "decreaseApproval",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1124,
+                      "referencedDeclaration": 1148,
                       "src": "3627:22:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -1990,7 +1990,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "3577:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2099,7 +2099,7 @@
             "scope": 288,
             "src": "3503:179:1",
             "stateMutability": "nonpayable",
-            "superFunction": 1124,
+            "superFunction": 1148,
             "visibility": "public"
           }
         ],
@@ -2136,7 +2136,7 @@
         "id": 155,
         "nodeType": "ImportDirective",
         "scope": 289,
-        "sourceUnit": 1126,
+        "sourceUnit": 1150,
         "src": "54:67:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2147,7 +2147,7 @@
         "id": 156,
         "nodeType": "ImportDirective",
         "scope": 289,
-        "sourceUnit": 555,
+        "sourceUnit": 579,
         "src": "122:60:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2161,10 +2161,10 @@
               "id": 157,
               "name": "StandardToken",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1125,
+              "referencedDeclaration": 1149,
               "src": "254:13:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_StandardToken_$1125",
+                "typeIdentifier": "t_contract$_StandardToken_$1149",
                 "typeString": "contract StandardToken"
               }
             },
@@ -2179,10 +2179,10 @@
               "id": 159,
               "name": "Pausable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 554,
+              "referencedDeclaration": 578,
               "src": "269:8:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Pausable_$554",
+                "typeIdentifier": "t_contract$_Pausable_$578",
                 "typeString": "contract Pausable"
               }
             },
@@ -2192,12 +2192,12 @@
           }
         ],
         "contractDependencies": [
-          554,
-          708,
-          804,
-          847,
-          879,
-          1125
+          578,
+          732,
+          828,
+          871,
+          903,
+          1149
         ],
         "contractKind": "contract",
         "documentation": "@title DAV Token\n@dev ERC20 token",
@@ -2205,12 +2205,12 @@
         "id": 288,
         "linearizedBaseContracts": [
           288,
-          554,
-          708,
-          1125,
-          804,
-          847,
-          879
+          578,
+          732,
+          1149,
+          828,
+          871,
+          903
         ],
         "name": "DAVToken",
         "nodeType": "ContractDefinition",
@@ -2531,7 +2531,7 @@
                       "name": "totalSupply_",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 723,
+                      "referencedDeclaration": 747,
                       "src": "846:12:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -2579,7 +2579,7 @@
                         "name": "balances",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 721,
+                        "referencedDeclaration": 745,
                         "src": "881:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
@@ -2595,7 +2595,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1137,
+                          "referencedDeclaration": 1161,
                           "src": "890:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2734,7 +2734,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "1176:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -2748,7 +2748,7 @@
                       "lValueRequested": false,
                       "memberName": "transfer",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 791,
+                      "referencedDeclaration": 815,
                       "src": "1176:14:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -2790,7 +2790,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "1134:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2899,7 +2899,7 @@
             "scope": 288,
             "src": "1080:128:1",
             "stateMutability": "nonpayable",
-            "superFunction": 791,
+            "superFunction": 815,
             "visibility": "public"
           },
           {
@@ -2973,7 +2973,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "1601:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -2987,7 +2987,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 979,
+                      "referencedDeclaration": 1003,
                       "src": "1601:18:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -3029,7 +3029,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "1559:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -3164,7 +3164,7 @@
             "scope": 288,
             "src": "1486:158:1",
             "stateMutability": "nonpayable",
-            "superFunction": 979,
+            "superFunction": 1003,
             "visibility": "public"
           },
           {
@@ -3221,7 +3221,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "2370:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -3235,7 +3235,7 @@
                       "lValueRequested": false,
                       "memberName": "approve",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1007,
+                      "referencedDeclaration": 1031,
                       "src": "2370:13:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -3277,7 +3277,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "2328:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -3386,7 +3386,7 @@
             "scope": 288,
             "src": "2270:136:1",
             "stateMutability": "nonpayable",
-            "superFunction": 1007,
+            "superFunction": 1031,
             "visibility": "public"
           },
           {
@@ -3443,7 +3443,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "2988:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -3457,7 +3457,7 @@
                       "lValueRequested": false,
                       "memberName": "increaseApproval",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1064,
+                      "referencedDeclaration": 1088,
                       "src": "2988:22:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -3499,7 +3499,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "2938:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -3608,7 +3608,7 @@
             "scope": 288,
             "src": "2869:169:1",
             "stateMutability": "nonpayable",
-            "superFunction": 1064,
+            "superFunction": 1088,
             "visibility": "public"
           },
           {
@@ -3665,7 +3665,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1163,
+                        "referencedDeclaration": 1187,
                         "src": "3627:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_DAVToken_$288",
@@ -3679,7 +3679,7 @@
                       "lValueRequested": false,
                       "memberName": "decreaseApproval",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1124,
+                      "referencedDeclaration": 1148,
                       "src": "3627:22:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -3721,7 +3721,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 515,
+                  "referencedDeclaration": 539,
                   "src": "3577:13:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -3830,7 +3830,7 @@
             "scope": 288,
             "src": "3503:179:1",
             "stateMutability": "nonpayable",
-            "superFunction": 1124,
+            "superFunction": 1148,
             "visibility": "public"
           }
         ],
@@ -3845,25 +3845,13 @@
     "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
   },
   "networks": {
-    "1521960831539": {
+    "1522159792048": {
       "events": {},
       "links": {},
-      "address": "0x3ac1e4a582f0230000c624803451baf8eecce8bc",
-      "transactionHash": "0xd8966eed1cb5b7aaa44d9fb932dc793fef730b4d0221892d2211bd9b5fbbb71b"
-    },
-    "1521984506462": {
-      "events": {},
-      "links": {},
-      "address": "0xe31841d245ccd1953397fb942b4d9778a41c35a0",
-      "transactionHash": "0x4d7fa60a5a3186f4e3c1894326325e0b18db88ace1ed34caf9356ca7a602d81d"
-    },
-    "1522012667783": {
-      "events": {},
-      "links": {},
-      "address": "0x0e1e44b4890247e1d5c8d29f0790878ed555aa92",
-      "transactionHash": "0x4d7fa60a5a3186f4e3c1894326325e0b18db88ace1ed34caf9356ca7a602d81d"
+      "address": "0x6f84742680311cef5ba42bc10a71a4708b4561d1",
+      "transactionHash": "0x3db0dcd73dcd7c3e80918b8c7d6f7bee02fc7fd31ef15480087a2a322bf6ca29"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-03-25T21:18:45.747Z"
+  "updatedAt": "2018-03-27T18:55:17.173Z"
 }

@@ -1,15 +1,15 @@
-const davJS = require('../dav-js');
+const { davJS } = require('../dav-js');
 const web3 = require('../../src/web3wrapper');
 
 process.env['MISSION_CONTROL_URL'] = 'http://localhost:8888';
 
 let davId, wallet;
 if(web3.isConnected()) {
-  davId = web3.eth.accounts[1];
-  wallet = web3.eth.accounts[1];
+  davId = web3.eth.accounts[0];
+  wallet = web3.eth.accounts[0];
 }
 const dav = new davJS(davId, wallet);
-dav.connect().then((res) => {
+dav.register().then((res) => {
   console.log('done', res);
 }).catch((err) => {
   console.log('err', err);

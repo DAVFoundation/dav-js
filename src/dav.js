@@ -61,13 +61,48 @@ function davJS(davId, wallet) {
 
 davJS.prototype.isRegistered = function () {
   let dav = this;
-  return davContracts.getInstace('identity')
+  return davContracts.getInstance('identity')
     .then(function (instance) {
       return instance.isRegistered.call(dav.davId);
     });
 };
 
-davJS.prototype.connect = function () {
+davJS.prototype.registerSimple = function () {
+  let dav = this;
+  if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
+    return Promise.resolve({});
+  }
+
+  return new Promise(function (resolve, reject) {
+    // console.log(dav.wallet);
+    var identityContractInstance;
+    return davContracts.getInstance('identity')
+      .then(function (instance) {
+        identityContractInstance = instance;
+        return instance.isRegistered.call(dav.davId);
+      })
+      .then(function (isRegistered) {
+        if (isRegistered === false) {
+          return identityContractInstance
+            .registerSimple({ from: dav.wallet })
+            .then(function (res) {
+              console.log(res);
+              resolve(true);
+            })
+            .catch(function (err) {
+              reject(err);
+            });
+        } else {
+          resolve(true);
+        }
+      }).catch(function (err) {
+        reject(err);
+      });
+  });
+};
+      
+
+davJS.prototype.register = function () {
   let dav = this;
   if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
     return Promise.resolve({});
@@ -85,25 +120,31 @@ davJS.prototype.connect = function () {
         if (isRegistered === false) {
           const msg = 'DAV Identity Registration';
           const hash = web3.sha3(msg);
-          let signature = web3.eth.sign(dav.davId, hash).substr(2);
-          const r = '0x' + signature.slice(0, 64);
-          const s = '0x' + signature.slice(64, 128);
-          const v = web3.toDecimal(signature.slice(128, 130)) + 27;
-          // console.log('r', r);
-          // console.log('s', s);
-          // console.log('v', v);
+          web3.eth.sign(dav.davId, hash, (error, signature) => {
+            if(error) {
+              reject(error);
+            }
+            signature = signature.substr(2);
+            const v_hex = signature.slice(128, 130);
+            const r = '0x' + signature.slice(0, 64);
+            const s = '0x' + signature.slice(64, 128);
+            const v = web3.toDecimal(v_hex) + 27;
+            // console.log('r', r);
+            // console.log('s', s);
+            // console.log('v', v);
 
-          return identityContractInstance
-            .register(dav.davId, v, r, s, { from: dav.wallet })
-            .then(function (res) {
-              console.log(res);
-              resolve({});
-            })
-            .catch(function (err) {
-              reject(err);
-            });
+            identityContractInstance
+              .register(dav.davId, v, r, s, { from: dav.wallet })
+              .then(function (res) {
+                console.log(res);
+                resolve(true);
+              })
+              .catch(function (err) {
+                reject(err);
+              });
+          });
         } else {
-          resolve({});
+          resolve(true);
         }
       }).catch(function (err) {
         reject(err);
@@ -192,7 +233,7 @@ davJS.prototype.bid = function () {
 davJS.prototype.createMissionContract = function (vehicleId, missionCost) {
   let dav = this;
   if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
-    return Promise.resolve({});
+    return Promise.resolve(true);
   }
 
   return new Promise(function (resolve, reject) {
