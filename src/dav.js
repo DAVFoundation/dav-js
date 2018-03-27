@@ -75,7 +75,7 @@ davJS.prototype.connect = function () {
   return new Promise(function (resolve, reject) {
     // console.log(dav.wallet);
     var identityContractInstance;
-    return davContracts.getInstace('identity')
+    return davContracts.getInstance('identity')
       .then(function (instance) {
         identityContractInstance = instance;
         const isRegistered = instance.isRegistered.call(dav.davId);
@@ -192,10 +192,10 @@ davJS.prototype.createMissionContract = function (vehicleId, missionCost) {
   return new Promise(function (resolve, reject) {
     var tokenContractInstance;
     var missionContractInstance;
-    return davContracts.getInstace('token')
+    return davContracts.getInstance('token')
       .then(function (instance) {
         tokenContractInstance = instance;
-        return davContracts.getInstace('mission')
+        return davContracts.getInstance('mission')
           .then((instance) => {
             missionContractInstance = instance;
             return tokenContractInstance.approve(missionContractInstance.address, missionCost, { from: dav.wallet });
