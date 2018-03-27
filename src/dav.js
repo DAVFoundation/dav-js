@@ -7,16 +7,15 @@ const davContracts = require('./dav-contracts');
 
 
 function davJS(davId, wallet) {
-  if (!process.env.MISSION_CONTROL_URL) throw new Error('MISSION_CONTROL_URL is not set');
+  if (!process.env.MISSION_CONTROL_HOST) throw new Error('MISSION_CONTROL_HOST is not set');
   if (!process.env.NOTIFICATION_URL) throw new Error('NOTIFICATION_URL is not set');
 
   // const port = process.env.WEB_SERVER_PORT || 7000;
 
   this.davId = davId;
   this.wallet = wallet;
-  this.web3 = web3;
 
-  this.missionControlURL = process.env.MISSION_CONTROL_URL;
+  this.missionControlURL = process.env.MISSION_CONTROL_HOST;
   this.notificationURL = process.env.NOTIFICATION_URL;
 
   // this.server = express();
@@ -62,12 +61,11 @@ function davJS(davId, wallet) {
     }); */
 }
 
-davJS.prototype.isRegistered = () => {
+davJS.prototype.isRegistered = function () {
   let dav = this;
   return davContracts.getInstace('identity')
     .then(function (instance) {
-      const isRegistered = instance.isRegistered.call(dav.davId);
-      return isRegistered;
+      return instance.isRegistered.call(dav.davId);
     });
 };
 
@@ -83,8 +81,7 @@ davJS.prototype.connect = function () {
     return davContracts.getInstace('identity')
       .then(function (instance) {
         identityContractInstance = instance;
-        const isRegistered = instance.isRegistered.call(dav.davId);
-        return isRegistered;
+        return instance.isRegistered.call(dav.davId);
       })
       .then(function (isRegistered) {
         if (isRegistered === false) {
@@ -130,11 +127,9 @@ davJS.prototype.getUpdate = function () {
   axios.get(`${this.missionControlURL}/needs/${this.davId}`, {})
     .then(({ data }) => {
       data.forEach(need => {
-        if (!dav.bids[need.id]) {
-          dav.needTypes[need.need_type].onNext(need);
-        }
+        dav.needTypes[need.need_type].onNext(need);
       });
-      // console.log(data);
+      console.log(data);
     })
     .catch(e =>
       console.log(e)
@@ -144,7 +139,7 @@ davJS.prototype.getUpdate = function () {
       data.forEach(bid => {
         dav.bids[bid.id].onNext(bid);
       });
-      // console.log(data);
+      console.log(data);
     })
     .catch(e =>
       console.log(e)
@@ -175,14 +170,15 @@ davJS.prototype.bid = function () {
   let dav = this;
   return {
     forNeed: (needId, bid) => {
-      if (!dav.bids[needId]) {
-        dav.bids[needId] = new rx.Subject;
-        bid.dav_id = dav.davId;
-        axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
-          .catch((err) => {
-            console.error(err);
-          });
-      }
+      dav.bids[needId] = new rx.Subject;
+      bid.dav_id = dav.davId;
+      axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
+        .then((/* response */) => {
+          // dav.bids[needId].onNext(response.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       return dav.bids[needId];
     }
   };
