@@ -62,12 +62,17 @@ function davJS(davId, wallet) {
     }); */
 }
 
+davJS.prototype.isRegistered = () => {
+  let dav = this;
+  return davContracts.getInstace('identity')
+    .then(function (instance) {
+      const isRegistered = instance.isRegistered.call(dav.davId);
+      return isRegistered;
+    });
+};
+
 davJS.prototype.connect = function () {
   let dav = this;
-  /*   axios.post(`${this.missionControlURL}/captains`, { dav_id: dav.davId, notification_url: this.notificationURL })
-      .catch((err) => {
-        console.error(err);
-      }); */
   if (process.env.NODE_ENV === 'development' && !web3.isConnected()) {
     return Promise.resolve({});
   }
