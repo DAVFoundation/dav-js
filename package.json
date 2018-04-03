@@ -2,24 +2,40 @@
   "name": "@davfoundation/dav-js",
   "version": "0.1.8",
   "description": "",
-  "main": "./src/index.js",
-  "scripts": {
-    "start-testnet": "dav-cli --start",
-    "build-dev": "webpack --mode development",
-    "build-prod": "webpack --mode production",
-    "postinstall": "npm run build-prod",
-    "test": "gulp js"
+  "homepage": "https://github.com/DAVFoundation/dav-js#readme",
+  "bugs": {
+    "url": "https://github.com/DAVFoundation/dav-js/issues"
   },
+  "license": "MIT",
+  "author": "DAV Foundation <tal@dav.network>",
+  "files": [
+    "index.js",
+    "lib/",
+    "src/",
+    "build/"
+  ],
+  "main": "./src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DAVFoundation/dav-js.git"
   },
-  "author": "DAV Foundation <tal@dav.network>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/DAVFoundation/dav-js/issues"
+  "scripts": {
+    "build-dev": "webpack --mode development",
+    "build-prod": "webpack --mode production",
+    "postinstall": "npm run build-prod",
+    "start-testnet": "dav-cli --start",
+    "test": "gulp js"
   },
-  "homepage": "https://github.com/DAVFoundation/dav-js#readme",
+  "dependencies": {
+    "ajv": "^6.4.0",
+    "axios": "^0.18.0",
+    "rx-lite": "^4.0.8",
+    "truffle-contract": "^3.0.4",
+    "web3": "^1.0.0-beta.33",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13",
+    "webpack-merge": "^4.1.2"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
@@ -29,22 +45,6 @@
     "gulp-nodemon": "^2.2.1",
     "gulp-shell": "^0.6.5",
     "i": "^0.3.6",
-    "jest-cli": "^22.4.0"
-  },
-  "dependencies": {
-    "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.13",
-    "webpack-merge": "^4.1.2",
-    "ajv": "^6.2.0",
-    "axios": "^0.18.0",
-    "rx-lite": "^4.0.8",
-    "truffle-contract": "^3.0.4",
-    "web3": "^0.20.6"
-  },
-  "files": [
-    "index.js",
-    "lib/",
-    "src/",
-    "build/"
-  ]
+    "jest-cli": "^22.4.3"
+  }
 }
