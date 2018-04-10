@@ -9,3 +9,7 @@ build-prod: tests
 
 publish: build-prod
 	npm publish --access public
+
+link-contracts:
+	-rm -rf ./build
+	-ln -s ../contracts/build ./

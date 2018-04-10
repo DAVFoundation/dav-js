@@ -1,4 +1,6 @@
 module.exports = {
-  davJS: require('./dav'),
-  web3: require('./web3wrapper')
+  DavSDK: require('./dav'),
+  API: {
+    missions: require('./missions'),
+  }
 };
