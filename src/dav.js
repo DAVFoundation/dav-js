@@ -134,7 +134,7 @@ class DavSDK {
     axios.get(`${this.missionControlURL}/needs/${this.davId}`, {})
       .then(({ data }) => {
         data.forEach(need => {
-          if (!dav.bids[need.id]) {
+          if (!dav.bids[need.id] && dav.needTypes[need.need_type]) {
             dav.needTypes[need.need_type].onNext(need);
           }
         });
@@ -142,12 +142,13 @@ class DavSDK {
       .catch(e =>
         console.error(e)
       );
+      
     axios.get(`${this.missionControlURL}/bids/${this.davId}/chosen`, {})
       .then(({ data }) => {
-        data.forEach(bidid => {
-          let bid = dav.bids[bidid];
-          if (bid) {
-            bid.onNext(bidid);
+        data.forEach((bid) => {
+          // let bid = dav.bids[bid.id];
+          if (bid && dav.bids[bid.need_id]) {
+            dav.bids[bid.need_id].onNext(bid);
           }
         });
       })
@@ -189,7 +190,7 @@ class DavSDK {
       forNeed: (needId, bid) => {
         if (!dav.bids[needId]) {
           dav.bids[needId] = new rx.Subject;
-          bid.dav_id = dav.davId;
+          bid.vehicle_id = dav.davId;
           axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
             .catch((err) => {
               console.error(err);
@@ -264,6 +265,11 @@ class DavSDK {
             console.error(err);
           });
         return dav.missions[bidId];
+      },
+      contract: () => {
+        this.missionContract = new rx.Subject;
+        this.subscribeToMissionContract().catch(err => console.log(err));
+        return this.missionContract;
       }
     };
   }
@@ -271,7 +277,6 @@ class DavSDK {
   async subscribeToMissionContract() {
     let basicMissionContractInstance = await this.davContracts.getInstance('mission');
     this.createMissionEvent = basicMissionContractInstance.Create();
-
     this.createMissionEvent.watch(
       async (error, response) => {
         if (error) {
@@ -288,9 +293,12 @@ class DavSDK {
                 || mission.contract_id == null) {
                 console.log(mission);
                 await updateMission(mission.mission_id, {
+                  'vehicle_id': this.davId,
+                  'bid_id': bidId,
                   'status': 'in_progress',
                   'vehicle_signed_at': Date.now()
                 });
+                this.missionContract.onNext(mission);
               }
             }
           }

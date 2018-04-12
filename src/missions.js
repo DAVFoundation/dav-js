@@ -5,6 +5,7 @@ const MISSION_CONTROL_URL = process.env.MISSION_CONTROL_URL || 'http://localhost
 const getMission = async (missionId) => {
   return axios
     .get(`${MISSION_CONTROL_URL}/missions/${missionId}`, {json: true})
+    .then(response => response.data)
     .catch(err => console.log(err));
 };
 
