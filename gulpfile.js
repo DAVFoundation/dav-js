@@ -40,7 +40,16 @@ gulp.task('lint', () => {
 gulp.task('jest', (done) => {
   jest.runCLI({
     config: Object.assign(jestConfig, { testMatch: ['**/test/specs/*.js'] })
-  }, '.', () => done());
+  }, '.')
+    .then(({ results }) => {
+      if (results.numFailedTests || results.numFailedTestSuites) {
+        done('Tests Failed');
+      }
+      else {
+        done();
+      }
+    });
+
 });
 
 gulp.task('js', ['lint', 'jest']);

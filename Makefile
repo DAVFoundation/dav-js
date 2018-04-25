@@ -1,5 +1,5 @@
 tests:
-	npm test
+	npm run test
 
 build-dev: tests
 	npm run build-dev
@@ -15,5 +15,5 @@ copy-contracts:
 	mkdir build/
 	mkdir build/contracts/
 	cp ../contracts/build/contracts/DAVToken.json build/contracts/
-  cp ../contracts/build/contracts/BasicMission.json build/contracts/
-  cp ../contracts/build/contracts/Identity.json build/contracts/
+	cp ../contracts/build/contracts/BasicMission.json build/contracts/
+	cp ../contracts/build/contracts/Identity.json build/contracts/
