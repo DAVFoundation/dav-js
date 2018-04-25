@@ -10,6 +10,10 @@ build-prod: tests
 publish: build-prod
 	npm publish --access public
 
-link-contracts:
+copy-contracts:
 	-rm -rf ./build
-	-ln -s ../contracts/build ./
+	mkdir build/
+	mkdir build/contracts/
+	cp ../contracts/build/contracts/DAVToken.json build/contracts/
+  cp ../contracts/build/contracts/BasicMission.json build/contracts/
+  cp ../contracts/build/contracts/Identity.json build/contracts/
