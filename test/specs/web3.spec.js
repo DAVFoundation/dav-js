@@ -1,24 +1,24 @@
-const { davJS } = require('../../src/index');
-const web3 = require('../../src/web3wrapper');
+jest.doMock('axios', () => {
+  return {
+    post: (url, data) => Promise.resolve({ data: []}), // eslint-disable-line no-unused-vars
+    get: (url, data) => Promise.resolve({ data: [] }) // eslint-disable-line no-unused-vars
+  };
+});
+
+const { DavSDK } = require('dav-js');
+const mnemonic = require('./mnemonic');
+
 
 describe('contract integration', () => {
 
-  // const account;
-  // const PK;
   beforeAll(() => {
-    process.env.MISSION_CONTROL_URL = 'http://localhost:8888';
-    // process.env.BLOCKCHAIN_TYPE = 'ETH_LOCAL_TESTNET';
     process.env.NODE_ENV = 'development';
+    process.env.ETH_NODE_URL = 'https://ropsten.infura.io/wUiZtmeZ1KwjFrcC8zRO';
   });
 
   test('test user register flow', async () => {
     expect.assertions(1);
-    let davId, wallet;
-    if(web3.isConnected()) {
-      davId = web3.eth.accounts[0];
-      wallet = web3.eth.accounts[0];
-    }
-    const dav = new davJS(davId, wallet);
-    await expect(dav.register()).resolves.toEqual(true);
+    const sdk = new DavSDK('0x4fFCe6A06CB4317a295acaDdbb3141c73158f954', '0x4fFCe6A06CB4317a295acaDdbb3141c73158f954', mnemonic);
+    await expect(sdk.isRegistered()).resolves.toEqual(false);
   });
 });
