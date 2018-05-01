@@ -3,7 +3,7 @@ const rx = require('rx-lite');
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
 const DavContracts = require('./dav-contracts');
-const { updateMission, getMissionByBidId } = require('./missions');
+const { updateMission, getMissionByBidId } = require('./api/missions');
 
 const ETH_NODE_URL = process.env.ETH_NODE_URL || 'http://localhost:8545';
 const MISSION_CONTROL_URL = process.env.MISSION_CONTROL_URL || 'http://localhost:8888';
@@ -28,10 +28,12 @@ class DavSDK {
     this.bids = {};
     this.contracts = {};
     this.missions = {};
+  }
 
+  initCaptain(captain) {
     setInterval(this.getUpdate.bind(this), 1000);
 
-    axios.post(`${this.missionControlURL}/captains`, { dav_id: davId })
+    axios.post(`${this.missionControlURL}/captains`, captain)
       .catch((err) => {
         console.error(err);
       });
