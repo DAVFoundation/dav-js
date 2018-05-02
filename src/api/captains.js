@@ -8,3 +8,15 @@ const addCaptain = async (captain) => {
     .then(response => response.data)
     .catch(err => console.log(err));
 };
+
+const getCaptain = async (captainId) => {
+  return axios
+    .get(`${MISSION_CONTROL_URL}/captains/${captainId}`)
+    .then(response => response.data)
+    .catch(err => console.log(err));
+};
+
+module.exports = {
+  addCaptain,
+  getCaptain
+};
