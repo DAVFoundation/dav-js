@@ -295,7 +295,7 @@ class DavSDK {
                 || mission.contract_id == null) {
                 console.log(mission);
                 await updateMission(mission.mission_id, {
-                  'vehicle_id': this.davId,
+                  'captain_id': this.davId,
                   'bid_id': bidId,
                   'status': 'in_progress',
                   'vehicle_signed_at': Date.now()
