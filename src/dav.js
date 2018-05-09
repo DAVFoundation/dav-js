@@ -178,7 +178,7 @@ class DavSDK {
         dav.needTypes[needType] = observable;
 
         observable.update = async () => {
-          await axios.put(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region });
+          await axios.put(`${dav.missionControlURL}/captains/${dav.davId}/needs`, { need_type: needType, region });
         };
 
         return observable;
@@ -298,7 +298,6 @@ class DavSDK {
                   'captain_id': this.davId,
                   'bid_id': bidId,
                   'status': 'in_progress',
-                  'vehicle_signed_at': Date.now()
                 });
                 this.missionContract.onNext(mission);
               }

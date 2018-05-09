@@ -16,7 +16,19 @@ const getCaptain = async (captainId) => {
     .catch(err => console.log(err));
 };
 
+const updateCaptain = async (captain) => {
+  return axios
+    .put(`${MISSION_CONTROL_URL}/captains/${captain.id}`, captain)
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
 module.exports = {
   addCaptain,
-  getCaptain
+  getCaptain,
+  updateCaptain
 };
