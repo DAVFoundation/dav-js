@@ -192,7 +192,7 @@ class DavSDK {
       forNeed: (needId, bid) => {
         if (!dav.bids[needId]) {
           dav.bids[needId] = new rx.Subject;
-          bid.vehicle_id = dav.davId;
+          bid.captain_id = dav.davId;
           axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
             .catch((err) => {
               console.error(err);
