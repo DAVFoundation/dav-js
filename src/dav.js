@@ -1,4 +1,5 @@
 const axios = require('axios');
+const uuid = require('uuid/v4');
 const rx = require('rx-lite');
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
@@ -52,7 +53,7 @@ class DavSDK {
     if (process.env.NODE_ENV === 'development' && dav.web3.isConnected()) {
       return Promise.resolve({});
     }
-  
+
     return new Promise(function (resolve, reject) {
       // console.log(dav.wallet);
       var identityContractInstance;
@@ -86,7 +87,7 @@ class DavSDK {
     if (process.env.NODE_ENV === 'development' && dav.web3.isConnected()) {
       return Promise.resolve({});
     }
-  
+
     return new Promise(function (resolve, reject) {
       // console.log(dav.wallet);
       var identityContractInstance;
@@ -111,7 +112,7 @@ class DavSDK {
               // console.log('r', r);
               // console.log('s', s);
               // console.log('v', v);
-  
+
               identityContractInstance
                 .register(dav.davId, v, r, s, { from: dav.wallet })
                 .then(function (res) {
@@ -144,7 +145,7 @@ class DavSDK {
       .catch(e =>
         console.error(e)
       );
-      
+
     axios.get(`${this.missionControlURL}/bids/${this.davId}/chosen`, {})
       .then(({ data }) => {
         data.forEach((bid) => {
@@ -190,15 +191,19 @@ class DavSDK {
     let dav = this;
     return {
       forNeed: (needId, bid) => {
-        if (!dav.bids[needId]) {
-          dav.bids[needId] = new rx.Subject;
-          bid.captain_id = dav.davId;
-          axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
-            .catch((err) => {
-              console.error(err);
-            });
-        }
-        return dav.bids[needId];
+        // generate new unique 128bit id for bid
+        let binaryId = new Array(16);
+        uuid(null, binaryId, 0);
+        bid.id = Buffer.from(binaryId).toString('hex');
+
+        dav.bids[bid.id] = new rx.Subject;
+        bid.captain_id = dav.davId;
+        axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
+          .catch((err) => {
+            console.error(err);
+          });
+
+        return dav.bids[bid.id];
       }
     };
   }
@@ -291,7 +296,7 @@ class DavSDK {
             let mission = null;
             mission = await getMissionByBidId(bidId);
             if (mission && mission.status === 'awaiting_signatures') {
-              if(mission.user_id === userId 
+              if(mission.user_id === userId
                 || mission.contract_id == null) {
                 console.log(mission);
                 await updateMission(mission.mission_id, {
