@@ -27,6 +27,7 @@ class DavSDK {
 
     this.needTypes = {};
     this.bids = {};
+    this.needArray = {};
     this.contracts = {};
     this.missions = {};
   }
@@ -137,7 +138,8 @@ class DavSDK {
     axios.get(`${this.missionControlURL}/needs/${this.davId}`, {})
       .then(({ data }) => {
         data.forEach(need => {
-          if (!dav.bids[need.id] && dav.needTypes[need.need_type]) {
+          if (!dav.needArray[need.id] && dav.needTypes[need.need_type]) {
+            dav.needArray[need.id] = true;
             dav.needTypes[need.need_type].onNext(need);
           }
         });
