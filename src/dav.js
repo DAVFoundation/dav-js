@@ -190,7 +190,7 @@ class DavSDK {
   bid() {
     let dav = this;
     return {
-      forNeed: (needId, bid) => {
+      forNeed: async (needId, bid) => {
         // generate new unique 128bit id for bid
         let binaryId = new Array(16);
         uuid(null, binaryId, 0);
@@ -198,11 +198,7 @@ class DavSDK {
 
         dav.bids[bid.id] = new rx.Subject;
         bid.captain_id = dav.davId;
-        axios.post(`${dav.missionControlURL}/bids/${needId}`, bid)
-          .catch((err) => {
-            console.error(err);
-          });
-
+        await axios.post(`${dav.missionControlURL}/bids/${needId}`, bid);
         return dav.bids[bid.id];
       }
     };
