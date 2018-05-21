@@ -172,10 +172,18 @@ class DavSDK {
           if (!region.radius) throw new Error('region radius is not set');
         }
         region.ttl = region.ttl || 120;
-        axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
+
+        const registerNeedTypeForCaptain = () => axios.post(`${dav.missionControlURL}/captains/${dav.davId}`, { need_type: needType, region })
           .catch((err) => {
             console.error(err);
           });
+
+        registerNeedTypeForCaptain();
+
+        rx.Observable.interval(90000 /*1.5m*/).subscribe( 
+          registerNeedTypeForCaptain, 
+          (err) => console.log('Error: ' + err),
+          () => console.log(''));
 
         const observable = new rx.Subject();
         dav.needTypes[needType] = observable;
