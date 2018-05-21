@@ -199,7 +199,6 @@ class DavSDK {
         bid.id = Buffer.from(binaryId).toString('hex');
 
         dav.bids[bid.id] = new rx.Subject;
-        bid.captain_id = dav.davId;
         await axios.post(`${dav.missionControlURL}/bids/${needId}`, bid);
         return dav.bids[bid.id];
       }
