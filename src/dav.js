@@ -8,18 +8,22 @@ const { updateMission, getMissionByBidId } = require('./api/missions');
 
 const ETH_NODE_URL = process.env.ETH_NODE_URL || 'http://localhost:8545';
 const MISSION_CONTROL_URL = process.env.MISSION_CONTROL_URL || 'http://localhost:8888';
+const BLOCKCHAIN_TYPE = process.env.BLOCKCHAIN_TYPE || 'MAINNET';
 
 class DavSDK {
   constructor(davId, wallet, mnemonic = null) {
-    let web3Provider;
-    if(mnemonic) {
-      web3Provider = new HDWalletProvider(mnemonic, ETH_NODE_URL);
-    } else {
-      web3Provider = window.web3.currentProvider;
+    if (BLOCKCHAIN_TYPE !== 'NONE') {
+      let web3Provider;
+      if(mnemonic) {
+        web3Provider = new HDWalletProvider(mnemonic, ETH_NODE_URL);
+      } else {
+        web3Provider = window.web3.currentProvider;
+      }
+      this.web3 = new Web3(web3Provider);
+  
+      this.davContracts = new DavContracts(this.web3);
     }
-    this.web3 = new Web3(web3Provider);
 
-    this.davContracts = new DavContracts(this.web3);
     this.davId = davId;
     this.wallet = wallet;
 
@@ -42,6 +46,9 @@ class DavSDK {
   }
 
   isRegistered() {
+    if (BLOCKCHAIN_TYPE === 'NONE') {
+      return Promise.resolve(true);
+    }
     let dav = this;
     return this.davContracts.getInstance('identity')
       .then(function (instance) {
@@ -51,7 +58,7 @@ class DavSDK {
 
   registerSimple() {
     let dav = this;
-    if (process.env.NODE_ENV === 'development' && dav.web3.isConnected()) {
+    if (BLOCKCHAIN_TYPE==='NONE') {
       return Promise.resolve({});
     }
 
@@ -85,7 +92,7 @@ class DavSDK {
 
   register() {
     let dav = this;
-    if (process.env.NODE_ENV === 'development' && dav.web3.isConnected()) {
+    if (BLOCKCHAIN_TYPE==='NONE') {
       return Promise.resolve({});
     }
 
@@ -154,7 +161,7 @@ class DavSDK {
         data.forEach((bid) => {
           if (bid && dav.bids[bid.need_id]) {
             dav.bids[bid.need_id].onNext(bid);
-            if (process.env.BLOCKCHAIN_TYPE === 'NONE') {
+            if (BLOCKCHAIN_TYPE === 'NONE') {
               this.startMission(bid.id);
             }
           }
@@ -218,7 +225,7 @@ class DavSDK {
                 data.forEach((bid) => {
                   if (bid && dav.bids[bid.id]) {
                     dav.bids[bid.id].onNext(bid);
-                    if (process.env.BLOCKCHAIN_TYPE === 'NONE') {
+                    if (BLOCKCHAIN_TYPE === 'NONE') {
                       this.startMission(bid.id);
                     }
                   }
@@ -239,7 +246,7 @@ class DavSDK {
 
   createMissionTransaction(vehicleId, missionCost) {
     let dav = this;
-    if (process.env.NODE_ENV === 'development' && dav.web3.isConnected()) {
+    if (BLOCKCHAIN_TYPE==='NONE') {
       return Promise.resolve(true);
     }
 
@@ -304,7 +311,7 @@ class DavSDK {
       },
       contract: () => {
         this.missionContract = new rx.Subject;
-        if (process.env.BLOCKCHAIN_TYPE !== 'NONE') {
+        if (BLOCKCHAIN_TYPE !== 'NONE') {
           this.subscribeToMissionContract().catch(err => console.log(err));
         }
         //this.subscribeToMissionContract().catch(err => console.log(err));
@@ -336,7 +343,7 @@ class DavSDK {
     let mission = null;
     mission = await getMissionByBidId(bidId);
     if (mission && mission.status === 'awaiting_signatures') {
-      if((mission.user_id === userId && process.env.BLOCKCHAIN_TYPE === 'NONE') || mission.contract_id == null) {
+      if((mission.user_id === userId && BLOCKCHAIN_TYPE === 'NONE') || mission.contract_id == null) {
         console.log(mission);
         await updateMission(mission.mission_id, {
           'captain_id': this.davId,
