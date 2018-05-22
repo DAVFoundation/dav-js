@@ -154,6 +154,9 @@ class DavSDK {
           // let bid = dav.bids[bid.id];
           if (bid && dav.bids[bid.need_id]) {
             dav.bids[bid.need_id].onNext(bid);
+            if (process.env.BLOCKCHAIN_TYPE === 'NONE') {
+              this.startMission(bid.id);
+            }
           }
         });
       })
@@ -280,7 +283,10 @@ class DavSDK {
       },
       contract: () => {
         this.missionContract = new rx.Subject;
-        this.subscribeToMissionContract().catch(err => console.log(err));
+        if (process.env.BLOCKCHAIN_TYPE !== 'NONE') {
+          this.subscribeToMissionContract().catch(err => console.log(err));
+        }
+        //this.subscribeToMissionContract().catch(err => console.log(err));
         return this.missionContract;
       }
     };
@@ -298,25 +304,29 @@ class DavSDK {
           let userId = response.args.buyerId.toLowerCase();
           let vehicleId = response.args.sellerId.toLowerCase();
           if(vehicleId === this.davId) {
-            let mission = null;
-            mission = await getMissionByBidId(bidId);
-            if (mission && mission.status === 'awaiting_signatures') {
-              if(mission.user_id === userId
-                || mission.contract_id == null) {
-                console.log(mission);
-                await updateMission(mission.mission_id, {
-                  'captain_id': this.davId,
-                  'bid_id': bidId,
-                  'status': 'in_progress',
-                });
-                this.missionContract.onNext(mission);
-              }
-            }
+            this.startMission(bidId, userId);
           }
         }
       }
     );
   }
+
+  async startMission(bidId, userId=null) {
+    let mission = null;
+    mission = await getMissionByBidId(bidId);
+    if (mission && mission.status === 'awaiting_signatures') {
+      if((mission.user_id === userId && process.env.BLOCKCHAIN_TYPE === 'NONE') || mission.contract_id == null) {
+        console.log(mission);
+        await updateMission(mission.mission_id, {
+          'captain_id': this.davId,
+          'bid_id': bidId,
+          'status': 'in_progress',
+        });
+        this.missionContract.onNext(mission);   
+      }
+    }
+  }
+
   async dispose() {
     this.contractUpdates.unsubscribe();
   }
