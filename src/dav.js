@@ -148,10 +148,10 @@ class DavSDK {
         console.error(e)
       );
 
+  /*
     axios.get(`${this.missionControlURL}/bids/${this.davId}/chosen`, {})
       .then(({ data }) => {
         data.forEach((bid) => {
-          // let bid = dav.bids[bid.id];
           if (bid && dav.bids[bid.need_id]) {
             dav.bids[bid.need_id].onNext(bid);
             if (process.env.BLOCKCHAIN_TYPE === 'NONE') {
@@ -163,6 +163,7 @@ class DavSDK {
       .catch(e =>
         console.error(e)
       );
+ */
   }
 
   needs() {
@@ -183,8 +184,8 @@ class DavSDK {
 
         registerNeedTypeForCaptain();
 
-        rx.Observable.interval(90000 /*1.5m*/).subscribe( 
-          registerNeedTypeForCaptain, 
+        rx.Observable.interval(90000 /*1.5m*/).subscribe(
+          registerNeedTypeForCaptain,
           (err) => console.log('Error: ' + err),
           () => console.log(''));
 
@@ -210,6 +211,23 @@ class DavSDK {
         bid.id = Buffer.from(binaryId).toString('hex');
 
         dav.bids[bid.id] = new rx.Subject;
+        rx.Observable.interval(1000).take(120).subscribe(
+          ()=>{
+            axios.get(`${this.missionControlURL}/bids/${needId}/chosen`, {})
+              .then(({ data }) => {
+                data.forEach((bid) => {
+                  if (bid && dav.bids[bid.id]) {
+                    dav.bids[bid.id].onNext(bid);
+                  }
+                });
+              })
+              .catch(e =>
+                console.error(e)
+              );
+          },
+          (err) => console.log('Error: ' + err),
+          () => console.log('')
+        );
         await axios.post(`${dav.missionControlURL}/bids/${needId}`, bid);
         return dav.bids[bid.id];
       }
