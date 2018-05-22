@@ -20,7 +20,7 @@ class DavSDK {
         web3Provider = window.web3.currentProvider;
       }
       this.web3 = new Web3(web3Provider);
-  
+
       this.davContracts = new DavContracts(this.web3);
     }
 
@@ -74,8 +74,8 @@ class DavSDK {
           if (isRegistered === false) {
             return identityContractInstance
               .registerSimple({ from: dav.wallet })
-              .then(function (res) {
-                console.log(res);
+              .then(function (/* res */) {
+                // console.log(res);
                 resolve(true);
               })
               .catch(function (err) {
@@ -123,8 +123,8 @@ class DavSDK {
 
               identityContractInstance
                 .register(dav.davId, v, r, s, { from: dav.wallet })
-                .then(function (res) {
-                  console.log(res);
+                .then(function (/* res */) {
+                  // console.log(res);
                   resolve(true);
                 })
                 .catch(function (err) {
@@ -344,13 +344,13 @@ class DavSDK {
     mission = await getMissionByBidId(bidId);
     if (mission && mission.status === 'awaiting_signatures') {
       if((mission.user_id === userId && BLOCKCHAIN_TYPE === 'NONE') || mission.contract_id == null) {
-        console.log(mission);
+        // console.log(mission);
         await updateMission(mission.mission_id, {
-          'captain_id': this.davId,
+          'captain_id': mission.captain_id,
           'bid_id': bidId,
           'status': 'in_progress',
         });
-        this.missionContract.onNext(mission);   
+        this.missionContract.onNext(mission);
       }
     }
   }
