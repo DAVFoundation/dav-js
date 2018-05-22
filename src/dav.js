@@ -58,8 +58,8 @@ class DavSDK {
 
   registerSimple() {
     let dav = this;
-    if (BLOCKCHAIN_TYPE==='NONE') {
-      return Promise.resolve({});
+    if (BLOCKCHAIN_TYPE === 'NONE') {
+      return Promise.resolve(true);
     }
 
     return new Promise(function (resolve, reject) {
@@ -92,8 +92,8 @@ class DavSDK {
 
   register() {
     let dav = this;
-    if (BLOCKCHAIN_TYPE==='NONE') {
-      return Promise.resolve({});
+    if (BLOCKCHAIN_TYPE === 'NONE') {
+      return Promise.resolve(true);
     }
 
     return new Promise(function (resolve, reject) {
@@ -246,7 +246,7 @@ class DavSDK {
 
   createMissionTransaction(vehicleId, missionCost) {
     let dav = this;
-    if (BLOCKCHAIN_TYPE==='NONE') {
+    if (BLOCKCHAIN_TYPE === 'NONE') {
       return Promise.resolve(true);
     }
 
@@ -361,4 +361,3 @@ class DavSDK {
 }
 
 module.exports = DavSDK;
-
