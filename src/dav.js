@@ -204,7 +204,7 @@ class DavSDK {
   bid() {
     let dav = this;
     return {
-      forNeed: async (needId, bid) => {
+      forNeed: (needId, bid) => {
         // generate new unique 128bit id for bid
         let binaryId = new Array(16);
         uuid(null, binaryId, 0);
@@ -218,6 +218,9 @@ class DavSDK {
                 data.forEach((bid) => {
                   if (bid && dav.bids[bid.id]) {
                     dav.bids[bid.id].onNext(bid);
+                    if (process.env.BLOCKCHAIN_TYPE === 'NONE') {
+                      this.startMission(bid.id);
+                    }
                   }
                 });
               })
@@ -228,7 +231,7 @@ class DavSDK {
           (err) => console.log('Error: ' + err),
           () => console.log('')
         );
-        await axios.post(`${dav.missionControlURL}/bids/${needId}`, bid);
+        axios.post(`${dav.missionControlURL}/bids/${needId}`, bid);
         return dav.bids[bid.id];
       }
     };
