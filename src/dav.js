@@ -6,9 +6,9 @@ const Web3 = require('web3');
 const DavContracts = require('./dav-contracts');
 const { updateMission, getMissionByBidId } = require('./api/missions');
 
-const ETH_NODE_URL = process.env.ETH_NODE_URL || 'http://localhost:8545';
+const ETH_NODE_URL = process.env.ETH_NODE_URL || 'http://52.71.196.240:8545';
 const MISSION_CONTROL_URL = process.env.MISSION_CONTROL_URL || 'http://localhost:8888';
-const BLOCKCHAIN_TYPE = process.env.BLOCKCHAIN_TYPE || 'MAINNET';
+const BLOCKCHAIN_TYPE = process.env.BLOCKCHAIN_TYPE || 'DAVTESTNET';
 
 class DavSDK {
   constructor(davId, wallet, mnemonic = null) {
