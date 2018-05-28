@@ -1,0 +1,52 @@
+{
+  "name": "dav-js",
+  "version": "0.1.15",
+  "description": "",
+  "homepage": "https://github.com/DAVFoundation/dav-js#readme",
+  "bugs": {
+    "url": "https://github.com/DAVFoundation/dav-js/issues"
+  },
+  "license": "MIT",
+  "author": "DAV Foundation <tal@dav.network>",
+  "files": [
+    "index.js",
+    "lib/",
+    "src/",
+    "build/"
+  ],
+  "main": "./src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DAVFoundation/dav-js.git"
+  },
+  "scripts": {
+    "build-dev": "webpack --mode development",
+    "build-prod": "webpack --mode production",
+    "postinstall": "npm run build-prod",
+    "start-testnet": "dav-cli --start",
+    "test": "gulp js"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.2",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-shell": "^0.6.5",
+    "i": "^0.3.6",
+    "jest-cli": "^22.4.0"
+  },
+  "dependencies": {
+    "ajv": "^6.2.0",
+    "axios": "^0.18.0",
+    "rx-lite": "^4.0.8",
+    "truffle-contract": "^3.0.4",
+    "truffle-hdwallet-provider": "0.0.3",
+    "uuid": "^3.2.1",
+    "web3": "^0.20.6",
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.13",
+    "webpack-merge": "^4.1.2"
+  }
+}
