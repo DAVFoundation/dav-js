@@ -1,4 +1,6 @@
-tests:
+FORCE:
+
+tests: FORCE
 	npm run test
 
 build-dev: tests
@@ -10,7 +12,7 @@ build-prod: tests
 publish: build-prod
 	npm publish --access public
 
-copy-contracts:
+copy-contracts: FORCE
 	-rm -rf ./build
 	mkdir build/
 	mkdir build/contracts/
