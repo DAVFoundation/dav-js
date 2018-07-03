@@ -41,6 +41,7 @@
     "ajv": "^6.2.0",
     "axios": "^0.18.0",
     "rx-lite": "^4.0.8",
+    "rxjs": "^6.2.1",
     "truffle-contract": "^3.0.4",
     "truffle-hdwallet-provider": "0.0.3",
     "uuid": "^3.2.1",

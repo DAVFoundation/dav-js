@@ -1,6 +1,6 @@
 const axios = require('axios');
 const uuid = require('uuid/v4');
-const rx = require('rx-lite');
+const Rx = require('rxjs');
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
 const DavContracts = require('./dav-contracts');
@@ -147,7 +147,7 @@ class DavSDK {
         data.forEach(need => {
           if (!dav.needArray[need.id] && dav.needTypes[need.need_type]) {
             dav.needArray[need.id] = true;
-            dav.needTypes[need.need_type].onNext(need);
+            dav.needTypes[need.need_type].next(need);
           }
         });
       })
@@ -191,12 +191,12 @@ class DavSDK {
 
         registerNeedTypeForCaptain();
 
-        rx.Observable.interval(90000 /*1.5m*/).subscribe(
+        Rx.Observable.interval(90000 /*1.5m*/).subscribe(
           registerNeedTypeForCaptain,
           (err) => console.log('Error: ' + err),
           () => console.log(''));
 
-        const observable = new rx.Subject();
+        const observable = new Rx.Subject();
         dav.needTypes[needType] = observable;
 
         observable.update = async () => {
@@ -217,14 +217,14 @@ class DavSDK {
         uuid(null, binaryId, 0);
         bid.id = Buffer.from(binaryId).toString('hex');
 
-        dav.bids[bid.id] = new rx.Subject;
-        rx.Observable.interval(1000).take(120).subscribe(
+        dav.bids[bid.id] = new Rx.Subject;
+        Rx.Observable.interval(1000).take(120).subscribe(
           ()=>{
             axios.get(`${this.missionControlURL}/bids/${needId}/chosen`, {})
               .then(({ data }) => {
                 data.forEach((bid) => {
                   if (bid && dav.bids[bid.id]) {
-                    dav.bids[bid.id].onNext(bid);
+                    dav.bids[bid.id].next(bid);
                     if (BLOCKCHAIN_TYPE === 'NONE') {
                       this.startMission(bid.id);
                     }
@@ -275,7 +275,7 @@ class DavSDK {
     let dav = this;
     return {
       forBid: (bidId, contract) => {
-        dav.contracts[bidId] = new rx.Subject;
+        dav.contracts[bidId] = new Rx.Subject;
         contract.dav_id = dav.davId;
         axios.post(`${dav.missionControlURL}/contracts/${bidId}`, contract)
           .catch((err) => {
@@ -290,7 +290,7 @@ class DavSDK {
     let dav = this;
     return {
       begin: (bidId, missionParams) => {
-        dav.missions[bidId] = new rx.Subject;
+        dav.missions[bidId] = new Rx.Subject;
         missionParams.dav_id = dav.davId;
         missionParams.bid_id = bidId;
         axios.post(`${dav.missionControlURL}/missions/${bidId}`, missionParams)
@@ -300,17 +300,17 @@ class DavSDK {
               axios.put(`${dav.missionControlURL}/missions/${mission.mission_id}`,
                 { status, latitude: 1, longitude: 1, dav_id: dav.davId })
                 .then((response) => {
-                  dav.missions[mission.bid_id].onNext(response.data);
+                  dav.missions[mission.bid_id].next(response.data);
                 });
             };
-            dav.missions[bidId].onNext(mission);
+            dav.missions[bidId].next(mission);
           }).catch((err) => {
             console.error(err);
           });
         return dav.missions[bidId];
       },
       contract: () => {
-        this.missionContract = new rx.Subject;
+        this.missionContract = new Rx.Subject;
         if (BLOCKCHAIN_TYPE !== 'NONE') {
           this.subscribeToMissionContract().catch(err => console.log(err));
         }
@@ -350,7 +350,7 @@ class DavSDK {
           'bid_id': bidId,
           'status': 'in_progress',
         });
-        this.missionContract.onNext(mission);
+        this.missionContract.next(mission);
       }
     }
   }
