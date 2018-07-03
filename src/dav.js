@@ -4,8 +4,6 @@ const rx = require('rx-lite');
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
 const DavContracts = require('./dav-contracts');
-const { updateMission, getMissionByBidId } = require('./api/missions');
-
 const ETH_NODE_URL = process.env.ETH_NODE_URL || 'http://52.71.196.240:8545';
 const MISSION_CONTROL_URL = process.env.MISSION_CONTROL_URL || 'http://localhost:8888';
 const BLOCKCHAIN_TYPE = process.env.BLOCKCHAIN_TYPE || 'DAVTESTNET';
@@ -320,6 +318,39 @@ class DavSDK {
     };
   }
 
+  async getMission(missionId) {
+    return axios
+      .get(`${MISSION_CONTROL_URL}/missions/${missionId}`, {json: true})
+      .then(response => response.data)
+      .catch(err =>
+        console.log(err));
+  }
+  
+  async updateMission(missionId, missionUpdate) {
+    return axios
+      .put(`${MISSION_CONTROL_URL}/missions/${missionId}`, missionUpdate)
+      .catch(err =>
+        console.log(err));
+  }
+  
+  async getCaptain(captainId) {
+    return axios
+      .get(`${MISSION_CONTROL_URL}/captains/${captainId}`)
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+  
+  async updateCaptain(captain) {
+    return axios
+      .put(`${MISSION_CONTROL_URL}/captains/${captain.id}`, captain)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   async subscribeToMissionContract() {
     let basicMissionContractInstance = await this.davContracts.getInstance('mission');
     this.createMissionEvent = basicMissionContractInstance.Create();
@@ -340,19 +371,20 @@ class DavSDK {
   }
 
   async startMission(bidId, userId=null) {
-    let mission = null;
-    mission = await getMissionByBidId(bidId);
-    if (mission && mission.status === 'awaiting_signatures') {
-      if((mission.user_id === userId && BLOCKCHAIN_TYPE === 'NONE') || mission.contract_id == null) {
-        // console.log(mission);
-        await updateMission(mission.mission_id, {
-          'captain_id': mission.captain_id,
-          'bid_id': bidId,
-          'status': 'in_progress',
-        });
-        this.missionContract.onNext(mission);
-      }
+    let mission = await axios.get(`${MISSION_CONTROL_URL}/bids/${bidId}/mission`, {json: true});
+    mission = mission.data;
+    if (!mission || mission.status !== 'awaiting_signatures') return;
+
+    if((mission.user_id === userId && BLOCKCHAIN_TYPE === 'NONE') || mission.contract_id == null) {
+      // console.log(mission);
+      await this.updateMission(mission.mission_id, {
+        'captain_id': mission.captain_id,
+        'bid_id': bidId,
+        'status': 'in_progress',
+      });
+      this.missionContract.onNext(mission);
     }
+    
   }
 
   async dispose() {
