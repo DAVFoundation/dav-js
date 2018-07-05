@@ -195,7 +195,7 @@ class DavSDK {
   }
 
   contract() {
-    let dav = this;
+    const dav = this;
     return {
       forBid: (bidId, contract) => {
         dav.contracts[bidId] = new Rx.Subject;
@@ -210,7 +210,7 @@ class DavSDK {
   }
 
   mission() {
-    let dav = this;
+    const dav = this;
     return {
       begin: async (bidId, missionParams) => {
         dav.missions[bidId] = new Rx.Subject;
@@ -284,9 +284,9 @@ class DavSDK {
         if (error) {
           return console.error(error);
         } 
-        let bidId = Buffer.from(response.args.id.substr(2), 'hex').toString();
-        let userId = response.args.buyerId.toLowerCase();
-        let vehicleId = response.args.sellerId.toLowerCase();
+        const bidId = Buffer.from(response.args.id.substr(2), 'hex').toString();
+        const userId = response.args.buyerId.toLowerCase();
+        const vehicleId = response.args.sellerId.toLowerCase();
         if(vehicleId === this.davId) {
           this.startMission(bidId, userId);
         }
