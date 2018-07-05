@@ -1,6 +1,7 @@
 const axios = require('axios');
 const uuid = require('uuid/v4');
 const Rx = require('rxjs');
+
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
 const DavContracts = require('./dav-contracts');
@@ -11,22 +12,14 @@ const BLOCKCHAIN_TYPE = process.env.BLOCKCHAIN_TYPE || 'DAVTESTNET';
 class DavSDK {
   constructor(davId, wallet, mnemonic = null) {
     if (BLOCKCHAIN_TYPE !== 'NONE') {
-      let web3Provider;
-      if(mnemonic) {
-        web3Provider = new HDWalletProvider(mnemonic, ETH_NODE_URL);
-      } else {
-        web3Provider = window.web3.currentProvider;
-      }
+      const web3Provider = mnemonic ? new HDWalletProvider(mnemonic, ETH_NODE_URL) : window.web3.currentProvider;
       this.web3 = new Web3(web3Provider);
-
       this.davContracts = new DavContracts(this.web3);
     }
 
     this.davId = davId;
     this.wallet = wallet;
-
     this.missionControlURL = MISSION_CONTROL_URL;
-
     this.needTypes = {};
     this.bids = {};
     this.needArray = {};
@@ -36,47 +29,40 @@ class DavSDK {
 
   initCaptain(captain) {
     setInterval(this.getUpdate.bind(this), 1000);
-
-    axios.post(`${this.missionControlURL}/captains`, captain)
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      axios.post(`${this.missionControlURL}/captains`, captain);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async isRegistered() {
     if (BLOCKCHAIN_TYPE === 'NONE') {
       return true;
     }
-    let dav = this;
+    const dav = this;
     const instance = await dav.davContracts.getInstance('identity');
     return await instance.isRegistered.call(dav.davId);
   }
 
-  registerSimple() {
-    let dav = this;
-    if (BLOCKCHAIN_TYPE === 'NONE') {
-      return Promise.resolve(true);
-    }
+  async registerSimple() {
+    const dav = this;
+    if (BLOCKCHAIN_TYPE === 'NONE') return true;
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        const identityContractInstance = await this.davContracts.getInstance('identity');
-        const isRegistered = await identityContractInstance.isRegistered.call(dav.davId);
-        if (isRegistered) {
-          resolve(true);
-        }
-        await identityContractInstance.registerSimple({ from: dav.wallet });
-        //should resolve after registerSimple is done
-        resolve(true);
-      } catch (err) {
-        reject(err);
-      }
-    });
-    
+    try {
+      const identityContractInstance = await this.davContracts.getInstance('identity');
+      const isRegistered = await identityContractInstance.isRegistered.call(dav.davId);
+      if (isRegistered) return true;
+
+      await identityContractInstance.registerSimple({ from: dav.wallet });
+      return true;  
+    } catch (err) {
+      return err;
+    }
   }
 
   register() {
-    let dav = this;
+    const dav = this;
     if (BLOCKCHAIN_TYPE === 'NONE') {
       return Promise.resolve(true);
     }
@@ -112,7 +98,7 @@ class DavSDK {
   }
 
   async getUpdate() {
-    let dav = this;
+    const dav = this;
     try {
       const response = await axios.get(`${this.missionControlURL}/needs/${this.davId}`, {});
       response.data.forEach(need => {
@@ -124,27 +110,10 @@ class DavSDK {
     } catch(e) {
       console.error(e);
     }
-
-  /*
-    axios.get(`${this.missionControlURL}/bids/${this.davId}/chosen`, {})
-      .then(({ data }) => {
-        data.forEach((bid) => {
-          if (bid && dav.bids[bid.need_id]) {
-            dav.bids[bid.need_id].onNext(bid);
-            if (BLOCKCHAIN_TYPE === 'NONE') {
-              this.startMission(bid.id);
-            }
-          }
-        });
-      })
-      .catch(e =>
-        console.error(e)
-      );
- */
   }
 
   needs() {
-    let dav = this;
+    const dav = this;
     return {
       forType: (needType, region) => {
         if (!region.global) {
@@ -169,9 +138,7 @@ class DavSDK {
         const observable = new Rx.Subject();
         dav.needTypes[needType] = observable;
 
-        observable.update = async () => {
-          await axios.put(`${dav.missionControlURL}/captains/${dav.davId}/needs`, { need_type: needType, region });
-        };
+        observable.update = async () => await axios.put(`${dav.missionControlURL}/captains/${dav.davId}/needs`, { need_type: needType, region });
 
         return observable;
       }
@@ -179,11 +146,11 @@ class DavSDK {
   }
 
   bid() {
-    let dav = this;
+    const dav = this;
     return {
       forNeed: (needId, bid) => {
         // generate new unique 128bit id for bid
-        let binaryId = new Array(16);
+        const binaryId = new Array(16);
         uuid(null, binaryId, 0);
         bid.id = Buffer.from(binaryId).toString('hex');
 
@@ -214,10 +181,9 @@ class DavSDK {
   }
 
   async createMissionTransaction(vehicleId, missionCost) {
-    let dav = this;
-    if (BLOCKCHAIN_TYPE === 'NONE') {
-      return true;
-    }
+    const dav = this;
+    if (BLOCKCHAIN_TYPE === 'NONE') return true;
+
     try {
       const tokenContractInstance = await this.davContracts.getInstance('token');
       const missionContractInstance = await this.davContracts.getInstance('mission');
@@ -270,7 +236,6 @@ class DavSDK {
         if (BLOCKCHAIN_TYPE !== 'NONE') {
           this.subscribeToMissionContract().catch(err => console.log(err));
         }
-        //this.subscribeToMissionContract().catch(err => console.log(err));
         return this.missionContract;
       }
     };
@@ -286,10 +251,11 @@ class DavSDK {
   }
   
   async updateMission(missionId, missionUpdate) {
-    return axios
-      .put(`${MISSION_CONTROL_URL}/missions/${missionId}`, missionUpdate)
-      .catch(err =>
-        console.log(err));
+    try {
+      return axios.put(`${MISSION_CONTROL_URL}/missions/${missionId}`, missionUpdate);
+    } catch (err) {
+      console.log(err);
+    }
   }
   
   async getCaptain(captainId) {
@@ -311,19 +277,18 @@ class DavSDK {
   }
 
   async subscribeToMissionContract() {
-    let basicMissionContractInstance = await this.davContracts.getInstance('mission');
+    const basicMissionContractInstance = await this.davContracts.getInstance('mission');
     this.createMissionEvent = basicMissionContractInstance.Create();
     this.createMissionEvent.watch(
-      async (error, response) => {
+      (error, response) => {
         if (error) {
-          console.error(error);
-        } else {
-          let bidId = Buffer.from(response.args.id.substr(2), 'hex').toString();
-          let userId = response.args.buyerId.toLowerCase();
-          let vehicleId = response.args.sellerId.toLowerCase();
-          if(vehicleId === this.davId) {
-            this.startMission(bidId, userId);
-          }
+          return console.error(error);
+        } 
+        let bidId = Buffer.from(response.args.id.substr(2), 'hex').toString();
+        let userId = response.args.buyerId.toLowerCase();
+        let vehicleId = response.args.sellerId.toLowerCase();
+        if(vehicleId === this.davId) {
+          this.startMission(bidId, userId);
         }
       }
     );

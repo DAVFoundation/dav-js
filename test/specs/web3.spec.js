@@ -50,4 +50,14 @@ describe('contract integration', () => {
     const sdk = new DavSDK('0x4fFCe6A06CB4317a295acaDdbb3141c73158f954', '0x4fFCe6A06CB4317a295acaDdbb3141c73158f954', mnemonic);
     await expect(sdk.isRegistered()).resolves.toEqual(false);
   });
+
+
+  test('test registerSimpel', async () => {
+    expect.assertions(1);
+    const sdk = new DavSDK('0x3e54f4d0A7C93516f962e5cfcB402dB6C2700C30', '0x3e54f4d0A7C93516f962e5cfcB402dB6C2700C30', mnemonic);
+    await expect(sdk.isRegistered()).resolves.toEqual(true);
+    await expect(sdk.registerSimple()).resolves.toEqual(true);
+    await expect(sdk.isRegistered()).resolves.toEqual(true);
+  });
+
 });
