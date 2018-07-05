@@ -53,9 +53,9 @@ describe('contract integration', () => {
 
 
   test('test registerSimpel', async () => {
-    expect.assertions(1);
-    const sdk = new DavSDK('0x3e54f4d0A7C93516f962e5cfcB402dB6C2700C30', '0x3e54f4d0A7C93516f962e5cfcB402dB6C2700C30', mnemonic);
-    await expect(sdk.isRegistered()).resolves.toEqual(true);
+    expect.assertions(3);
+    const sdk = new DavSDK('0xCE71a46b6837e474def0c1B244868e8b7307F51b', '0xCE71a46b6837e474def0c1B244868e8b7307F51b', 'solar wild tide always display engage virtual jacket choose shaft bread group term raccoon filter');
+    await expect(sdk.isRegistered()).resolves.toEqual(false);
     await expect(sdk.registerSimple()).resolves.toEqual(true);
     await expect(sdk.isRegistered()).resolves.toEqual(true);
   });

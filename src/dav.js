@@ -1,6 +1,6 @@
 const axios = require('axios');
 const uuid = require('uuid/v4');
-const Rx = require('rxjs');
+const Rx = require('rxjs/Rx');
 
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
