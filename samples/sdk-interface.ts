@@ -4,7 +4,7 @@ namespace DAV {
     type ID = string;
     type BigInteger = string;
 
-    interface NeedTypeParamas {
+    interface NeedTypeParams {
         lat: number
         long: number
         radius: number // service radius in meters 
