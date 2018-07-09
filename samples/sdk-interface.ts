@@ -138,3 +138,8 @@ namespace DAV {
         finalizeMission(walletPrivateKey: string) { }
     }
 }
+
+export = {
+    SDKFactory: DAV.SDKFactory,
+    Config: DAV.Config
+};
