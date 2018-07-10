@@ -4,17 +4,18 @@ namespace DAV {
     type ID = string;
     type BigInteger = string;
 
-    interface NeedTypeParams {
-        lat: number
-        long: number
-        radius: number // service radius in meters 
-        ttl?: number  // TTL in seconds
+    interface NeedTypeParams extends BasicParams {
+        area?: {
+            lat: number
+            long: number
+            radius: number // service radius in meters 
+        } // if null then it is a global service (not limited to a geographic area)
     }
 
     enum PriceType { flat = 'flat' }
 
     interface BasicParams {
-        ttl: number // Bid TTL in seconds:
+        ttl?: number // TTL in seconds
     }
 
     interface BidParams extends BasicParams {
