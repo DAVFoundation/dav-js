@@ -2,25 +2,8 @@ const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const jest = require('jest-cli');
 const exec = require('child_process').exec;
-
-// const ganache = require('ganache-cli');
-
-// const server = ganache.server();
-// server.listen(8545, () => {
-//   console.log(
-//     `Local Ethereum testnet started on http://localhost:${port}`
-//   );
-//   exec('truffle deploy', function (err, stdout, stderr) {
-//     console.log(stdout);
-//     console.log(stderr);
-//     console.log(err);
-//   });
-// });
-
-const jestConfig = {
-  verbose: false,
-  rootDir: '.'
-};
+var ts = require('gulp-typescript');
+var tslint = require('gulp-tslint');
 
 gulp.task('deploy-contracts', (calback) => {
   exec('truffle deploy', function (err, stdout, stderr) {
@@ -37,19 +20,27 @@ gulp.task('lint', () => {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('jest', (done) => {
-  jest.runCLI({
-    config: Object.assign(jestConfig, { testMatch: ['**/test/specs/*.js'] })
-  }, '.')
-    .then(({ results }) => {
-      if (results.numFailedTests || results.numFailedTestSuites) {
-        done('Tests Failed');
-      }
-      else {
-        done();
-      }
-    });
-
+gulp.task('jest', () => {
+  return jest.runCLI({}, '.');
 });
 
-gulp.task('js', ['lint', 'jest']);
+gulp.task('tslint', () =>
+  gulp.src('src/**/*.ts')
+    .pipe(tslint({
+      formatter: 'prose'
+    })).pipe(tslint.report({
+      emitError: false
+    }))
+);
+
+gulp.task('tsc', function () {
+  return gulp.src('samples/**/*.ts')
+    .pipe(ts({
+      target: 'es2018',
+      module: 'commonjs'
+    }))
+    .pipe(gulp.dest('build'));
+});
+
+gulp.task('compile', ['tslint', 'tsc']);
+gulp.task('test', ['compile', 'jest']);

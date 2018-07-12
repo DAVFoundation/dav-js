@@ -1,12 +1,15 @@
 FORCE:
 
-tests: FORCE
-	npm run test
+test: FORCE
+	npm test
 
-build-dev: tests
+compile: FORCE
+	npm run compile
+
+build-dev: test
 	npm run build-dev
 
-build-prod: tests
+build-prod: test
 	npm run build-prod
 
 publish: build-prod
@@ -19,3 +22,4 @@ copy-contracts: FORCE
 	cp ../contracts/build/contracts/DAVToken.json build/contracts/
 	cp ../contracts/build/contracts/BasicMission.json build/contracts/
 	cp ../contracts/build/contracts/Identity.json build/contracts/
+
