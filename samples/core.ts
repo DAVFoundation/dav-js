@@ -1,8 +1,8 @@
 // tslint:disable:max-classes-per-file
 namespace Rx {
-  export class Subject<T> {
+  export class Observable<T> {
     public subscribe(success: (t: T) => void, error?: (t: T) => void) { /**/ }
-    public filter(cb: (t: T) => boolean): Subject<T> { return this; }
+    public filter(cb: (t: T) => boolean): Observable<T> { return this; }
   }
 } // Dummy Definition
 
@@ -55,17 +55,17 @@ class SDK {
 
 class Identity {
   public davId: ID;
-  private _messages: Rx.Subject<Message>;
+  private _messages: Rx.Observable<Message>;
 
   constructor(davId: ID, privateKey: string) {/**/ }
 
-  public needsForType(params: NeedFilterParams): Rx.Subject<Need> { return new Rx.Subject<Need>(); }
+  public needsForType(params: NeedFilterParams): Rx.Observable<Need> { return new Rx.Observable<Need>(); }
   public need(needId: ID): Need { return new Need(needId); }
   public bid(bidId: ID): Bid { return new Bid(bidId); }
   public mission(missionId: ID): Mission { return new Mission(missionId); }
-  public messages(): Rx.Subject<Message> {
+  public messages(): Rx.Observable<Message> {
     if (!this._messages) {
-      this._messages = new Rx.Subject<Message>();
+      this._messages = new Rx.Observable<Message>();
     }
     return this._messages;
   }
@@ -80,7 +80,7 @@ class Need {
 
   public createBid(price: IPrice | BigInteger, ttl: number, params: BidParams):
     Bid { return new Bid(params); }
-  public bids(): Rx.Subject<Bid> { return new Rx.Subject<Bid>(); }
+  public bids(): Rx.Observable<Bid> { return new Rx.Observable<Bid>(); }
 }
 
 class Bid {
@@ -92,7 +92,7 @@ class Bid {
 
   public accept() { /**/ }
   public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission(''); }
-  public messages(): Rx.Subject<Message> { return new Rx.Subject<Message>(); }
+  public messages(): Rx.Observable<Message> { return new Rx.Observable<Message>(); }
 }
 
 enum MessageStatus {
@@ -125,6 +125,6 @@ class Mission {
   constructor(missionId: ID) { /**/ }
 
   public sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
-  public messages(): Rx.Subject<Message> { return new Rx.Subject<Message>(); }
+  public messages(): Rx.Observable<Message> { return new Rx.Observable<Message>(); }
   public finalizeMission(walletPrivateKey: string) { /**/ }
 }
