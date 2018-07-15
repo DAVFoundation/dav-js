@@ -1,4 +1,4 @@
-import BasicParams from './basic-params';
+import BasicParams from './BasicParams';
 
 export default abstract class NeedFilterParams extends BasicParams {
     public area?: {
@@ -7,3 +7,4 @@ export default abstract class NeedFilterParams extends BasicParams {
       radius: number; // service radius in meters
     }; // if null then it is a global service (not limited to a geographic area)
   }
+  
