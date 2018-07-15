@@ -34,12 +34,10 @@ gulp.task('tslint', () =>
 );
 
 gulp.task('tsc', function () {
-  return gulp.src('samples/**/*.ts')
-    .pipe(ts({
-      target: 'es2018',
-      module: 'commonjs'
-    }))
-    .pipe(gulp.dest('build'));
+  var tsProject = ts.createProject('tsconfig.json');
+  return tsProject.src()
+    .pipe(tsProject())
+    .js.pipe(gulp.dest('build'));
 });
 
 gulp.task('compile', ['tslint', 'tsc']);
