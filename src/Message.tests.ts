@@ -1,6 +1,6 @@
 import { SDKFactory } from '../samples/core';
 
-describe('Need class', () => {
+describe('Message class', () => {
 
   let sdk;
 
