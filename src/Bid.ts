@@ -6,16 +6,18 @@ import Message from './Message';
 import Mission from './Mission';
 
 export default class Bid {
-    public id: ID;
-    public priceType: PriceType;
-    public price: number;
+    // public priceType: PriceType;
+    // public price: number;
 
-    constructor(data: ID | BidParams, private config: IConfig) {
+    constructor(public needId: ID, public needTypeId: ID, private config: IConfig) {
         /**/
     }
 
     public accept() { /**/ }
-    public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission('', '', this.config); }
+    public async signContract(walletPrivateKey: string): Promise<Mission> {
+        return new Mission(''/* new topic */,
+            undefined /* no peer yet */, this.config);
+    }
     public messages(): Observable<Message> { return new Observable<Message>(); }
 }
 

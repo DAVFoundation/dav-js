@@ -6,15 +6,13 @@ import IPrice from './IPrice';
 import Bid from './Bid';
 
 export default class Need {
+    // public params: NeedParams;
 
-    public id: ID;
-    public params: NeedParams;
-
-    constructor(data: ID | NeedParams, private config: IConfig) {
+    constructor(public id: ID, public needTypeId: ID, private config: IConfig) {
         /**/
     }
     public createBid(price: IPrice | BigInteger, ttl: number, params: BidParams): Bid {
-        return new Bid(params, this.config);
+        return new Bid(this.id, this.needTypeId, /* params, */ this.config);
     }
 
     public bids(): Observable<Bid> {
