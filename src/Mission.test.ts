@@ -7,7 +7,7 @@ describe('Mission class', () => {
 
   beforeAll(() => {
     sdk = SDKFactory({});
-    mission = new sdk.Mission({needParams: 'needParams'})
+    mission = new sdk.Mission({needParams: 'needParams'});
   });
 
   describe('sendMessage method', () => {
