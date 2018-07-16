@@ -8,5 +8,5 @@ export interface IBid {
     // accept this bid, should be called by service consumer
     accept: () => void;
     signContract: (walletPrivateKey: string) => Promise<Mission>;
-    messages: () => Rx.Subject<Message>;
+    messages: () => Rx.Observable<Message>;
   }
