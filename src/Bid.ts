@@ -15,7 +15,7 @@ export default class Bid {
     }
 
     public accept() { /**/ }
-    public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission('', this.config); }
+    public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission('', '', this.config); }
     public messages(): Observable<Message> { return new Observable<Message>(); }
 }
 
