@@ -1,4 +1,4 @@
-import './common';
+import { BigInteger } from './common';
 import { PriceType } from './enums';
 
 export default interface IPrice {
