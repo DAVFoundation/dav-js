@@ -1,4 +1,4 @@
-import { Observable, TopicID, ID } from './common';
+import { Observable, DavID, ID } from './common';
 import IConfig from './IConfig';
 import NeedParams from './NeedParams';
 import NeedFilterParams from './NeedFilterParams';
@@ -9,15 +9,14 @@ import Mission from './Mission';
 
 
 export default class Identity {
-  public davId: ID;
   private _messages: Observable<Message>;
 
-  constructor(davId: ID, privateKey: string, private config: IConfig) { /**/ }
+  constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
 
   public needsForType(params: NeedFilterParams): Observable<Need> { return new Observable<Need>(); }
-  public need(topic: TopicID): Need { return new Need(needId, this.config); }
-  public bid(topic: TopicID): Bid { return new Bid(bidId, this.config); }
-  public mission(missionId: TopicID): Mission { return new Mission(missionId, this.config); }
+  public need(id: ID): Need { return new Need(id, this.config); }
+  public bid(id: ID): Bid { return new Bid(id, this.config); }
+  public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, this.config); }
   public messages(): Observable<Message> {
     if (!this._messages) {
       this._messages = new Observable<Message>();
