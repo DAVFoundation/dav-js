@@ -4,7 +4,7 @@ import BidParams from './BidParams';
 import Message from './Message';
 import {Mission} from '../samples/core';
 
-class Bid {
+export default class Bid {
     public id: ID;
     public priceType: PriceType;
     public price: number;
@@ -15,4 +15,4 @@ class Bid {
     public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission(''); }
     public messages(): Rx.Observable<Message> { return new Rx.Observable<Message>(); }
 }
-export default Bid;
+
