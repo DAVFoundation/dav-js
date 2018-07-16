@@ -1,10 +1,10 @@
-import './common-definitions';
+import './common';
 import { MessageStatus, MessageDomain } from './enums';
-//ToDo: import Bid from './Bid';
-//ToDo: import Mission from './Mission';
+// ToDo: import Bid from './Bid';
+// ToDo: import Mission from './Mission';
 
-/*ToDo: delete*/class Bid { constructor(params){}}
-/*ToDo: delete*/class Mission { constructor(params){}}
+/* tslint:disable *//*ToDo: delete*/class Bid { constructor(params){}}
+/*ToDo: delete*/class Mission { constructor(params){}}/* tslint:enable */
 
 export default interface IMessage {
     bid: Bid;
@@ -12,5 +12,5 @@ export default interface IMessage {
     status: MessageStatus;
     domain: MessageDomain;
 
-    respond:(type: string, payload: any) => void;
+    respond: (type: string, payload: any) => void;
 }

@@ -4,6 +4,5 @@ namespace Rx {
       public filter(cb: (t: T) => boolean): Observable<T> { return this; }
     }
 } // Dummy Definition
-  
 type ID = string;
 type BigInteger = string;

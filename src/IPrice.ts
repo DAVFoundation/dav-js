@@ -1,4 +1,4 @@
-import './common-definitions';
+import './common';
 import { PriceType } from './enums';
 
 export default interface IPrice {

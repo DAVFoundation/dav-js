@@ -1,10 +1,10 @@
-import IMessage from './IMessage'
+import IMessage from './IMessage';
 import { MessageStatus, MessageDomain } from './enums';
-//ToDo: import Bid from './Bid';
-//ToDo: import Bid from './Bid';
+// ToDo: import Bid from './Bid';
+// ToDo: import Bid from './Bid';
 
-/*ToDo: delete*/class Bid { constructor(params) { } }
-/*ToDo: delete*/class Mission { constructor(params) { } }
+/* tslint:disable *//*ToDo: delete*/class Bid { constructor(params) { } }
+/*ToDo: delete*/class Mission { constructor(params) { } }/* tslint:enable */// tslint:disable:max-classes-per-file
 
 export default class Message implements IMessage {
     public bid: Bid;

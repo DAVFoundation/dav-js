@@ -6,5 +6,4 @@ export default abstract class NeedFilterParams extends BasicParams {
       long: number;
       radius: number; // service radius in meters
     }; // if null then it is a global service (not limited to a geographic area)
-  }
-  
+}
