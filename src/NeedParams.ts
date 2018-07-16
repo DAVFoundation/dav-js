@@ -1,4 +1,4 @@
-import BasicParams from './basic-params';
+import BasicParams from './BasicParams';
 
 export default abstract class NeedParams extends BasicParams {
 }
