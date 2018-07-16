@@ -1,4 +1,4 @@
-import { SDKFactory } from '../samples/core';
+import SDKFactory from './SDKFactory';
 
 describe('Message class', () => {
 

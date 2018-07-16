@@ -1,4 +1,4 @@
-import { ID, Rx} from './common';
+import { ID, Observable } from './common';
 import IConfig from './IConfig';
 import { PriceType } from './enums';
 import BidParams from './BidParams';
@@ -16,6 +16,6 @@ export default class Bid {
 
     public accept() { /**/ }
     public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission('', this.config); }
-    public messages(): Rx.Observable<Message> { return new Rx.Observable<Message>(); }
+    public messages(): Observable<Message> { return new Observable<Message>(); }
 }
 

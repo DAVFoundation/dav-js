@@ -1,5 +1,5 @@
 
-import { ID, Rx } from './common';
+import { ID, Observable } from './common';
 import IConfig from './IConfig';
 import Identity from './Identity';
 import Message from './Message';
@@ -13,6 +13,6 @@ export default class Mission {
     }
 
     public sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
-    public messages(): Rx.Observable<Message> { return new Rx.Observable<Message>(); }
+    public messages(): Observable<Message> { return new Observable<Message>(); }
     public finalizeMission(walletPrivateKey: string) { /**/ }
 }

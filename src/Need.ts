@@ -1,4 +1,4 @@
-import { ID, BigInteger, Rx } from './common';
+import { ID, BigInteger, Observable } from './common';
 import IConfig from './IConfig';
 import NeedParams from './NeedParams';
 import BidParams from './BidParams';
@@ -17,7 +17,7 @@ export default class Need {
         return new Bid(params, this.config);
     }
 
-    public bids(): Rx.Observable<Bid> {
-        return new Rx.Observable<Bid>();
+    public bids(): Observable<Bid> {
+        return new Observable<Bid>();
     }
 }
