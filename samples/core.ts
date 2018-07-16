@@ -1,3 +1,4 @@
+import { IConfig } from './core';
 // tslint:disable:max-classes-per-file
 export namespace Rx {
   export class Observable<T> {
@@ -45,10 +46,10 @@ export function SDKFactory(config: IConfig): SDK {
 }
 
 class SDK {
-  constructor(config: IConfig) { /**/ }
+  constructor(private config: IConfig) { /**/ }
 
   // Not sure this need a config param
-  public getIdentity(davId: ID, privateKey: string, config?: IConfig): Identity { return new Identity('', ''); }
+  public getIdentity(davId: ID, privateKey: string, config?: IConfig): Identity { return new Identity('', '', this.config); }
   public async isRegistered(davID: ID): Promise<boolean> { return false; }
   public async registerIdentity(davId: ID, walletAddress: string, walletPrivateKey: string, identityPrivateKey: string) { /**/ }
 }
@@ -57,29 +58,29 @@ export class Identity {
   public davId: ID;
   private _messages: Rx.Observable<Message>;
 
-  constructor(davId: ID, privateKey: string) {/**/ }
+  constructor(davId: ID, privateKey: string, private config: IConfig) {/**/ }
 
   public needsForType(params: NeedFilterParams): Rx.Observable<Need> { return new Rx.Observable<Need>(); }
-  public need(needId: ID): Need { return new Need(needId); }
-  public bid(bidId: ID): Bid { return new Bid(bidId); }
-  public mission(missionId: ID): Mission { return new Mission(missionId); }
+  public need(needId: ID): Need { return new Need(needId, this.config); }
+  public bid(bidId: ID): Bid { return new Bid(bidId, this.config); }
+  public mission(missionId: ID): Mission { return new Mission(missionId, this.config); }
   public messages(): Rx.Observable<Message> {
     if (!this._messages) {
       this._messages = new Rx.Observable<Message>();
     }
     return this._messages;
   }
-  public publishNeed(params: NeedParams): Need { return new Need(params); }
+  public publishNeed(params: NeedParams): Need { return new Need(params, this.config); }
 }
 
 class Need {
   public id: ID;
   public params: NeedParams;
 
-  constructor(data: ID | NeedParams) { /**/ }
+  constructor(data: ID | NeedParams, private config: IConfig) { /**/ }
 
   public createBid(price: IPrice | BigInteger, ttl: number, params: BidParams):
-    Bid { return new Bid(params); }
+    Bid { return new Bid(params, this.config); }
   public bids(): Rx.Observable<Bid> { return new Rx.Observable<Bid>(); }
 }
 
@@ -88,10 +89,10 @@ class Bid {
   public priceType: PriceType;
   public price: number;
 
-  constructor(data?: ID | BidParams) { /**/ }
+  constructor(data: ID | BidParams, private config: IConfig) { /**/ }
 
   public accept() { /**/ }
-  public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission(''); }
+  public async signContract(walletPrivateKey: string): Promise<Mission> { return new Mission('', this.config); }
   public messages(): Rx.Observable<Message> { return new Rx.Observable<Message>(); }
 }
 
@@ -122,7 +123,7 @@ export class Mission {
   public id: ID;
   public needer: Identity;
 
-  constructor(missionId: ID) { /**/ }
+  constructor(missionId: ID, private config: IConfig) { /**/ }
 
   public sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
   public messages(): Rx.Observable<Message> { return new Rx.Observable<Message>(); }
