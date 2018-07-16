@@ -7,7 +7,7 @@ describe('Need class', () => {
 
   beforeAll(() => {
     sdk = SDKFactory({});
-    need = new sdk.Need({needParams: 'needParams'})
+    need = new sdk.Need({needParams: 'needParams'});
   });
 
   describe('createBid method', () => {
