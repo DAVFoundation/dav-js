@@ -1,4 +1,4 @@
-import { IBid } from './IBid';
+import Bid from './Bid';
 
 describe('Bid class', () => {
   beforeAll(() => { /**/ });
@@ -7,7 +7,7 @@ describe('Bid class', () => {
     beforeAll(() => { /**/ });
 
     it('should success', async () => {
-      let bid: IBid;
+      const bid = new Bid('123');
       // Initialize bid
       try {
         await bid.accept();
@@ -18,7 +18,7 @@ describe('Bid class', () => {
     });
 
     it('should fail', async () => {
-      let bid: IBid;
+      const bid = new Bid('123');
       // Initialize bid
       expect(await bid.accept()).toThrow('some exception');
     });
@@ -28,7 +28,7 @@ describe('Bid class', () => {
     beforeAll(() => { /**/ });
 
     it('should success', async () => {
-      let bid: IBid;
+      const bid = new Bid('123');
       const privateKey = 'valid private key';
       // Initialize bid
       try {
@@ -40,7 +40,7 @@ describe('Bid class', () => {
     });
 
     it('should fail', async () => {
-      let bid: IBid;
+      const bid = new Bid('123');
       const privateKey = 'invalid private key';
       // Initialize bid
       expect(await bid.signContract(privateKey)).toThrow('some exception');
