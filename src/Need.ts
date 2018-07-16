@@ -19,8 +19,8 @@ export default class Need implements INeed {
         return new Bid(params);
     }
 
-    public bids(): Rx.Subject<Bid> { 
-        return new Rx.Subject<Bid>();
+    public bids(): Rx.Observable<Bid> { 
+        return new Rx.Observable<Bid>();
     }
 }
   

@@ -1,7 +1,7 @@
 namespace Rx {
-    export class Subject<T> {
+    export class Observable<T> {
       public subscribe(success: (t: T) => void, error?: (t: T) => void) { /**/ }
-      public filter(cb: (t: T) => boolean): Subject<T> { return this; }
+      public filter(cb: (t: T) => boolean): Observable<T> { return this; }
     }
 } // Dummy Definition
   
