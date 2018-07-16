@@ -1,12 +1,12 @@
 // tslint:disable:max-classes-per-file
-namespace Rx {
+export namespace Rx {
   export class Subject<T> {
     public subscribe(success: (t: T) => void, error?: (t: T) => void) { /**/ }
     public filter(cb: (t: T) => boolean): Subject<T> { return this; }
   }
 } // Dummy Definition
 
-type ID = string;
+export type ID = string;
 type BigInteger = string;
 
 export enum PriceType { flat = 'flat' }
@@ -35,7 +35,7 @@ export abstract class NeedFilterParams extends BasicParams {
   }; // if null then it is a global service (not limited to a geographic area)
 }
 
-interface IConfig {
+export interface IConfig {
   ethNodeUrl?: string;
   ttl?: number;
 }
@@ -53,7 +53,7 @@ class SDK {
   public async registerIdentity(davId: ID, walletAddress: string, walletPrivateKey: string, identityPrivateKey: string) { /**/ }
 }
 
-class Identity {
+export class Identity {
   public davId: ID;
   private _messages: Rx.Subject<Message>;
 
@@ -105,7 +105,7 @@ enum MessageDomain {
   bid = 'bid',
 }
 
-class Message {
+export class Message {
   public bid: Bid;
   public mission: Mission;
   public status: MessageStatus;
@@ -118,7 +118,7 @@ interface ISendMessageParams {
   recipients?: ID[];
 }
 
-class Mission {
+export class Mission {
   public id: ID;
   public needer: Identity;
 
