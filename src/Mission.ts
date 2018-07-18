@@ -12,7 +12,7 @@ export default class Mission {
         /**/
     }
 
-    public sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
+    public async sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
     public messages(): Observable<Message> { return new Observable<Message>(); }
-    public finalizeMission(walletPrivateKey: string) { /**/ }
+    public async finalizeMission(walletPrivateKey: string) { /**/ }
 }

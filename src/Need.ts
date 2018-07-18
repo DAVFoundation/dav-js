@@ -9,7 +9,7 @@ export default class Need {
     constructor(public id: ID, public needTypeId: ID, private config: IConfig) {
         /**/
     }
-    public createBid(price: IPrice | BigInteger, ttl: number, params: BidParams): Bid {
+    public async createBid(price: IPrice | BigInteger, ttl: number, params: BidParams): Bid {
         return new Bid(this.id, this.needTypeId, /* params, */ this.config);
     }
 
