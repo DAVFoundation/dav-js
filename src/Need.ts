@@ -1,12 +1,10 @@
 import { ID, BigInteger, Observable } from './common';
 import IConfig from './IConfig';
-import NeedParams from './NeedParams';
 import BidParams from './BidParams';
 import IPrice from './IPrice';
 import Bid from './Bid';
 
 export default class Need {
-    // public params: NeedParams;
 
     constructor(public id: ID, public needTypeId: ID, private config: IConfig) {
         /**/
