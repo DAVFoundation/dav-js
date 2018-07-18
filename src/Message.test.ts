@@ -1,18 +1,20 @@
-import SDKFactory from './SDKFactory';
+import Message from './Message';
+import Config from './Config';
 
 describe('Message class', () => {
 
-  let sdk;
+  const configuration = new Config();
+  const message = new Message('selfId', 'peerId', configuration);
 
   beforeAll(() => {
-    sdk = SDKFactory({});
+    /**/
   });
 
   describe('respond method', () => {
     beforeAll(() => { /**/ });
 
     it('should send a message', async () => {
-      expect(await sdk.Message.respond('messageType', 'messagePayload')).toBe(false);
+      expect(await message.respond('messageType', 'messagePayload')).toBe(false);
     });
   });
 
