@@ -1,20 +1,18 @@
-import SDKFactory from './SDKFactory';
+import Config from './Config';
+import Mission from './Mission';
 
 describe('Mission class', () => {
 
-  let sdk;
-  let mission;
+  const configuration = new Config();
 
-  beforeAll(() => {
-    sdk = SDKFactory({});
-    mission = new sdk.Mission({needParams: 'needParams'});
-  });
+  beforeAll(() => { /**/ });
 
   describe('sendMessage method', () => {
     beforeAll(() => { /**/ });
 
     it('should send a message', async () => {
-      expect(await mission.sendMessage('messagesType', 'messagesPayload', {params: 'ISendMessageParams'})).toBe(false);
+      const mission = new Mission('selfId', 'peerId', configuration);
+      expect(mission.sendMessage('messagesType', 'messagesPayload', {})).toBe(false);
     });
   });
 
@@ -22,7 +20,8 @@ describe('Mission class', () => {
     beforeAll(() => { /**/ });
 
     it('should subscribe for new messages', async () => {
-      expect(await mission.messages()).toBe(false);
+      const mission = new Mission('selfId', 'peerId', configuration);
+      expect(mission.messages()).toBe(false);
     });
   });
 
@@ -30,7 +29,8 @@ describe('Mission class', () => {
     beforeAll(() => { /**/ });
 
     it('should complete the mission', async () => {
-      expect(await mission.finalizeMission('walletPrivateKey')).toBe(false);
+      const mission = new Mission('selfId', 'peerId', configuration);
+      expect(mission.finalizeMission('walletPrivateKey')).toBe(false);
     });
   });
 
