@@ -12,12 +12,7 @@ describe('Bid class', () => {
     it('should success', async () => {
       const bid = new Bid('needId', 'needTypeId', config);
       // Initialize bid
-      try {
-        await bid.accept();
-      } catch (err) {
-          console.log(err);
-          fail();
-      }
+      await bid.accept();
     });
 
     it('should throw due to topic creation failure', async () => {
@@ -25,27 +20,17 @@ describe('Bid class', () => {
       // Initialize bid
       expect(await bid.accept()).toThrow('topic creation failure exception');
     });
-
-    it('should throw due to kafka excpetion after sending message', async () => {
-      const bid = new Bid('needId', 'needTypeId', config);
-      // Initialize bid
-      expect(await bid.accept()).toThrow('kafka connection failure exception');
-    });
   });
 
   describe('signContract method', () => {
     beforeAll(() => { /**/ });
 
-    it('should success', async () => {
+    it('should success, validate mission selfId', async () => {
       const bid = new Bid('needId', 'needTypeId', config);
       const privateKey = 'valid private key';
-      // Initialize bid
-      try {
-        await bid.signContract(privateKey);
-      } catch (err) {
-          console.log(err);
-          fail();
-      }
+      // Initialize bid, add consumer topic before sign
+      const mission = await bid.signContract(privateKey);
+      expect(mission.selfId).toBe('new consumer topic created in accept method');
     });
 
     it('should throw due to invalid private key', async () => {
@@ -55,11 +40,28 @@ describe('Bid class', () => {
       expect(await bid.signContract(privateKey)).toThrow('invalid private key exception');
     });
 
-    it('should throw due to timeout exception', async () => {
+    it('should throw due to web3 exception', async () => {
       const bid = new Bid('needId', 'needTypeId', config);
       const privateKey = 'valid private key';
       // Initialize bid
-      expect(await bid.signContract(privateKey)).toThrow('timeout exception');
+      expect(await bid.signContract(privateKey)).toThrow('web3 exception');
+    });
+  });
+
+  describe('messages method', () => {
+    beforeAll(() => { /**/ });
+
+    it('should success', async () => {
+      const bid = new Bid('needId', 'needTypeId', config);
+      // Initialize bid
+      // mock accept, because messages method had to be called after bid has topic Id
+      await bid.messages();
+    });
+
+    it('should throw due to absence of topic creation', async () => {
+      const bid = new Bid('needId', 'needTypeId', config);
+      // Initialize bid
+      expect(await bid.messages()).toThrow('no topic to listen for');
     });
   });
 });
