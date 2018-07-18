@@ -1,20 +1,18 @@
-import SDKFactory from './SDKFactory';
+import Config from './Config';
+import Need from './Need';
 
 describe('Need class', () => {
 
-  let sdk;
-  let need;
+  const configuration = new Config();
+  const need = new Need('id', 'needTypeId', configuration);
 
-  beforeAll(() => {
-    sdk = SDKFactory({});
-    need = new sdk.Need({needParams: 'needParams'});
-  });
+  beforeAll(() => { /**/ });
 
   describe('createBid method', () => {
     beforeAll(() => { /**/ });
 
     it('should return Bid', async () => {
-      expect(await need.createBid('1000000', 5000, {bidParams: 'bidParams'})).toBe(false);
+      expect(await need.createBid('1000000', 5000, {})).toBe(false);
     });
   });
 
