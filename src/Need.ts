@@ -5,17 +5,17 @@ import NeedParams from './NeedParams';
 import IPrice from './IPrice';
 import Bid from './Bid';
 
-export default class Need {
+export default class Need<T extends NeedParams> {
 
-    constructor(public id: ID, public needTypeId: ID, private params: NeedParams, private config: IConfig) {
+    constructor(public id: ID, public needTypeId: ID, private _params: T, private config: IConfig) {
         /**/
     }
     public async createBid(price: IPrice | BigInteger, ttl: number, params: BidParams): Promise<Bid> {
         return new Bid(this.id, this.needTypeId, params, this.config);
     }
 
-    public getParams(): NeedParams {
-        return { ...this.params };
+    public getParams(): T {
+        return this._params as T;
     }
 
     public bids(): Observable<Bid> {
