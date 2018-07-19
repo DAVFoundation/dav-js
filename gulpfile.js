@@ -41,4 +41,4 @@ gulp.task('tsc', function () {
 });
 
 gulp.task('compile', ['tslint', 'tsc']);
-gulp.task('test', ['compile', 'jest']);
+gulp.task('test', ['jest','compile']);

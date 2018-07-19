@@ -1,6 +1,6 @@
 module.exports = {
   'verbose': true,
-  'roots':['<rootDir>/samples'],
+  'roots':['<rootDir>/src'],
   'transform': {
     '\\.tsx?$': 'ts-jest'
   },
