@@ -1,4 +1,4 @@
-import { ID } from './common';
+import { ID, DavID } from './common';
 import IConfig from './IConfig';
 import Identity from './Identity';
 
@@ -6,7 +6,7 @@ export default class SDK {
   constructor(private config: IConfig) { /**/ }
 
   // Not sure this need a config param
-  public getIdentity(davId: ID, privateKey: string, config?: IConfig): Identity { return new Identity('', '', this.config); }
-  public async isRegistered(davID: ID): Promise<boolean> { return false; }
-  public async registerIdentity(davId: ID, walletAddress: string, walletPrivateKey: string, identityPrivateKey: string) { /**/ }
+  public getIdentity(davId: DavID, privateKey: string, config?: IConfig): Identity { return new Identity('', '', this.config); }
+  public async isRegistered(davID: DavID): Promise<boolean> { return false; }
+  public async registerIdentity(davId: DavID, walletAddress: string, walletPrivateKey: string, identityPrivateKey: string) { /**/ }
 }

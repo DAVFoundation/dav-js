@@ -11,8 +11,9 @@ describe('Need class', () => {
   describe('createBid method', () => {
     beforeAll(() => { /**/ });
 
-    it('should return Bid', async () => {
-      expect(await need.createBid('1000000', 5000, {})).toBe(false);
+    it('should create valid Bid with properties: {}', async () => {
+      const bid = await need.createBid('1000000', 5000, {});
+      // check each bid public property validity in a separate test
     });
   });
 

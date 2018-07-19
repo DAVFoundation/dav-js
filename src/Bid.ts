@@ -1,6 +1,5 @@
 import { ID, Observable } from './common';
 import IConfig from './IConfig';
-import { PriceType } from './enums';
 import BidParams from './BidParams';
 import Message from './Message';
 import Mission from './Mission';
@@ -9,7 +8,7 @@ export default class Bid {
     // public priceType: PriceType;
     // public price: number;
 
-    constructor(public needId: ID, public needTypeId: ID, private config: IConfig) {
+    constructor(public needId: ID, public needTypeId: ID, private params: BidParams, private config: IConfig) {
         /**/
     }
 

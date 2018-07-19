@@ -23,5 +23,5 @@ export default class Identity {
     }
     return this._messages;
   }
-  public publishNeed(params: NeedParams): Need { return new Need('', '', this.config); }
+  public publishNeed(params: NeedParams): Need { return new Need('', '', params, this.config); }
 }
