@@ -5,8 +5,6 @@ import Message from './Message';
 import Mission from './Mission';
 
 export default class Bid<T extends BidParams> {
-    // public priceType: PriceType;
-    // public price: number;
     get params(): T {
         return this._params;
     }

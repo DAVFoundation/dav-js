@@ -2,7 +2,7 @@ import { BigInteger } from './common';
 import { PriceType } from './enums';
 
 export default interface IPrice {
-    price: BigInteger; // price in Vinci
-    priceType: PriceType;
-    priceDescription: string;
+    value: BigInteger; // price in Vinci
+    type: PriceType;
+    description?: string;
 }
