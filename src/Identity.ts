@@ -6,7 +6,7 @@ import Need from './Need';
 import Bid from './Bid';
 import Message from './Message';
 import Mission from './Mission';
-import BidParams from './drone-charging/BidParams';
+import BidParams from './BidParams';
 
 
 export default class Identity {
@@ -14,8 +14,10 @@ export default class Identity {
 
   constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
 
-  public async needsForType(params: NeedFilterParams): Promise<Observable<Need>> { return Promise.resolve(new Observable<Need>()); }
-  public need(id: ID, params: NeedParams): Need { return new Need(id, '', params, this.config); }
+  public async needsForType<T extends NeedFilterParams, U extends NeedParams>(params: T): Promise<Observable<Need<U>>> {
+    return Promise.resolve(new Observable<Need<U>>()); }
+
+  public need<T extends NeedParams>(id: ID, params: T): Need<T> { return new Need(id, '', params, this.config); }
   public bid<T extends BidParams>(id: ID, params: T): Bid<T> { return new Bid(id, '', params, this.config); }
   public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, this.config); }
   public messages(): Observable<Message> {
@@ -24,5 +26,5 @@ export default class Identity {
     }
     return this._messages;
   }
-  public async publishNeed(params: NeedParams): Promise<Need> { return Promise.resolve(new Need('', '', params, this.config)); }
+  public async publishNeed<T extends NeedParams>(params: T): Promise<Need<T>> { return Promise.resolve(new Need('', '', params, this.config)); }
 }
