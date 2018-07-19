@@ -1,4 +1,4 @@
-import { ID, BigInteger, Observable } from './common';
+import { ID, BigInteger, Observable } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
 import NeedParams from './NeedParams';

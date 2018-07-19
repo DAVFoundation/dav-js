@@ -1,4 +1,4 @@
-import { ID, DavID } from './common';
+import { ID, DavID } from './common-types';
 import IConfig from './IConfig';
 import Identity from './Identity';
 

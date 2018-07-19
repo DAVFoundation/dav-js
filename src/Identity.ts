@@ -1,4 +1,4 @@
-import { Observable, DavID, ID } from './common';
+import { Observable, DavID, ID } from './common-types';
 import IConfig from './IConfig';
 import NeedParams from './NeedParams';
 import NeedFilterParams from './NeedFilterParams';

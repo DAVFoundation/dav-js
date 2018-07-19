@@ -1,6 +1,6 @@
 import IConfig from './IConfig';
-import { ID } from './common';
-import { MessageStatus, MessageDomain } from './enums';
+import { ID } from './common-types';
+import { MessageStatus, MessageDomain } from './common-enums';
 import Bid from './Bid';
 import Mission from './Mission';
 

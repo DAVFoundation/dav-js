@@ -1,10 +1,12 @@
 import Config from './Config';
 import Need from './Need';
+import BidParams from './drone-charging/BidParams';
 
 describe('Need class', () => {
 
   const configuration = new Config({});
   const need = new Need('id', 'needTypeId', {}, configuration);
+  const bidParams = new BidParams({});
 
   beforeAll(() => { /**/ });
 
@@ -12,7 +14,7 @@ describe('Need class', () => {
     beforeAll(() => { /**/ });
 
     it('should create valid Bid with properties: {}', async () => {
-      const bid = await need.createBid('1000000', 5000, {});
+      const bid = await need.createBid('1000000', 5000, bidParams);
       // check each bid public property validity in a separate test
     });
   });

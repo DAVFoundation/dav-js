@@ -1,5 +1,5 @@
 
-import { ID, Observable } from './common';
+import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import Identity from './Identity';
 import Message from './Message';

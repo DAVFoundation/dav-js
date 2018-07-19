@@ -1,4 +1,4 @@
-import { ID } from './common';
+import { ID } from './common-types';
 
 export default interface ISendMessageParams {
     recipients?: ID[];

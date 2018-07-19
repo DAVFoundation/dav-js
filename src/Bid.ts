@@ -1,4 +1,4 @@
-import { ID, Observable } from './common';
+import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
 import Message from './Message';
