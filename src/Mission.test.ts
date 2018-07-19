@@ -4,7 +4,7 @@ import SendMessageParams from './SendMessageParams';
 
 describe('Mission class', () => {
 
-  const configuration = new Config();
+  const configuration = new Config({});
 
   beforeAll(() => { /**/ });
 

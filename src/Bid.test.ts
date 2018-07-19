@@ -3,7 +3,7 @@ import Config from './Config';
 import BidParams from './drone-delivery/BidParams';
 
 describe('Bid class', () => {
-  const config = new Config();
+  const config = new Config({});
   const bidParams = new BidParams();
 
   beforeAll(() => { /**/ });

@@ -3,7 +3,7 @@ import Config from './Config';
 
 describe('Message class', () => {
 
-  const configuration = new Config();
+  const configuration = new Config({});
   const message = new Message('selfId', 'peerId', configuration);
 
   beforeAll(() => {

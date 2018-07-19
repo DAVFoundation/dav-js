@@ -2,7 +2,7 @@ import Config from './Config';
 import SDK from './SDK';
 
 describe('SDK class', () => {
-    const config = new Config();
+    const config = new Config({});
 
     beforeAll(() => { /**/ });
 

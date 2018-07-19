@@ -1,4 +1,10 @@
 export default interface IConfig {
     ethNodeUrl?: string;
-    ttl?: number;
+    networkSeedUrls?: string[];
+    identityTtl?: number;
+    needTypeTtl?: number;
+    needTtl?: number;
+    missionConsumerTtl?: number;
+    missionProviderTtl?: number;
+
 }
