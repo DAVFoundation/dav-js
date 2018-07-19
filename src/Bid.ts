@@ -4,14 +4,14 @@ import BidParams from './BidParams';
 import Message from './Message';
 import Mission from './Mission';
 
-export default class Bid {
+export default class Bid<T extends BidParams> {
     // public priceType: PriceType;
     // public price: number;
-    get params(): BidParams {
+    get params(): T {
         return this._params;
     }
 
-    constructor(public needId: ID, public needTypeId: ID, private _params: BidParams, private config: IConfig) {
+    constructor(public needId: ID, public needTypeId: ID, private _params: T, private config: IConfig) {
         /**/
     }
 

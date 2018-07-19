@@ -10,11 +10,11 @@ export default class Need {
     constructor(public id: ID, public needTypeId: ID, private params: NeedParams, private config: IConfig) {
         /**/
     }
-    public async createBid(price: IPrice | BigInteger, ttl: number, params: BidParams): Promise<Bid> {
-        return new Bid(this.id, this.needTypeId, params, this.config);
+    public async createBid<T extends BidParams>(price: IPrice | BigInteger, ttl: number, params: T): Promise<Bid<T>> {
+        return new Bid<T>(this.id, this.needTypeId, params, this.config);
     }
 
-    public bids(): Observable<Bid> {
-        return new Observable<Bid>();
+    public bids<T extends BidParams>(): Observable<Bid<T>> {
+        return new Observable<Bid<T>>();
     }
 }

@@ -16,7 +16,7 @@ export default class Identity {
 
   public async needsForType(params: NeedFilterParams): Promise<Observable<Need>> { return Promise.resolve(new Observable<Need>()); }
   public need(id: ID, params: NeedParams): Need { return new Need(id, '', params, this.config); }
-  public bid(id: ID, params: BidParams): Bid { return new Bid(id, '', params, this.config); }
+  public bid<T extends BidParams>(id: ID, params: T): Bid<T> { return new Bid(id, '', params, this.config); }
   public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, this.config); }
   public messages(): Observable<Message> {
     if (!this._messages) {
