@@ -1,6 +1,6 @@
 import BaseBidParams from '../BidParams';
 
-export class BidParams extends BaseBidParams {
+export default class BidParams extends BaseBidParams {
     public plugType: string;
 
     constructor(init?: Partial<BidParams>) {

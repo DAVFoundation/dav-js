@@ -6,6 +6,7 @@ import Need from './Need';
 import Bid from './Bid';
 import Message from './Message';
 import Mission from './Mission';
+import BidParams from './drone-charging/BidParams';
 
 
 export default class Identity {
@@ -14,8 +15,8 @@ export default class Identity {
   constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
 
   public async needsForType(params: NeedFilterParams): Promise<Observable<Need>> { return Promise.resolve(new Observable<Need>()); }
-  public need(id: ID): Need { return new Need('', '', this.config); }
-  public bid(id: ID): Bid { return new Bid('', '', this.config); }
+  public need(id: ID, params: NeedParams): Need { return new Need(id, '', params, this.config); }
+  public bid(id: ID, params: BidParams): Bid { return new Bid(id, '', params, this.config); }
   public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, this.config); }
   public messages(): Observable<Message> {
     if (!this._messages) {

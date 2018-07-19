@@ -2,11 +2,13 @@ import Config from './Config';
 import Identity from './Identity';
 import NeedFilterParams from './drone-charging/NeedFilterParams';
 import NeedParams from './drone-charging/NeedParams';
+import BidParams from './drone-charging/BidParams';
 
 describe('Identity class', () => {
     const config = new Config();
     const needFilterParams = new NeedFilterParams({area: {lat: 0, long: 0, radius: 0}});
     const needParams = new NeedParams({});
+    const bidParams = new BidParams();
 
     beforeAll(() => { /**/ });
 
@@ -61,7 +63,7 @@ describe('Identity class', () => {
 
         it('should success, validate need', () => {
           const identity = new Identity('id', 'davId', config);
-          const need = identity.need('needId');
+          const need = identity.need('needId', needParams);
           // check each need public property validity in a separate test
         });
     });
@@ -71,7 +73,7 @@ describe('Identity class', () => {
 
         it('should success, validate bid', () => {
           const identity = new Identity('id', 'davId', config);
-          const bid = identity.bid('bidId');
+          const bid = identity.bid('bidId', bidParams);
           // check each bid public property validity in a separate test
         });
     });
