@@ -14,6 +14,10 @@ export default class Need {
         return new Bid(this.id, this.needTypeId, params, this.config);
     }
 
+    public getParams(): NeedParams {
+        return { ...this.params };
+    }
+
     public bids(): Observable<Bid> {
         return new Observable<Bid>();
     }

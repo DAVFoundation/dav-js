@@ -4,7 +4,7 @@ import Need from './Need';
 describe('Need class', () => {
 
   const configuration = new Config();
-  const need = new Need('id', 'needTypeId', configuration);
+  const need = new Need('id', 'needTypeId', {}, configuration);
 
   beforeAll(() => { /**/ });
 
