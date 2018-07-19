@@ -15,18 +15,18 @@ describe('Identity class', () => {
 
       it('should success, validate kafka mock create topic', async () => {
         const identity = new Identity('id', 'davId', config);
-        const needsStream = identity.needsForType(needFilterParams);
+        const needsStream = await identity.needsForType(needFilterParams);
         // check kafka mock create topic method to be called with valid topic
       });
 
       it('should fail due to topic creation failure', async () => {
         const identity = new Identity('id', 'davId', config);
-        expect(identity.needsForType(needFilterParams)).toThrow('topic creation error');
+        expect(await identity.needsForType(needFilterParams)).toThrow('topic creation error');
       });
 
       it('should fail due to dav node exception', async () => {
         const identity = new Identity('id', 'davId', config);
-        expect(identity.needsForType(needFilterParams)).toThrow('dav node exception');
+        expect(await identity.needsForType(needFilterParams)).toThrow('dav node exception');
       });
     });
 
@@ -35,31 +35,31 @@ describe('Identity class', () => {
 
         it('should success, validate kafka mock create topic', async () => {
           const identity = new Identity('id', 'davId', config);
-          const need = identity.publishNeed(needParams);
+          const need = await identity.publishNeed(needParams);
           // check kafka mock create topic method to be called with valid topic
         });
 
         it('should success, validate need', async () => {
             const identity = new Identity('id', 'davId', config);
-            const need = identity.publishNeed(needParams);
+            const need = await identity.publishNeed(needParams);
             // check each need public property validity in a separate test
           });
 
         it('should fail due to topic creation failure', async () => {
           const identity = new Identity('id', 'davId', config);
-          expect(identity.publishNeed(needParams)).toThrow('topic creation error');
+          expect(await identity.publishNeed(needParams)).toThrow('topic creation error');
         });
 
         it('should fail due to dav node exception', async () => {
           const identity = new Identity('id', 'davId', config);
-          expect(identity.publishNeed(needParams)).toThrow('dav node exception');
+          expect(await identity.publishNeed(needParams)).toThrow('dav node exception');
         });
     });
 
     describe('need method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success, validate need', async () => {
+        it('should success, validate need', () => {
           const identity = new Identity('id', 'davId', config);
           const need = identity.need('needId');
           // check each need public property validity in a separate test
@@ -69,7 +69,7 @@ describe('Identity class', () => {
     describe('bid method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success, validate bid', async () => {
+        it('should success, validate bid', () => {
           const identity = new Identity('id', 'davId', config);
           const bid = identity.bid('bidId');
           // check each bid public property validity in a separate test
@@ -79,7 +79,7 @@ describe('Identity class', () => {
     describe('mission method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success, validate mission', async () => {
+        it('should success, validate mission', () => {
             const identity = new Identity('id', 'davId', config);
             const mission = identity.mission('missionId', 'peerId');
             // check each mission public property validity in a separate test
@@ -89,7 +89,7 @@ describe('Identity class', () => {
     describe('messages method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success', async () => {
+        it('should success', () => {
             const identity = new Identity('id', 'davId', config);
             const messages = identity.messages();
         });
