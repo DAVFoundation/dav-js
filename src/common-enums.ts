@@ -11,3 +11,9 @@ export enum MessageDomain {
     mission = 'mission',
     bid = 'bid',
 }
+
+export enum BlockchainType {
+    local = 'local',
+    ropsten = 'ropsten',
+    main = 'main',
+}
