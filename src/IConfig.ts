@@ -1,3 +1,5 @@
+import { BlockchainType } from './common-enums';
+
 export default interface IConfig {
     ethNodeUrl?: string;
     networkSeedUrls?: string[];
@@ -6,5 +8,5 @@ export default interface IConfig {
     needTtl?: number;
     missionConsumerTtl?: number;
     missionProviderTtl?: number;
-
+    blockchainType?: BlockchainType;
 }

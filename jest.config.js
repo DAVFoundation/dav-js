@@ -4,7 +4,7 @@ module.exports = {
   'transform': {
     '\\.tsx?$': 'ts-jest'
   },
-  'testRegex': '(\\.(test|spec))\\.(jsx?|tsx?)$',
+  'testRegex': 'Contracts(\\.(test|spec))\\.(jsx?|tsx?)$',
   'moduleFileExtensions': [
     'ts',
     'tsx',
