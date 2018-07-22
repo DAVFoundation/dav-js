@@ -7,7 +7,7 @@ describe('Contracts class', () => {
 
   beforeAll(() => { /**/ });
 
-  describe('isRegistered method', () => {
+  describe('isIdentityRegistered method', () => {
     beforeAll(() => { /**/ });
 
     it('should return true for registered Id', async () => {
