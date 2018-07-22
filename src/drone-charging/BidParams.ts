@@ -3,7 +3,7 @@ import BaseBidParams from '../BidParams';
 export default class BidParams extends BaseBidParams {
     public plugType: string;
 
-    constructor(init?: Partial<BidParams>) {
+    constructor(init: Partial<BidParams>) {
         super();
     }
 
