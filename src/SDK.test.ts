@@ -59,18 +59,18 @@ describe('SDK class', () => {
 
         it('should success, validates identity', async () => {
           const sdk = new SDK(config);
-          const identity = await sdk.getIdentity('davId', 'privateKey', config);
+          const identity = await sdk.getIdentity('davId', config);
           // validate each identity's properties in a separate test
         });
 
         it('should throw due to unregistered dav id', async () => {
             const sdk = new SDK(config);
-            expect(await sdk.getIdentity('davId', 'privateKey', config)).toThrow('unregisterd dav id exception');
+            expect(await sdk.getIdentity('davId', config)).toThrow('unregisterd dav id exception');
         });
 
         it('should throw due to blockchain exception', async () => {
             const sdk = new SDK(config);
-            expect(await sdk.getIdentity('davId', 'privateKey', config)).toThrow('blockchain exception');
+            expect(await sdk.getIdentity('davId', config)).toThrow('blockchain exception');
         });
     });
 });

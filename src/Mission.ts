@@ -6,9 +6,8 @@ import Message from './Message';
 import ISendMessageParams from './ISendMessageParams';
 
 export default class Mission {
-    public needer: Identity;
 
-    constructor(public selfId: ID, public peerId: ID, private config: IConfig) {
+    constructor(public selfId: ID, public peerId: ID, public needer: Identity, private config: IConfig) {
         /**/
     }
 

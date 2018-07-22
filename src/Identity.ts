@@ -19,7 +19,7 @@ export default class Identity {
 
   public need<T extends NeedParams>(id: ID, params: T): Need<T> { return new Need(id, '', params, this.config); }
   public bid<T extends BidParams>(id: ID, params: T): Bid<T> { return new Bid(id, '', params, this.config); }
-  public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, this.config); }
+  public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, new Identity('id', 'davId', this.config), this.config); }
   public messages(): Observable<Message> {
     if (!this._messages) {
       this._messages = new Observable<Message>();
