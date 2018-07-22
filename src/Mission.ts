@@ -4,6 +4,7 @@ import IConfig from './IConfig';
 import Identity from './Identity';
 import Message from './Message';
 import ISendMessageParams from './ISendMessageParams';
+import BidParams from './BidParams';
 
 export default class Mission {
 
@@ -12,6 +13,6 @@ export default class Mission {
     }
 
     public async sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
-    public messages(): Observable<Message> { return new Observable<Message>(); }
+    public messages<T extends BidParams>(): Observable<Message<T>> { return new Observable<Message<T>>(); }
     public async finalizeMission(walletPrivateKey: string) { /**/ }
 }
