@@ -9,7 +9,7 @@ import Identity from './Identity';
 describe('Message class', () => {
 
   const configuration = new Config({});
-  const bidParams = new BidParams();
+  const bidParams = new BidParams({});
   const bid = new Bid('needId', 'needTypeId', bidParams, configuration);
   const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
   const message = new Message('selfId', 'peerId', bid, mission, MessageStatus.accepted, MessageDomain.bid, configuration);

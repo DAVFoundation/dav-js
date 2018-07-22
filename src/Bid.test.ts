@@ -4,7 +4,7 @@ import BidParams from './drone-delivery/BidParams';
 
 describe('Bid class', () => {
   const config = new Config({});
-  const bidParams = new BidParams();
+  const bidParams = new BidParams({});
 
   beforeAll(() => { /**/ });
 

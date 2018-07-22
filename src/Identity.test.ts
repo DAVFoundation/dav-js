@@ -8,7 +8,7 @@ describe('Identity class', () => {
     const config = new Config({});
     const needFilterParams = new NeedFilterParams({area: {lat: 0, long: 0, radius: 0}});
     const needParams = new NeedParams({});
-    const bidParams = new BidParams();
+    const bidParams = new BidParams({});
 
     beforeAll(() => { /**/ });
 
