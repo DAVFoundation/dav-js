@@ -10,7 +10,7 @@ import BidParams from './BidParams';
 
 
 export default class Identity {
-  private _messages: Observable<Message>;
+  private _messages: Observable<Message<any>>;
 
   constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
 
@@ -20,9 +20,9 @@ export default class Identity {
   public need<T extends NeedParams>(id: ID, params: T): Need<T> { return new Need(id, '', params, this.config); }
   public bid<T extends BidParams>(id: ID, params: T): Bid<T> { return new Bid(id, '', params, this.config); }
   public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, new Identity('id', 'davId', this.config), this.config); }
-  public messages(): Observable<Message> {
+  public messages<T extends BidParams>(): Observable<Message<T>> {
     if (!this._messages) {
-      this._messages = new Observable<Message>();
+      this._messages = new Observable<Message<T>>();
     }
     return this._messages;
   }
