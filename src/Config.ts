@@ -8,7 +8,8 @@ export default class Config implements IConfig {
             this,
             {
                 ethNodeUrl: 'https://ropsten.infura.io/wUiZtmeZ1KwjFrcC8zRO',
-                networkSeedUrls: [''],
+                apiSeedUrls: [''],
+                kafkaSeedUrls: [''],
                 identityTtl: 10000,
                 needTypeTtl: 10000,
                 needTtl: 10000,

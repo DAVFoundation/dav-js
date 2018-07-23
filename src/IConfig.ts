@@ -2,7 +2,8 @@ import { BlockchainType } from './common-enums';
 
 export default interface IConfig {
     ethNodeUrl?: string;
-    networkSeedUrls?: string[];
+    apiSeedUrls?: string[];
+    kafkaSeedUrls?: string[];
     identityTtl?: number;
     needTypeTtl?: number;
     needTtl?: number;
