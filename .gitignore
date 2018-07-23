@@ -4,3 +4,4 @@ npm-debug.log
 .idea
 dist
 build
+docs/api

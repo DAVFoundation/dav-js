@@ -2,14 +2,15 @@ const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const jest = require('jest-cli');
 const exec = require('child_process').exec;
-var ts = require('gulp-typescript');
-var tslint = require('gulp-tslint');
+const ts = require('gulp-typescript');
+const tslint = require('gulp-tslint');
+const typedoc = require('gulp-typedoc');
 
-gulp.task('deploy-contracts', (calback) => {
+gulp.task('deploy-contracts', (callback) => {
   exec('truffle deploy', function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
-    calback(err);
+    callback(err);
   });
 });
 
@@ -40,5 +41,12 @@ gulp.task('tsc', function () {
     .js.pipe(gulp.dest('build'));
 });
 
+gulp.task('typedoc', function () {
+  return gulp
+    .src(['src/**/*.ts'])
+    .pipe(typedoc(require('./typedoc.js')));
+});
+
 gulp.task('compile', ['tslint', 'tsc']);
-gulp.task('test', ['jest','compile']);
+gulp.task('test', ['tslint', 'jest']);
+gulp.task('publish', ['tslint', 'jest', 'tsc', 'typedoc']);
