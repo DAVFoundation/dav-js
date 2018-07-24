@@ -1,34 +1,33 @@
 // tslint:disable:max-classes-per-file
 
-class Methods {
-    // return async function for execute smart contract method in the EVM without sending any transaction.
-    public isRegistered(davID: string): any {
-        return async () => davID === 'REGISTERED_ADDRESS';
-    }
-}
-
 class HttpProvider {
-    constructor(public provider: string) {
-        this.provider = provider;
-    }
 }
 
-class Contract {
-    constructor(public methods: Methods) {
-        this.methods = new Methods();
+function contractFactory(callRes: any) {
+    class Contract {
+        public methods: any;
+        constructor() {
+            this.methods = {
+                isRegistered: jest.fn(() => ({
+                    call: jest.fn(() => Promise.resolve(callRes)),
+                })),
+                register: jest.fn(() => ({
+                    send: jest.fn(() => Promise.resolve(callRes)),
+                })),
+            };
+        }
     }
+    return Contract;
 }
 
-const _eth = { Contract };
-const _providers = { HttpProvider };
-
-class Web3 {
-    constructor(public eth: any, public provider: any) {
-        this.eth = _eth;
+function web3Factory(callRes: any) {
+    class Web3 {
+        public static providers = { HttpProvider };
+        public eth = {
+            Contract: contractFactory(callRes),
+        };
     }
+    return Web3;
 }
 
-const web3 = Web3 as any;
-web3.providers = _providers;
-
-module.exports = web3;
+module.exports = web3Factory;
