@@ -5,4 +5,6 @@ export default interface IPrice {
     value: BigInteger; // price in Vinci
     type: PriceType;
     description?: string;
+
+    equals(other: IPrice): boolean;
 }

@@ -1,11 +1,12 @@
 import Config from './Config';
 import Need from './Need';
+import NeedParams from './drone-charging/NeedParams';
 import BidParams from './drone-charging/BidParams';
 
 describe('Need class', () => {
 
   const configuration = new Config({});
-  const need = new Need('id', 'needTypeId', {}, configuration);
+  const need = new Need('id', 'needTypeId', new NeedParams({}), configuration);
   const bidParams = new BidParams({});
 
   beforeAll(() => { /**/ });
