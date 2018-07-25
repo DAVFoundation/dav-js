@@ -14,7 +14,8 @@ const contracts = {
 export default class Contracts {
 
     public static async isIdentityRegistered(davID: DavID, config: IConfig): Promise<boolean> {
-        const { contract } = this.initWeb3(contracts.identity, config);
+        const web3 = this.initWeb3(config);
+        const { contract } = this.getContruct(contracts.identity, web3, config);
         const receipt = await contract.methods.isRegistered(davID).call();
         return receipt;
     }
@@ -25,7 +26,8 @@ export default class Contracts {
         if (isAlreadyRegistered) {
             return 'ALREADY_REGISTERED';
         }
-        const { contract, web3, contractAddress } = this.initWeb3(contracts.identity, config);
+        const web3 = this.initWeb3(config);
+        const { contract, contractAddress } = this.getContruct(contracts.identity, web3, config);
         const { sign } = web3.eth.accounts.privateKeyToAccount(identityPrivateKey) as any;
         const { v, r, s } = sign(REGISTRATION_REQUEST_HASH) as any;
         const { encodeABI, estimateGas } = await contract.methods.register(davId, v, r, s) as any;
@@ -52,12 +54,15 @@ export default class Contracts {
         /**/
     }
 
-    private static initWeb3(contractFile: any, config: IConfig): any {
-        const web3 = new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
+    private static initWeb3(config: IConfig): Web3 {
+        return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
+    }
+
+    private static getContruct( contractFile: any, web3: Web3, config: IConfig): any {
         const abi = contractFile.abi;
         const contractAddress = contractFile.networks[config.blockchainType].address;
         const contract = new web3.eth.Contract(abi, contractAddress);
-        return { web3, abi, contractAddress, contract };
+        return { abi, contractAddress, contract };
     }
 
     private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<any> {
