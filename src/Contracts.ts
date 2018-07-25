@@ -2,7 +2,6 @@ import IConfig from './IConfig';
 import { DavID } from './common-types';
 import Web3 = require('web3');
 
-const toSafeGasAmount = (gasAmount: number) => Math.min(gasAmount * 2, 1000000);
 // web3.utils.sha3('DAV Identity Registration'):
 const REGISTRATION_REQUEST_HASH = '0x3d75604157f80934d3965cbdf5676395ddaf5f92b8d7c90caf745f93d35d2066';
 const contracts = {
@@ -35,7 +34,7 @@ export default class Contracts {
             data: encodeABI(),
             to: contractAddress,
             from: walletAddress,
-            gas: toSafeGasAmount(await estimateGas({ from: walletAddress })),
+            gas: this.toSafeGasLimit(await estimateGas({ from: walletAddress })),
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
         const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
@@ -65,11 +64,16 @@ export default class Contracts {
         return { abi, contractAddress, contract };
     }
 
-    private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<any> {
+    private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<string> {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
-            transaction.once('transactionHash', (hash) => resolve(hash));
+            transaction.once('transactionHash', (transactionHash) => resolve(transactionHash));
             transaction.on('error', (err) => reject(err));
         });
     }
+
+    private static toSafeGasLimit (gasAmount: number) {
+        return Math.min(gasAmount * 2, 1000000);
+    } 
+
 }
