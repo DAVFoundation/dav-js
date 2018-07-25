@@ -7,6 +7,8 @@ import DroneChargingNeedParams from './drone-charging/NeedParams';
 import DroneChargingBidParams from './drone-charging/BidParams';
 import BasicParams from './BasicParams';
 
+// TODO: Wrong casing
+// TODO: use ':' instead of ','
 enum classType {
     droneDeliveryNeed = 'drone-delivery,need',
     droneDeliveryBid = 'drone-delivery,bid',
@@ -16,10 +18,12 @@ enum classType {
 
 export default class Kafka {
 
+    // TODO: What's 'topic'? is it the topic name? id? rename...
     public static async createTopic(topic: string, config: IConfig) {
         const producer = await this.createProducer(config);
         producer.createTopics([topic], true, (err: any, data: any) => {
             if (err) {
+                // TODO: This will NOT throw in the async context!!!!
                 throw err;
             }
         });
@@ -34,6 +38,7 @@ export default class Kafka {
         });
     }
 
+    // TODO: What's 'topic'? is it the topic name? id? rename...
     public static async sendParams(topic: string, basicParams: BasicParams, config: IConfig) {
         const producer = await this.createProducer(config);
         const payloads = [
@@ -75,6 +80,7 @@ export default class Kafka {
     );
 
     // todo: maybe delete this method
+    // TODO: use 'get' instead of 'create'
     private static createKafkaClient(config: IConfig): KafkaClient {
         // todo: change kafka host to config
         // const client = new KafkaClient({kafkaHost: config.kafkaSeedUrls});
@@ -82,6 +88,7 @@ export default class Kafka {
         return client;
     }
 
+    // TODO: use 'get' instead of 'create'
     private static createProducer(config: IConfig): Promise<Producer> {
         const client = this.createKafkaClient(config);
         const producer = new Producer(client);
