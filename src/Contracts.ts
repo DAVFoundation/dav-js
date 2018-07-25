@@ -4,6 +4,7 @@ import { DavID, Observable } from './common-types';
 
 const DAV_REGISTRATION_REQUEST = 'DAV Identity Registration';
 const contracts = {
+    // TODO: contracts path should be in same dir.... build is for build results - this code will not work after compilation
     identity: require('../build/contracts/Identity'),
     davToken: require('../build/contracts/DAVToken'),
     basicMission: require('../build/contracts/BasicMission'),
@@ -52,6 +53,7 @@ export default class Contracts {
     }
 
     private static getContractAddress(contract: any, config: IConfig): string {
+        // TODO: How does this support local test network?
         return contract.networks[config.blockchainType].address;
     }
 }

@@ -3,6 +3,8 @@
 class HttpProvider {
 }
 
+// TODO: use map {[funcName]:[res value]}
+// TODO: use typed parameter here
 function contractFactory(callRes: any) {
     class Contract {
         public methods: any;
