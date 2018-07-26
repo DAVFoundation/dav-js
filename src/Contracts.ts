@@ -20,7 +20,7 @@ export default class Contracts {
     }
 
     public static async registerIdentity(davId: DavID, identityPrivateKey: string, walletAddress: string, walletPrivateKey: string, config: IConfig):
-    Promise<string> {
+        Promise<string> {
         const isAlreadyRegistered = await this.isIdentityRegistered(davId, config);
         if (isAlreadyRegistered) {
             return 'ALREADY_REGISTERED';
@@ -57,7 +57,7 @@ export default class Contracts {
         return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
     }
 
-    private static getContruct( contractFile: any, web3: Web3, config: IConfig): any {
+    private static getContruct(contractFile: any, web3: Web3, config: IConfig): any {
         const abi = contractFile.abi;
         const contractAddress = contractFile.networks[config.blockchainType].address;
         const contract = new web3.eth.Contract(abi, contractAddress);
@@ -72,8 +72,8 @@ export default class Contracts {
         });
     }
 
-    private static toSafeGasLimit (gasAmount: number) {
+    private static toSafeGasLimit(gasAmount: number) {
         return Math.min(gasAmount * 2, 1000000);
-    } 
+    }
 
 }
