@@ -1,6 +1,5 @@
 import Config from './Config';
 import BidParams from './drone-charging/BidParams';
-import Kafka from './Kafka';
 import Price from './Price';
 import { PriceType } from './common-enums';
 import IConfig from './IConfig';
@@ -13,15 +12,15 @@ describe('Kafka class', () => {
 
     describe('createTopic method', () => {
 
-      let kafkaNodeMock: any;
-
       beforeEach(() => {
-        kafkaNodeMock = require('./__mocks__/kafka-node');
+        jest.resetAllMocks();
       });
 
-      it('should success', async () => {
+      it('should succeed - get valid input, check return value', async () => {
         // Arrange
-        const topic = 'topic';
+        jest.doMock('kafka-node');
+        const kafka = (await import('./Kafka')).default;
+
         const producer = {
           on: (state: string, cb: any) => {
             cb();
@@ -30,29 +29,93 @@ describe('Kafka class', () => {
             cb(null, null);
           },
         };
-        kafkaNodeMock.Producer.mockImplementation(() => producer);
+        require('kafka-node').Producer.mockImplementation(() => producer);
+
+        const topic = 'topic';
 
         // Act + Assert
-        await expect(Kafka.createTopic(topic, config)).resolves.toBeUndefined();
+        await expect(kafka.createTopic(topic, config)).resolves.toBeUndefined();
+      });
+
+      it('should succeed - get valid input, check producer ready method has been called', async () => {
+        // Arrange
+        jest.doMock('kafka-node');
+        const kafka = (await import('./Kafka')).default;
+        const kafkaMock = require('kafka-node');
+
+        const on = jest.fn();
+        on.mockReturnValue(Promise.resolve(new kafkaMock.Producer()));
+        const producer = {
+          on,
+          createTopics: (topics: string[], async: boolean, cb: (error: any, data: any) => any) => {
+            cb(null, null);
+          },
+        };
+        kafkaMock.Producer.mockImplementation(() => producer);
+
+        const topic = 'topic';
+
+        // Act
+        try {
+          await kafka.createTopic(topic, config);
+        } catch (error) {
+          console.log(error);
+          fail();
+        }
+
+        // Assert
+        expect(producer.on).toHaveBeenCalled();
+      });
+
+      it('should succeed - get valid input, check producer createTopic method has been called', async () => {
+        // Arrange
+        jest.doMock('kafka-node');
+        const kafka = (await import('./Kafka')).default;
+
+        const producer = {
+          on: (state: string, cb: any) => {
+            cb();
+          },
+          createTopics: jest.fn(),
+        };
+        require('kafka-node').Producer.mockImplementation(() => producer);
+
+        const topic = 'topic';
+
+        // Act
+        try {
+          await kafka.createTopic(topic, config);
+        } catch (error) {
+          /** */
+        }
+
+        // Assert
+        expect(producer.createTopics).toHaveBeenCalled();
       });
 
       it('should get connection timeout', async () => {
         // Arrange
-        const topic = 'topic';
+        jest.doMock('kafka-node');
+        const kafka = (await import('./Kafka')).default;
+
         const producer = {
           on: (state: string, cb: any) => {
             return;
           },
         };
-        kafkaNodeMock.Producer.mockImplementation(() => producer);
+        require('kafka-node').Producer.mockImplementation(() => producer);
+
+        const topic = 'topic';
 
         // Act + Assert
-        await expect(Kafka.createTopic(topic, config)).rejects.toEqual('connection timeout');
+        await expect(kafka.createTopic(topic, config)).rejects.toEqual('connection timeout');
       });
 
       it('should get error from kafka in topic creation action', async () => {
         // Arrange
-        const topic = 'topic';
+        jest.doMock('kafka-node');
+        const kafka = (await import('./Kafka')).default;
+
         const kafkaError = 'kafka error';
         const producer = {
           on: (state: string, cb: any) => {
@@ -62,10 +125,12 @@ describe('Kafka class', () => {
             cb(kafkaError, null);
           },
         };
-        kafkaNodeMock.Producer.mockImplementation(() => producer);
+        require('kafka-node').Producer.mockImplementation(() => producer);
+
+        const topic = 'topic';
 
         // Act + Assert
-        await expect(Kafka.createTopic(topic, config)).rejects.toEqual(kafkaError);
+        await expect(kafka.createTopic(topic, config)).rejects.toEqual(kafkaError);
       });
     });
 

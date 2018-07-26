@@ -18,7 +18,7 @@ export default class Kafka {
 
     public static async createTopic(topicId: string, config: IConfig): Promise<void> {
         const producer = await this.getProducer(config);
-        return new Promise<void>((resolve, reject) => {
+        const createTopicPromise = new Promise<void>((resolve, reject) => {
             producer.createTopics([topicId], true, (err: any, data: any) => {
                 if (err) {
                     reject(err);
@@ -27,6 +27,7 @@ export default class Kafka {
                 }
             });
         });
+        return this.createPromiseWithTimeout(createTopicPromise, this._kafkaRequestTimeoutInMs, 'connection timeout');
     }
 
     public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig) {
@@ -64,7 +65,7 @@ export default class Kafka {
     }
 
     private static _kafkaConnectionTimeoutInMs: number = 4500;
-    private static _kafkarequestTimeoutInMs: number = 4500;
+    private static _kafkaRequestTimeoutInMs: number = 4500;
 
     private static _classEnumToMethod: Map<ClassType, (json: string) => any> = new Map(
         [
