@@ -7,28 +7,19 @@ import DroneChargingNeedParams from './drone-charging/NeedParams';
 import DroneChargingBidParams from './drone-charging/BidParams';
 import BasicParams from './BasicParams';
 
-// TODO: Wrong casing
-// TODO: use ':' instead of ','
-enum classType {
-    droneDeliveryNeed = 'drone-delivery,need',
-    droneDeliveryBid = 'drone-delivery,bid',
-    droneChargingNeed = 'drone-charging,need',
-    droneChargingBid = 'drone-charging,bid',
+enum ClassType {
+    DroneDeliveryNeed = 'drone-delivery:need',
+    DroneDeliveryBid = 'drone-delivery:bid',
+    DroneChargingNeed = 'drone-charging:need',
+    DroneChargingBid = 'drone-charging:bid',
 }
 
 export default class Kafka {
 
-    // TODO: What's 'topic'? is it the topic name? id? rename...
-    public static async createTopic(topic: string, config: IConfig) {
-        const producer = await this.createProducer(config);
-        producer.createTopics([topic], true, (err: any, data: any) => {
-            if (err) {
-                // TODO: This will NOT throw in the async context!!!!
-                throw err;
-            }
-        });
+    public static async createTopic(topicId: string, config: IConfig): Promise<void> {
+        const producer = await this.getProducer(config);
         return new Promise<void>((resolve, reject) => {
-            producer.createTopics([topic], true, (err: any, data: any) => {
+            producer.createTopics([topicId], true, (err: any, data: any) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -38,11 +29,10 @@ export default class Kafka {
         });
     }
 
-    // TODO: What's 'topic'? is it the topic name? id? rename...
-    public static async sendParams(topic: string, basicParams: BasicParams, config: IConfig) {
-        const producer = await this.createProducer(config);
+    public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig) {
+        const producer = await this.getProducer(config);
         const payloads = [
-            { topic, messages: basicParams.toJson()},
+            { topic: topicId, messages: basicParams.toJson()},
         ];
         return new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {
@@ -61,8 +51,8 @@ export default class Kafka {
             consumer.on('message', (message) => {
                 const messageString = message.value.toString();
                 const messageObject = JSON.parse(messageString);
-                const classEnum = [messageObject.protocol, messageObject.type].join(',') as classType;
-                const fromJsonMethod = this.classEnumToMethod.get(classEnum);
+                const classEnum = [messageObject.protocol, messageObject.type].join(':') as ClassType;
+                const fromJsonMethod = this._classEnumToMethod.get(classEnum);
                 const finalObjectFromStream = fromJsonMethod(messageString);
                 resolve(finalObjectFromStream);
             });
@@ -73,35 +63,33 @@ export default class Kafka {
         return bidParamsObservable;
     }
 
-    private static classEnumToMethod: Map<classType, (json: string) => any> = new Map(
+    private static _kafkaConnectionTimeoutInMs: number = 4500;
+    private static _kafkarequestTimeoutInMs: number = 4500;
+
+    private static _classEnumToMethod: Map<ClassType, (json: string) => any> = new Map(
         [
-            [classType.droneChargingBid, DroneChargingBidParams.fromJson],
+            [ClassType.DroneChargingBid, DroneChargingBidParams.fromJson],
         ],
     );
 
     // todo: maybe delete this method
-    // TODO: use 'get' instead of 'create'
-    private static createKafkaClient(config: IConfig): KafkaClient {
-        // todo: change kafka host to config
-        // const client = new KafkaClient({kafkaHost: config.kafkaSeedUrls});
-        const client = new KafkaClient({kafkaHost: 'localhost:9092', connectTimeout: 6000, requestTimeout: 6000});
+    private static getKafkaClient(config: IConfig): KafkaClient {
+        const client = new KafkaClient({kafkaHost: config.kafkaSeedUrls[0], connectTimeout: 6000, requestTimeout: 6000});
         return client;
     }
 
-    // TODO: use 'get' instead of 'create'
-    private static createProducer(config: IConfig): Promise<Producer> {
-        const client = this.createKafkaClient(config);
+    private static getProducer(config: IConfig): Promise<Producer> {
+        const client = this.getKafkaClient(config);
         const producer = new Producer(client);
-        return new Promise<Producer>((resolve) => {
-            producer.on('ready', () => {
-                resolve(producer);
-                console.log(`producer is ready`);
-            });
+        const producerReadyPromise = new Promise<Producer>((resolve) => {
+            producer.on('ready', () => resolve(producer));
         });
+
+        return this.createPromiseWithTimeout(producerReadyPromise, this._kafkaConnectionTimeoutInMs, 'connection timeout');
     }
 
     private static createConsumer(topic: string, davId: DavID, config: IConfig): Consumer {
-        const client = this.createKafkaClient(config);
+        const client = this.getKafkaClient(config);
         const consumer = new Consumer(
             client,
             [
@@ -113,6 +101,16 @@ export default class Kafka {
             },
         );
         return consumer;
+    }
+
+    private static createPromiseWithTimeout<T>(resolvablePromise: Promise<T>, timeout: number, errorMessage: string) {
+        const timeoutPromise = new Promise<T>((resolve, reject) => {
+            const timer = setTimeout(() =>  {
+                clearTimeout(timer);
+                reject(errorMessage);
+            }, timeout);
+        });
+        return Promise.race([resolvablePromise, timeoutPromise]);
     }
 }
 
