@@ -16,6 +16,7 @@ export default class Config implements IConfig {
                 missionConsumerTtl: 10000,
                 missionProviderTtl: 10000,
                 blockchainType: BlockchainType.ropsten,
+                contractPath: './contracts/',
             },
             props);
     }

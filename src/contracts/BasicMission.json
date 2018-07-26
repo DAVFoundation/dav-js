@@ -65,14 +65,14 @@
           "type": "address"
         },
         {
-          "name": "_cost",
+          "name": "_tokenAmount",
           "type": "uint256"
         }
       ],
       "name": "create",
       "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
+      "payable": true,
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -81,10 +81,6 @@
         {
           "name": "_missionId",
           "type": "bytes32"
-        },
-        {
-          "name": "_buyerId",
-          "type": "address"
         }
       ],
       "name": "fulfilled",
@@ -98,14 +94,14 @@
     "ropsten": {
       "events": {},
       "links": {},
-      "address": "0xe6de69458a618cf417be88027159249340dc0b32",
-      "transactionHash": "0x28b293f70c43f5035fc5414d8b11c67cbd71d5e8ecfa8dcacc346e7425d4239c"
+      "address": "0x1f6674b6929Ba3B713c6C0b760379b61D8603cC9",
+      "transactionHash": "0x0f756f83c6fb262bf5f4c77da7b1249037e8d8cd52914419f45dd25692db2fe9"
     },
     "main": {
       "events": {},
       "links": {},
-      "address": "0x36db70e49ec65c2b14032078fcd1687c9cd21e03",
-      "transactionHash": "0x7993c1c9d283d3c06c8afbc7183e4a188a321075a91afe350ab3a0bfb47df02c"
+      "address": "0x927777B82DeDd4A93454bE8dC6573CFD6CE6B95d",
+      "transactionHash": "0x9c20763906f6615fc29cb68b48e380deb16e7ca70c6bf550abedbaad3667f47c"
     },
     "local": {
       "events": {},

@@ -10,4 +10,5 @@ export default interface IConfig {
     missionConsumerTtl?: number;
     missionProviderTtl?: number;
     blockchainType?: BlockchainType;
+    contractPath?: string;
 }
