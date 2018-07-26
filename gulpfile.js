@@ -5,6 +5,7 @@ const exec = require('child_process').exec;
 const ts = require('gulp-typescript');
 const tslint = require('gulp-tslint');
 const typedoc = require('gulp-typedoc');
+var sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('deploy-contracts', (callback) => {
   exec('truffle deploy', function (err, stdout, stderr) {
@@ -37,8 +38,11 @@ gulp.task('tslint', () =>
 gulp.task('tsc', function () {
   var tsProject = ts.createProject('tsconfig.json');
   return tsProject.src()
+    .pipe(sourcemaps.init())
     .pipe(tsProject())
-    .js.pipe(gulp.dest('build'));
+    .js
+    .pipe(sourcemaps.write(''))
+    .pipe(gulp.dest('build'));
 });
 
 gulp.task('typedoc', function () {

@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Test",
             "program": "${workspaceFolder}/node_modules/.bin/jest",
-            "args": [],
+            "args": ["src/Contracts.test.ts"],
             "console": "internalConsole",
             "internalConsoleOptions": "neverOpen",
             "windows": {
