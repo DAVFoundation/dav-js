@@ -22,11 +22,12 @@
   "scripts": {
     "build-dev": "webpack --mode development",
     "build-prod": "webpack --mode production",
-    "_postinstall": "npm run build-prod && rm -f node_modules/web3/index.d.ts",
     "postinstall": "rm -f node_modules/web3/index.d.ts",
     "start-testnet": "dav-cli --start",
-    "compile": "gulp compile",
-    "test": "gulp test"
+    "tslint": "gulp tslint",
+    "tsc": "gulp tsc",
+    "jest": "gulp jest",
+    "typedoc": "gulp typedoc"
   },
   "devDependencies": {
     "@types/jest": "^23.1.5",
@@ -47,6 +48,7 @@
     "jest": "^23.4.0",
     "jest-cli": "^22.4.0",
     "ts-jest": "^23.0.0",
+    "ts-node": "^7.0.0",
     "tslint": "^5.10.0",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.2",

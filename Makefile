@@ -1,13 +1,15 @@
 FORCE:
 
 test: FORCE
-	npm test
+	npm run tslint
+	npm run jest
 
 compile: FORCE
-	npm run compile
+	npm run tslint
+	npm run tsc
 
-publish: FORCE
-	npm run publish
+pre-publish: FORCE
+	npm run typedoc
 
 build-dev: test
 	npm run build-dev

@@ -22,35 +22,36 @@ gulp.task('lint', () => {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('jest', () => {
-  return jest.runCLI({}, '.');
+gulp.task('jest', (done) => {
+  return jest.runCLI({}, '.')
+    .on('error', function (err) { done(err); });
 });
 
-gulp.task('tslint', () =>
+gulp.task('tslint', (done) => {
   gulp.src('src/**/*.ts')
-    .pipe(tslint({
-      formatter: 'prose'
-    })).pipe(tslint.report({
-      emitError: false
-    }))
-);
+    .on('error', function (err) { done(err); })
+    .pipe(tslint({ formatter: 'prose' }))
+    .pipe(tslint.report());
+});
 
-gulp.task('tsc', function () {
+gulp.task('tsc', function (done) {
   var tsProject = ts.createProject('tsconfig.json');
   return tsProject.src()
     .pipe(sourcemaps.init())
     .pipe(tsProject())
+    .on('error', function (err) { done(err); })
     .js
     .pipe(sourcemaps.write(''))
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('typedoc', function () {
+gulp.task('typedoc', function (done) {
   return gulp
     .src(['src/**/*.ts'])
+    .on('error', function (err) { done(err); })
     .pipe(typedoc(require('./typedoc.js')));
 });
 
 gulp.task('compile', ['tslint', 'tsc']);
 gulp.task('test', ['tslint', 'jest']);
-gulp.task('publish', ['tslint', 'jest', 'tsc', 'typedoc']);
+gulp.task('pre-publish', ['tslint', 'jest', 'tsc', 'typedoc']);
