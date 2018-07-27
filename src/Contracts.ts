@@ -100,12 +100,8 @@ export default class Contracts {
         return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
     }
 
-<<<<<<< HEAD
     private static getContract( contractType: contracts, web3: Web3, config: IConfig): any {
         const contractFile = require(config.contractPath + contractType);
-=======
-    private static getContruct(contractFile: any, web3: Web3, config: IConfig): any {
->>>>>>> 3bcc29f11f8ba6439e2340f0e914265a40e74810
         const abi = contractFile.abi;
         const contractAddress = contractFile.networks[config.blockchainType].address;
         const contract = new web3.eth.Contract(abi, contractAddress);
