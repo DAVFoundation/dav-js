@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
-const jest = require('jest-cli');
+const jest = require('gulp-jest').default;
 const exec = require('child_process').exec;
 const ts = require('gulp-typescript');
 const tslint = require('gulp-tslint');
@@ -23,12 +23,13 @@ gulp.task('lint', () => {
 });
 
 gulp.task('jest', (done) => {
-  return jest.runCLI({}, '.')
-    .on('error', function (err) { done(err); });
+  return gulp.src('')
+    .on('error', function (err) { done(err); })
+    .pipe(jest({}));
 });
 
 gulp.task('tslint', (done) => {
-  gulp.src('src/**/*.ts')
+  return gulp.src('src/**/*.ts')
     .on('error', function (err) { done(err); })
     .pipe(tslint({ formatter: 'prose' }))
     .pipe(tslint.report());

@@ -38,6 +38,7 @@
     "babel-preset-env": "^1.6.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.2",
+    "gulp-jest": "^4.0.2",
     "gulp-nodemon": "^2.2.1",
     "gulp-shell": "^0.6.5",
     "gulp-sourcemaps": "^2.6.4",
