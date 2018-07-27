@@ -117,11 +117,8 @@ export default class Contracts {
     }
 
     private static toSafeGasLimit(gasAmount: number) {
-<<<<<<< HEAD
         return Math.min(gasAmount + 100, 4000000);
-=======
-        return Math.min(gasAmount * 2, 1000000);
->>>>>>> 3bcc29f11f8ba6439e2340f0e914265a40e74810
+        // return Math.min(gasAmount * 2, 1000000);
     }
 
 }
