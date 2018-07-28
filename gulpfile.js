@@ -5,7 +5,7 @@ const exec = require('child_process').exec;
 const ts = require('gulp-typescript');
 const tslint = require('gulp-tslint');
 const typedoc = require('gulp-typedoc');
-var sourcemaps = require('gulp-sourcemaps');
+const sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('deploy-contracts', (callback) => {
   exec('truffle deploy', function (err, stdout, stderr) {
