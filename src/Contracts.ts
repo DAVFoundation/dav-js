@@ -38,7 +38,7 @@ export default class Contracts {
         return transactionHash;
     }
 
-    public static async aproveMision(davId: DavID, walletPrivateKey: string, config: IConfig):
+    public static async approveMission(davId: DavID, walletPrivateKey: string, config: IConfig):
     Promise<string> {
         const web3 = this.initWeb3(config);
         const tokenContract = this.getContract(contracts.davToken, web3, config);
@@ -55,16 +55,16 @@ export default class Contracts {
         return transactionHash;
     }
 
-    public static async startMision(misionId: ID, davId: DavID, walletPrivateKey: string, vehicleId: DavID, price: BigInteger, config: IConfig):
+    public static async startMission(missionId: ID, davId: DavID, walletPrivateKey: string, vehicleId: DavID, price: BigInteger, config: IConfig):
     Promise<string> {
         const web3 = this.initWeb3(config);
         const { contract, contractAddress } = this.getContract(contracts.basicMission, web3, config);
-        const { encodeABI, estimateGas } = await contract.methods.create(misionId, vehicleId, davId, TOKEN_AMOUNT);
+        const { encodeABI, estimateGas } = await contract.methods.create(missionId, vehicleId, davId, TOKEN_AMOUNT);
         const tx = {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: 1000000,
+            gas: 1000000, // ToDo: use estimateGas()
             value: price,
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
@@ -72,15 +72,15 @@ export default class Contracts {
         return transactionHash;
     }
 
-    public static async finalizeMission(misionId: ID, davId: DavID, walletPrivateKey: string, config: IConfig): Promise<void> {
+    public static async finalizeMission(missionId: ID, davId: DavID, walletPrivateKey: string, config: IConfig): Promise<void> {
         const web3 = this.initWeb3(config);
         const { contract, contractAddress } = this.getContract(contracts.basicMission, web3, config);
-        const { encodeABI, estimateGas } = await contract.methods.fulfilled(misionId) as any;
+        const { encodeABI, estimateGas } = await contract.methods.fulfilled(missionId) as any;
         const tx = {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: 1000000,
+            gas: 1000000, // ToDo: use estimateGas()
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
         const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
@@ -94,7 +94,7 @@ export default class Contracts {
         const observable = Observable.create((observer: any) => {
             Observable.interval(2000).subscribe( async () => {
                 try {
-                    let events = await this.checkContractPastEvents(contract, davId) as any[];
+                    let events = await this.checkContractPastEvents(contract, davId);
                     events = events.filter((event: any) => !oldEventsTransactionHash[event.transactionHash]);
                     events.forEach((event: any) => oldEventsTransactionHash[event.transactionHash] = true);
                     if (events.length) {
@@ -112,7 +112,7 @@ export default class Contracts {
         return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
     }
 
-    private static getContract( contractType: contracts, web3: Web3, config: IConfig): any {
+    private static getContract(contractType: contracts, web3: Web3, config: IConfig): any {
         const contractFile = require(config.contractPath + contractType);
         const abi = contractFile.abi;
         const contractAddress = contractFile.networks[config.blockchainType].address;
@@ -128,7 +128,7 @@ export default class Contracts {
         });
     }
 
-    private static async checkContractPastEvents(contract: any, filter: string): Promise<any> {
+    private static async checkContractPastEvents(contract: any, filter: string): Promise<any[]> {
         // ToDo: Filter getPastEvents by sellerId or by missionId.
         const event = await contract.getPastEvents('allEvents');
         return event;
