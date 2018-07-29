@@ -23,5 +23,7 @@ export default class Message<T extends BidParams> {
         this.domain = domain;
     }
 
-    public async respond(type: string, payload: any) { /**/ }
+    public async respond(type: string, payload: any) {
+        return false;
+    }
 }

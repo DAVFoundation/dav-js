@@ -1,5 +1,5 @@
 import IConfig from './IConfig';
-import { DavID, BigInteger, ID, Observable as SDKObservable } from './common-types';
+import { DavID, BigInteger, ID, Observable } from './common-types';
 import Web3 = require('web3');
 import { contracts } from './common-enums';
 
@@ -87,18 +87,21 @@ export default class Contracts {
         return transactionHash;
     }
 
-    public static watchContract(davId: string, contractType: contracts, config: IConfig): SDKObservable<any> {
+    public static watchContract(davId: string, contractType: contracts, config: IConfig): Observable<any> {
         const web3 = this.initWeb3(config);
         const { contract } = this.getContract(contractType, web3, config);
-        const rxobservable = SDKObservable as any;
-        const oldEventsTransactionHash = {} as any;
-        const observable = rxobservable.create((observer: any) => {
-            rxobservable.interval(2000).subscribe( async () => {
-                let events = await this.checkContractPastEvents(contract, davId) as any[];
-                events = events.filter((event: any) => !oldEventsTransactionHash[event.transactionHash]);
-                events.forEach((event: any) => oldEventsTransactionHash[event.transactionHash] = true);
-                if (events.length) {
-                    observer.next(events);
+        const oldEventsTransactionHash: {[key: string]: boolean} = {};
+        const observable = Observable.create((observer: any) => {
+            Observable.interval(2000).subscribe( async () => {
+                try {
+                    let events = await this.checkContractPastEvents(contract, davId) as any[];
+                    events = events.filter((event: any) => !oldEventsTransactionHash[event.transactionHash]);
+                    events.forEach((event: any) => oldEventsTransactionHash[event.transactionHash] = true);
+                    if (events.length) {
+                        observer.next(events);
+                    }
+                } catch (err) {
+                    observer.error(err);
                 }
             });
         });
