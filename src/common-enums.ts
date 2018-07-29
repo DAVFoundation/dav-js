@@ -17,3 +17,9 @@ export enum BlockchainType {
     ropsten = 'ropsten',
     main = 'main',
 }
+
+export enum contracts {
+    identity = 'Identity',
+    davToken = 'DAVToken',
+    basicMission = 'BasicMission',
+}
