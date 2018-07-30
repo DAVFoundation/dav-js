@@ -27,7 +27,7 @@ export default class Kafka {
                 }
             });
         });
-        return this.createPromiseWithTimeout(createTopicPromise, this._kafkaRequestTimeoutInMs, 'connection timeout');
+        return this.createPromiseWithTimeout(createTopicPromise, this._kafkaRequestTimeoutInMs, 'kafka request timeout');
     }
 
     public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig) {
@@ -35,7 +35,7 @@ export default class Kafka {
         const payloads = [
             { topic: topicId, messages: basicParams.toJson()},
         ];
-        return new Promise<void>((resolve, reject) => {
+        const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {
                 if (err) {
                     reject(err);
@@ -44,23 +44,25 @@ export default class Kafka {
                 }
             });
         });
+        return this.createPromiseWithTimeout(sendPromise, this._kafkaRequestTimeoutInMs, 'kafka request timeout');
     }
 
-    public static paramsStream<T extends BasicParams>(topic: string, davId: DavID, config: IConfig): SDKObservable<T> {
-        const consumer = this.createConsumer(topic, davId, config);
+    public static async paramsStream<T extends BasicParams>(topicId: string, config: IConfig): Promise<SDKObservable<T>> {
+        const consumer = await this.getConsumer(topicId, config);
         const bidParamsPromise = new Promise<T>((resolve) => {
             consumer.on('message', (message) => {
                 const messageString = message.value.toString();
                 const messageObject = JSON.parse(messageString);
                 const classEnum = [messageObject.protocol, messageObject.type].join(':') as ClassType;
                 const fromJsonMethod = this._classEnumToMethod.get(classEnum);
+                // console.log(fromJsonMethod);
                 const finalObjectFromStream = fromJsonMethod(messageString);
+                // console.log(`final object is ${finalObjectFromStream}`);
                 resolve(finalObjectFromStream);
             });
         });
         const rxObservable = SDKObservable.fromPromise(bidParamsPromise);
-        const bidParamsObservable = rxObservable as SDKObservable<T>;
-        bidParamsObservable.topic = topic;
+        const bidParamsObservable = SDKObservable.fromObservable(rxObservable, topicId);
         return bidParamsObservable;
     }
 
@@ -82,14 +84,15 @@ export default class Kafka {
     private static getProducer(config: IConfig): Promise<Producer> {
         const client = this.getKafkaClient(config);
         const producer = new Producer(client);
-        const producerReadyPromise = new Promise<Producer>((resolve) => {
+        const producerReadyPromise = new Promise<Producer>((resolve, reject) => {
             producer.on('ready', () => resolve(producer));
+            producer.on('error', () => reject(producer));
         });
 
         return this.createPromiseWithTimeout(producerReadyPromise, this._kafkaConnectionTimeoutInMs, 'connection timeout');
     }
 
-    private static createConsumer(topic: string, davId: DavID, config: IConfig): Consumer {
+    private static getConsumer(topic: string, config: IConfig): Promise<Consumer> {
         const client = this.getKafkaClient(config);
         const consumer = new Consumer(
             client,
@@ -97,11 +100,14 @@ export default class Kafka {
                 { topic },
             ],
             {
-                groupId: davId,
+                groupId: topic,
                 autoCommit: true,
             },
         );
-        return consumer;
+        const clientReadyPromise = new Promise<Consumer>((resolve) => {
+            client.on('ready', () => resolve(consumer));
+        });
+        return this.createPromiseWithTimeout(clientReadyPromise, this._kafkaConnectionTimeoutInMs, 'connection timeout');
     }
 
     private static createPromiseWithTimeout<T>(resolvablePromise: Promise<T>, timeout: number, errorMessage: string) {
