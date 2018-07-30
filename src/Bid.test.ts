@@ -11,13 +11,13 @@ describe('Bid class', () => {
   describe('accept method', () => {
     beforeAll(() => { /**/ });
 
-    it('should success', async () => {
+    xit('should success', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       // Initialize bid
       await bid.accept();
     });
 
-    it('should throw due to topic creation failure', async () => {
+    xit('should throw due to topic creation failure', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       // Initialize bid
       expect(await bid.accept()).toThrow('topic creation failure exception');
@@ -27,7 +27,7 @@ describe('Bid class', () => {
   describe('signContract method', () => {
     beforeAll(() => { /**/ });
 
-    it('should success, validate mission selfId', async () => {
+    xit('should success, validate mission selfId', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'valid private key';
       // Initialize bid, add consumer topic before sign
@@ -35,14 +35,14 @@ describe('Bid class', () => {
       expect(mission.selfId).toBe('new consumer topic created in accept method');
     });
 
-    it('should throw due to invalid private key', async () => {
+    xit('should throw due to invalid private key', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'invalid private key';
       // Initialize bid
       expect(await bid.signContract(privateKey)).toThrow('invalid private key exception');
     });
 
-    it('should throw due to web3 exception', async () => {
+    xit('should throw due to web3 exception', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'valid private key';
       // Initialize bid
@@ -53,14 +53,14 @@ describe('Bid class', () => {
   describe('messages method', () => {
     beforeAll(() => { /**/ });
 
-    it('should success', () => {
+    xit('should success', () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       // Initialize bid
       // mock accept, because messages method had to be called after bid has topic Id
       bid.messages();
     });
 
-    it('should throw due to absence of topic creation', () => {
+    xit('should throw due to absence of topic creation', () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       // Initialize bid
       expect(bid.messages()).toThrow('no topic to listen for');

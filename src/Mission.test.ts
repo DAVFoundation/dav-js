@@ -12,13 +12,13 @@ describe('Mission class', () => {
   describe('sendMessage method', () => {
     beforeAll(() => { /**/ });
 
-    it('should success, validate kafka mock send message', async () => {
+    xit('should success, validate kafka mock send message', async () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
       await mission.sendMessage('type', 'content', new SendMessageParams());
       // validate kafka mock called with send message method
     });
 
-    it('should fail due to kafka exception', async () => {
+    xit('should fail due to kafka exception', async () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
       expect(await mission.sendMessage('type', 'content', new SendMessageParams())).toThrow('kafka exception');
     });
@@ -27,7 +27,7 @@ describe('Mission class', () => {
   describe('messages method', () => {
     beforeAll(() => { /**/ });
 
-    it('should success', () => {
+    xit('should success', () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
       mission.messages();
     });
@@ -36,17 +36,17 @@ describe('Mission class', () => {
   describe('finalizeMission method', () => {
     beforeAll(() => { /**/ });
 
-    it('should success', async () => {
+    xit('should success', async () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
       await mission.finalizeMission('walletPrivateKey');
     });
 
-    it('should fail due to blockchain exception', async () => {
+    xit('should fail due to blockchain exception', async () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
       expect(await mission.finalizeMission('walletPrivateKey')).toThrow('blockchain excpetion');
     });
 
-    it('should fail due to invalid private key', async () => {
+    xit('should fail due to invalid private key', async () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
       expect(await mission.finalizeMission('invalid walletPrivateKey')).toThrow('invalid private key excpetion');
     });
