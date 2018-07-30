@@ -15,14 +15,14 @@ export default class Identity {
   constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
 
   public async needsForType<T extends NeedFilterParams, U extends NeedParams>(params: T): Promise<Observable<Need<U>>> {
-    return Promise.resolve(new Observable<Need<U>>()); }
+    return null; }
 
   public need<T extends NeedParams>(id: ID, params: T): Need<T> { return new Need(id, '', params, this.config); }
   public bid<T extends BidParams>(id: ID, params: T): Bid<T> { return new Bid(id, '', params, this.config); }
   public mission(selfId: ID, peerId: ID): Mission { return new Mission(selfId, peerId, new Identity('id', 'davId', this.config), this.config); }
   public messages<T extends BidParams>(): Observable<Message<T>> {
     if (!this._messages) {
-      this._messages = new Observable<Message<T>>();
+      this._messages = null;
     }
     return this._messages;
   }

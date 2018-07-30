@@ -19,6 +19,6 @@ export default class Bid<T extends BidParams> {
         return new Mission(''/* new topic */,
             undefined /* no peer yet */, new Identity('id', 'davId', this.config), this.config);
     }
-    public messages(): Observable<Message<T>> { return new Observable<Message<T>>(); }
+    public messages(): Observable<Message<T>> { return null; }
 }
 

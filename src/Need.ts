@@ -15,6 +15,6 @@ export default class Need<T extends NeedParams> {
     }
 
     public bids<U extends BidParams>(): Observable<Bid<U>> {
-        return new Observable<Bid<U>>();
+        return null;
     }
 }

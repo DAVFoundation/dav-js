@@ -13,6 +13,6 @@ export default class Mission {
     }
 
     public async sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
-    public messages<T extends BidParams>(): Observable<Message<T>> { return new Observable<Message<T>>(); }
+    public messages<T extends BidParams>(): Observable<Message<T>> { return null; }
     public async finalizeMission(walletPrivateKey: string) { /**/ }
 }
