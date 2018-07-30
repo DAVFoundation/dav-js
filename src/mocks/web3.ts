@@ -34,6 +34,9 @@ function contractFactory(callRes: any) {
                 })),
             };
         }
+        public getPastEvents() {
+            return callRes.pastEvents;
+        }
     }
     return Contract;
 }

@@ -41,14 +41,14 @@ export default class Contracts {
     public static async approveMission(davId: DavID, walletPrivateKey: string, config: IConfig):
     Promise<string> {
         const web3 = this.initWeb3(config);
-        const tokenContract = this.getContract(contracts.davToken, web3, config);
+        const { contract, contractAddress } = this.getContract(contracts.davToken, web3, config);
         const missionContract = this.getContract(contracts.basicMission, web3, config);
-        const { encodeABI, estimateGas } = await tokenContract.contract.methods.approve(missionContract.contractAddress, TOKEN_AMOUNT);
+        const { encodeABI, estimateGas } = await contract.methods.approve(missionContract.contractAddress, TOKEN_AMOUNT);
         const tx = {
             data: encodeABI(),
-            to: tokenContract.contractAddress,
+            to: contractAddress,
             from: davId,
-            gas: this.toSafeGasLimit(await estimateGas({ from: davId })),
+            gas: this.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress })),
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
         const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
@@ -64,7 +64,7 @@ export default class Contracts {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: 1000000, // ToDo: use estimateGas()
+            gas: this.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress, value: price })),
             value: price,
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
@@ -80,7 +80,7 @@ export default class Contracts {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: 1000000, // ToDo: use estimateGas()
+            gas: this.toSafeGasLimit(await estimateGas({ from: davId })),
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
         const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
@@ -123,7 +123,7 @@ export default class Contracts {
     private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<any> {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
-            transaction.once('confirmation', (confirmationNumber, receipt) => resolve(receipt));
+            transaction.once('receipt', (receipt) => resolve(receipt));
             transaction.on('error', (err) => reject(err));
         });
     }
