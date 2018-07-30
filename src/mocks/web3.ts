@@ -21,6 +21,7 @@ function sendSignedTransaction(callRes: any) {
 
 function contractFactory(callRes: any) {
     class Contract {
+        public getPastEvents = callRes.getPastEvents;
         public methods: any;
         constructor() {
             this.methods = {
@@ -32,10 +33,19 @@ function contractFactory(callRes: any) {
                     estimateGas: jest.fn(() => 100),
                     send: jest.fn(() => Promise.resolve(callRes.register)),
                 })),
+                approve: jest.fn(() => ({
+                    encodeABI: jest.fn(() => 'encodeABI'),
+                    estimateGas: jest.fn(() => 100),
+                })),
+                create: jest.fn(() => ({
+                    encodeABI: jest.fn(() => 'encodeABI'),
+                    estimateGas: jest.fn(() => 100),
+                })),
+                fulfilled: jest.fn(() => ({
+                    encodeABI: jest.fn(() => 'encodeABI'),
+                    estimateGas: jest.fn(() => 100),
+                })),
             };
-        }
-        public getPastEvents() {
-            return callRes.pastEvents;
         }
     }
     return Contract;

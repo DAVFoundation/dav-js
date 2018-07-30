@@ -6,9 +6,8 @@ import Mission from './Mission';
 describe('Contracts class', () => {
 
   const configuration = new Config({});
-  const transactionReceipt = {transactionHash: 'TRANSACTION_HASH'};
-  const pastEvent = {transactionHash: 'TRANSACTION_HASH'};
-  const web3Error = {msg: 'WEB3_ERROR'};
+  const transactionReceipt = { transactionHash: 'TRANSACTION_HASH' };
+  const web3Error = { msg: 'WEB3_ERROR' };
   const REGISTERED_IDENTITY = 'REGISTERED_IDENTITY';
   const UNREGISTERED_IDENTITY = 'UNREGISTERED_IDENTITY';
   const WALLET_PRIVATE_KEY = 'WALLET_PRIVET_KEY';
@@ -16,7 +15,14 @@ describe('Contracts class', () => {
   const WALLET_ADDRESS = 'WALLET_ADDRESS';
   const VEHICLE_ID = 'VEHICLE_ID';
   const MISSION_ID = 'MISSION_ID';
+  const MISSION_PRICE = '1000000';
 
+  const aBitOfTime = () => {
+    return new Promise((resolve, reject) => {
+      jest.useRealTimers();
+      setTimeout(resolve, 0);
+    });
+  };
   beforeAll(() => { /**/ });
 
   describe('isIdentityRegistered method', () => {
@@ -33,7 +39,7 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.isIdentityRegistered(REGISTERED_IDENTITY, configuration)).resolves.toEqual(true);
+      await expect(contracts.isIdentityRegistered(REGISTERED_IDENTITY, configuration)).resolves.toBe(true);
     });
 
     it('should return false for unregistered Id', async () => {
@@ -44,7 +50,7 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.isIdentityRegistered(UNREGISTERED_IDENTITY, configuration)).resolves.toEqual(false);
+      await expect(contracts.isIdentityRegistered(UNREGISTERED_IDENTITY, configuration)).resolves.toBe(false);
 
     });
   });
@@ -63,11 +69,11 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.registerIdentity(REGISTERED_IDENTITY,
-                                        IDENTITY_PRIVATE_KEY,
-                                        WALLET_ADDRESS,
-                                        WALLET_PRIVATE_KEY,
-                                        configuration)).resolves.toEqual('ALREADY_REGISTERED');
+      await expect(contracts.registerIdentity(REGISTERED_IDENTITY,
+        IDENTITY_PRIVATE_KEY,
+        WALLET_ADDRESS,
+        WALLET_PRIVATE_KEY,
+        configuration)).resolves.toEqual('ALREADY_REGISTERED');
     });
 
     it('should return transaction receipt for unregistered Id', async () => {
@@ -79,11 +85,11 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.registerIdentity(UNREGISTERED_IDENTITY,
-                                        IDENTITY_PRIVATE_KEY,
-                                        WALLET_ADDRESS,
-                                        WALLET_PRIVATE_KEY,
-                                        configuration)).resolves.toEqual(transactionReceipt);
+      await expect(contracts.registerIdentity(UNREGISTERED_IDENTITY,
+        IDENTITY_PRIVATE_KEY,
+        WALLET_ADDRESS,
+        WALLET_PRIVATE_KEY,
+        configuration)).resolves.toBe(transactionReceipt);
     });
 
     it('should throw some web3 error', async () => {
@@ -96,11 +102,11 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.registerIdentity(UNREGISTERED_IDENTITY,
-                                        IDENTITY_PRIVATE_KEY,
-                                        WALLET_ADDRESS,
-                                        WALLET_PRIVATE_KEY,
-                                        configuration)).rejects.toEqual(web3Error);
+      await expect(contracts.registerIdentity(UNREGISTERED_IDENTITY,
+        IDENTITY_PRIVATE_KEY,
+        WALLET_ADDRESS,
+        WALLET_PRIVATE_KEY,
+        configuration)).rejects.toBe(web3Error);
     });
   });
 
@@ -119,9 +125,9 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.approveMission(REGISTERED_IDENTITY,
-                                      WALLET_PRIVATE_KEY,
-                                      configuration)).resolves.toEqual(transactionReceipt);
+      await expect(contracts.approveMission(REGISTERED_IDENTITY,
+        WALLET_PRIVATE_KEY,
+        configuration)).resolves.toBe(transactionReceipt);
     });
 
     it('should throw some web3 error', async () => {
@@ -134,9 +140,9 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.approveMission(REGISTERED_IDENTITY,
-                                      WALLET_PRIVATE_KEY,
-                                      configuration)).rejects.toEqual(web3Error);
+      await expect(contracts.approveMission(REGISTERED_IDENTITY,
+        WALLET_PRIVATE_KEY,
+        configuration)).rejects.toBe(web3Error);
     });
   });
 
@@ -155,11 +161,12 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.startMission(MISSION_ID,
-                                    REGISTERED_IDENTITY,
-                                    WALLET_PRIVATE_KEY,
-                                    VEHICLE_ID,
-                                    configuration)).resolves.toEqual(transactionReceipt);
+      await expect(contracts.startMission(MISSION_ID,
+        REGISTERED_IDENTITY,
+        WALLET_PRIVATE_KEY,
+        VEHICLE_ID,
+        MISSION_PRICE,
+        configuration)).resolves.toBe(transactionReceipt);
     });
 
     it('should throw some web3 error', async () => {
@@ -172,11 +179,12 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.startMission(MISSION_ID,
-                                    REGISTERED_IDENTITY,
-                                    WALLET_PRIVATE_KEY,
-                                    VEHICLE_ID,
-                                    configuration)).rejects.toEqual(web3Error);
+      await expect(contracts.startMission(MISSION_ID,
+        REGISTERED_IDENTITY,
+        WALLET_PRIVATE_KEY,
+        VEHICLE_ID,
+        MISSION_PRICE,
+        configuration)).rejects.toBe(web3Error);
     });
   });
 
@@ -195,10 +203,10 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.finalizeMission(MISSION_ID,
-                                       REGISTERED_IDENTITY,
-                                       WALLET_PRIVATE_KEY,
-                                       configuration)).resolves.toEqual(transactionReceipt);
+      await expect(contracts.finalizeMission(MISSION_ID,
+        REGISTERED_IDENTITY,
+        WALLET_PRIVATE_KEY,
+        configuration)).resolves.toBe(transactionReceipt);
     });
 
     it('should throw some web3 error', async () => {
@@ -211,38 +219,44 @@ describe('Contracts class', () => {
         });
       });
       const contracts: any = (await import('./Contracts')).default;
-      expect(contracts.finalizeMission(MISSION_ID,
-                                       REGISTERED_IDENTITY,
-                                       WALLET_PRIVATE_KEY,
-                                       configuration)).rejects.toEqual(web3Error);
+      await expect(contracts.finalizeMission(MISSION_ID,
+        REGISTERED_IDENTITY,
+        WALLET_PRIVATE_KEY,
+        configuration)).rejects.toBe(web3Error);
     });
   });
 
   describe('watchContract method', () => {
 
-    beforeAll(() => {
-      jest.useFakeTimers();
-    });
-
     beforeEach(() => {
       jest.resetAllMocks();
       jest.resetModules();
+      jest.useFakeTimers();
     });
 
-    it('should receive contract event', async () => {
+    it('should receive contract events', async () => {
+      const pastEvent1 = [{ transactionHash: 'TRANSACTION_HASH_1' }];
+      const pastEvent2 = [{ transactionHash: 'TRANSACTION_HASH_2' }];
       const web3Factory = require('./mocks/web3');
       jest.doMock('web3', () => {
+        const getPastEvents = jest.fn();
+        getPastEvents
+        .mockReturnValueOnce(pastEvent1)
+        .mockReturnValue(pastEvent2);
+
         return web3Factory({
-          pastEvent,
+          getPastEvents,
         });
       });
+      const spy = jest.fn();
       const contracts: any = (await import('./Contracts')).default;
-      const contractEvents = contracts.watchContract(REGISTERED_IDENTITY,
-        contractsType.basicMission,
-        configuration);
-      contractEvents.subscribe((event: any) => {
-        expect(event).resolves.toEqual(pastEvent);
-      });
+      const observable = contracts.watchContract(REGISTERED_IDENTITY, contractsType.basicMission, configuration);
+      observable.subscribe(spy);
+      jest.advanceTimersByTime(10000);
+      await aBitOfTime();
+      expect(spy.mock.calls.length).toBe(2);
+      expect(spy.mock.calls[0][0]).toEqual(pastEvent1);
+      expect(spy.mock.calls[1][0]).toEqual(pastEvent2);
     });
 
   });
