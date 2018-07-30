@@ -4,6 +4,8 @@ import { log } from 'handlebars';
 
 export default class BidParams extends BaseBidParams {
 
+    public plugType: string;
+
     public static fromJson(json: string) {
         const object = JSON.parse(json);
         const price =  new Price(object.price.value, object.price.type);
@@ -19,8 +21,6 @@ export default class BidParams extends BaseBidParams {
         }
         return bidParams;
     }
-
-    public plugType: string;
 
     constructor(init: Partial<BidParams>) {
         super(init.price);

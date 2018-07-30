@@ -9,6 +9,36 @@ const TOKEN_AMOUNT = '1500000000000000000';
 
 export default class Contracts {
 
+    private static initWeb3(config: IConfig): Web3 {
+        return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
+    }
+
+    private static getContract(contractType: contracts, web3: Web3, config: IConfig): any {
+        const contractFile = require(config.contractPath + contractType);
+        const abi = contractFile.abi;
+        const contractAddress = contractFile.networks[config.blockchainType].address;
+        const contract = new web3.eth.Contract(abi, contractAddress);
+        return { abi, contractAddress, contract };
+    }
+
+    private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const transaction = web3.eth.sendSignedTransaction(rawTransaction);
+            transaction.once('receipt', (receipt) => resolve(receipt));
+            transaction.on('error', (err) => reject(err));
+        });
+    }
+
+    private static async checkContractPastEvents(contract: any, filter: string): Promise<any[]> {
+        // ToDo: Filter getPastEvents by sellerId or by missionId.
+        const event = await contract.getPastEvents('allEvents');
+        return event;
+    }
+
+    private static toSafeGasLimit(gasAmount: number) {
+        return Math.min(gasAmount + 100, 4000000);
+    }
+
     public static async isIdentityRegistered(davID: DavID, config: IConfig): Promise<boolean> {
         const web3 = this.initWeb3(config);
         const { contract } = this.getContract(contracts.identity, web3, config);
@@ -107,35 +137,4 @@ export default class Contracts {
         });
         return observable;
     }
-
-    private static initWeb3(config: IConfig): Web3 {
-        return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
-    }
-
-    private static getContract(contractType: contracts, web3: Web3, config: IConfig): any {
-        const contractFile = require(config.contractPath + contractType);
-        const abi = contractFile.abi;
-        const contractAddress = contractFile.networks[config.blockchainType].address;
-        const contract = new web3.eth.Contract(abi, contractAddress);
-        return { abi, contractAddress, contract };
-    }
-
-    private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const transaction = web3.eth.sendSignedTransaction(rawTransaction);
-            transaction.once('receipt', (receipt) => resolve(receipt));
-            transaction.on('error', (err) => reject(err));
-        });
-    }
-
-    private static async checkContractPastEvents(contract: any, filter: string): Promise<any[]> {
-        // ToDo: Filter getPastEvents by sellerId or by missionId.
-        const event = await contract.getPastEvents('allEvents');
-        return event;
-    }
-
-    private static toSafeGasLimit(gasAmount: number) {
-        return Math.min(gasAmount + 100, 4000000);
-    }
-
 }
