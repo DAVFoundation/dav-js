@@ -15,18 +15,18 @@ describe('Identity class', () => {
     describe('needsForType method', () => {
       beforeAll(() => { /**/ });
 
-      it('should success, validate kafka mock create topic', async () => {
+      xit('should success, validate kafka mock create topic', async () => {
         const identity = new Identity('id', 'davId', config);
         const needsStream = await identity.needsForType(needFilterParams);
         // check kafka mock create topic method to be called with valid topic
       });
 
-      it('should fail due to topic creation failure', async () => {
+      xit('should fail due to topic creation failure', async () => {
         const identity = new Identity('id', 'davId', config);
         expect(await identity.needsForType(needFilterParams)).toThrow('topic creation error');
       });
 
-      it('should fail due to dav node exception', async () => {
+      xit('should fail due to dav node exception', async () => {
         const identity = new Identity('id', 'davId', config);
         expect(await identity.needsForType(needFilterParams)).toThrow('dav node exception');
       });
@@ -35,24 +35,24 @@ describe('Identity class', () => {
     describe('publishNeed method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success, validate kafka mock create topic', async () => {
+        xit('should success, validate kafka mock create topic', async () => {
           const identity = new Identity('id', 'davId', config);
           const need = await identity.publishNeed(needParams);
           // check kafka mock create topic method to be called with valid topic
         });
 
-        it('should success, validate need', async () => {
+        xit('should success, validate need', async () => {
             const identity = new Identity('id', 'davId', config);
             const need = await identity.publishNeed(needParams);
             // check each need public property validity in a separate test
           });
 
-        it('should fail due to topic creation failure', async () => {
+        xit('should fail due to topic creation failure', async () => {
           const identity = new Identity('id', 'davId', config);
           expect(await identity.publishNeed(needParams)).toThrow('topic creation error');
         });
 
-        it('should fail due to dav node exception', async () => {
+        xit('should fail due to dav node exception', async () => {
           const identity = new Identity('id', 'davId', config);
           expect(await identity.publishNeed(needParams)).toThrow('dav node exception');
         });
@@ -61,7 +61,7 @@ describe('Identity class', () => {
     describe('need method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success, validate need', () => {
+        xit('should success, validate need', () => {
           const identity = new Identity('id', 'davId', config);
           const need = identity.need('needId', needParams);
           // check each need public property validity in a separate test
@@ -71,7 +71,7 @@ describe('Identity class', () => {
     describe('bid method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success, validate bid', () => {
+        xit('should success, validate bid', () => {
           const identity = new Identity('id', 'davId', config);
           const bid = identity.bid('bidId', bidParams);
           // check each bid public property validity in a separate test
@@ -81,7 +81,7 @@ describe('Identity class', () => {
     describe('mission method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success, validate mission', () => {
+        xit('should success, validate mission', () => {
             const identity = new Identity('id', 'davId', config);
             const mission = identity.mission('missionId', 'peerId');
             // check each mission public property validity in a separate test
@@ -91,7 +91,7 @@ describe('Identity class', () => {
     describe('messages method', () => {
         beforeAll(() => { /**/ });
 
-        it('should success', () => {
+        xit('should success', () => {
             const identity = new Identity('id', 'davId', config);
             const messages = identity.messages();
         });

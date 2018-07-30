@@ -1,6 +1,9 @@
 import { KafkaClient, Producer, Consumer } from 'kafka-node';
 import IConfig from './IConfig';
+// TODO: If `Observable` is not not a used name - don't alias - it confuses.
 import { DavID, Observable as SDKObservable } from './common-types';
+
+// TODO: Use `import * as DroneDeliveryNeedParams from ...` in this case since you are aliasing indeed - it's confusing
 import DroneDeliveryNeedParams from './drone-delivery/NeedParams';
 import DroneDeliveryBidParams from './drone-delivery/BidParams';
 import DroneChargingNeedParams from './drone-charging/NeedParams';
@@ -27,6 +30,7 @@ export default class Kafka {
                 }
             });
         });
+        // TODO: replace with promise-timeout from https://www.npmjs.com/package/promise-timeout
         return this.createPromiseWithTimeout(createTopicPromise, this._kafkaRequestTimeoutInMs, 'kafka request timeout');
     }
 
@@ -44,6 +48,7 @@ export default class Kafka {
                 }
             });
         });
+        // TODO: replace with promise-timeout from https://www.npmjs.com/package/promise-timeout
         return this.createPromiseWithTimeout(sendPromise, this._kafkaRequestTimeoutInMs, 'kafka request timeout');
     }
 
@@ -51,6 +56,7 @@ export default class Kafka {
         const consumer = await this.getConsumer(topicId, config);
         const bidParamsPromise = new Promise<T>((resolve) => {
             consumer.on('message', (message) => {
+                // TODO: What happens when message format is bad?
                 const messageString = message.value.toString();
                 const messageObject = JSON.parse(messageString);
                 const classEnum = [messageObject.protocol, messageObject.type].join(':') as ClassType;
@@ -66,15 +72,19 @@ export default class Kafka {
         return bidParamsObservable;
     }
 
+    // TODO: private static properties should be put at the top
     private static _kafkaConnectionTimeoutInMs: number = 4500;
     private static _kafkaRequestTimeoutInMs: number = 4500;
 
+    // TODO: private static properties should be put at the top
+    // TODO: Why `any`? It would be better to use the real type `BidParams`
     private static _classEnumToMethod: Map<ClassType, (json: string) => any> = new Map(
         [
             [ClassType.DroneChargingBid, DroneChargingBidParams.fromJson],
         ],
     );
 
+    // TODO: remove comments which are not relevant anymore
     // todo: maybe delete this method
     private static getKafkaClient(config: IConfig): KafkaClient {
         const client = new KafkaClient({kafkaHost: config.kafkaSeedUrls[0], connectTimeout: 6000, requestTimeout: 6000});
@@ -89,9 +99,11 @@ export default class Kafka {
             producer.on('error', () => reject(producer));
         });
 
+        // TODO: replace with promise-timeout from https://www.npmjs.com/package/promise-timeout
         return this.createPromiseWithTimeout(producerReadyPromise, this._kafkaConnectionTimeoutInMs, 'connection timeout');
     }
 
+    // TODO: topic -> topicId
     private static getConsumer(topic: string, config: IConfig): Promise<Consumer> {
         const client = this.getKafkaClient(config);
         const consumer = new Consumer(
@@ -104,12 +116,16 @@ export default class Kafka {
                 autoCommit: true,
             },
         );
+
+        // TODO: `clientReadyPromise` is declared twice - should be merged
         const clientReadyPromise = new Promise<Consumer>((resolve) => {
             client.on('ready', () => resolve(consumer));
         });
+        // TODO: replace with promise-timeout from https://www.npmjs.com/package/promise-timeout
         return this.createPromiseWithTimeout(clientReadyPromise, this._kafkaConnectionTimeoutInMs, 'connection timeout');
     }
 
+    // TODO: replace with promise-timeout from https://www.npmjs.com/package/promise-timeout
     private static createPromiseWithTimeout<T>(resolvablePromise: Promise<T>, timeout: number, errorMessage: string) {
         const timeoutPromise = new Promise<T>((resolve, reject) => {
             const timer = setTimeout(() =>  {
