@@ -17,10 +17,11 @@ describe('Contracts class', () => {
   const MISSION_ID = 'MISSION_ID';
   const MISSION_PRICE = '1000000';
 
-  const aBitOfTime = () => {
+  const bitOfTime = () => {
     return new Promise((resolve, reject) => {
       jest.useRealTimers();
       setTimeout(resolve, 0);
+      jest.useFakeTimers();
     });
   };
   beforeAll(() => { /**/ });
@@ -241,8 +242,8 @@ describe('Contracts class', () => {
       jest.doMock('web3', () => {
         const getPastEvents = jest.fn();
         getPastEvents
-        .mockReturnValueOnce(pastEvent1)
-        .mockReturnValue(pastEvent2);
+          .mockReturnValueOnce(pastEvent1)
+          .mockReturnValue(pastEvent2);
 
         return web3Factory({
           getPastEvents,
@@ -253,12 +254,30 @@ describe('Contracts class', () => {
       const observable = contracts.watchContract(REGISTERED_IDENTITY, contractsType.basicMission, configuration);
       observable.subscribe(spy);
       jest.advanceTimersByTime(10000);
-      await aBitOfTime();
+      await bitOfTime();
       expect(spy.mock.calls.length).toBe(2);
       expect(spy.mock.calls[0][0]).toEqual(pastEvent1);
       expect(spy.mock.calls[1][0]).toEqual(pastEvent2);
     });
 
-  });
+    it('should receive contract error events', async () => {
+      const web3Factory = require('./mocks/web3');
+      jest.doMock('web3', () => {
+        const getPastEvents = jest.fn(() => Promise.reject(web3Error));
+        return web3Factory({
+          getPastEvents,
+        });
+      });
+      const spy = jest.fn();
+      const contracts: any = (await import('./Contracts')).default;
+      const observable = contracts.watchContract(REGISTERED_IDENTITY, contractsType.basicMission, configuration);
+      observable.subscribe(spy, (err: any) => {
+        expect(err).toEqual(web3Error);
+      });
+      jest.advanceTimersByTime(10000);
+      await bitOfTime();
+      expect(spy).not.toHaveBeenCalled();
+    });
 
+  });
 });
