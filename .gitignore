@@ -5,3 +5,4 @@ npm-debug.log
 dist
 build
 docs/api
+coverage
