@@ -11,13 +11,13 @@ import { contracts } from './common-enums';
 const configuration = new Config({});
 
 // params start
-const MISSION_ID = '';
-const MISSION_PRICE = '';
-const DAV_ID = '';
-const WALLET_PRIVATE_KEY = '';
-const IDENTITY_PRIVATE_KEY = '';
-const WALLET_ADDRESS = '';
-const VEHICLE_ID = '';
+const MISSION_ID = '0xf3229680B0166F0812e0ECEAd69B1dd144334229';
+const MISSION_PRICE = '100000000000000000';
+const DAV_ID = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
+const WALLET_PRIVATE_KEY = 'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
+const IDENTITY_PRIVATE_KEY = 'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
+const WALLET_ADDRESS = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
+const VEHICLE_ID = '0x3e54f4d0A7C93516f962e5cfcB402dB6C2700C30';
 // params end
 
 // identityPrivateKey: string, walletAddress

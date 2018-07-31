@@ -1,18 +1,33 @@
-
 import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import Identity from './Identity';
 import Message from './Message';
-import ISendMessageParams from './ISendMessageParams';
+import MessageParams from './MessageParams';
 import BidParams from './BidParams';
+import Contracts from './Contracts';
+import Kafka from './Kafka';
 
 export default class Mission {
 
     constructor(public selfId: ID, public peerId: ID, public needer: Identity, private config: IConfig) {
-        /**/
     }
 
-    public async sendMessage(type: string, payload: any, params: ISendMessageParams) { /**/ }
-    public messages<T extends BidParams>(): Observable<Message<T>> { return null; }
-    public async finalizeMission(walletPrivateKey: string) { /**/ }
+    public async sendMessage(type: string, payload: any, params: MessageParams) {
+        Kafka.sendParams(this.peerId, params, this.config);
+    }
+
+    public async messages<T extends BidParams>(): Promise<Observable<Message<T>>> {
+        const stream = await Kafka.paramsStream(this.selfId, this.config);
+        const observable = Observable.create((observer: any) => {
+            stream.subscribe((params) => {
+                // const message = new Message(...params);
+                // observer.next(message);
+            });
+        });
+        return observable;
+    }
+
+    public async finalizeMission(walletPrivateKey: string) {
+        Contracts.finalizeMission(this.selfId, this.needer.davID, walletPrivateKey, this.config);
+    }
 }
