@@ -1,7 +1,5 @@
-import { log } from 'handlebars';
 import Config from './Config';
 import { contracts as contractsType } from './common-enums';
-import Mission from './Mission';
 
 describe('Contracts class', () => {
 
