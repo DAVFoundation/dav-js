@@ -1,6 +1,6 @@
 import Config from './Config';
 import Mission from './Mission';
-import SendMessageParams from './SendMessageParams';
+import MessageParams from './drone-charging/MessageParams';
 import Identity from './Identity';
 
 describe('Mission class', () => {
@@ -14,13 +14,13 @@ describe('Mission class', () => {
 
     xit('should success, validate kafka mock send message', async () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
-      await mission.sendMessage('type', 'content', new SendMessageParams());
+      await mission.sendMessage('type', 'content', new MessageParams({}));
       // validate kafka mock called with send message method
     });
 
     xit('should fail due to kafka exception', async () => {
       const mission = new Mission('selfId', 'peerId', new Identity('id', 'davId', configuration), configuration);
-      expect(await mission.sendMessage('type', 'content', new SendMessageParams())).toThrow('kafka exception');
+      expect(await mission.sendMessage('type', 'content', new MessageParams({}))).toThrow('kafka exception');
     });
   });
 
