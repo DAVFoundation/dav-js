@@ -8,6 +8,7 @@ import { default as DroneDeliveryBidParams } from './drone-delivery/BidParams';
 import { default as DroneChargingNeedParams } from './drone-charging/NeedParams';
 import { default as DroneChargingBidParams } from './drone-charging/BidParams';
 import BasicParams from './BasicParams';
+import { v4 as uuidV4 } from 'uuid';
 
 enum ClassType {
 
@@ -62,6 +63,10 @@ export default class Kafka {
             client.on('ready', () => resolve(consumer));
         });
         return timeout(clientReadyPromise, this._kafkaConnectionTimeoutInMs);
+    }
+
+    public static generateTopicId(): string {
+        return uuidV4();
     }
 
     public static async createTopic(topicId: string, config: IConfig): Promise<void> {

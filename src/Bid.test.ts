@@ -30,23 +30,26 @@ describe('Bid class', () => {
     xit('should success, validate mission selfId', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'valid private key';
+      const davId = 'davId';
       // Initialize bid, add consumer topic before sign
-      const mission = await bid.signContract(privateKey);
+      const mission = await bid.signContract(davId, privateKey);
       expect(mission.selfId).toBe('new consumer topic created in accept method');
     });
 
     xit('should throw due to invalid private key', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'invalid private key';
+      const davId = 'davId';
       // Initialize bid
-      expect(await bid.signContract(privateKey)).toThrow('invalid private key exception');
+      expect(await bid.signContract(davId, privateKey)).toThrow('invalid private key exception');
     });
 
     xit('should throw due to web3 exception', async () => {
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'valid private key';
+      const davId = 'davId';
       // Initialize bid
-      expect(await bid.signContract(privateKey)).toThrow('web3 exception');
+      expect(await bid.signContract(davId, privateKey)).toThrow('web3 exception');
     });
   });
 

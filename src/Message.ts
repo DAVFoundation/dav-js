@@ -15,12 +15,7 @@ export default class Message<T extends BidParams> {
       public status: MessageStatus,
       public domain: MessageDomain,
       private config: IConfig) {
-        this.selfId = selfId;
-        this.peerId = peerId;
-        this.bid = bid;
-        this.mission = mission;
-        this.status = status;
-        this.domain = domain;
+        /** */
     }
 
     public async respond(type: string, payload: any) {

@@ -1,4 +1,4 @@
-import { ID, Observable } from './common-types';
+import { ID, Observable, DavID } from './common-types';
 import IConfig from './IConfig';
 import Identity from './Identity';
 import Message from './Message';
@@ -9,7 +9,7 @@ import Kafka from './Kafka';
 
 export default class Mission {
 
-    constructor(public selfId: ID, public peerId: ID, public needer: Identity, private config: IConfig) {
+    constructor(public selfId: ID, public peerId: ID, public neederDavId: DavID, private config: IConfig) {
     }
 
     public async sendMessage(type: string, payload: any, params: MessageParams) {
@@ -28,6 +28,6 @@ export default class Mission {
     }
 
     public async finalizeMission(walletPrivateKey: string) {
-        Contracts.finalizeMission(this.selfId, this.needer.davID, walletPrivateKey, this.config);
+        Contracts.finalizeMission(this.selfId, this.neederDavId, walletPrivateKey, this.config);
     }
 }
