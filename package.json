@@ -33,7 +33,7 @@
   "devDependencies": {
     "@types/jest": "^23.1.5",
     "@types/node": "^10.5.2",
-    "@types/web3": "^1.0.1",
+    "@types/web3": "https://github.com/srfrnk/types-dav-web3",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
