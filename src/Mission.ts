@@ -16,7 +16,7 @@ export default class Mission {
         Kafka.sendParams(this.peerId, params, this.config);
     }
 
-    public async messages<T extends BidParams>(): Promise<Observable<Message<T>>> {
+    public async messages<T extends MessageParams, U extends BidParams>(): Promise<Observable<Message<T, U>>> {
         const stream = await Kafka.paramsStream(this.selfId, this.config);
         const observable = Observable.create((observer: any) => {
             stream.subscribe((params) => {
