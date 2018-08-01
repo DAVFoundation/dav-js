@@ -1,12 +1,25 @@
 import IConfig from './IConfig';
-import { DavID, BigInteger, ID, Observable } from './common-types';
+import { DavID, BigInteger, ID } from './common-types';
 import Web3 = require('web3');
-import { contracts } from './common-enums';
+import { ContractTypes } from './common-enums';
+import Contract from 'web3/eth/contract';
+import { EventLog, TransactionReceipt } from 'web3/types';
+import { Observable } from 'rxjs';
 
-// TODO: remove unnecessary comments
-// web3.utils.sha3('DAV Identity Registration'):
-const REGISTRATION_REQUEST_HASH = '0x3d75604157f80934d3965cbdf5676395ddaf5f92b8d7c90caf745f93d35d2066';
-const TOKEN_AMOUNT = '1500000000000000000';
+let contracts: { [T in ContractTypes]: any } = {
+    Identity: require('./contracts/Identity'),
+    DAVToken: require('./contracts/DAVToken'),
+    BasicMission: require('./contracts/BasicMission'),
+};
+
+const REGISTRATION_REQUEST_HASH = new Web3().utils.sha3('DAV Identity Registration');
+const TOKEN_AMOUNT = '1500000000000000000'; // ToDo: TOKEN_AMOUNT need to be set by basicMission contract.
+
+interface IContract {
+    contract: Contract;
+    contractAddress: string;
+    abi: any[];
+}
 
 export default class Contracts {
 
@@ -14,18 +27,17 @@ export default class Contracts {
         return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
     }
 
-    // TODO: create interface and use as return type
-    private static getContract(contractType: contracts, web3: Web3, config: IConfig): any {
-        // TODO: use `${...} ${...}` string formatter instead of '+' operator
-        // TODO: don't use dynamic require (will fail after webpack) - statically require all and use a dynamic map.
-        const contractFile = require(config.contractPath + contractType);
-        const abi = contractFile.abi;
-        const contractAddress = contractFile.networks[config.blockchainType].address;
+    private static getContract(contractType: ContractTypes, web3: Web3, config: IConfig): IContract {
+        if (config.contracts) {
+            contracts = config.contracts;
+        }
+        const abi = contracts[contractType].abi;
+        const contractAddress = contracts[contractType].networks[config.blockchainType].address;
         const contract = new web3.eth.Contract(abi, contractAddress);
         return { abi, contractAddress, contract };
     }
-    // TODO: change return: any -> TransactionReceipt
-    private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<any> {
+
+    private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<TransactionReceipt> {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
             transaction.once('receipt', (receipt) => resolve(receipt));
@@ -33,8 +45,7 @@ export default class Contracts {
         });
     }
 
-    // TODO: don't use 'any' for params and return
-    private static async checkContractPastEvents(contract: any, filter: string): Promise<any[]> {
+    private static async checkContractPastEvents(contract: Contract, filter: string): Promise<EventLog[]> {
         // ToDo: Filter getPastEvents by sellerId or by missionId.
         const event = await contract.getPastEvents('allEvents');
         return event;
@@ -44,116 +55,106 @@ export default class Contracts {
         return Math.min(gasAmount + 100, 4000000);
     }
 
-    // TODO: davID -> davId
-    // TODO: where ever you use 'this' for static calls change to class name
-    public static async isIdentityRegistered(davID: DavID, config: IConfig): Promise<boolean> {
-        const web3 = this.initWeb3(config);
-        const { contract } = this.getContract(contracts.identity, web3, config);
-        const receipt = await contract.methods.isRegistered(davID).call();
+    public static async isIdentityRegistered(davId: DavID, config: IConfig): Promise<boolean> {
+        const web3 = Contracts.initWeb3(config);
+        const { contract } = Contracts.getContract(ContractTypes.identity, web3, config);
+        const receipt = await contract.methods.isRegistered(davId).call();
         return receipt;
     }
 
-    // TODO: wrong line cutoff point - prefer in middle of param list
-    public static async registerIdentity(davId: DavID, identityPrivateKey: string, walletAddress: string, walletPrivateKey: string, config: IConfig):
-        Promise<string> {
-        const isAlreadyRegistered = await this.isIdentityRegistered(davId, config);
+    public static async registerIdentity(davId: DavID,
+                                         identityPrivateKey: string,
+                                         walletAddress: string,
+                                         walletPrivateKey: string,
+                                         config: IConfig): Promise<string> {
+        const isAlreadyRegistered = await Contracts.isIdentityRegistered(davId, config);
         if (isAlreadyRegistered) {
             return 'ALREADY_REGISTERED';
         }
-        const web3 = this.initWeb3(config);
-        const { contract, contractAddress } = this.getContract(contracts.identity, web3, config);
-        // TODO: 'any' -> real type
-        const { sign } = web3.eth.accounts.privateKeyToAccount(identityPrivateKey) as any;
-        // TODO: 'any' -> real type
-        const { v, r, s } = sign(REGISTRATION_REQUEST_HASH) as any;
-        // TODO: 'any' -> real type
-        const { encodeABI, estimateGas } = await contract.methods.register(davId, v, r, s) as any;
+        const web3 = Contracts.initWeb3(config);
+        const { contract, contractAddress } = Contracts.getContract(ContractTypes.identity, web3, config);
+        const { sign } = web3.eth.accounts.privateKeyToAccount(identityPrivateKey);
+        const { v, r, s } = sign(REGISTRATION_REQUEST_HASH);
+        const { encodeABI, estimateGas } = await contract.methods.register(davId, v, r, s);
         const tx = {
             data: encodeABI(),
             to: contractAddress,
             from: walletAddress,
-            gas: this.toSafeGasLimit(await estimateGas({ from: walletAddress })),
+            gas: Contracts.toSafeGasLimit(await estimateGas({ from: walletAddress })),
+            gasPrice: await web3.eth.getGasPrice(),
         };
-        // TODO: 'any' -> real type
-        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
-        const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
-        return transactionHash;
+        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
+        const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
+        return transactionReceipt.transactionHash;
     }
 
-    // TODO: wrong line cutoff point - prefer in middle of param list
-    public static async approveMission(davId: DavID, walletPrivateKey: string, config: IConfig):
-    Promise<string> {
-        const web3 = this.initWeb3(config);
-        const { contract, contractAddress } = this.getContract(contracts.davToken, web3, config);
-        const missionContract = this.getContract(contracts.basicMission, web3, config);
+    public static async approveMission(davId: DavID, walletPrivateKey: string, config: IConfig): Promise<TransactionReceipt> {
+        const web3 = Contracts.initWeb3(config);
+        const { contract, contractAddress } = Contracts.getContract(ContractTypes.davToken, web3, config);
+        const missionContract = Contracts.getContract(ContractTypes.basicMission, web3, config);
         const { encodeABI, estimateGas } = await contract.methods.approve(missionContract.contractAddress, TOKEN_AMOUNT);
         const tx = {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: this.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress })),
+            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress })),
+            gasPrice: await web3.eth.getGasPrice(),
         };
-        // TODO: 'any' -> real type
-        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
-        const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
-        return transactionHash;
+        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
+        const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
+        return transactionReceipt;
     }
 
-    // TODO: wrong line cutoff point - prefer in middle of param list
-    public static async startMission(missionId: ID, davId: DavID, walletPrivateKey: string, vehicleId: DavID, price: BigInteger, config: IConfig):
-    Promise<string> {
-        const web3 = this.initWeb3(config);
-        const { contract, contractAddress } = this.getContract(contracts.basicMission, web3, config);
+    public static async startMission(missionId: ID,
+                                     davId: DavID,
+                                     walletPrivateKey: string,
+                                     vehicleId: DavID,
+                                     price: BigInteger,
+                                     config: IConfig): Promise<TransactionReceipt> {
+        const web3 = Contracts.initWeb3(config);
+        const { contract, contractAddress } = Contracts.getContract(ContractTypes.basicMission, web3, config);
         const { encodeABI, estimateGas } = await contract.methods.create(missionId, vehicleId, davId, TOKEN_AMOUNT);
         const tx = {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: this.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress, value: price })),
+            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress, value: price })),
             value: price,
+            gasPrice: await web3.eth.getGasPrice(),
         };
-        // TODO: 'any' -> real type
-        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
-        const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
-        return transactionHash;
+        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
+        const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
+        return transactionReceipt;
     }
 
-    public static async finalizeMission(missionId: ID, davId: DavID, walletPrivateKey: string, config: IConfig): Promise<void> {
-        const web3 = this.initWeb3(config);
-        const { contract, contractAddress } = this.getContract(contracts.basicMission, web3, config);
-        const { encodeABI, estimateGas } = await contract.methods.fulfilled(missionId) as any;
+    public static async finalizeMission(missionId: ID, davId: DavID, walletPrivateKey: string, config: IConfig): Promise<TransactionReceipt> {
+        const web3 = Contracts.initWeb3(config);
+        const { contract, contractAddress } = Contracts.getContract(ContractTypes.basicMission, web3, config);
+        const { encodeABI, estimateGas } = await contract.methods.fulfilled(missionId);
         const tx = {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: this.toSafeGasLimit(await estimateGas({ from: davId })),
+            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId })),
+            gasPrice: await web3.eth.getGasPrice(),
         };
-        // TODO: 'any' -> real type
-        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey) as any;
-        const transactionHash = await this.sendSignedTransaction(web3, rawTransaction);
-        return transactionHash;
+        const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
+        const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
+        return transactionReceipt;
     }
 
-    public static watchContract(davId: string, contractType: contracts, config: IConfig): Observable<any> {
-        const web3 = this.initWeb3(config);
-        const { contract } = this.getContract(contractType, web3, config);
-        const oldEventsTransactionHash: {[key: string]: boolean} = {};
-        // TODO: 'any' -> real type (i.e. Observer<TYPE>)
-        // TODO: no need to build an Observable by using another Observable....just use the internal with map/filter etc...
-        const observable = Observable.create((observer: any) => {
-            Observable.interval(2000).subscribe( async () => {
-                try {
-                    let events = await this.checkContractPastEvents(contract, davId);
-                    events = events.filter((event: any) => !oldEventsTransactionHash[event.transactionHash]);
-                    events.forEach((event: any) => oldEventsTransactionHash[event.transactionHash] = true);
-                    if (events.length) {
-                        observer.next(events);
-                    }
-                } catch (err) {
-                    observer.error(err);
-                }
+    public static watchContract(davId: string, contractType: ContractTypes, config: IConfig): Observable<EventLog[]> {
+        const web3 = Contracts.initWeb3(config);
+        const { contract } = Contracts.getContract(contractType, web3, config);
+        const oldEventsTransactionHash: { [key: string]: boolean } = {};
+        const observable = Observable
+            .interval(2000)
+            .flatMap(() => Observable.fromPromise(Contracts.checkContractPastEvents(contract, davId)))
+            .filter((events: EventLog[]) => {
+                events = events.filter((event: EventLog) => !oldEventsTransactionHash[event.transactionHash]);
+                events.forEach((event: EventLog) => oldEventsTransactionHash[event.transactionHash] = true);
+                return !!events.length;
             });
-        });
         return observable;
     }
 }

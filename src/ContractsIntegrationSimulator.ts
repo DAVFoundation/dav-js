@@ -123,10 +123,13 @@ async function main(): Promise<void> {
         });
     };
 
-    watchMission();
-    await approveMission();
-    await startMission();
-    await finalizeMission();
+    // await registerIdentity();
+    // await registerIdentity();
+
+    // watchMission();
+    // await approveMission();
+    // await startMission();
+    // await finalizeMission();
 
 }
 
