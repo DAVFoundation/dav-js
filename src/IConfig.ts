@@ -1,4 +1,4 @@
-import { BlockchainType } from './common-enums';
+import { BlockchainType, ContractTypes } from './common-enums';
 
 export default interface IConfig {
     ethNodeUrl?: string;
@@ -10,5 +10,5 @@ export default interface IConfig {
     missionConsumerTtl?: number;
     missionProviderTtl?: number;
     blockchainType?: BlockchainType;
-    contractPath?: string;
+    contracts?: { [T in ContractTypes]: any };
 }

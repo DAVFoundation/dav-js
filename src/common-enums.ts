@@ -18,9 +18,7 @@ export enum BlockchainType {
     main = 'main',
 }
 
-// TODO: Wrong casing - fix
-// TODO: contracts -> ContractTypes
-export enum contracts {
+export enum ContractTypes {
     identity = 'Identity',
     davToken = 'DAVToken',
     basicMission = 'BasicMission',

@@ -1,5 +1,5 @@
 import Config from './Config';
-import { contracts as contractsType } from './common-enums';
+import { ContractTypes } from './common-enums';
 
 describe('Contracts class', () => {
 
@@ -88,7 +88,7 @@ describe('Contracts class', () => {
         IDENTITY_PRIVATE_KEY,
         WALLET_ADDRESS,
         WALLET_PRIVATE_KEY,
-        configuration)).resolves.toBe(transactionReceipt);
+        configuration)).resolves.toBe(transactionReceipt.transactionHash);
     });
 
     it('should throw some web3 error', async () => {
@@ -249,7 +249,7 @@ describe('Contracts class', () => {
       });
       const spy = jest.fn();
       const contracts: any = (await import('./Contracts')).default;
-      const observable = contracts.watchContract(REGISTERED_IDENTITY, contractsType.basicMission, configuration);
+      const observable = contracts.watchContract(REGISTERED_IDENTITY, ContractTypes.basicMission, configuration);
       observable.subscribe(spy);
       jest.advanceTimersByTime(10000);
       await bitOfTime();
@@ -268,7 +268,7 @@ describe('Contracts class', () => {
       });
       const spy = jest.fn();
       const contracts: any = (await import('./Contracts')).default;
-      const observable = contracts.watchContract(REGISTERED_IDENTITY, contractsType.basicMission, configuration);
+      const observable = contracts.watchContract(REGISTERED_IDENTITY, ContractTypes.basicMission, configuration);
       observable.subscribe(spy, (err: any) => {
         expect(err).toEqual(web3Error);
       });

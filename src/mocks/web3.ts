@@ -58,6 +58,10 @@ function web3Factory(callRes: any) {
             Contract: contractFactory(callRes),
             accounts: Accounts,
             sendSignedTransaction: sendSignedTransaction(callRes),
+            getGasPrice: () => 1,
+        };
+        public utils = {
+            sha3: (x: any) => x,
         };
     }
     return Web3;
