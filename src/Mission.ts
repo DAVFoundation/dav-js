@@ -24,7 +24,8 @@ export default class Mission<T extends MessageParams, U extends BidParams> {
             stream.subscribe((params: MessageParams) => {
                 const message = new Message(this.selfId, this.peerId, this.bid, this, params, this.config);
                 observer.next(message);
-            });
+            },
+            (err: any) => observer.error(err));
         });
         return observable;
     }

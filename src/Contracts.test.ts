@@ -234,16 +234,18 @@ describe('Contracts class', () => {
       jest.useFakeTimers();
     });
 
-    // TODO: test fails
-    xit('should receive contract events', async () => {
-      const pastEvent1 = [{ transactionHash: 'TRANSACTION_HASH_1' }];
-      const pastEvent2 = [{ transactionHash: 'TRANSACTION_HASH_2' }];
+    it('should receive contract events', async () => {
+      const pastEvent1 = [{ transactionHash: 'TRANSACTION_HASH_1', blockNumber: 1, transactionIndex: 1 }];
+      const pastEvent2 = [{ transactionHash: 'TRANSACTION_HASH_2', blockNumber: 2, transactionIndex: 1 }];
+      const pastEvent3 = [{ transactionHash: 'TRANSACTION_HASH_3', blockNumber: 2, transactionIndex: 2 }];
       const web3Factory = require('./mocks/web3');
       jest.doMock('web3', () => {
         const getPastEvents = jest.fn();
         getPastEvents
           .mockReturnValueOnce(pastEvent1)
-          .mockReturnValue(pastEvent2);
+          .mockReturnValueOnce(pastEvent2)
+          .mockReturnValueOnce(pastEvent3)
+          .mockReturnValue({});
 
         return web3Factory({
           getPastEvents,
@@ -255,9 +257,9 @@ describe('Contracts class', () => {
       observable.subscribe(spy);
       jest.advanceTimersByTime(10000);
       await forContextSwitch();
-      expect(spy.mock.calls.length).toBe(2);
-      expect(spy.mock.calls[0][0]).toEqual(pastEvent1);
-      expect(spy.mock.calls[1][0]).toEqual(pastEvent2);
+      expect(spy.mock.calls.length).toBe(3);
+      expect(spy.mock.calls[0][0]).toEqual(pastEvent1[0]);
+      expect(spy.mock.calls[1][0]).toEqual(pastEvent2[0]);
     });
 
     it('should receive contract error events', async () => {

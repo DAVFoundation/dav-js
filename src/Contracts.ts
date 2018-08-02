@@ -14,8 +14,7 @@ let contracts: { [T in ContractTypes]: any } = {
 };
 
 const REGISTRATION_REQUEST_HASH = new Web3().utils.sha3('DAV Identity Registration');
-// TODO: Please note format of todo comments in style guide.
-const TOKEN_AMOUNT = '1500000000000000000'; // ToDo: TOKEN_AMOUNT need to be set by basicMission contract.
+const TOKEN_AMOUNT = '1500000000000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
 
 interface IContract {
     contract: Contract;
@@ -47,10 +46,8 @@ export default class Contracts {
         });
     }
 
-    // TODO: [ts] 'filter' is declared but its value is never read.
-    // TODO: [tslint] Shadowed name: 'filter' (no-shadowed-variable)
-    private static async checkContractPastEvents(contract: Contract/* , filter: string */): Promise<EventLog[]> {
-        // ToDo: Filter getPastEvents by sellerId or by missionId.
+    private static async checkContractPastEvents(contract: Contract/* , filterParam: string */): Promise<EventLog[]> {
+        // TODO: Filter getPastEvents by sellerId or by missionId.
         const event = await contract.getPastEvents('allEvents');
         return event;
     }
@@ -143,23 +140,22 @@ export default class Contracts {
         return transactionReceipt;
     }
 
-    // TODO: I revised this code - please verify that it is what you intended.
-    // TODO: Also please make sure you understand how the new code works and why is this better.
     public static watchContract(davId: string, contractType: ContractTypes, config: IConfig): Observable<EventLog> {
         const web3 = Contracts.initWeb3(config);
         const { contract } = Contracts.getContract(contractType, web3, config);
-        // TODO: Please attempt to avoid using this hash as it will eventually cause OOM
-        const oldEventsTransactionHash: { [key: string]: boolean } = {};
+        let lastBlock = 0;
+        let lastTransactionIndex = 0;
         const events = Observable.interval(2000)
             .map(() => Contracts.checkContractPastEvents(contract/* , davId */))
             .map((promise) => Observable.fromPromise(promise))
             .map((eventsObservable) => eventsObservable.mergeAll())
             .map((eventsArray) => Observable.from(eventsArray))
             .mergeAll()
-            .filter((event) => !oldEventsTransactionHash[event.transactionHash]);
-        events.subscribe((event) => {
-            oldEventsTransactionHash[event.transactionHash] = true;
-        });
+            .filter((event) => event.blockNumber > lastBlock || (event.blockNumber === lastBlock && event.transactionIndex > lastTransactionIndex))
+            .do((event) => {
+                lastBlock = event.blockNumber;
+                lastTransactionIndex = event.transactionIndex;
+            });
         return events;
     }
 }
