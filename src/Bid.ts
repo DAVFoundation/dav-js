@@ -22,14 +22,17 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         /**/
     }
 
-    public async accept(messageParams: U) {
+    public async accept(messageParams: U): Promise<void> {
         this._topicId = Kafka.generateTopicId();
-        Kafka.createTopic(this._topicId, this.config);
+        await Kafka.createTopic(this._topicId, this.config);
         messageParams.sourceId = this._topicId;
-        await Kafka.sendParams(this.needId, messageParams, this.config);
+        return await Kafka.sendParams(this.needId, messageParams, this.config);
     }
 
     public async signContract(walletPrivateKey: string, neederDavId: DavID): Promise<Mission<U, T>> {
+        if (!this._topicId) {
+            throw new Error('Cannot sign on contract before bid is accepted');
+        }
         const approveReceipt = await Contracts.approveMission(neederDavId, walletPrivateKey, this.config);
         const missionId = uuidV4();
         const createReceipt = await Contracts.startMission(missionId, neederDavId, walletPrivateKey, this._params.vehicleId,

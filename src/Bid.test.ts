@@ -1,11 +1,9 @@
 import Config from './Config';
 import BidParams from './drone-charging/BidParams';
-// jest.doMock('./Contracts');
-// import Bid from './Bid';
 import Price from './Price';
-import { PriceType } from './common-enums';
-import Contracts from './Contracts';
-import { DavID, ID, BigInteger } from './common-types';
+import { PriceType, MessageStatus, MessageDomain } from './common-enums';
+import { DavID, ID } from './common-types';
+import MessageParams from './drone-charging/MessageParams';
 import IConfig from './IConfig';
 
 describe('Bid class', () => {
@@ -15,21 +13,188 @@ describe('Bid class', () => {
     price: new Price('3', PriceType.flat),
     vehicleId: '34',
   });
+  const messageParams = new MessageParams({
+    status: MessageStatus.accepted,
+    domain: MessageDomain.bid,
+  });
 
-  xdescribe('accept method', () => {
-    beforeAll(() => { /**/ });
+  describe('accept method', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+      jest.resetModules();
+    });
 
-    // it('should success', async () => {
-    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
-    //   // Initialize bid
-    //   await bid.accept();
-    // });
+    it('should succeed - check return value resolved', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.resolve()),
+        sendParams: jest.fn((needId: string, mParams: MessageParams, configParam: IConfig) => Promise.resolve()),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
 
-    // it('should throw due to topic creation failure', async () => {
-    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
-    //   // Initialize bid
-    //   expect(await bid.accept()).toThrow('topic creation failure exception');
-    // });
+      // Act + Assert
+      await expect(bid.accept(messageParams)).resolves.toBeUndefined();
+    });
+
+    it('should succeed - check generateTopicId call', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.resolve()),
+        sendParams: jest.fn((needId: string, mParams: MessageParams, configParam: IConfig) => Promise.resolve()),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act
+      await bid.accept(messageParams);
+
+      // Assert
+      expect(kafkaMock.generateTopicId).toHaveBeenCalled();
+    });
+
+    it('should succeed - check createTopic call', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.resolve()),
+        sendParams: jest.fn((needId: string, mParams: MessageParams, configParam: IConfig) => Promise.resolve()),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act
+      await bid.accept(messageParams);
+
+      // Assert
+      expect(kafkaMock.createTopic).toHaveBeenCalledWith('topicId', config);
+    });
+
+    it('should succeed - check sendParams call', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.resolve()),
+        sendParams: jest.fn((needId: string, mParams: MessageParams, configParam: IConfig) => Promise.resolve()),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act
+      await bid.accept(messageParams);
+
+      // Assert
+      expect(kafkaMock.sendParams).toHaveBeenCalledWith('needId', messageParams, config);
+    });
+
+    it('should throw due to topic creation failure - check return value', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.reject('error')),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act + Assert
+      await expect(bid.accept(messageParams)).rejects.toBe('error');
+    });
+
+    it('should throw due to topic creation failure - check createTopic call', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.reject('error')),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act + Assert
+      try {
+        await bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
+
+      // Assert
+      expect(kafkaMock.createTopic).toHaveBeenCalledWith('topicId', config);
+    });
+
+    it('should throw due to message send failure - check return value', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.resolve()),
+        sendParams: jest.fn((needId: string, mParams: MessageParams, configParam: IConfig) => Promise.reject('error')),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act + Assert
+      await expect(bid.accept(messageParams)).rejects.toBe('error');
+    });
+
+    it('should throw due to message send failure - check createTopic call', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.resolve()),
+        sendParams: jest.fn((needId: string, mParams: MessageParams, configParam: IConfig) => Promise.reject('error')),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act + Assert
+      try {
+        await bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
+
+      // Assert
+      expect(kafkaMock.createTopic).toHaveBeenCalledWith('topicId', config);
+    });
+
+    it('should throw due to message send failure - check sendParams call', async () => {
+      // Arrange
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+        createTopic: jest.fn((topicId: string, configParam: IConfig) => Promise.resolve()),
+        sendParams: jest.fn((needId: string, mParams: MessageParams, configParam: IConfig) => Promise.reject('error')),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      // Act
+      try {
+        await bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
+
+      // Assert
+      expect(kafkaMock.sendParams).toHaveBeenCalledWith('needId', messageParams, config);
+    });
   });
 
   describe('signContract method', () => {
@@ -45,84 +210,168 @@ describe('Bid class', () => {
         startMission: () => Promise.resolve(''),
       };
       jest.doMock('./Contracts', () => ({default: contractsMock}));
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      try {
+        bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
       const privateKey = 'valid private key';
       const davId = 'davId';
-      // Initialize bid, add consumer topic before sign
 
       // Act
       const mission = await bid.signContract(privateKey, davId);
 
       // Assert
-      expect(mission.selfId).toBeUndefined();
+      expect(mission.selfId).toBe('topicId');
       expect(mission.peerId).toBe('needTypeId');
       expect(mission.neederDavId).toBe(davId);
     });
 
     it('should succeed, validate approveMission method', async () => {
       // Arrange
-      const approveContractVerifiable = jest.fn();
-      approveContractVerifiable.mockResolvedValue('');
+      const approveMissionVerifiable = jest.fn();
+      approveMissionVerifiable.mockResolvedValue('');
       const contractsMock = {
-        approveMission: (key: string, dav: DavID, configParam: IConfig) => approveContractVerifiable(key, dav, configParam),
+        approveMission: (dav: DavID, key: string, configParam: IConfig) => approveMissionVerifiable(dav, key, configParam),
         startMission: () => Promise.resolve(''),
       };
       jest.doMock('./Contracts', () => ({default: contractsMock}));
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      try {
+        bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
       const privateKey = 'valid private key';
       const davId = 'davId';
-      // Initialize bid, add consumer topic before sign
 
       // Act
       const mission = await bid.signContract(privateKey, davId);
 
       // Assert
-      expect(approveContractVerifiable).toHaveBeenCalledWith(davId, privateKey, config);
+      expect(approveMissionVerifiable).toHaveBeenCalledWith(davId, privateKey, config);
     });
 
     it('should succeed, validate startMission method', async () => {
       // Arrange
-      const startContractVerifiable = jest.fn();
-      startContractVerifiable.mockResolvedValue('');
+      const startMissionVerifiable = jest.fn();
+      startMissionVerifiable.mockResolvedValue('');
       const contractsMock = {
         approveMission: () => Promise.resolve(''),
         startMission: (missionId: ID, dav: DavID, key: string, vId: DavID, price: string, configParam: IConfig) =>
-         startContractVerifiable(missionId, dav, key, vId, price, configParam),
+         startMissionVerifiable(missionId, dav, key, vId, price, configParam),
       };
       jest.doMock('./Contracts', () => ({default: contractsMock}));
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      try {
+        bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
       const privateKey = 'valid private key';
       const davId = 'davId';
-      // Initialize bid, add consumer topic before sign
 
       // Act
       const mission = await bid.signContract(privateKey, davId);
 
       // Assert
-      expect(startContractVerifiable).toHaveBeenCalledWith(expect.any(String), davId, privateKey, '34', '3', config);
+      expect(startMissionVerifiable).toHaveBeenCalledWith(expect.any(String), davId, privateKey, '34', '3', config);
     });
 
-    // xit('should throw due to invalid private key', async () => {
-    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
-    //   const privateKey = 'invalid private key';
-    //   const davId = 'davId';
-    //   // Initialize bid
-    //   expect(await bid.signContract(davId, privateKey)).toThrow('invalid private key exception');
-    // });
+    it('should throw due to invalid input - check return value', async () => {
+      // Arrange
+      const contractsMock = {
+        approveMission: () => Promise.reject('error'),
+      };
+      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
 
-    // xit('should throw due to web3 exception', async () => {
-    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
-    //   const privateKey = 'valid private key';
-    //   const davId = 'davId';
-    //   // Initialize bid
-    //   expect(await bid.signContract(davId, privateKey)).toThrow('web3 exception');
-    // });
+      try {
+        bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
+      const privateKey = 'invalid private key';
+      const davId = 'davId';
+
+      // Act + Assert
+      await expect(bid.signContract(privateKey, davId)).rejects.toBe('error');
+    });
+
+    it('should throw due to invalid input - validate approveMission method', async () => {
+      // Arrange
+      const approveMissionVerifiable = jest.fn();
+      approveMissionVerifiable.mockRejectedValue('error');
+      const contractsMock = {
+        approveMission: (dav: DavID, key: string, configParam: IConfig) => approveMissionVerifiable(dav, key, configParam),
+      };
+      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      const kafkaMock = {
+        generateTopicId: jest.fn(() => 'topicId'),
+      };
+      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+
+      try {
+        bid.accept(messageParams);
+      } catch (error) {
+        /** */
+      }
+      const privateKey = 'invalid private key';
+      const davId = 'davId';
+
+      // Act
+      try {
+        await bid.signContract(privateKey, davId);
+      } catch (error) {
+        /** */
+      }
+
+      // Assert
+      expect(approveMissionVerifiable).toHaveBeenCalledWith(davId, privateKey, config);
+    });
+
+    it('should throw due topic id undefined - validate return value', async () => {
+      // Arrange;
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+      const privateKey = 'invalid private key';
+      const davId = 'davId';
+
+      // Act + Assert
+      await expect(bid.signContract(privateKey, davId)).rejects.toEqual(new Error('Cannot sign on contract before bid is accepted'));
+    });
   });
 
   xdescribe('messages method', () => {
