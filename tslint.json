@@ -1,6 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "align":false,
     "member-ordering": [
       true,
       {
