@@ -11,17 +11,17 @@ describe('Bid class', () => {
   describe('accept method', () => {
     beforeAll(() => { /**/ });
 
-    xit('should success', async () => {
-      const bid = new Bid('needId', 'needTypeId', bidParams, config);
-      // Initialize bid
-      await bid.accept();
-    });
+    // xit('should success', async () => {
+    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
+    //   // Initialize bid
+    //   await bid.accept();
+    // });
 
-    xit('should throw due to topic creation failure', async () => {
-      const bid = new Bid('needId', 'needTypeId', bidParams, config);
-      // Initialize bid
-      expect(await bid.accept()).toThrow('topic creation failure exception');
-    });
+    // xit('should throw due to topic creation failure', async () => {
+    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
+    //   // Initialize bid
+    //   expect(await bid.accept()).toThrow('topic creation failure exception');
+    // });
   });
 
   describe('signContract method', () => {
