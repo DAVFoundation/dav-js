@@ -83,7 +83,8 @@ describe('Identity class', () => {
 
         xit('should success, validate mission', () => {
             const identity = new Identity('id', 'davId', config);
-            const mission = identity.mission('missionId', 'peerId');
+            const bid = identity.bid('bidId', bidParams);
+            const mission = identity.mission('missionId', 'peerId', bid);
             // check each mission public property validity in a separate test
         });
     });

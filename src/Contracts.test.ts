@@ -15,13 +15,14 @@ describe('Contracts class', () => {
   const MISSION_ID = 'MISSION_ID';
   const MISSION_PRICE = '1000000';
 
-  const bitOfTime = () => {
+  const forContextSwitch = () => {
     return new Promise((resolve, reject) => {
       jest.useRealTimers();
       setTimeout(resolve, 0);
       jest.useFakeTimers();
     });
   };
+
   beforeAll(() => { /**/ });
 
   describe('isIdentityRegistered method', () => {
@@ -252,7 +253,7 @@ describe('Contracts class', () => {
       const observable = contracts.watchContract(REGISTERED_IDENTITY, ContractTypes.basicMission, configuration);
       observable.subscribe(spy);
       jest.advanceTimersByTime(10000);
-      await bitOfTime();
+      await forContextSwitch();
       expect(spy.mock.calls.length).toBe(2);
       expect(spy.mock.calls[0][0]).toEqual(pastEvent1);
       expect(spy.mock.calls[1][0]).toEqual(pastEvent2);
@@ -273,7 +274,7 @@ describe('Contracts class', () => {
         expect(err).toEqual(web3Error);
       });
       jest.advanceTimersByTime(10000);
-      await bitOfTime();
+      await forContextSwitch();
       expect(spy).not.toHaveBeenCalled();
     });
 

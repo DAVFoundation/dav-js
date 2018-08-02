@@ -12,7 +12,7 @@ export default class Message<T extends MessageParams, U extends BidParams> {
       public selfId: ID,
       public peerId: ID,
       public bid: Bid<U, T>,
-      public mission: Mission,
+      public mission: Mission<T, U>,
       public messageParams: MessageParams,
       private config: IConfig) {
         /** */

@@ -11,7 +11,7 @@ describe('Message class', () => {
   const configuration = new Config({});
   const bidParams = new BidParams({});
   const bid = new Bid('needId', 'needTypeId', bidParams, configuration);
-  const mission = new Mission('selfId', 'peerId', 'davId', configuration);
+  const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
   const message = new Message('selfId', 'peerId', bid, mission, new MessageParams({status: MessageStatus.accepted}), configuration);
 
   beforeAll(() => {

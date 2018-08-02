@@ -6,7 +6,7 @@ To use this script fill in all params.
 // tslint:disable:no-console
 import Contracts from './Contracts';
 import Config from './Config';
-// import { contracts } from './common-enums';
+import { ContractTypes } from './common-enums';
 
 const configuration = new Config({});
 
@@ -100,7 +100,7 @@ async function main(): Promise<void> {
     const watchMission = () => {
         console.log('Getting events...');
         try {
-            const observable = Contracts.watchContract(MISSION_ID, null/* contracts.basicMission */, configuration);
+            const observable = Contracts.watchContract(MISSION_ID, ContractTypes.basicMission, configuration);
             observable.subscribe((event: any) => {
                 console.log('New event:');
                 console.log(event);
