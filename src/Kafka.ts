@@ -65,13 +65,6 @@ export default class Kafka {
         return timeout(clientReadyPromise, this._kafkaConnectionTimeoutInMs);
     }
 
-    // private static kafkaClientReady<T extends Producer|Consumer>(client: T): Promise<T> {
-    //     return new Promise<T>((resolve, reject) => {
-    //         client.on('ready', () => resolve(client));
-    //         client.on('error', () => reject(client));
-    //     });
-    // }
-
     public static generateTopicId(): string {
         return uuidV4();
     }
