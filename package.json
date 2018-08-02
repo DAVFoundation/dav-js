@@ -23,7 +23,7 @@
     "preinstall": "cp ./.githooks/* .git/hooks",
     "build-dev": "webpack --mode development",
     "build-prod": "webpack --mode production",
-    "postinstall": "rm -f node_modules/web3/index.d.ts",
+    "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
     "start-testnet": "dav-cli --start",
     "tslint": "gulp tslint",
     "tsc": "gulp tsc",
