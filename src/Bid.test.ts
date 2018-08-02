@@ -1,23 +1,31 @@
-import Bid from './Bid';
 import Config from './Config';
-import BidParams from './drone-delivery/BidParams';
+import BidParams from './drone-charging/BidParams';
+// jest.doMock('./Contracts');
+// import Bid from './Bid';
+import Price from './Price';
+import { PriceType } from './common-enums';
+import Contracts from './Contracts';
+import { DavID, ID, BigInteger } from './common-types';
+import IConfig from './IConfig';
 
 describe('Bid class', () => {
   const config = new Config({});
-  const bidParams = new BidParams({});
+  jest.doMock('./drone-charging/BidParams');
+  const bidParams = new BidParams({
+    price: new Price('3', PriceType.flat),
+    vehicleId: '34',
+  });
 
-  beforeAll(() => { /**/ });
-
-  describe('accept method', () => {
+  xdescribe('accept method', () => {
     beforeAll(() => { /**/ });
 
-    // xit('should success', async () => {
+    // it('should success', async () => {
     //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
     //   // Initialize bid
     //   await bid.accept();
     // });
 
-    // xit('should throw due to topic creation failure', async () => {
+    // it('should throw due to topic creation failure', async () => {
     //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
     //   // Initialize bid
     //   expect(await bid.accept()).toThrow('topic creation failure exception');
@@ -25,48 +33,112 @@ describe('Bid class', () => {
   });
 
   describe('signContract method', () => {
-    beforeAll(() => { /**/ });
+    beforeEach(() => {
+      jest.resetAllMocks();
+      jest.resetModules();
+    });
 
-    xit('should success, validate mission selfId', async () => {
+    it('should succeed, validate mission object', async () => {
+      // Arrange
+      const contractsMock = {
+        approveMission: () => Promise.resolve(''),
+        startMission: () => Promise.resolve(''),
+      };
+      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'valid private key';
       const davId = 'davId';
       // Initialize bid, add consumer topic before sign
-      const mission = await bid.signContract(davId, privateKey);
-      expect(mission.selfId).toBe('new consumer topic created in accept method');
+
+      // Act
+      const mission = await bid.signContract(privateKey, davId);
+
+      // Assert
+      expect(mission.selfId).toBeUndefined();
+      expect(mission.peerId).toBe('needTypeId');
+      expect(mission.neederDavId).toBe(davId);
     });
 
-    xit('should throw due to invalid private key', async () => {
-      const bid = new Bid('needId', 'needTypeId', bidParams, config);
-      const privateKey = 'invalid private key';
-      const davId = 'davId';
-      // Initialize bid
-      expect(await bid.signContract(davId, privateKey)).toThrow('invalid private key exception');
-    });
-
-    xit('should throw due to web3 exception', async () => {
+    it('should succeed, validate approveMission method', async () => {
+      // Arrange
+      const approveContractVerifiable = jest.fn();
+      approveContractVerifiable.mockResolvedValue('');
+      const contractsMock = {
+        approveMission: (key: string, dav: DavID, configParam: IConfig) => approveContractVerifiable(key, dav, configParam),
+        startMission: () => Promise.resolve(''),
+      };
+      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
       const bid = new Bid('needId', 'needTypeId', bidParams, config);
       const privateKey = 'valid private key';
       const davId = 'davId';
-      // Initialize bid
-      expect(await bid.signContract(davId, privateKey)).toThrow('web3 exception');
+      // Initialize bid, add consumer topic before sign
+
+      // Act
+      const mission = await bid.signContract(privateKey, davId);
+
+      // Assert
+      expect(approveContractVerifiable).toHaveBeenCalledWith(davId, privateKey, config);
     });
+
+    it('should succeed, validate startMission method', async () => {
+      // Arrange
+      const startContractVerifiable = jest.fn();
+      startContractVerifiable.mockResolvedValue('');
+      const contractsMock = {
+        approveMission: () => Promise.resolve(''),
+        startMission: (missionId: ID, dav: DavID, key: string, vId: DavID, price: string, configParam: IConfig) =>
+         startContractVerifiable(missionId, dav, key, vId, price, configParam),
+      };
+      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      // tslint:disable-next-line:variable-name
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', 'needTypeId', bidParams, config);
+      const privateKey = 'valid private key';
+      const davId = 'davId';
+      // Initialize bid, add consumer topic before sign
+
+      // Act
+      const mission = await bid.signContract(privateKey, davId);
+
+      // Assert
+      expect(startContractVerifiable).toHaveBeenCalledWith(expect.any(String), davId, privateKey, '34', '3', config);
+    });
+
+    // xit('should throw due to invalid private key', async () => {
+    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
+    //   const privateKey = 'invalid private key';
+    //   const davId = 'davId';
+    //   // Initialize bid
+    //   expect(await bid.signContract(davId, privateKey)).toThrow('invalid private key exception');
+    // });
+
+    // xit('should throw due to web3 exception', async () => {
+    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
+    //   const privateKey = 'valid private key';
+    //   const davId = 'davId';
+    //   // Initialize bid
+    //   expect(await bid.signContract(davId, privateKey)).toThrow('web3 exception');
+    // });
   });
 
-  describe('messages method', () => {
+  xdescribe('messages method', () => {
     beforeAll(() => { /**/ });
 
-    xit('should success', () => {
-      const bid = new Bid('needId', 'needTypeId', bidParams, config);
-      // Initialize bid
-      // mock accept, because messages method had to be called after bid has topic Id
-      bid.messages();
-    });
+    // it('should success', () => {
+    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
+    //   // Initialize bid
+    //   // mock accept, because messages method had to be called after bid has topic Id
+    //   bid.messages();
+    // });
 
-    xit('should throw due to absence of topic creation', () => {
-      const bid = new Bid('needId', 'needTypeId', bidParams, config);
-      // Initialize bid
-      expect(bid.messages()).toThrow('no topic to listen for');
-    });
+    // it('should throw due to absence of topic creation', () => {
+    //   const bid = new Bid('needId', 'needTypeId', bidParams, config);
+    //   // Initialize bid
+    //   expect(bid.messages()).toThrow('no topic to listen for');
+    // });
   });
 });
