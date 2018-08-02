@@ -1,11 +1,12 @@
 FORCE:
 
-test: FORCE
+tslint: FORCE
 	npm run tslint
+
+jest: FORCE
 	npm run jest
 
-compile: FORCE
-	npm run tslint
+tsc: FORCE
 	npm run tsc
 
 pre-publish: FORCE
