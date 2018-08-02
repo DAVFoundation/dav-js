@@ -9,6 +9,8 @@ jest: FORCE
 tsc: FORCE
 	npm run tsc
 
+pre-push: tslint tsc jest
+
 pre-publish: FORCE
 	npm run typedoc
 
