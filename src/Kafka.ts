@@ -3,10 +3,10 @@ import IConfig from './IConfig';
 import { Observable } from './common-types';
 import { Observer } from 'rxjs';
 import { timeout } from 'promise-timeout';
-import { default as DroneDeliveryNeedParams } from './drone-delivery/NeedParams';
-import { default as DroneDeliveryBidParams } from './drone-delivery/BidParams';
-import { default as DroneChargingNeedParams } from './drone-charging/NeedParams';
-import { default as DroneChargingBidParams } from './drone-charging/BidParams';
+import DroneDeliveryNeedParams from './drone-delivery/NeedParams';
+import DroneDeliveryBidParams from './drone-delivery/BidParams';
+import DroneChargingNeedParams from './drone-charging/NeedParams';
+import DroneChargingBidParams from './drone-charging/BidParams';
 import BasicParams from './BasicParams';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -64,6 +64,13 @@ export default class Kafka {
         });
         return timeout(clientReadyPromise, this._kafkaConnectionTimeoutInMs);
     }
+
+    // private static kafkaClientReady<T extends Producer|Consumer>(client: T): Promise<T> {
+    //     return new Promise<T>((resolve, reject) => {
+    //         client.on('ready', () => resolve(client));
+    //         client.on('error', () => reject(client));
+    //     });
+    // }
 
     public static generateTopicId(): string {
         return uuidV4();
