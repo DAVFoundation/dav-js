@@ -40,7 +40,7 @@ export default class Kafka {
         const producer = new Producer(client);
         const producerReadyPromise = new Promise<Producer>((resolve, reject) => {
             producer.on('ready', () => resolve(producer));
-            producer.on('error', () => reject(producer));
+            producer.on('error', () => reject('Producer got error in connection'));
         });
 
         return timeout(producerReadyPromise, this._kafkaConnectionTimeoutInMs);
@@ -59,8 +59,9 @@ export default class Kafka {
             },
         );
 
-        const clientReadyPromise = new Promise<Consumer>((resolve) => {
+        const clientReadyPromise = new Promise<Consumer>((resolve, reject) => {
             client.on('ready', () => resolve(consumer));
+            client.on('error', () => reject('client got error in connection'));
         });
         return timeout(clientReadyPromise, this._kafkaConnectionTimeoutInMs);
     }

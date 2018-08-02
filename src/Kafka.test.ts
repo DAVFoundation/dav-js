@@ -116,6 +116,53 @@ describe('Kafka class', () => {
       await expect(promise).rejects.toEqual(new TimeoutError());
     });
 
+    it('should get error from producer while trying to connect to kafka, check return value', async () => {
+      // Arrange
+      jest.doMock('kafka-node');
+      const kafka = (await import('./Kafka')).default;
+
+      const producer = {
+        on: (state: string, cb: any) => {
+          if (state === 'error') {
+            cb();
+          }
+        },
+      };
+      require('kafka-node').Producer.mockImplementation(() => producer);
+
+      const topic = 'topic';
+
+      // Act + Assert
+      await expect(kafka.createTopic(topic, config)).rejects.toBe('Producer got error in connection');
+    });
+
+    it('should get error from producer while trying to connect to kafka, check method call', async () => {
+      // Arrange
+      jest.doMock('kafka-node');
+      const kafka = (await import('./Kafka')).default;
+
+      const onMock = jest.fn();
+      const producer = {
+        on: (state: string, cb: any) => {
+          onMock(state);
+          cb();
+        },
+      };
+      require('kafka-node').Producer.mockImplementation(() => producer);
+
+      const topic = 'topic';
+
+      // Act + Assert
+      try {
+        await expect(kafka.createTopic(topic, config));
+      } catch (error) {
+        /** */
+      }
+
+      // Assert
+      expect(onMock).toHaveBeenCalledWith('error');
+    });
+
     it('should get error from kafka in topic creation method', async () => {
       // Arrange
       jest.doMock('kafka-node');
@@ -328,6 +375,61 @@ describe('Kafka class', () => {
       await expect(promise).rejects.toEqual(new TimeoutError());
     });
 
+    it('should get error from producer while trying to connect to kafka - check return value', async () => {
+      // Arrange
+      jest.doMock('kafka-node');
+      const kafka = (await import('./Kafka')).default;
+      const paramsMockType = jest.fn<BasicParams>(() => ({
+        toJson: () => {
+          return 'basic params mock content';
+        },
+      }));
+      const paramsMock = new paramsMockType();
+
+      const topic = 'topic';
+      const producer = {
+        on: (state: string, cb: any) => {
+          if (state === 'error') {
+            cb();
+          }
+        },
+      };
+      require('kafka-node').Producer.mockImplementation(() => producer);
+
+      // Act + Assert
+      await expect(kafka.sendParams(topic, paramsMock, config)).rejects.toBe('Producer got error in connection');
+    });
+
+    it('should get error from producer while trying to connect to kafka, check method call', async () => {
+      // Arrange
+      jest.doMock('kafka-node');
+      const kafka = (await import('./Kafka')).default;
+      const paramsMockType = jest.fn<BasicParams>(() => ({
+        toJson: () => {
+          return 'basic params mock content';
+        },
+      }));
+      const paramsMock = new paramsMockType();
+
+      const topic = 'topic';
+      const onMock = jest.fn();
+      const producer = {
+        on: (state: string, cb: any) => {
+          onMock(state);
+          cb();
+        },
+      };
+      require('kafka-node').Producer.mockImplementation(() => producer);
+
+      // Act
+      try {
+        await kafka.sendParams(topic, paramsMock, config);
+      } catch (error) {
+        /** */
+      }
+      expect(onMock).toHaveBeenCalledWith('error');
+    });
+
     it('should get error from kafka in send method', async () => {
       // Arrange
       jest.doMock('kafka-node');
@@ -485,6 +587,51 @@ describe('Kafka class', () => {
 
       // Assert
       expect(clientReadyVerifiable).toHaveBeenCalledWith('ready');
+    });
+
+    it('should get error from kafka client while trying to connect - check return value', async () => {
+      // Arrange
+      jest.doMock('kafka-node');
+      const kafka = (await import('./Kafka')).default;
+
+      const kafkaClient = {
+        on: (state: string, cb: any) => {
+          if (state === 'error') {
+            cb();
+          }
+        },
+      };
+      require('kafka-node').KafkaClient.mockImplementation(() => kafkaClient);
+      const topic = 'topic';
+
+      // Act + Assert
+      await expect(kafka.paramsStream(topic, config)).rejects.toBe('client got error in connection');
+    });
+
+    it('should get error from kafka client while trying to connect - check method call', async () => {
+      // Arrange
+      jest.doMock('kafka-node');
+      const kafka = (await import('./Kafka')).default;
+
+      const onMock = jest.fn();
+      const kafkaClient = {
+        on: (state: string, cb: any) => {
+          onMock(state);
+          cb();
+        },
+      };
+      require('kafka-node').KafkaClient.mockImplementation(() => kafkaClient);
+      const topic = 'topic';
+
+      // Act
+      try {
+        await kafka.paramsStream(topic, config);
+      } catch (error) {
+        /** */
+      }
+
+      // Assert
+      expect(onMock).toHaveBeenCalledWith('error');
     });
 
     it('should succeed - get valid input, check return value', async (done) => {
