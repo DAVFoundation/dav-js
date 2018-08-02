@@ -5,6 +5,7 @@ import { ContractTypes } from './common-enums';
 import Contract from 'web3/eth/contract';
 import { EventLog, TransactionReceipt } from 'web3/types';
 import { Observable } from 'rxjs';
+import { filter } from 'minimatch';
 
 let contracts: { [T in ContractTypes]: any } = {
     Identity: require('./contracts/Identity'),
@@ -13,6 +14,7 @@ let contracts: { [T in ContractTypes]: any } = {
 };
 
 const REGISTRATION_REQUEST_HASH = new Web3().utils.sha3('DAV Identity Registration');
+// TODO: Please note format of todo comments in style guide.
 const TOKEN_AMOUNT = '1500000000000000000'; // ToDo: TOKEN_AMOUNT need to be set by basicMission contract.
 
 interface IContract {
@@ -45,7 +47,9 @@ export default class Contracts {
         });
     }
 
-    private static async checkContractPastEvents(contract: Contract, filter: string): Promise<EventLog[]> {
+    // TODO: [ts] 'filter' is declared but its value is never read.
+    // TODO: [tslint] Shadowed name: 'filter' (no-shadowed-variable)
+    private static async checkContractPastEvents(contract: Contract/* , filter: string */): Promise<EventLog[]> {
         // ToDo: Filter getPastEvents by sellerId or by missionId.
         const event = await contract.getPastEvents('allEvents');
         return event;
@@ -63,10 +67,10 @@ export default class Contracts {
     }
 
     public static async registerIdentity(davId: DavID,
-                                         identityPrivateKey: string,
-                                         walletAddress: string,
-                                         walletPrivateKey: string,
-                                         config: IConfig): Promise<string> {
+        identityPrivateKey: string,
+        walletAddress: string,
+        walletPrivateKey: string,
+        config: IConfig): Promise<string> {
         const isAlreadyRegistered = await Contracts.isIdentityRegistered(davId, config);
         if (isAlreadyRegistered) {
             return 'ALREADY_REGISTERED';
@@ -105,12 +109,8 @@ export default class Contracts {
         return transactionReceipt;
     }
 
-    public static async startMission(missionId: ID,
-                                     davId: DavID,
-                                     walletPrivateKey: string,
-                                     vehicleId: DavID,
-                                     price: BigInteger,
-                                     config: IConfig): Promise<TransactionReceipt> {
+    public static async startMission(missionId: ID, davId: DavID, walletPrivateKey: string, vehicleId: DavID,
+        price: BigInteger, config: IConfig): Promise<TransactionReceipt> {
         const web3 = Contracts.initWeb3(config);
         const { contract, contractAddress } = Contracts.getContract(ContractTypes.basicMission, web3, config);
         const { encodeABI, estimateGas } = await contract.methods.create(missionId, vehicleId, davId, TOKEN_AMOUNT);
@@ -143,18 +143,23 @@ export default class Contracts {
         return transactionReceipt;
     }
 
-    public static watchContract(davId: string, contractType: ContractTypes, config: IConfig): Observable<EventLog[]> {
+    // TODO: I revised this code - please verify that it is what you intended.
+    // TODO: Also please make sure you understand how the new code works and why is this better.
+    public static watchContract(davId: string, contractType: ContractTypes, config: IConfig): Observable<EventLog> {
         const web3 = Contracts.initWeb3(config);
         const { contract } = Contracts.getContract(contractType, web3, config);
+        // TODO: Please attempt to avoid using this hash as it will eventually cause OOM
         const oldEventsTransactionHash: { [key: string]: boolean } = {};
-        const observable = Observable
-            .interval(2000)
-            .flatMap(() => Observable.fromPromise(Contracts.checkContractPastEvents(contract, davId)))
-            .filter((events: EventLog[]) => {
-                events = events.filter((event: EventLog) => !oldEventsTransactionHash[event.transactionHash]);
-                events.forEach((event: EventLog) => oldEventsTransactionHash[event.transactionHash] = true);
-                return !!events.length;
-            });
-        return observable;
+        const events = Observable.interval(2000)
+            .map(() => Contracts.checkContractPastEvents(contract/* , davId */))
+            .map((promise) => Observable.fromPromise(promise))
+            .map((eventsObservable) => eventsObservable.mergeAll())
+            .map((eventsArray) => Observable.from(eventsArray))
+            .mergeAll()
+            .filter((event) => !oldEventsTransactionHash[event.transactionHash]);
+        events.subscribe((event) => {
+            oldEventsTransactionHash[event.transactionHash] = true;
+        });
+        return events;
     }
 }
