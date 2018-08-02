@@ -4,15 +4,15 @@ import Config from './Config';
 import BidParams from './drone-delivery/BidParams';
 import Mission from './Mission';
 import { MessageStatus, MessageDomain } from './common-enums';
-import Identity from './Identity';
+import MessageParams from './drone-charging/MessageParams';
 
 describe('Message class', () => {
 
   const configuration = new Config({});
   const bidParams = new BidParams({});
   const bid = new Bid('needId', 'needTypeId', bidParams, configuration);
-  const mission = new Mission('selfId', 'peerId', 'davId', configuration);
-  const message = new Message('selfId', 'peerId', bid, mission, MessageStatus.accepted, MessageDomain.bid, configuration);
+  const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+  const message = new Message('selfId', 'peerId', bid, mission, new MessageParams({status: MessageStatus.accepted}), configuration);
 
   beforeAll(() => {
     /**/

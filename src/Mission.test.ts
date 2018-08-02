@@ -10,17 +10,27 @@ describe('Mission class', () => {
   beforeAll(() => { /**/ });
 
   describe('sendMessage method', () => {
-    beforeAll(() => { /**/ });
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      jest.resetModules();
+    });
 
     xit('should success, validate kafka mock send message', async () => {
-      const mission = new Mission('selfId', 'peerId', 'davId', configuration);
-      await mission.sendMessage('type', 'content', new MessageParams({}));
+      const kafkaFactory = require('./mocks/Kafka');
+      jest.doMock('Kafka', () => {
+        return kafkaFactory({
+          createTopicResolve: true,
+        });
+      });
+      // const mission = new Mission('selfId', 'peerId', 'davId', configuration);
+      // await mission.sendMessage('type', 'content', new MessageParams({}));
       // validate kafka mock called with send message method
     });
 
     xit('should fail due to kafka exception', async () => {
-      const mission = new Mission('selfId', 'peerId', 'davId', configuration);
-      expect(await mission.sendMessage('type', 'content', new MessageParams({}))).toThrow('kafka exception');
+      // const mission = new Mission('selfId', 'peerId', 'davId', configuration);
+      // expect(await mission.sendMessage('type', 'content', new MessageParams({}))).toThrow('kafka exception');
     });
   });
 
@@ -28,8 +38,8 @@ describe('Mission class', () => {
     beforeAll(() => { /**/ });
 
     xit('should success', () => {
-      const mission = new Mission('selfId', 'peerId', 'davId', configuration);
-      mission.messages();
+      // const mission = new Mission('selfId', 'peerId', 'davId', configuration);
+      // mission.messages();
     });
   });
 
@@ -37,18 +47,18 @@ describe('Mission class', () => {
     beforeAll(() => { /**/ });
 
     xit('should success', async () => {
-      const mission = new Mission('selfId', 'peerId', 'davId', configuration);
-      await mission.finalizeMission('walletPrivateKey');
+      // const mission = new Mission('selfId', 'peerId', 'davId', configuration);
+      // await mission.finalizeMission('walletPrivateKey');
     });
 
     xit('should fail due to blockchain exception', async () => {
-      const mission = new Mission('selfId', 'peerId', 'davId', configuration);
-      expect(await mission.finalizeMission('walletPrivateKey')).toThrow('blockchain exception');
+      // const mission = new Mission('selfId', 'peerId', 'davId', configuration);
+      // expect(await mission.finalizeMission('walletPrivateKey')).toThrow('blockchain exception');
     });
 
     xit('should fail due to invalid private key', async () => {
-      const mission = new Mission('selfId', 'peerId', 'davId', configuration);
-      expect(await mission.finalizeMission('invalid walletPrivateKey')).toThrow('invalid private key exception');
+      // const mission = new Mission('selfId', 'peerId', 'davId', configuration);
+      // expect(await mission.finalizeMission('invalid walletPrivateKey')).toThrow('invalid private key exception');
     });
   });
 

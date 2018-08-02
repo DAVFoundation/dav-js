@@ -10,9 +10,9 @@ import { v4 as uuidV4 } from 'uuid';
 import MessageParams from './drone-charging/MessageParams';
 import { MessageStatus, MessageDomain } from './common-enums';
 
-export default class Bid<T extends BidParams> {
+export default class Bid<T extends BidParams, U extends MessageParams> {
     private _topicId: string;
-    private _mission: Mission;
+    private _mission: Mission<U, T>;
 
     get params(): T {
         return this._params;
@@ -22,33 +22,33 @@ export default class Bid<T extends BidParams> {
         /**/
     }
 
-    public async accept() {
+    public async accept(messageParams: U) {
         this._topicId = Kafka.generateTopicId();
         Kafka.createTopic(this._topicId, this.config);
-        // This line should be changed due to the decision what this params object should be and where it should be created,
-        // and it probably should include the new topicId
-        const params = new MessageParams({topicIdToReply: this._topicId});
-        await Kafka.sendParams(this.needId, params, this.config);
+        messageParams.sourceId = this._topicId;
+        await Kafka.sendParams(this.needId, messageParams, this.config);
     }
 
-    public async signContract(walletPrivateKey: string, neederDavId: DavID): Promise<Mission> {
+    public async signContract(walletPrivateKey: string, neederDavId: DavID): Promise<Mission<U, T>> {
         const approveReceipt = await Contracts.approveMission(neederDavId, walletPrivateKey, this.config);
         const missionId = uuidV4();
         const createReceipt = await Contracts.startMission(missionId, neederDavId, walletPrivateKey, this._params.vehicleId,
              this._params.price.value, this.config);
-        this._mission = new Mission(this._topicId, this.needTypeId, neederDavId, this.config);
+        this._mission = new Mission(this._topicId, this.needTypeId, neederDavId, this, this.config);
         return this._mission;
     }
 
-    public async messages(): Promise<Observable<Message<T>>> {
+    public async messages(): Promise<Observable<Message<U, T>>> {
         if (!this._topicId || !this._mission) {
             throw new Error('No messages available, please accept the bid, and sign the contract before you try to get messages');
         }
-        const kafkaStream = await Kafka.paramsStream<T>(this._topicId, this.config);
-        const messageStream = kafkaStream.map((bidParams) => new Message<T>(this._topicId, this.needTypeId,
-            // need to move some Message object members to MessageParams
-            new Bid<T>(this.needId, this.needTypeId, bidParams, this.config), this._mission, MessageStatus.contractSigned,
-            MessageDomain.mission, this.config));
+        const kafkaStream = await Kafka.paramsStream<U>(this._topicId, this.config);
+
+        const messageStream = kafkaStream.map((messageParams) => {
+            const bid = new Bid<T, U>(this.needId, this.needTypeId, this._params, this.config);
+            const message = new Message<U, T>(this._topicId, this.needTypeId, bid, this._mission, messageParams, this.config);
+            return message;
+        });
         return Observable.fromObservable(messageStream, this._topicId);
     }
 }
