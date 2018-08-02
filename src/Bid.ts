@@ -12,7 +12,7 @@ import { MessageStatus, MessageDomain } from './common-enums';
 
 export default class Bid<T extends BidParams, U extends MessageParams> {
     private _topicId: string;
-    private _mission: Mission;
+    private _mission: Mission<U, T>;
 
     get params(): T {
         return this._params;
@@ -29,12 +29,12 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         await Kafka.sendParams(this.needId, messageParams, this.config);
     }
 
-    public async signContract(walletPrivateKey: string, neederDavId: DavID): Promise<Mission> {
+    public async signContract(walletPrivateKey: string, neederDavId: DavID): Promise<Mission<U, T>> {
         const approveReceipt = await Contracts.approveMission(neederDavId, walletPrivateKey, this.config);
         const missionId = uuidV4();
         const createReceipt = await Contracts.startMission(missionId, neederDavId, walletPrivateKey, this._params.vehicleId,
              this._params.price.value, this.config);
-        this._mission = new Mission(this._topicId, this.needTypeId, neederDavId, this.config);
+        this._mission = new Mission(this._topicId, this.needTypeId, neederDavId, this, this.config);
         return this._mission;
     }
 
