@@ -1,10 +1,10 @@
 import IConfig from './IConfig';
 import { ID } from './common-types';
-import { MessageStatus, MessageDomain } from './common-enums';
 import Bid from './Bid';
 import BidParams from './BidParams';
 import Mission from './Mission';
 import MessageParams from './MessageParams';
+import Kafka from './Kafka';
 
 export default class Message<T extends MessageParams, U extends BidParams> {
 
@@ -15,10 +15,11 @@ export default class Message<T extends MessageParams, U extends BidParams> {
       public mission: Mission<T, U>,
       public messageParams: MessageParams,
       private config: IConfig) {
-        /** */
+        /* */
     }
 
-    public async respond(type: string, payload: any) {
-        return false;
+    public async respond(params: MessageParams) {
+        params.sourceId = this.selfId;
+        return Kafka.sendParams(this.peerId, params, this.config);
     }
 }
