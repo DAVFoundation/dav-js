@@ -8,12 +8,25 @@ import Message from './Message';
 import Mission from './Mission';
 import BidParams from './BidParams';
 import MessageParams from './drone-delivery/MessageParams';
-
+import Kafka from './Kafka';
+import axios from 'axios';
+import { cat } from 'shelljs';
 
 export default class Identity {
   // private _messages: Observable<Message<T>>;
 
   constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
+
+  public async publishNeed<T extends NeedParams>(params: T): Promise<Need<T>> {
+    const bidsChannelName = Kafka.generateTopicId();
+    try {
+      await Kafka.createTopic(bidsChannelName, this.config);
+      await axios.post(`${this.config.apiSeedUrls[0]}/needsForType/:${bidsChannelName}`, params);
+    } catch (err) {
+      throw err;
+    }
+    return new Need(bidsChannelName, params, this.config);
+  }
 
   public async needsForType<T extends NeedFilterParams, U extends NeedParams>(params: T): Promise<Observable<Need<U>>> {
     return null; }
@@ -30,5 +43,4 @@ export default class Identity {
     // return this._messages;
     return null;
   }
-  public async publishNeed<T extends NeedParams>(params: T): Promise<Need<T>> { return Promise.resolve(new Need('', '', this.config)); }
 }
