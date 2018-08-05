@@ -6,9 +6,7 @@ import Mission from './Mission';
 import Kafka from './Kafka';
 import Contracts from './Contracts';
 import { v4 as uuidV4 } from 'uuid';
-// temporary import
-import MessageParams from './drone-charging/MessageParams';
-import { MessageStatus, MessageDomain } from './common-enums';
+import MessageParams from './MessageParams';
 
 export default class Bid<T extends BidParams, U extends MessageParams> {
     private _topicId: string;
