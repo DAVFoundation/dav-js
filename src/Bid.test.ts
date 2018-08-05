@@ -10,11 +10,11 @@ import { Observable } from 'rxjs';
 describe('Bid class', () => {
   const config = new Config({});
   jest.doMock('./drone-charging/BidParams');
-  const bidParams = new BidParams({
+  let bidParams = new BidParams({
     price: new Price('3', PriceType.flat),
     vehicleId: '34',
   });
-  const messageParams = new MessageParams({
+  let messageParams = new MessageParams({
     status: MessageStatus.accepted,
     domain: MessageDomain.bid,
   });
@@ -23,6 +23,14 @@ describe('Bid class', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       jest.resetModules();
+      bidParams = new BidParams({
+        price: new Price('3', PriceType.flat),
+        vehicleId: '34',
+      });
+      messageParams = new MessageParams({
+        status: MessageStatus.accepted,
+        domain: MessageDomain.bid,
+      });
     });
 
     it('should succeed - check return value resolved', async () => {
@@ -202,6 +210,14 @@ describe('Bid class', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       jest.resetModules();
+      bidParams = new BidParams({
+        price: new Price('3', PriceType.flat),
+        vehicleId: '34',
+      });
+      messageParams = new MessageParams({
+        status: MessageStatus.accepted,
+        domain: MessageDomain.bid,
+      });
     });
 
     it('should succeed, validate mission object', async () => {
@@ -369,6 +385,14 @@ describe('Bid class', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       jest.resetModules();
+      bidParams = new BidParams({
+        price: new Price('3', PriceType.flat),
+        vehicleId: '34',
+      });
+      messageParams = new MessageParams({
+        status: MessageStatus.accepted,
+        domain: MessageDomain.bid,
+      });
     });
 
     it('should success - check message object', async (done) => {

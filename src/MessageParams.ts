@@ -6,7 +6,6 @@ const defaultValues = {
 };
 
 export default abstract class MessageParams extends BasicParams {
-    public sourceId: ID;
     public status: MessageStatus;
     public domain: MessageDomain;
     constructor(values: Partial<MessageParams>) {
