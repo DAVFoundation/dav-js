@@ -13,7 +13,8 @@ export default class Mission<T extends MessageParams, U extends BidParams> {
     constructor(public selfId: ID, public peerId: ID, public neederDavId: DavID, public bid: Bid<U, T>, private config: IConfig) {
     }
 
-    public async sendMessage(type: string, payload: any, params: MessageParams): Promise<void> {
+    public async sendMessage(params: MessageParams): Promise<void> {
+        params.sourceId = this.selfId;
         return Kafka.sendParams(this.peerId, params, this.config);
     }
 

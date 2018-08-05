@@ -46,8 +46,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         const kafkaStream = await Kafka.paramsStream<U>(this._topicId, this.config);
 
         const messageStream = kafkaStream.map((messageParams) => {
-            const bid = new Bid<T, U>(this.needId, this.needTypeId, this._params, this.config);
-            const message = new Message<U, T>(this._topicId, this.needTypeId, bid, this._mission, messageParams, this.config);
+            const message = new Message<U, T>(this._topicId, this.needTypeId, this, this._mission, messageParams, this.config);
             return message;
         });
         return Observable.fromObservable(messageStream, this._topicId);
