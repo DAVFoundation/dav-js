@@ -1,5 +1,5 @@
 import { ID, Observable, DavID } from './common-types';
-import { MessageDomain, MessageStatus } from './common-enums';
+import { TransactionReceipt } from 'web3/types';
 import IConfig from './IConfig';
 import Message from './Message';
 import MessageParams from './MessageParams';
@@ -7,7 +7,6 @@ import BidParams from './BidParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
 import Bid from './Bid';
-import { TransactionReceipt } from 'web3/types';
 
 export default class Mission<T extends MessageParams, U extends BidParams> {
 
@@ -20,13 +19,8 @@ export default class Mission<T extends MessageParams, U extends BidParams> {
 
     public async messages(): Promise<Observable<Message<T, U>>> {
         const stream = await Kafka.paramsStream(this.selfId, this.config);
-        const observable = Observable.create((observer: any) => {
-            stream.subscribe((params: MessageParams) => {
-                const message = new Message(this.selfId, this.peerId, this.bid, this, params, this.config);
-                observer.next(message);
-            },
-            (err: any) => observer.error(err));
-        });
+        const observable = Observable.fromObservable(stream.map((params: MessageParams) =>
+            new Message<T, U>(this.selfId, this.peerId, this.bid, this, params, this.config)), stream.topic);
         return observable;
     }
 
