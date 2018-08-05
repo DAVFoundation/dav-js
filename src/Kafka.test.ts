@@ -4,23 +4,28 @@ import BasicParams from './BasicParams';
 import { TimeoutError } from 'promise-timeout';
 
 describe('Kafka class', () => {
+  // TODO: Why do we need to put a URL here?
   const config: IConfig = new Config({ kafkaSeedUrls: ['localhost:9092'] });
 
   beforeAll(() => { /**/ });
 
   describe('createTopic method', () => {
 
+    // TODO: move the duplicated beforeEach in internal suites to containing suite
     beforeEach(() => {
       jest.resetAllMocks();
       jest.resetModules();
       jest.useFakeTimers();
     });
 
+    // TODO: move the duplicated afterEach in internal suites to containing suite
     afterEach(() => {
       jest.unmock('promise-timeout');
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check return value', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -37,15 +42,23 @@ describe('Kafka class', () => {
 
       const topic = 'topic';
 
+      // TODO: remove unnecessary comments (also applies to other tests below!)
       // Act + Assert
       await expect(kafka.createTopic(topic, config)).resolves.toBeUndefined();
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check producer ready method has been called', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
       const kafkaMock = require('kafka-node');
+
+      // TODO: A cleaner solution would be: (also applies to other tests below!)
+      //    const onMethodVerifiable = jest.fn((state: string, cb: any) => { cb(); });
+      //    const producer = {
+      //      on: onMethodVerifiable,
 
       const onMethodVerifiable = jest.fn();
       const producer = {
@@ -59,16 +72,23 @@ describe('Kafka class', () => {
       };
       kafkaMock.Producer.mockImplementation(() => producer);
 
+      // TODO: Is this really necessary? (also applies to other tests below!)
       const topic = 'topic';
 
+      // TODO: remove unnecessary comments (also applies to other tests below!)
       // Act
       await kafka.createTopic(topic, config);
 
+      // TODO: A cleaner solution would be:
+      //    expect(onMethodVerifiable).toHaveBeenCalledWith('ready',expect.anything());
+      // TODO: remove unnecessary comments (also applies to other tests below!)
       // Assert
       expect(onMethodVerifiable).toHaveBeenCalledWith('ready');
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check producer createTopic method has been called with correct params', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -95,6 +115,7 @@ describe('Kafka class', () => {
     });
 
     it('should get connection timeout', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -117,6 +138,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from producer while trying to connect to kafka, check return value', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -137,6 +159,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from producer while trying to connect to kafka, check method call', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -152,6 +175,7 @@ describe('Kafka class', () => {
 
       const topic = 'topic';
 
+      // Don't do empty catch  - prefer 'expect to reject'. You can merge with similar test in this case.
       // Act + Assert
       try {
         await expect(kafka.createTopic(topic, config));
@@ -164,6 +188,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from kafka in topic creation method', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -186,6 +211,7 @@ describe('Kafka class', () => {
     });
 
     it('should get timeout in topic creation method - check promise was rejected', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const producer = {
@@ -213,6 +239,7 @@ describe('Kafka class', () => {
     });
 
     it('should get timeout in topic creation method - check timeout was called twice', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const producer = {
@@ -226,6 +253,8 @@ describe('Kafka class', () => {
       const kafkaNode = require('kafka-node');
       kafkaNode.Producer.mockImplementation(() => producer);
 
+      // TODO: Could use fluent syntax:
+      //    const timeoutMock = jest.fn().mockResolvedValueOnce(new kafkaNode.Producer()).mockRejectedValue(new TimeoutError());
       const timeoutMock = jest.fn();
       timeoutMock.mockResolvedValueOnce(new kafkaNode.Producer()).mockRejectedValue(new TimeoutError());
       jest.doMock('promise-timeout', () => ({
@@ -259,7 +288,9 @@ describe('Kafka class', () => {
       jest.unmock('promise-timeout');
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check return value', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -285,7 +316,9 @@ describe('Kafka class', () => {
       await expect(kafka.sendParams(topic, paramsMock, config)).resolves.toBeUndefined();
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check producer ready method has been called', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -316,7 +349,9 @@ describe('Kafka class', () => {
       expect(producerReadyVerifiable).toHaveBeenCalledWith('ready');
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check producer send method has been called with correct params', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -349,6 +384,8 @@ describe('Kafka class', () => {
     });
 
     it('should get connection timeout', async () => {
+      // TODO: remove unnecessary comments
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -376,6 +413,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from producer while trying to connect to kafka - check return value', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -401,6 +439,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from producer while trying to connect to kafka, check method call', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -431,6 +470,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from kafka in send method', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -457,6 +497,7 @@ describe('Kafka class', () => {
     });
 
     it('should get timeout in send method - check promise was rejected', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const paramsMockType = jest.fn<BasicParams>(() => ({
@@ -475,7 +516,7 @@ describe('Kafka class', () => {
           return;
         },
       };
-      const kafkaNode =  require('kafka-node');
+      const kafkaNode = require('kafka-node');
       kafkaNode.Producer.mockImplementation(() => producer);
 
       const timeoutMock = jest.fn();
@@ -491,6 +532,7 @@ describe('Kafka class', () => {
     });
 
     it('should get timeout in send method - check timeout was called twice', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const paramsMockType = jest.fn<BasicParams>(() => ({
@@ -509,7 +551,7 @@ describe('Kafka class', () => {
           return;
         },
       };
-      const kafkaNode =  require('kafka-node');
+      const kafkaNode = require('kafka-node');
       kafkaNode.Producer.mockImplementation(() => producer);
 
       const timeoutMock = jest.fn();
@@ -541,6 +583,7 @@ describe('Kafka class', () => {
     });
 
     it('should get connection timeout - check return value', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -562,6 +605,7 @@ describe('Kafka class', () => {
     });
 
     it('should get connection timeout - check ready method has been called', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -590,6 +634,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from kafka client while trying to connect - check return value', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -609,6 +654,7 @@ describe('Kafka class', () => {
     });
 
     it('should get error from kafka client while trying to connect - check method call', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -634,7 +680,9 @@ describe('Kafka class', () => {
       expect(onMock).toHaveBeenCalledWith('error');
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check return value', async (done) => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('./drone-charging/BidParams');
       jest.doMock('kafka-node');
@@ -662,6 +710,7 @@ describe('Kafka class', () => {
       // Act
       const stream = await kafka.paramsStream(topic, config);
       let message: any;
+      // TODO: Implement this with Promise rather then 'done'
       stream.subscribe(
         (next) => {
           message = next;
@@ -677,7 +726,9 @@ describe('Kafka class', () => {
       );
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check client ready method has been called', async () => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('./drone-charging/BidParams');
       jest.doMock('kafka-node');
@@ -711,7 +762,9 @@ describe('Kafka class', () => {
       expect(clientReadyVerifiable).toBeCalledWith('ready');
     });
 
+    // TODO: change 'should succeed' to something meaningful
     it('should succeed - get valid input, check fromJson method has been called', async (done) => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('./drone-charging/BidParams');
       jest.doMock('kafka-node');
@@ -742,6 +795,7 @@ describe('Kafka class', () => {
 
       // Act
       const stream = await kafka.paramsStream(topic, config);
+      // TODO: Implement this with Promise rather then 'done'
       stream.subscribe(
         (next) => {
           // Assert
@@ -757,6 +811,7 @@ describe('Kafka class', () => {
     });
 
     it('should throw error due to invalid params in message', async (done) => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('./drone-charging/BidParams');
       jest.doMock('kafka-node');
@@ -785,6 +840,7 @@ describe('Kafka class', () => {
 
       // Act
       const stream = await kafka.paramsStream(topic, config);
+      // TODO: Implement this with Promise rather then 'done'
       stream.subscribe(
         (next) => {
           // Assert
@@ -800,6 +856,7 @@ describe('Kafka class', () => {
     });
 
     it('should throw error due to parsing error', async (done) => {
+      // TODO: remove unnecessary comments
       // Arrange
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -823,6 +880,7 @@ describe('Kafka class', () => {
 
       // Act
       const stream = await kafka.paramsStream(topic, config);
+      // TODO: Implement this with Promise rather then 'done'
       stream.subscribe(
         (next) => {
           // Assert
