@@ -422,7 +422,6 @@ describe('Bid class', () => {
       messagesStream.subscribe(
         (next) => {
           expect(next.selfId).toBe('topicId');
-          expect(next.peerId).toBe('needTypeId');
           expect(next.messageParams.domain).toBe(MessageDomain.bid);
           expect(next.messageParams.status).toBe(MessageStatus.accepted);
           done();

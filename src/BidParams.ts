@@ -7,7 +7,7 @@ import { PriceType } from './common-enums';
 export default abstract class BidParams extends BasicParams {
     public price: IPrice;
 
-    public constructor(price: IPrice | BigInteger, public vehicleId: ID) {
+    public constructor(public bidderId: ID, price: IPrice | BigInteger, public vehicleId: ID) {
         super();
         const priceObject = price as IPrice;
         if (!!priceObject) {

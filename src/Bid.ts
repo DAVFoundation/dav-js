@@ -23,7 +23,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
     public async accept(messageParams: U): Promise<void> {
         this._topicId = Kafka.generateTopicId();
         await Kafka.createTopic(this._topicId, this.config);
-        messageParams.sourceId = this._topicId;
+        messageParams.senderId = this._topicId;
         return await Kafka.sendParams(this.needId, messageParams, this.config);
     }
 
@@ -46,7 +46,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         const kafkaStream = await Kafka.paramsStream<U>(this._topicId, this.config);
 
         const messageStream = kafkaStream.map((messageParams) => {
-            const message = new Message<U, T>(this._topicId, this.needTypeId, this, this._mission, messageParams, this.config);
+            const message = new Message<U, T>(this._topicId, this, this._mission, messageParams, this.config);
             return message;
         });
         return Observable.fromObservable(messageStream, this._topicId);

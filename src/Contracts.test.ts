@@ -3,9 +3,37 @@ import { ContractTypes } from './common-enums';
 
 describe('Contracts class', () => {
 
+  // tslint:disable:max-classes-per-file
+  class Contract {
+    public static methods: any;
+    public get methods(): any { return Contract.methods; }
+    public static getPastEvents: any;
+    public get getPastEvents(): any { return Contract.getPastEvents; }
+  }
+
+  class Accounts {
+    public static privateKeyToAccount: any;
+    public get privateKeyToAccount(): any { return Accounts.privateKeyToAccount; }
+    public static signTransaction: any;
+    public get signTransaction(): any { return Accounts.signTransaction; }
+}
+
+  class HttpProvider {
+  }
+
+  class Web3 {
+    public static providers = { HttpProvider };
+    public static eth = { Contract, accounts: Accounts, getGasPrice: () => 1 };
+    public get eth(): any { return Web3.eth; }
+    public utils = {
+      sha3: (x: any) => x,
+    };
+  }
+
   const configuration = new Config({});
   const transactionReceipt = { transactionHash: 'TRANSACTION_HASH' };
   const web3Error = { msg: 'WEB3_ERROR' };
+  const signedTransaction = { rawTransaction: 'RAW_TRANSACTION' };
   const REGISTERED_IDENTITY = 'REGISTERED_IDENTITY';
   const UNREGISTERED_IDENTITY = 'UNREGISTERED_IDENTITY';
   const WALLET_PRIVATE_KEY = 'WALLET_PRIVET_KEY';
@@ -26,140 +54,180 @@ describe('Contracts class', () => {
   beforeAll(() => { /**/ });
 
   describe('isIdentityRegistered method', () => {
+
+    const isRegisteredCall = jest.fn(() => true);
+    const isRegistered = jest.fn(() => ({
+      call: isRegisteredCall,
+    }));
+
     beforeEach(() => {
-      jest.resetAllMocks();
-      jest.resetModules();
+      jest.clearAllMocks();
     });
 
-    it('should return true for registered Id', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: true,
-        });
-      });
+    beforeAll(() => {
+      jest.doMock('web3', () => Web3);
+      const web3 = require('web3');
+      web3.eth.Contract.methods = { isRegistered };
+    });
+
+    it('should call relevant functions and return true for registered Id', async () => {
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.isIdentityRegistered(REGISTERED_IDENTITY, configuration)).resolves.toBe(true);
+      expect(isRegistered).toHaveBeenCalled();
     });
 
-    it('should return false for unregistered Id', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-        });
-      });
+    it('should call relevant functions and return false for unregistered Id', async () => {
+      isRegisteredCall.mockImplementation(() => false);
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.isIdentityRegistered(UNREGISTERED_IDENTITY, configuration)).resolves.toBe(false);
-
+      expect(isRegistered).toHaveBeenCalled();
     });
   });
 
   describe('registerIdentity method', () => {
+
+    const isRegisteredCall = jest.fn(() => true);
+    const isRegistered = jest.fn(() => ({
+      call: isRegisteredCall,
+    }));
+    const register = jest.fn(() => ({
+      encodeABI: jest.fn(() => 'encodeABI'),
+      estimateGas: jest.fn(() => 100),
+      send: jest.fn(() => Promise.resolve()),
+    }));
+    const privateKeyToAccount = jest.fn(() => ({
+      sign: () => ({v: 'v', r: 'r', s: 's'}),
+    }));
+    const sendSignedTransactionSuccess = jest.fn((type: string, cb: any) => jest.fn(cb(transactionReceipt)));
+    const sendSignedTransaction = jest.fn(() => ({
+      once: sendSignedTransactionSuccess,
+      on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+    }));
+    const signTransaction = jest.fn(() => signedTransaction);
+
     beforeEach(() => {
-      jest.resetAllMocks();
-      jest.resetModules();
+      jest.clearAllMocks();
     });
 
-    it('should return ALREADY_REGISTERED for registered Id', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: true,
-        });
-      });
+    beforeAll(() => {
+      jest.doMock('web3', () => Web3);
+      const web3 = require('web3');
+      web3.eth.Contract.methods = { isRegistered, register };
+      web3.eth.accounts = { privateKeyToAccount, signTransaction };
+      web3.eth.sendSignedTransaction = sendSignedTransaction;
+    });
+
+    it('should call relevant functions and return ALREADY_REGISTERED for registered Id', async () => {
+      isRegisteredCall.mockImplementation(() => true);
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.registerIdentity(REGISTERED_IDENTITY,
         IDENTITY_PRIVATE_KEY,
         WALLET_ADDRESS,
         WALLET_PRIVATE_KEY,
         configuration)).resolves.toEqual('ALREADY_REGISTERED');
+      expect(isRegistered).toHaveBeenCalled();
     });
 
-    it('should return transaction receipt for unregistered Id', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionSuccess: (type: string, cb: any) => cb(transactionReceipt),
-        });
-      });
+    it('should call relevant functions and return transaction receipt for unregistered Id', async () => {
+      isRegisteredCall.mockImplementation(() => false);
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.registerIdentity(UNREGISTERED_IDENTITY,
         IDENTITY_PRIVATE_KEY,
         WALLET_ADDRESS,
         WALLET_PRIVATE_KEY,
         configuration)).resolves.toBe(transactionReceipt.transactionHash);
+      expect(signTransaction).toHaveBeenCalled();
+      expect(privateKeyToAccount).toHaveBeenCalled();
     });
 
-    it('should throw some web3 error', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionError: (type: string, cb: any) => cb(web3Error),
-          sendSignedTransactionSuccess: (type: string, cb: any) => false,
-        });
-      });
+    it('should call relevant functions and throw web3 error', async () => {
+      isRegisteredCall.mockImplementation(() => false);
+      sendSignedTransactionSuccess.mockImplementation(() => false);
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.registerIdentity(UNREGISTERED_IDENTITY,
         IDENTITY_PRIVATE_KEY,
         WALLET_ADDRESS,
         WALLET_PRIVATE_KEY,
         configuration)).rejects.toBe(web3Error);
+      expect(signTransaction).toHaveBeenCalled();
+      expect(privateKeyToAccount).toHaveBeenCalled();
     });
+
   });
 
   describe('approveMission method', () => {
+
+    const approve = jest.fn(() => ({
+      encodeABI: jest.fn(() => 'encodeABI'),
+      estimateGas: jest.fn(() => 100),
+    }));
+    const sendSignedTransactionSuccess = jest.fn((type: string, cb: any) => jest.fn(cb(transactionReceipt)));
+    const sendSignedTransaction = jest.fn(() => ({
+      once: sendSignedTransactionSuccess,
+      on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+    }));
+    const signTransaction = jest.fn(() => signedTransaction);
+
     beforeEach(() => {
-      jest.resetAllMocks();
-      jest.resetModules();
+      jest.clearAllMocks();
     });
 
-    it('should return transaction receipt', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionSuccess: (type: string, cb: any) => cb(transactionReceipt),
-        });
-      });
+    beforeAll(() => {
+      jest.doMock('web3', () => Web3);
+      const web3 = require('web3');
+      web3.eth.Contract.methods = { approve };
+      web3.eth.accounts = { signTransaction };
+      web3.eth.sendSignedTransaction = sendSignedTransaction;
+    });
+
+    it('should call relevant functions and return transaction receipt', async () => {
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.approveMission(REGISTERED_IDENTITY,
         WALLET_PRIVATE_KEY,
         configuration)).resolves.toBe(transactionReceipt);
+      expect(approve).toHaveBeenCalled();
+      expect(signTransaction).toHaveBeenCalled();
+      expect(sendSignedTransaction).toHaveBeenCalled();
     });
 
-    it('should throw some web3 error', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionError: (type: string, cb: any) => cb(web3Error),
-          sendSignedTransactionSuccess: (type: string, cb: any) => false,
-        });
-      });
+    it('should call relevant functions and throw web3 error', async () => {
+      sendSignedTransactionSuccess.mockImplementation(() => false);
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.approveMission(REGISTERED_IDENTITY,
         WALLET_PRIVATE_KEY,
         configuration)).rejects.toBe(web3Error);
+      expect(approve).toHaveBeenCalled();
+      expect(signTransaction).toHaveBeenCalled();
+      expect(sendSignedTransaction).toHaveBeenCalled();
     });
   });
 
   describe('startMission method', () => {
+
+    const create = jest.fn(() => ({
+      encodeABI: jest.fn(() => 'encodeABI'),
+      estimateGas: jest.fn(() => 100),
+    }));
+    const sendSignedTransactionSuccess = jest.fn((type: string, cb: any) => jest.fn(cb(transactionReceipt)));
+    const sendSignedTransaction = jest.fn(() => ({
+      once: sendSignedTransactionSuccess,
+      on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+    }));
+    const signTransaction = jest.fn(() => signedTransaction);
+
     beforeEach(() => {
-      jest.resetAllMocks();
-      jest.resetModules();
+      jest.clearAllMocks();
     });
 
-    it('should return transaction receipt', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionSuccess: (type: string, cb: any) => cb(transactionReceipt),
-        });
-      });
+    beforeAll(() => {
+      jest.doMock('web3', () => Web3);
+      const web3 = require('web3');
+      web3.eth.Contract.methods = { create };
+      web3.eth.accounts = { signTransaction };
+      web3.eth.sendSignedTransaction = sendSignedTransaction;
+    });
+
+    it('should call relevant functions and return transaction receipt', async () => {
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.startMission(MISSION_ID,
         REGISTERED_IDENTITY,
@@ -167,17 +235,13 @@ describe('Contracts class', () => {
         VEHICLE_ID,
         MISSION_PRICE,
         configuration)).resolves.toBe(transactionReceipt);
+      expect(create).toHaveBeenCalled();
+      expect(signTransaction).toHaveBeenCalled();
+      expect(sendSignedTransaction).toHaveBeenCalled();
     });
 
-    it('should throw some web3 error', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionError: (type: string, cb: any) => cb(web3Error),
-          sendSignedTransactionSuccess: (type: string, cb: any) => false,
-        });
-      });
+    it('should call relevant functions and throw web3 error', async () => {
+      sendSignedTransactionSuccess.mockImplementation(() => false);
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.startMission(MISSION_ID,
         REGISTERED_IDENTITY,
@@ -185,91 +249,100 @@ describe('Contracts class', () => {
         VEHICLE_ID,
         MISSION_PRICE,
         configuration)).rejects.toBe(web3Error);
+      expect(create).toHaveBeenCalled();
+      expect(signTransaction).toHaveBeenCalled();
+      expect(sendSignedTransaction).toHaveBeenCalled();
     });
   });
 
   describe('finalizeMission method', () => {
+
+    const fulfilled = jest.fn(() => ({
+      encodeABI: jest.fn(() => 'encodeABI'),
+      estimateGas: jest.fn(() => 100),
+    }));
+    const sendSignedTransactionSuccess = jest.fn((type: string, cb: any) => jest.fn(cb(transactionReceipt)));
+    const sendSignedTransaction = jest.fn(() => ({
+      once: sendSignedTransactionSuccess,
+      on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+    }));
+    const signTransaction = jest.fn(() => signedTransaction);
+
     beforeEach(() => {
-      jest.resetAllMocks();
-      jest.resetModules();
+      jest.clearAllMocks();
     });
 
-    it('should return start mission transaction receipt', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionSuccess: (type: string, cb: any) => cb(transactionReceipt),
-        });
-      });
+    beforeAll(() => {
+      jest.doMock('web3', () => Web3);
+      const web3 = require('web3');
+      web3.eth.Contract.methods = { fulfilled };
+      web3.eth.accounts = { signTransaction };
+      web3.eth.sendSignedTransaction = sendSignedTransaction;
+    });
+
+    it('should call relevant functions and return start mission transaction receipt', async () => {
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.finalizeMission(MISSION_ID,
         REGISTERED_IDENTITY,
         WALLET_PRIVATE_KEY,
         configuration)).resolves.toBe(transactionReceipt);
+      expect(fulfilled).toHaveBeenCalled();
+      expect(signTransaction).toHaveBeenCalled();
+      expect(sendSignedTransaction).toHaveBeenCalled();
     });
 
-    it('should throw some web3 error', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        return web3Factory({
-          isRegistered: false,
-          sendSignedTransactionError: (type: string, cb: any) => cb(web3Error),
-          sendSignedTransactionSuccess: (type: string, cb: any) => false,
-        });
-      });
+    it('should call relevant functions and throw web3 error', async () => {
+      sendSignedTransactionSuccess.mockImplementation(() => false);
       const contracts: any = (await import('./Contracts')).default;
       await expect(contracts.finalizeMission(MISSION_ID,
         REGISTERED_IDENTITY,
         WALLET_PRIVATE_KEY,
         configuration)).rejects.toBe(web3Error);
+      expect(fulfilled).toHaveBeenCalled();
+      expect(signTransaction).toHaveBeenCalled();
+      expect(sendSignedTransaction).toHaveBeenCalled();
     });
   });
 
   describe('watchContract method', () => {
 
+    const getPastEvents = jest.fn();
+
     beforeEach(() => {
-      jest.resetAllMocks();
+      jest.clearAllMocks();
       jest.resetModules();
-      jest.useFakeTimers();
     });
 
-    it('should receive contract events', async () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+      jest.doMock('web3', () => Web3);
+      const web3 = require('web3');
+      web3.eth.Contract.getPastEvents = getPastEvents;
+    });
+
+    it('should  call relevant functions and receive contract events', async () => {
       const pastEvent1 = [{ transactionHash: 'TRANSACTION_HASH_1', blockNumber: 1, transactionIndex: 1 }];
       const pastEvent2 = [{ transactionHash: 'TRANSACTION_HASH_2', blockNumber: 2, transactionIndex: 1 }];
       const pastEvent3 = [{ transactionHash: 'TRANSACTION_HASH_3', blockNumber: 2, transactionIndex: 2 }];
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        const getPastEvents = jest.fn();
-        getPastEvents
-          .mockReturnValueOnce(pastEvent1)
-          .mockReturnValueOnce(pastEvent2)
-          .mockReturnValueOnce(pastEvent3)
-          .mockReturnValue({});
-
-        return web3Factory({
-          getPastEvents,
-        });
-      });
+      getPastEvents
+      .mockImplementationOnce(() => Promise.resolve(pastEvent1))
+      .mockImplementationOnce(() => Promise.resolve(pastEvent2))
+      .mockImplementationOnce(() => Promise.resolve(pastEvent3))
+      .mockImplementation(() => Promise.resolve({}));
       const spy = jest.fn();
       const contracts: any = (await import('./Contracts')).default;
       const observable = contracts.watchContract(REGISTERED_IDENTITY, ContractTypes.basicMission, configuration);
       observable.subscribe(spy);
       jest.advanceTimersByTime(10000);
       await forContextSwitch();
+      expect(getPastEvents.mock.calls.length).toBe(5);
       expect(spy.mock.calls.length).toBe(3);
       expect(spy.mock.calls[0][0]).toEqual(pastEvent1[0]);
       expect(spy.mock.calls[1][0]).toEqual(pastEvent2[0]);
     });
 
-    it('should receive contract error events', async () => {
-      const web3Factory = require('./mocks/web3');
-      jest.doMock('web3', () => {
-        const getPastEvents = jest.fn(() => Promise.reject(web3Error));
-        return web3Factory({
-          getPastEvents,
-        });
-      });
+    it('should  call relevant functions and receive contract error events', async () => {
+      getPastEvents.mockImplementation(() => Promise.reject(web3Error));
       const spy = jest.fn();
       const contracts: any = (await import('./Contracts')).default;
       const observable = contracts.watchContract(REGISTERED_IDENTITY, ContractTypes.basicMission, configuration);

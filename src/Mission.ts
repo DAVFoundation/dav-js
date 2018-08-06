@@ -14,14 +14,14 @@ export default class Mission<T extends MessageParams, U extends BidParams> {
     }
 
     public async sendMessage(params: MessageParams): Promise<void> {
-        params.sourceId = this.selfId;
+        params.senderId = this.selfId;
         return Kafka.sendParams(this.peerId, params, this.config);
     }
 
     public async messages(): Promise<Observable<Message<T, U>>> {
         const stream = await Kafka.paramsStream(this.selfId, this.config);
         const observable = Observable.fromObservable(stream.map((params: MessageParams) =>
-            new Message<T, U>(this.selfId, this.peerId, this.bid, this, params, this.config)), stream.topic);
+            new Message<T, U>(this.selfId, this.bid, this, params, this.config)), stream.topic);
         return observable;
     }
 

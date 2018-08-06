@@ -5,7 +5,6 @@ import { ContractTypes } from './common-enums';
 import Contract from 'web3/eth/contract';
 import { EventLog, TransactionReceipt } from 'web3/types';
 import { Observable } from 'rxjs';
-import { filter } from 'minimatch';
 
 let contracts: { [T in ContractTypes]: any } = {
     Identity: require('./contracts/Identity'),
