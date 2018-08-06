@@ -10,7 +10,6 @@ export default class Message<T extends MessageParams, U extends BidParams> {
 
     constructor(
       public selfId: ID,
-      public peerId: ID,
       public bid: Bid<U, T>,
       public mission: Mission<T, U>,
       public messageParams: MessageParams,
@@ -19,7 +18,7 @@ export default class Message<T extends MessageParams, U extends BidParams> {
     }
 
     public async respond(params: MessageParams) {
-        params.sourceId = this.selfId;
-        return Kafka.sendParams(this.peerId, params, this.config);
+        params.senderId = this.selfId;
+        return Kafka.sendParams(this.messageParams.senderId, params, this.config);
     }
 }

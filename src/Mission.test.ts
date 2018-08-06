@@ -78,9 +78,9 @@ describe('Mission class', () => {
 
     it('should receive message events', async () => {
 
-      const messageParams1 = new MessageParams({sourceId: 'SOURCE_ID_1'});
-      const messageParams2 = new MessageParams({sourceId: 'SOURCE_ID_2'});
-      const messageParams3 = new MessageParams({sourceId: 'SOURCE_ID_3'});
+      const messageParams1 = new MessageParams({senderId: 'SOURCE_ID_1'});
+      const messageParams2 = new MessageParams({senderId: 'SOURCE_ID_2'});
+      const messageParams3 = new MessageParams({senderId: 'SOURCE_ID_3'});
       jest.doMock('./Kafka', () => ({
           default: { paramsStream: async () => Observable.from([
             messageParams1, messageParams2, messageParams3,
@@ -94,9 +94,9 @@ describe('Mission class', () => {
       const messages = await mission.messages();
       messages.subscribe(spy);
       expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Message('selfId', 'peerId', bid, mission, messageParams1, configuration));
-      expect(spy.mock.calls[1][0]).toEqual(new Message('selfId', 'peerId', bid, mission, messageParams2, configuration));
-      expect(spy.mock.calls[2][0]).toEqual(new Message('selfId', 'peerId', bid, mission, messageParams3, configuration));
+      expect(spy.mock.calls[0][0]).toEqual(new Message('selfId', bid, mission, messageParams1, configuration));
+      expect(spy.mock.calls[1][0]).toEqual(new Message('selfId', bid, mission, messageParams2, configuration));
+      expect(spy.mock.calls[2][0]).toEqual(new Message('selfId', bid, mission, messageParams3, configuration));
     });
 
     it('should receive error event', async () => {
