@@ -14,13 +14,14 @@ describe('Need class', () => {
   let bidParams = new BidParams({price: new Price('3', PriceType.flat)});
   bidParams.bidderId = 'bidSource';
 
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.resetModules();
+    bidParams = new BidParams({price: new Price('3', PriceType.flat)});
+    bidParams.bidderId = 'bidSource';
+  });
+
   describe('createBid method', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-      jest.resetModules();
-      bidParams = new BidParams({price: new Price('3', PriceType.flat)});
-      bidParams.bidderId = 'bidSource';
-    });
 
     it('should create correct bid when input is valid', async () => {
       const kafkaMock = {
@@ -58,12 +59,6 @@ describe('Need class', () => {
   });
 
   describe('bids method', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-      jest.resetModules();
-      bidParams = new BidParams({price: new Price('3', PriceType.flat)});
-      bidParams.bidderId = 'bidSource';
-    });
 
     it('should create bid observable with one message', async () => {
       const kafkaMock = {
