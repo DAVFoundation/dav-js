@@ -18,6 +18,11 @@ enum ClassType {
     DroneChargingBid = 'drone-charging:bid',
 }
 
+interface IKafkaMessage {
+    classType: ClassType;
+    contents: string;
+}
+
 export default class Kafka {
 
     private static _kafkaConnectionTimeoutInMs: number = 4500;
@@ -31,7 +36,7 @@ export default class Kafka {
     );
 
     private static getKafkaClient(config: IConfig): KafkaClient {
-        const client = new KafkaClient({kafkaHost: config.kafkaSeedUrls[0], connectTimeout: 6000, requestTimeout: 6000});
+        const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0], connectTimeout: 6000, requestTimeout: 6000 });
         return client;
     }
 
@@ -87,7 +92,7 @@ export default class Kafka {
     public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig) {
         const producer = await this.getProducer(config);
         const payloads = [
-            { topic: topicId, messages: basicParams.toJson()},
+            { topic: topicId, messages: basicParams.toJson() },
         ];
         const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {
@@ -100,6 +105,9 @@ export default class Kafka {
         });
         return timeout(sendPromise, this._kafkaRequestTimeoutInMs);
     }
+
+    public static async paramsStreamKafka(topicId: string, config: IConfig): Promise<Observable<IKafkaMessage>> { return null; }
+    public static async paramsStreamFilter<T extends BasicParams>(stream: Observable<IKafkaMessage>): Promise<Observable<T>> { return null; }
 
     public static async paramsStream<T extends BasicParams>(topicId: string, config: IConfig): Promise<Observable<T>> {
         const consumer = await this.getConsumer(topicId, config);
