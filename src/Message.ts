@@ -10,7 +10,9 @@ export default class Message<T extends MessageParams, U extends BidParams> {
 
     constructor(
       public selfId: ID,
+      // TODO: remove bid
       public bid: Bid<U, T>,
+      // TODO: remove mission
       public mission: Mission<T, U>,
       public messageParams: MessageParams,
       private config: IConfig) {

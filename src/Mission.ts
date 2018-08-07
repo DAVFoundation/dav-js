@@ -10,6 +10,7 @@ import Bid from './Bid';
 
 export default class Mission<T extends MessageParams, U extends BidParams> {
 
+    // TODO: remove bid
     constructor(public selfId: ID, public peerId: ID, public neederDavId: DavID, public bid: Bid<U, T>, private config: IConfig) {
     }
 
