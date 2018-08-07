@@ -8,6 +8,7 @@ import Kafka from './Kafka';
 
 export default class Need<T extends NeedParams> {
 
+    // TODO: replace id with needParams
     constructor(public id: ID, private config: IConfig) {
         /**/
     }
@@ -21,4 +22,8 @@ export default class Need<T extends NeedParams> {
         const bidStream = kafkaStream.map((bidParams) => new Bid(this.id, bidParams.bidderId, bidParams, this.config));
         return Observable.fromObservable(bidStream, this.id);
     }
+
+    // TODO: add sendMessage(params: MessageParams): Promise<void>
+
+    // TODO: Add messages<...>(): Promise<Observable<Message<...>>>
 }

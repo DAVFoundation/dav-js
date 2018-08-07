@@ -28,13 +28,17 @@ export default class Identity {
   }
 
   public async needsForType<T extends NeedFilterParams, U extends NeedParams>(params: T): Promise<Observable<Need<U>>> {
-    return null; }
+    return null;
+  }
 
   public need<T extends NeedParams>(id: ID, params: T): Need<T> { return new Need(id, this.config); }
   public bid<T extends BidParams, U extends MessageParams>(id: ID, params: T): Bid<T, U> { return new Bid(id, '', params, this.config); }
   public mission<T extends MessageParams, U extends BidParams>(selfId: ID, peerId: ID, bid: Bid<U, T>): Mission<T, U> {
-     return new Mission(selfId, peerId, this.davID, bid, this.config);
-    }
+    return new Mission(selfId, peerId, this.davID, bid, this.config);
+  }
+
+  // TODO: Add missions<...>(): Promise<Observable<Mission<...>>>
+
   public messages<T extends MessageParams, U extends BidParams>(): Observable<Message<T, U>> {
     // if (!this._messages) {
     //   this._messages = null;
