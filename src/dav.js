@@ -1,7 +1,6 @@
 const axios = require('axios');
 const uuid = require('uuid/v4');
 const rx = require('rx-lite');
-const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
 const DavContracts = require('./dav-contracts');
 const { updateMission, getMissionByBidId } = require('./api/missions');
@@ -12,18 +11,6 @@ const BLOCKCHAIN_TYPE = process.env.BLOCKCHAIN_TYPE || 'DAVTESTNET';
 
 class DavSDK {
   constructor(davId, wallet, mnemonic = null) {
-    if (BLOCKCHAIN_TYPE !== 'NONE') {
-      let web3Provider;
-      if(mnemonic) {
-        web3Provider = new HDWalletProvider(mnemonic, ETH_NODE_URL);
-      } else {
-        web3Provider = window.web3.currentProvider;
-      }
-      this.web3 = new Web3(web3Provider);
-
-      this.davContracts = new DavContracts(this.web3);
-    }
-
     this.davId = davId;
     this.wallet = wallet;
 
