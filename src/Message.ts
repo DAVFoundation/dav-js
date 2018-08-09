@@ -6,14 +6,10 @@ import Mission from './Mission';
 import MessageParams from './MessageParams';
 import Kafka from './Kafka';
 
-export default class Message<T extends MessageParams, U extends BidParams> {
+export default class Message<T extends MessageParams> {
 
     constructor(
       public selfId: ID,
-      // TODO: remove bid
-      public bid: Bid<U, T>,
-      // TODO: remove mission
-      public mission: Mission<T, U>,
       public messageParams: MessageParams,
       private config: IConfig) {
         /* */

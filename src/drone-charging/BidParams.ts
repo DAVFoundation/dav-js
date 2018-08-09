@@ -23,7 +23,7 @@ export default class BidParams extends BaseBidParams {
     }
 
     constructor(init: Partial<BidParams>) {
-        super(init.bidderId, init.price, init.vehicleId);
+        super(init.id, init.price, init.vehicleId, init.needTypeId);
     }
 
     public toJson() {

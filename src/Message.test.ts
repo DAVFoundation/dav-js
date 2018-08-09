@@ -1,16 +1,10 @@
-import Bid from './Bid';
 import Config from './Config';
-import BidParams from './drone-delivery/BidParams';
-import Mission from './Mission';
 import { MessageStatus, MessageDomain } from './common-enums';
 import MessageParams from './drone-charging/MessageParams';
 
 describe('Message class', () => {
 
   const configuration = new Config({});
-  const bidParams = new BidParams({});
-  const bid = new Bid('needId', 'needTypeId', bidParams, configuration);
-  const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
   const messageContent = new MessageParams({status: MessageStatus.accepted, senderId: 'peerId'});
   beforeAll(() => {
     /**/
@@ -31,7 +25,7 @@ describe('Message class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
-      const message = new Message('selfId', bid, mission, messageContent, configuration);
+      const message = new Message('selfId', messageContent, configuration);
       await expect(message.respond(new MessageParams({senderId: 'selfId'}))).resolves.toBeDefined();
     });
 
@@ -42,7 +36,7 @@ describe('Message class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
-      const message = new Message('selfId', bid, mission, messageContent, configuration);
+      const message = new Message('selfId', messageContent, configuration);
       await expect(message.respond(new MessageParams({senderId: 'selfId'}))).rejects.toBe(kafkaError);
     });
 
@@ -53,7 +47,7 @@ describe('Message class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
-      const message = new Message('selfId', bid, mission, messageContent, configuration);
+      const message = new Message('selfId', messageContent, configuration);
       const messageParams = new MessageParams({senderId: 'selfId'});
       await message.respond(messageParams);
       expect(kafkaMock.sendParams).toHaveBeenCalledWith('peerId', messageParams, configuration);
@@ -67,7 +61,7 @@ describe('Message class', () => {
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
       const selfId = 'selfId';
-      const message = new Message(selfId, bid, mission, messageContent, configuration);
+      const message = new Message(selfId, messageContent, configuration);
       const messageParams = new MessageParams({});
       await message.respond(messageParams);
       expect(kafkaMock.sendParams.mock.calls[0][1].senderId).toBe(selfId);
