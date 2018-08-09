@@ -17,5 +17,6 @@ module.exports = [
   'blockchain',
   'enum',
   'rx',
-  'sdk'
+  'sdk',
+  'axios'
 ];
