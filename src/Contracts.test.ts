@@ -21,10 +21,10 @@ describe('Contracts class', () => {
   class HttpProvider {
   }
 
-  class Web3 {
+  class Web3Mock {
     public static providers = { HttpProvider };
     public static eth = { Contract, accounts: Accounts, getGasPrice: () => 1 };
-    public get eth(): any { return Web3.eth; }
+    public get eth(): any { return Web3Mock.eth; }
     public utils = {
       sha3: (x: any) => x,
     };
@@ -65,7 +65,7 @@ describe('Contracts class', () => {
     });
 
     beforeAll(() => {
-      jest.doMock('web3', () => Web3);
+      jest.doMock('web3', () => Web3Mock);
       const web3 = require('web3');
       web3.eth.Contract.methods = { isRegistered };
     });
@@ -110,7 +110,7 @@ describe('Contracts class', () => {
     });
 
     beforeAll(() => {
-      jest.doMock('web3', () => Web3);
+      jest.doMock('web3', () => Web3Mock);
       const web3 = require('web3');
       web3.eth.Contract.methods = { isRegistered, register };
       web3.eth.accounts = { privateKeyToAccount, signTransaction };
@@ -173,7 +173,7 @@ describe('Contracts class', () => {
     });
 
     beforeAll(() => {
-      jest.doMock('web3', () => Web3);
+      jest.doMock('web3', () => Web3Mock);
       const web3 = require('web3');
       web3.eth.Contract.methods = { approve };
       web3.eth.accounts = { signTransaction };
@@ -220,7 +220,7 @@ describe('Contracts class', () => {
     });
 
     beforeAll(() => {
-      jest.doMock('web3', () => Web3);
+      jest.doMock('web3', () => Web3Mock);
       const web3 = require('web3');
       web3.eth.Contract.methods = { create };
       web3.eth.accounts = { signTransaction };
@@ -273,7 +273,7 @@ describe('Contracts class', () => {
     });
 
     beforeAll(() => {
-      jest.doMock('web3', () => Web3);
+      jest.doMock('web3', () => Web3Mock);
       const web3 = require('web3');
       web3.eth.Contract.methods = { fulfilled };
       web3.eth.accounts = { signTransaction };
@@ -315,12 +315,12 @@ describe('Contracts class', () => {
 
     beforeAll(() => {
       jest.useFakeTimers();
-      jest.doMock('web3', () => Web3);
+      jest.doMock('web3', () => Web3Mock);
       const web3 = require('web3');
       web3.eth.Contract.getPastEvents = getPastEvents;
     });
 
-    it('should  call relevant functions and receive contract events', async () => {
+    it('should call relevant functions and receive contract events', async () => {
       const pastEvent1 = [{ transactionHash: 'TRANSACTION_HASH_1', blockNumber: 1, transactionIndex: 1 }];
       const pastEvent2 = [{ transactionHash: 'TRANSACTION_HASH_2', blockNumber: 2, transactionIndex: 1 }];
       const pastEvent3 = [{ transactionHash: 'TRANSACTION_HASH_3', blockNumber: 2, transactionIndex: 2 }];
@@ -341,7 +341,7 @@ describe('Contracts class', () => {
       expect(spy.mock.calls[1][0]).toEqual(pastEvent2[0]);
     });
 
-    it('should  call relevant functions and receive contract error events', async () => {
+    it('should call relevant functions and receive contract error events', async () => {
       getPastEvents.mockImplementation(() => Promise.reject(web3Error));
       const spy = jest.fn();
       const contracts: any = (await import('./Contracts')).default;
