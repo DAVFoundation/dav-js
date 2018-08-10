@@ -18,7 +18,7 @@ describe('Identity class', () => {
   const davNodeError = { msg: 'Dav node error' };
   const config = new Config({}) as IConfig;
   const needFilterParams = new NeedFilterParams({ area: { lat: 0, long: 0, radius: 0 } });
-  const needParams = new NeedParams({});
+  const needParams = new NeedParams();
   const bidParams = new BidParams({});
   const missionParams = new MissionParams('SOURCE_ID_', 'DAV_ID', 'DAV_ID', '100');
 
@@ -88,9 +88,9 @@ describe('Identity class', () => {
 
   describe('needsForType method', () => {
 
-    const needParams1 = new NeedParams({ id: 'SOURCE_ID_1' });
-    const needParams2 = new NeedParams({ id: 'SOURCE_ID_2' });
-    const needParams3 = new NeedParams({ id: 'SOURCE_ID_3' });
+    const needParams1 = new NeedParams();
+    const needParams2 = new NeedParams();
+    const needParams3 = new NeedParams();
 
     const kafkaMock = {
       generateTopicId: jest.fn(() => TOPIC_ID),
