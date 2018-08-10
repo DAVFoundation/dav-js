@@ -20,7 +20,7 @@
     "url": "git+https://github.com/DAVFoundation/dav-js.git"
   },
   "scripts": {
-    "preinstall": "cp ./.githooks/* .git/hooks",
+    "preinstall": "(cp ./.githooks/* .git/hooks) || true",
     "build-dev": "webpack --mode development",
     "build-prod": "webpack --mode production",
     "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
