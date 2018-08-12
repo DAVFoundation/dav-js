@@ -1,6 +1,13 @@
 import BaseMessageParams from '../MessageParams';
 
 export default class MessageParams extends BaseMessageParams {
+    public static getMessageType(): string {
+        return 'DroneDelivery:Message';
+    }
+
+    public static fromJson(json: any): MessageParams {
+        return new MessageParams(json);
+    }
 
     constructor(values: Partial<MessageParams>) { super(values); }
 

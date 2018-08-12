@@ -5,19 +5,21 @@ import { log } from 'handlebars';
 export default class BidParams extends BaseBidParams {
 
     public plugType: string;
+    public static getMessageType(): string {
+        return 'DroneCharging:Bid';
+    }
 
-    public static fromJson(json: string) {
-        const object = JSON.parse(json);
-        const price =  new Price(object.price.value, object.price.type);
-        if (object.description) {
-            price.description = object.price.description;
+    public static fromJson(json: any): BidParams {
+        const price = new Price(json.price.value, json.price.type);
+        if (json.description) {
+            price.description = json.price.description;
         }
-        const bidParams = new BidParams({price});
-        if (object.ttl) {
-            bidParams.ttl = object.ttl;
+        const bidParams = new BidParams({ price });
+        if (json.ttl) {
+            bidParams.ttl = json.ttl;
         }
-        if (object.plugType) {
-            bidParams.plugType = object.plugType;
+        if (json.plugType) {
+            bidParams.plugType = json.plugType;
         }
         return bidParams;
     }
@@ -27,7 +29,7 @@ export default class BidParams extends BaseBidParams {
     }
 
     public toJson() {
-        const bidParams = Object.assign({protocol: 'drone-charging', type: 'bid'}, this);
+        const bidParams = Object.assign({ protocol: 'drone-charging', type: 'bid' }, this);
         return JSON.stringify(bidParams);
     }
 
