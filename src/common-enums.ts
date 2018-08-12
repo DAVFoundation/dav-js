@@ -14,7 +14,7 @@ export enum MessageDomain {
 
 export enum BlockchainType {
     local = 'local',
-    ropsten = 'ropsten',
+    test = 'test',
     main = 'main',
 }
 
