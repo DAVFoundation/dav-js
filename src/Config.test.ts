@@ -1,5 +1,6 @@
 import Config from './Config';
 import { BlockchainType } from './common-enums';
+import { defaultConfiguration } from './Config';
 
 describe('Config class', () => {
 
@@ -8,27 +9,16 @@ describe('Config class', () => {
   describe('check default configuration are set', () => {
     beforeAll(() => { /**/ });
 
-    xit('should contain all default configuration', async () => {
+    it('should contain all default configuration', async () => {
       const configuration = new Config({});
-      expect(configuration).toEqual({
-        ethNodeUrl: 'https://ropsten.infura.io/wUiZtmeZ1KwjFrcC8zRO',
-        apiSeedUrls: [''],
-        kafkaSeedUrls: [''],
-        identityTtl: 10000,
-        needTypeTtl: 10000,
-        needTtl: 10000,
-        missionConsumerTtl: 10000,
-        missionProviderTtl: 10000,
-        blockchainType: BlockchainType.ropsten,
-        contractPath: './contracts/',
-    });
+      expect(configuration).toEqual(defaultConfiguration);
     });
   });
 
   describe('check costume configuration are set', () => {
     beforeAll(() => { /**/ });
 
-    xit('should contain all costume configuration', async () => {
+    it('should contain all costume configuration', async () => {
       const configurationObject = {
         ethNodeUrl: 'ETH_NODE_URL',
         apiSeedUrls: ['API_SEED_URL_1', 'API_SEED_URL_2'],
@@ -40,7 +30,8 @@ describe('Config class', () => {
         missionProviderTtl: 90,
         blockchainType: BlockchainType.local,
         contractPath: 'CONTRACT_PATH',
-    };
+        contracts: 'contracts',
+      };
       const configuration = new Config(configurationObject);
       expect(configuration).toEqual(configurationObject);
     });

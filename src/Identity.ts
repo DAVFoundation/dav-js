@@ -18,51 +18,65 @@ export default class Identity {
 
   constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
 
+  private async registerNewTopic() {
+    const topic = Kafka.generateTopicId(); // Channel#2
+    try {
+      await Kafka.createTopic(topic, this.config);
+    } catch (err) {
+      throw new Error(`Topic registration failed: ${err}`);
+    }
+    return topic;
+  }
+
   public async publishNeed<T extends NeedParams, U extends MessageParams>(params: T): Promise<Need<T, U>> {
-    const bidsChannelName = Kafka.generateTopicId(); // Channel#3
+    const bidsChannelName = await this.registerNewTopic(); // Channel#3
     params.id = bidsChannelName;
-    await Kafka.createTopic(bidsChannelName, this.config);
     await axios.post(`${this.config.apiSeedUrls[0]}/publishNeed/:${bidsChannelName}`, params);
     return new Need<T, U>(bidsChannelName, params, this.config);
   }
 
   public async needsForType<T extends NeedParams, U extends MessageParams>(params: NeedFilterParams, channelId?: ID):
   Promise<Observable<Need<T, U>>> {
-    const needsChannelName = channelId || Kafka.generateTopicId(); // Channel#2
-    this._needTypeId = needsChannelName;
-    try {
-      if (!channelId) {
-        await Kafka.createTopic(needsChannelName, this.config);
-        await axios.post(`${this.config.apiSeedUrls[0]}/needsForType/:${needsChannelName}`, params);
+    let identityChannelName = channelId || this._needTypeId;
+    if (!identityChannelName) {
+      identityChannelName = await this.registerNewTopic();
+      this._needTypeId = identityChannelName;
+      try {
+        await axios.post(`${this.config.apiSeedUrls[0]}/needsForType/:${identityChannelName}`, params);
+      } catch (err) {
+        throw new Error(`Needs registration failed: ${err}`);
       }
-    } catch (err) {
-      throw new Error(`Needs registration failed: ${err}`);
     }
-    const stream = await Kafka.paramsStream(needsChannelName, this.config);
+    const stream = await Kafka.paramsStream(identityChannelName, this.config);
     const observable = Observable.fromObservable(stream.map((needParams: T) =>
-        new Need<T, U>(needsChannelName, needParams, this.config)), stream.topic);
+        new Need<T, U>(identityChannelName, needParams, this.config)), stream.topic);
     return observable;
   }
 
-  public async missions<T extends MissionParams, U extends MessageParams>(): Promise<Observable<Mission<T, U>>> {
-    if (!this._needTypeId) {
-      throw new Error(`You must subscribe for needs first`);
+  public async missions<T extends MissionParams, U extends MessageParams>(channelId?: ID): Promise<Observable<Mission<T, U>>> {
+    let identityChannelName = channelId || this._needTypeId;
+    if (!identityChannelName) {
+      identityChannelName = await this.registerNewTopic();
+      this._needTypeId = identityChannelName;
     }
-    const stream = await Kafka.paramsStream(this._needTypeId, this.config); // Channel#2
+    const stream = await Kafka.paramsStream(identityChannelName, this.config); // Channel#2
     const messageStream = stream.map(async (params: T) => {
-      const missionChannelName = Kafka.generateTopicId(); // Channel#5
-      await Kafka.createTopic(missionChannelName, this.config);
-      return new Mission<T, U>(this._needTypeId, params, this.config);
+      return new Mission<T, U>(identityChannelName, params, this.config);
     })
     .map((promise) => Observable.fromPromise(promise))
     .mergeAll();
     return Observable.fromObservable(messageStream, stream.topic);
   }
 
-  public async messages<T extends MessageParams>(): Promise<Observable<Message<T>>> {
-    const stream = await Kafka.paramsStream(this._needTypeId, this.config); // Channel#2
+  public async messages<T extends MessageParams>(channelId?: ID): Promise<Observable<Message<T>>> {
+    let identityChannelName = channelId || this._needTypeId;
+    if (!identityChannelName) {
+      identityChannelName = await this.registerNewTopic();
+      this._needTypeId = identityChannelName;
+    }
+    const stream = await Kafka.paramsStream(identityChannelName, this.config); // Channel#2
     const messageStream = stream.map((params: MessageParams) =>
-        new Message<T>(this._needTypeId, params, this.config));
+        new Message<T>(identityChannelName, params, this.config));
     return Observable.fromObservable(messageStream, stream.topic);
   }
 

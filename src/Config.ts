@@ -20,3 +20,5 @@ export default class Config implements IConfig {
         Object.assign(this, defaultValues, props);
     }
 }
+
+export const defaultConfiguration = defaultValues;
