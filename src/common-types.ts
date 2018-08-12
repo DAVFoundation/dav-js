@@ -1,4 +1,4 @@
-import { Observable as RxObservable } from 'rxjs/Rx';
+import { Observable as RxObservable } from 'rxjs';
 
 export type ID = string;
 export type DavID = string;

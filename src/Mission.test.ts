@@ -2,19 +2,24 @@ import Config from './Config';
 import MessageParams from './drone-charging/MessageParams';
 import Bid from './Bid';
 import BidParams from './drone-charging/BidParams';
+import MissionParams from './drone-charging/MissionParams';
 import { PriceType } from './common-enums';
 import Price from './Price';
-import { Observable } from './common-types';
+import { Observable, DavID, ID } from './common-types';
 import Message from './Message';
 
 describe('Mission class', () => {
 
   const configuration = new Config({});
   const bidParams = new BidParams({
+    id: 'BID_TOPIC_ID',
+    needTypeId: 'needTypeId',
     price: new Price('3', PriceType.flat),
     vehicleId: '34',
   });
-  const bid = new Bid('needId', 'needTypeId', bidParams, configuration);
+  const missionParams = new MissionParams('SOURCE_ID_1', 'DAV_ID', 'DAV_ID', '100');
+  const selfId = 'selfId';
+  const bid = new Bid(selfId, bidParams, configuration);
   const kafkaError = { msg: 'KAFKA_ERROR' };
   const forContextSwitch = () => {
     return new Promise((resolve, reject) => {
@@ -40,7 +45,7 @@ describe('Mission class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
-      const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+      const mission = new Mission(selfId, missionParams, configuration);
       await expect(mission.sendMessage(new MessageParams({}))).resolves.toBeDefined();
     });
 
@@ -51,7 +56,7 @@ describe('Mission class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
-      const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+      const mission = new Mission(selfId, missionParams, configuration);
       await expect(mission.sendMessage(new MessageParams({}))).rejects.toBe(kafkaError);
     });
 
@@ -62,11 +67,20 @@ describe('Mission class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
-      const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+      const mission = new Mission(selfId, missionParams, configuration);
       const messageParams = new MessageParams({});
       await mission.sendMessage(messageParams);
-      expect(kafkaMock.sendParams).toHaveBeenCalledWith('peerId', messageParams, configuration);
+      expect(kafkaMock.sendParams).toHaveBeenCalledWith(missionParams.id, messageParams, configuration);
     });
+
+    it('should throw because topic id == selfId', async () => {
+      // tslint:disable-next-line:variable-name
+      const Mission: any = (await import('./Mission')).default;
+      const mission = new Mission(missionParams.id, missionParams, configuration);
+      const messageParams = new MessageParams({});
+      await expect(mission.sendMessage(messageParams)).rejects.toThrow('You cannot send message to yore own channel');
+    });
+
   });
 
   describe('messages method', () => {
@@ -89,14 +103,14 @@ describe('Mission class', () => {
       }));
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
-      const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+      const mission = new Mission(selfId, missionParams, configuration);
       const spy = jest.fn();
       const messages = await mission.messages();
       messages.subscribe(spy);
       expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Message('selfId', bid, mission, messageParams1, configuration));
-      expect(spy.mock.calls[1][0]).toEqual(new Message('selfId', bid, mission, messageParams2, configuration));
-      expect(spy.mock.calls[2][0]).toEqual(new Message('selfId', bid, mission, messageParams3, configuration));
+      expect(spy.mock.calls[0][0]).toEqual(new Message(selfId, messageParams1, configuration));
+      expect(spy.mock.calls[1][0]).toEqual(new Message(selfId, messageParams2, configuration));
+      expect(spy.mock.calls[2][0]).toEqual(new Message(selfId, messageParams3, configuration));
     });
 
     it('should receive error event', async () => {
@@ -106,7 +120,7 @@ describe('Mission class', () => {
 
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
-      const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+      const mission = new Mission(missionParams.id, missionParams, configuration);
       const successSpy = jest.fn();
       const errorSpy = jest.fn();
       const messages = await mission.messages();
@@ -115,6 +129,41 @@ describe('Mission class', () => {
       expect(successSpy.mock.calls.length).toBe(0);
       expect(errorSpy.mock.calls.length).toBe(1);
       expect(errorSpy.mock.calls[0][0]).toBe(kafkaError);
+    });
+
+  });
+
+  describe('signContract method', () => {
+
+    const privateKey = 'valid private key';
+    const contractsMock = {
+      approveMission: jest.fn((dav: DavID, key: string, configParam: Config) => Promise.resolve('')),
+      startMission: jest.fn((missionId: ID, dav: DavID, key: string, vId: DavID, price: string, configParam: Config) => Promise.resolve('')),
+    };
+
+    beforeAll(() => {
+      jest.resetAllMocks();
+      jest.resetModules();
+      jest.doMock('./Contracts', () => ({default: contractsMock}));
+    });
+
+    it('should not throw any errors when get valid input and no errors', async () => {
+      // tslint:disable-next-line:variable-name
+      const Mission: any = (await import('./Mission')).default;
+      const mission = new Mission(missionParams.id, missionParams, configuration);
+      await mission.signContract(privateKey);
+      expect(contractsMock.startMission).toHaveBeenCalledWith(missionParams.id, missionParams.neederDavId, privateKey,
+        missionParams.vehicleId, missionParams.price.value, configuration);
+    });
+
+    it('should fail due to blockchain exception', async () => {
+      const web3Error = { msg: 'WEB3_ERROR' };
+      contractsMock.startMission.mockImplementation(() => Promise.reject(web3Error));
+      jest.doMock('./Contracts', () => ({ default: contractsMock }));
+      // tslint:disable-next-line:variable-name
+      const Mission: any = (await import('./Mission')).default;
+      const mission = new Mission(missionParams.id, missionParams, configuration);
+      await expect(mission.signContract(privateKey)).rejects.toBe(web3Error);
     });
 
   });
@@ -136,7 +185,7 @@ describe('Mission class', () => {
       jest.doMock('./Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
-      const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+      const mission = new Mission(missionParams.id, missionParams, configuration);
       await expect(mission.finalizeMission(WALLET_PRIVATE_KEY)).resolves.toBe(transactionReceipt);
     });
 
@@ -148,7 +197,7 @@ describe('Mission class', () => {
       jest.doMock('./Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
-      const mission = new Mission('selfId', 'peerId', 'davId', bid, configuration);
+      const mission = new Mission(missionParams.id, missionParams, configuration);
       await expect(mission.finalizeMission(WALLET_PRIVATE_KEY)).rejects.toBe(web3Error);
     });
   });

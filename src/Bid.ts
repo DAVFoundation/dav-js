@@ -1,64 +1,58 @@
 import { ID, Observable, DavID } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
+import MissionParams from './MissionParams';
+import MessageParams from './MessageParams';
 import Message from './Message';
 import Mission from './Mission';
 import Kafka from './Kafka';
 import Contracts from './Contracts';
-import { v4 as uuidV4 } from 'uuid';
-import MessageParams from './MessageParams';
 
 export default class Bid<T extends BidParams, U extends MessageParams> {
-    // TODO: rename _topicId to missionId
-    private _topicId: string;
-    private _mission: Mission<U, T>;
+
+    private _missionId: ID;
 
     get params(): T {
         return this._params;
     }
 
-    // TODO: remove needId and needTypeId
-    constructor(public needId: ID, public needTypeId: ID, private _params: T, private config: IConfig) {
+    constructor(private _selfId: ID, private _params: T, private config: IConfig) {
         /**/
     }
 
-    public async accept(messageParams: U): Promise<void> {
-        this._topicId = Kafka.generateTopicId();
-        await Kafka.createTopic(this._topicId, this.config);
-        messageParams.senderId = this._topicId;
-        // TODO: return Mission
-        // TODO: send to bidder.id rather then neederId
-        return await Kafka.sendParams(this.needId, messageParams, this.config);
-    }
-
-    // TODO: move this to Mission
-    public async signContract(walletPrivateKey: string, neederDavId: DavID): Promise<Mission<U, T>> {
-        if (!this._topicId) {
-            throw new Error('Cannot sign on contract before bid is accepted');
+    public async accept<V extends MissionParams>(params: V, walletPrivateKey: string): Promise<Mission<V, U>> {
+        const needTypeId = this._params.needTypeId;
+        params.id = Kafka.generateTopicId(); // Channel#4
+        params.price = this._params.price;
+        this._missionId = params.id;
+        try {
+            await Contracts.approveMission(params.neederDavId, walletPrivateKey, this.config);
+        } catch (err) {
+            throw new Error(`Fail to approve mission, you might not have enough DAV Tokens: ${err}`);
         }
-        const approveReceipt = await Contracts.approveMission(neederDavId, walletPrivateKey, this.config);
-        // TODO: rename missionID -> contractMissionId
-        const missionId = uuidV4();
-        const createReceipt = await Contracts.startMission(missionId, neederDavId, walletPrivateKey, this._params.vehicleId,
-             this._params.price.value, this.config);
-        this._mission = new Mission(this._topicId, this.needTypeId, neederDavId, this, this.config);
-        return this._mission;
-    }
-
-    // TODO: Adapt to new flow
-    public async messages(): Promise<Observable<Message<U, T>>> {
-        if (!this._topicId || !this._mission) {
-            throw new Error('No messages available, please accept the bid, and sign the contract before you try to get messages');
+        try {
+            await Kafka.createTopic(params.id, this.config);
+        } catch (err) {
+            throw new Error(`Fail to create a topic: ${err}`);
         }
-        const kafkaStream = await Kafka.paramsStream<U>(this._topicId, this.config);
-
-        const messageStream = kafkaStream.map((messageParams) => {
-            const message = new Message<U, T>(this._topicId, this, this._mission, messageParams, this.config);
-            return message;
-        });
-        return Observable.fromObservable(messageStream, this._topicId);
+        await Kafka.sendParams(needTypeId, params, this.config);
+        const mission = new Mission<V, U>(this._missionId, params, this.config);
+        return mission;
     }
 
-    // TODO: add sendMessage(params: MessageParams): Promise<void>
+    public async sendMessage(params: MessageParams): Promise<void> {
+        if (this._selfId === this._params.id) {
+            throw new Error(`You cannot send message to yore own channel`);
+        }
+        params.senderId = this._selfId; // Channel#3
+        return Kafka.sendParams(this._params.id, params, this.config); // Channel#6
+    }
+
+    public async messages(): Promise<Observable<Message<U>>> {
+        const stream = await Kafka.paramsStream<U>(this._params.id, this.config); // Channel#6
+        const messageStream = stream.map((params: MessageParams) =>
+            new Message<U>(this._selfId, params, this.config));
+        return Observable.fromObservable(messageStream, stream.topic);
+    }
 }
 

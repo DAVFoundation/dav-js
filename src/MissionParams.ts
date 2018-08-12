@@ -1,13 +1,19 @@
 import BasicParams from './BasicParams';
 import IPrice from './IPrice';
-import { ID, BigInteger } from './common-types';
+import { ID, DavID, BigInteger } from './common-types';
 import Price from './Price';
 import { PriceType } from './common-enums';
 
-export default abstract class BidParams extends BasicParams {
+export default abstract class MissionParams extends BasicParams {
     public price: IPrice;
 
-    public constructor(public id: ID, price: IPrice | BigInteger, public vehicleId: ID, public needTypeId: ID) {
+    // public id: ID;
+    // public neederDavId: DavID;
+    // public vehicleId: DavID;
+    // price: IPrice | BigInteger;
+
+    // constructor(values: Partial<MissionParams>) { super(values); }
+    constructor(public id: ID, public neederDavId: DavID, public vehicleId: DavID, price: IPrice | BigInteger) {
         super();
         const priceObject = price as IPrice;
         if (!!priceObject) {

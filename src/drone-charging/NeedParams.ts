@@ -1,12 +1,15 @@
 import BaseNeedParams from '../NeedParams';
 
 export default class NeedParams extends BaseNeedParams {
-
-    public static fromJson(json: string): NeedParams {
-        throw new Error('Method not implemented.');
+    public static getMessageType(): string {
+        return 'DroneCharging:Need';
     }
 
-    constructor(values: Partial<NeedParams>) { super(); }
+    public static fromJson(json: any): NeedParams {
+        const needParams = new NeedParams();
+        Object.assign(needParams, json);
+        return needParams;
+    }
 
     public toJson(): string {
         throw new Error('Method not implemented.');

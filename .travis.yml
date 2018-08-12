@@ -12,6 +12,7 @@ install:
 before_script:
 - npm run tslint
 - npm run jest
+- npm run spellcheck
 script:
 - npm run tsc
 - npm run typedoc

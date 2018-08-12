@@ -12,7 +12,6 @@ const defaultValues = {
     missionProviderTtl: 10000,
     kafkaPollingInterval: 1000,
     blockchainType: BlockchainType.ropsten,
-    contracts: '',
 };
 
 export default class Config implements IConfig {
@@ -21,3 +20,5 @@ export default class Config implements IConfig {
         Object.assign(this, defaultValues, props);
     }
 }
+
+export const defaultConfiguration = defaultValues;

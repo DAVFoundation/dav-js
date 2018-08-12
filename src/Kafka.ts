@@ -1,7 +1,6 @@
 import { KafkaClient, Producer, Consumer } from 'kafka-node';
 import IConfig from './IConfig';
 import { Observable } from './common-types';
-import { Observer } from 'rxjs';
 import { timeout } from 'promise-timeout';
 import DroneDeliveryNeedParams from './drone-delivery/NeedParams';
 import DroneDeliveryBidParams from './drone-delivery/BidParams';
@@ -9,6 +8,8 @@ import DroneChargingNeedParams from './drone-charging/NeedParams';
 import DroneChargingBidParams from './drone-charging/BidParams';
 import BasicParams from './BasicParams';
 import { v4 as uuidV4 } from 'uuid';
+import { Observer } from 'rxjs';
+import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import axios from 'axios';
 const runningOnBrowser = process.env.BROWSER || false;
 
@@ -19,16 +20,9 @@ enum ClassType {
     DroneChargingNeed = 'drone-charging:need',
     DroneChargingBid = 'drone-charging:bid',
 }
-
-interface IKafkaMessage {
-    classType: ClassType;
-    contents: string;
-}
-
 export default class Kafka {
 
-    private static _kafkaConnectionTimeoutInMs: number = 4500;
-    private static _kafkaRequestTimeoutInMs: number = 4500;
+    // TODO: Close consumers + observers
 
     private static _classEnumToMethod: Map<ClassType, (json: string) => BasicParams> = new Map(
         [
@@ -36,6 +30,9 @@ export default class Kafka {
             [ClassType.DroneChargingNeed, DroneChargingNeedParams.fromJson],
         ],
     );
+
+    private static _kafkaConnectionTimeoutInMs: number = 4500;
+    private static _kafkaRequestTimeoutInMs: number = 4500;
 
     private static getKafkaClient(config: IConfig): KafkaClient {
         // TODO: make sure what is the correct way to use kafka seed url, and check other constructor options here
@@ -182,8 +179,26 @@ export default class Kafka {
         return timeout(sendPromise, this._kafkaRequestTimeoutInMs);
     }
 
-    public static async paramsStreamKafka(topicId: string, config: IConfig): Promise<Observable<IKafkaMessage>> { return null; }
-    public static async paramsStreamFilter<T extends BasicParams>(stream: Observable<IKafkaMessage>): Promise<Observable<T>> { return null; }
+    public static async messages(topicId: string, config: IConfig): Promise<KafkaMessageStream> {
+        const consumer = await this.getConsumer(topicId, config);
+        const kafkaStream: Observable<IKafkaMessage> = Observable.create((observer: Observer<IKafkaMessage>) => {
+            consumer.on('message', (message) => {
+                try {
+                    const messageString = message.value.toString();
+                    const messageObject = JSON.parse(messageString);
+                    const messageType = [messageObject.protocol, messageObject.type].join(':');
+                    observer.next({
+                        messageType,
+                        contents: messageString,
+                    });
+                } catch (error) {
+                    observer.error(`error while trying to parse message. topic: ${topicId} error: ${error}, message: ${message}`);
+                }
+            });
+        });
+
+        return new KafkaMessageStream(kafkaStream);
+    }
 
     public static async paramsStream<T extends BasicParams>(topicId: string, config: IConfig): Promise<Observable<T>> {
         if (runningOnBrowser) {
