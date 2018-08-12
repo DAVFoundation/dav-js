@@ -30,8 +30,6 @@ describe('Identity class', () => {
     });
   };
 
-  beforeAll(() => { /**/ });
-
   describe('publishNeed method', () => {
 
     const kafkaMock = {
@@ -133,6 +131,22 @@ describe('Identity class', () => {
       expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/:${TOPIC_ID}`, needFilterParams);
     });
 
+    it('should receive needs with specified topicId and relevant functions', async () => {
+      const anotherTopic = 'anotherTopic';
+      // tslint:disable-next-line:variable-name
+      const Identity: any = (await import('./Identity')).default;
+      const identity = new Identity('selfId', 'davId', config);
+      const spy = jest.fn();
+      const needs = await identity.needsForType(needFilterParams, anotherTopic);
+      needs.subscribe(spy);
+      expect(spy.mock.calls.length).toBe(3);
+      expect(spy.mock.calls[0][0]).toEqual(new Need(anotherTopic, needParams1, config));
+      expect(spy.mock.calls[1][0]).toEqual(new Need(anotherTopic, needParams2, config));
+      expect(kafkaMock.generateTopicId).not.toHaveBeenCalled();
+      expect(kafkaMock.createTopic).not.toHaveBeenCalled();
+      expect(axiosMock.post).not.toHaveBeenCalled();
+    });
+
     it('should receive Kafka error event', async () => {
       kafkaMock.paramsStream.mockImplementation(() => Observable.fromPromise(Promise.reject(kafkaError)));
       // tslint:disable-next-line:variable-name
@@ -200,7 +214,7 @@ describe('Identity class', () => {
       }));
     });
 
-    it('should receive needs and relevant functions', async () => {
+    it('should receive missions and relevant functions', async () => {
       const missionParams1 = new MissionParams('SOURCE_ID_1', 'DAV_ID', 'DAV_ID', '100');
       const missionParams2 = new MissionParams('SOURCE_ID_2', 'DAV_ID', 'DAV_ID', '100');
       const missionParams3 = new MissionParams('SOURCE_ID_3', 'DAV_ID', 'DAV_ID', '100');
@@ -220,6 +234,30 @@ describe('Identity class', () => {
       expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2, config));
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
+    });
+
+
+    it('should receive missions with specified topicId and relevant functions', async () => {
+      const anotherTopic = 'anotherTopic';
+      const missionParams1 = new MissionParams('SOURCE_ID_1', 'DAV_ID', 'DAV_ID', '100');
+      const missionParams2 = new MissionParams('SOURCE_ID_2', 'DAV_ID', 'DAV_ID', '100');
+      const missionParams3 = new MissionParams('SOURCE_ID_3', 'DAV_ID', 'DAV_ID', '100');
+      kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.from([
+        missionParams1, missionParams2, missionParams3,
+      ])));
+      kafkaMock.generateTopicId.mockImplementation(() => TOPIC_ID);
+      // tslint:disable-next-line:variable-name
+      const Identity: any = (await import('./Identity')).default;
+      const identity = new Identity('selfId', 'davId', config);
+      const spy = jest.fn();
+      const missions = await identity.missions(anotherTopic);
+      missions.subscribe(spy);
+      await forContextSwitch();
+      expect(spy.mock.calls.length).toBe(3);
+      expect(spy.mock.calls[0][0]).toEqual(new Mission(anotherTopic, missionParams1, config));
+      expect(spy.mock.calls[1][0]).toEqual(new Mission(anotherTopic, missionParams2, config));
+      expect(kafkaMock.generateTopicId).not.toHaveBeenCalled();
+      expect(kafkaMock.createTopic).not.toHaveBeenCalled();
     });
 
     it('should receive Kafka error event', async () => {
@@ -334,6 +372,29 @@ describe('Identity class', () => {
       expect(spy.mock.calls[1][0]).toEqual(new Message(TOPIC_ID, messageParams2, config));
       expect(spy.mock.calls[2][0]).toEqual(new Message(TOPIC_ID, messageParams3, config));
     });
+
+    it('should receive message events with specified topicId', async () => {
+      const anotherTopic = 'anotherTopic';
+      const messageParams1 = new MessageParams({ senderId: 'SOURCE_ID_1' });
+      const messageParams2 = new MessageParams({ senderId: 'SOURCE_ID_2' });
+      const messageParams3 = new MessageParams({ senderId: 'SOURCE_ID_3' });
+      kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.from([
+        messageParams1, messageParams2, messageParams3,
+      ])));
+      // tslint:disable-next-line:variable-name
+      const Identity: any = (await import('./Identity')).default;
+      const identity = new Identity('selfId', 'davId', config);
+      const spy = jest.fn();
+      const messages = await identity.messages(anotherTopic);
+      messages.subscribe(spy);
+      expect(kafkaMock.generateTopicId).not.toHaveBeenCalled();
+      expect(kafkaMock.createTopic).not.toHaveBeenCalled();
+      expect(spy.mock.calls.length).toBe(3);
+      expect(spy.mock.calls[0][0]).toEqual(new Message(anotherTopic, messageParams1, config));
+      expect(spy.mock.calls[1][0]).toEqual(new Message(anotherTopic, messageParams2, config));
+      expect(spy.mock.calls[2][0]).toEqual(new Message(anotherTopic, messageParams3, config));
+    });
+
 
     it('should receive error event', async () => {
       kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.fromPromise(Promise.reject(kafkaError))));

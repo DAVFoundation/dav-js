@@ -6,9 +6,7 @@ describe('Message class', () => {
 
   const configuration = new Config({});
   const messageContent = new MessageParams({status: MessageStatus.accepted, senderId: 'peerId'});
-  beforeAll(() => {
-    /**/
-  });
+  const selfId = 'selfId';
 
   describe('respond method', () => {
     const kafkaError = { msg: 'KAFKA_ERROR' };
@@ -25,8 +23,8 @@ describe('Message class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
-      const message = new Message('selfId', messageContent, configuration);
-      await expect(message.respond(new MessageParams({senderId: 'selfId'}))).resolves.toBeDefined();
+      const message = new Message(selfId, messageContent, configuration);
+      await expect(message.respond(new MessageParams({senderId: selfId}))).resolves.toBeDefined();
     });
 
     it('should fail due to kafka exception', async () => {
@@ -36,19 +34,19 @@ describe('Message class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
-      const message = new Message('selfId', messageContent, configuration);
-      await expect(message.respond(new MessageParams({senderId: 'selfId'}))).rejects.toBe(kafkaError);
+      const message = new Message(selfId, messageContent, configuration);
+      await expect(message.respond(new MessageParams({senderId: selfId}))).rejects.toBe(kafkaError);
     });
 
-    xit('should call to Kafka sendParams', async () => {
+    it('should call to Kafka sendParams', async () => {
       const kafkaMock = {
-        sendParams: jest.fn((params) => Promise.resolve(true)),
+        sendParams: jest.fn(() => Promise.resolve(true)),
       };
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
-      const message = new Message('selfId', messageContent, configuration);
-      const messageParams = new MessageParams({senderId: 'selfId'});
+      const message = new Message(selfId, messageContent, configuration);
+      const messageParams = new MessageParams({});
       await message.respond(messageParams);
       expect(kafkaMock.sendParams).toHaveBeenCalledWith('peerId', messageParams, configuration);
     });
@@ -60,7 +58,6 @@ describe('Message class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Message = (await import('./Message')).default;
-      const selfId = 'selfId';
       const message = new Message(selfId, messageContent, configuration);
       const messageParams = new MessageParams({});
       await message.respond(messageParams);

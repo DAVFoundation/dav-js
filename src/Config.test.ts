@@ -4,10 +4,8 @@ import { defaultConfiguration } from './Config';
 
 describe('Config class', () => {
 
-  beforeAll(() => { /**/ });
 
   describe('check default configuration are set', () => {
-    beforeAll(() => { /**/ });
 
     it('should contain all default configuration', async () => {
       const configuration = new Config({});
@@ -16,7 +14,6 @@ describe('Config class', () => {
   });
 
   describe('check costume configuration are set', () => {
-    beforeAll(() => { /**/ });
 
     it('should contain all costume configuration', async () => {
       const configurationObject = {
@@ -30,7 +27,6 @@ describe('Config class', () => {
         missionProviderTtl: 90,
         blockchainType: BlockchainType.local,
         contractPath: 'CONTRACT_PATH',
-        contracts: 'contracts',
       };
       const configuration = new Config(configurationObject);
       expect(configuration).toEqual(configurationObject);

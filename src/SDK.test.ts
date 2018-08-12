@@ -1,76 +1,97 @@
 import Config from './Config';
-import SDK from './SDK';
+import Identity from './Identity';
+import IConfig from './IConfig';
 
 describe('SDK class', () => {
-    const config = new Config({});
+  const config = new Config({}) as IConfig;
+  const davId = 'DAV_ID';
+  const contractsError = { msg: 'WEB3_ERROR' };
+  const contractsMock = {
+    isIdentityRegistered: jest.fn(),
+    registerIdentity: jest.fn(),
+  };
 
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.resetModules();
+    jest.doMock('./Contracts', () => ({default: contractsMock}));
+  });
+
+  describe('getIdentity method', () => {
+
+    it('should success, validates identity', async () => {
+      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(true));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      const identity = new Identity('NO_TOPIC', davId, config);
+      await expect(sdk.getIdentity(davId, config)).resolves.toEqual(identity);
+    });
+
+    it('should throw due to unregistered dav id', async () => {
+      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(false));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      await expect(sdk.getIdentity(davId, config)).rejects.toThrow(`${davId} is not a registered identity`);
+    });
+
+    it('should throw due to blockchain exception', async () => {
+      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.reject(contractsError));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      await expect(sdk.getIdentity(davId, config)).rejects.toEqual(contractsError);
+    });
+  });
+
+  describe('isRegistered method', () => {
+
+    it('validates registered dav id', async () => {
+      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(true));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      const isRegistered = await sdk.isRegistered('registered dav id');
+      expect(isRegistered).toBe(true);
+    });
+
+    it('validates unregistered dav id', async () => {
+      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(false));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      const isRegistered = await sdk.isRegistered('unregistered dav id');
+      expect(isRegistered).toBe(false);
+    });
+
+    it('should throw due to blockchain exception', async () => {
+      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.reject(contractsError));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      await expect(sdk.isRegistered(davId)).rejects.toEqual(contractsError);
+    });
+  });
+
+  describe('registerIdentity method', () => {
     beforeAll(() => { /**/ });
 
-    describe('isRegistered method', () => {
-      beforeAll(() => { /**/ });
-
-      xit('validates registered dav id', async () => {
-        const sdk = new SDK(config);
-        const isRegistered = await sdk.isRegistered('registered dav id');
-        expect(isRegistered).toBe(true);
-      });
-
-      xit('validates unregistered dav id', async () => {
-        const sdk = new SDK(config);
-        const isRegistered = await sdk.isRegistered('unregistered dav id');
-        expect(isRegistered).toBe(false);
-      });
-
-      xit('should throw due to blockchain exception', async () => {
-        const sdk = new SDK(config);
-        expect(await sdk.isRegistered('dav id')).toThrow('blockchain excpetion');
-      });
+    it('should success, validate web3 mock has been called', async () => {
+      contractsMock.registerIdentity.mockImplementation(() => Promise.resolve('TRANSACTION_HASH'));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      await expect(sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey')).resolves.toEqual('TRANSACTION_HASH');
     });
 
-    describe('registerIdentity method', () => {
-        beforeAll(() => { /**/ });
-
-        xit('should success, validate web3 mock has been called', async () => {
-          const sdk = new SDK(config);
-          await sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey');
-          // check web3 mock to be called with valid params
-        });
-
-        xit('should throw due to blockchain exception', async () => {
-          const sdk = new SDK(config);
-          expect(await sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey')).toThrow('blockchain excpetion');
-        });
-
-        xit('should throw due to wallet key and wallet address which do not match', async () => {
-            const sdk = new SDK(config);
-            expect(await sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey'))
-            .toThrow('wrong wallet details excpetion');
-        });
-
-        xit('should throw due to identity key and dav id which do not match', async () => {
-            const sdk = new SDK(config);
-            expect(await sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey'))
-            .toThrow('wrong dav details excpetion');
-        });
+    it('should throw due to blockchain exception', async () => {
+      contractsMock.registerIdentity.mockImplementation(() => Promise.reject(contractsError));
+      // tslint:disable-next-line:no-shadowed-variable
+      const SDK: any = (await import('./SDK')).default;
+      const sdk = new SDK(config);
+      await expect(sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey')).rejects.toEqual(contractsError);
     });
+  });
 
-    describe('getIdentity method', () => {
-        beforeAll(() => { /**/ });
-
-        xit('should success, validates identity', async () => {
-          const sdk = new SDK(config);
-          const identity = await sdk.getIdentity('davId', config);
-          // validate each identity's properties in a separate test
-        });
-
-        xit('should throw due to unregistered dav id', async () => {
-            const sdk = new SDK(config);
-            expect(await sdk.getIdentity('davId', config)).toThrow('unregisterd dav id exception');
-        });
-
-        xit('should throw due to blockchain exception', async () => {
-            const sdk = new SDK(config);
-            expect(await sdk.getIdentity('davId', config)).toThrow('blockchain exception');
-        });
-    });
 });

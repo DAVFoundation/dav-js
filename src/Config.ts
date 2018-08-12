@@ -11,7 +11,6 @@ const defaultValues = {
     missionConsumerTtl: 10000,
     missionProviderTtl: 10000,
     blockchainType: BlockchainType.ropsten,
-    contracts: '',
 };
 
 export default class Config implements IConfig {
