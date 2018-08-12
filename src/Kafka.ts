@@ -9,6 +9,8 @@ import DroneChargingNeedParams from './drone-charging/NeedParams';
 import DroneChargingBidParams from './drone-charging/BidParams';
 import BasicParams from './BasicParams';
 import { v4 as uuidV4 } from 'uuid';
+import axios from 'axios';
+const runningOnBrowser = process.env.BROWSER || false;
 
 enum ClassType {
 
@@ -36,6 +38,7 @@ export default class Kafka {
     );
 
     private static getKafkaClient(config: IConfig): KafkaClient {
+        // TODO: make sure what is the correct way to use kafka seed url, and check other constructor options here
         const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0], connectTimeout: 6000, requestTimeout: 6000 });
         return client;
     }
@@ -71,11 +74,80 @@ export default class Kafka {
         return timeout(clientReadyPromise, this._kafkaConnectionTimeoutInMs);
     }
 
+    private static async createTopicViaApi(topicId: string, config: IConfig): Promise<void> {
+        // TODO: make sure what is the correct way to use api seed url
+        const fullEndpoint = `${config.apiSeedUrls[0]}/topic/create/${topicId}`;
+        const response = await axios.post(fullEndpoint);
+        if (response.status === 200) {
+            return Promise.resolve();
+        }
+        return Promise.reject(response.data.error);
+    }
+
+    private static async sendParamsViaApi(topicId: string, params: string, config: IConfig): Promise<void> {
+        // TODO: make sure what is the correct way to use api seed url
+        const fullEndpoint = `${config.apiSeedUrls[0]}/topic/publish/${topicId}`;
+        try {
+            const response = await axios.post(fullEndpoint, params);
+            if (response.status === 200) {
+                return Promise.resolve();
+            }
+            return Promise.reject(response.data.error);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+    private static paramsStreamViaApi<T extends BasicParams>(topicId: string, config: IConfig): Observable<T> {
+        // TODO: make sure what is the correct way to use api seed url
+        const messagesUrl = `${config.apiSeedUrls[0]}/topic/consume/${topicId}`;
+        return Observable.create((observer: Observer<T>) => {
+            const sendRequest = async () => {
+                try {
+                    const messages = await axios.get(messagesUrl);
+                    if (messages.status !== 200) {
+                        observer.error(messages.data.error);
+                    } else {
+                        const messageArray: any[] = JSON.parse(messages.data);
+                        messageArray.forEach((message) => {
+                            try {
+                                const object = this.convertMessage<T>(JSON.stringify(message));
+                                observer.next(object);
+                            } catch (error) {
+                                observer.error(error);
+                            }
+                        });
+                    }
+                } catch (error) {
+                    observer.error(error);
+                }
+            };
+            sendRequest();
+            // TODO: set ttl
+            setInterval(() => sendRequest(), config.kafkaPollingInterval);
+        });
+    }
+
+    private static convertMessage<T extends BasicParams>(message: string): T {
+        const messageObject = JSON.parse(message);
+        const classEnum = [messageObject.protocol, messageObject.type].join(':') as ClassType;
+        const fromJsonMethod = this._classEnumToMethod.get(classEnum);
+        if (!!fromJsonMethod) {
+            const finalObjectFromStream = fromJsonMethod(message);
+            return finalObjectFromStream as T;
+        } else {
+            throw new Error(`unrecognized message type, message: ${message}`);
+        }
+    }
+
     public static generateTopicId(): string {
         return uuidV4();
     }
 
     public static async createTopic(topicId: string, config: IConfig): Promise<void> {
+        if (runningOnBrowser) {
+            return await this.createTopicViaApi(topicId, config);
+        }
         const producer = await this.getProducer(config);
         const createTopicPromise = new Promise<void>((resolve, reject) => {
             producer.createTopics([topicId], true, (err: any, data: any) => {
@@ -89,10 +161,14 @@ export default class Kafka {
         return timeout(createTopicPromise, this._kafkaRequestTimeoutInMs);
     }
 
-    public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig) {
+    public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void> {
+        const messageToSend = basicParams.toJson();
+        if (runningOnBrowser) {
+            return await this.sendParamsViaApi(topicId, messageToSend, config);
+        }
         const producer = await this.getProducer(config);
         const payloads = [
-            { topic: topicId, messages: basicParams.toJson() },
+            { topic: topicId, messages: messageToSend},
         ];
         const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {
@@ -110,21 +186,15 @@ export default class Kafka {
     public static async paramsStreamFilter<T extends BasicParams>(stream: Observable<IKafkaMessage>): Promise<Observable<T>> { return null; }
 
     public static async paramsStream<T extends BasicParams>(topicId: string, config: IConfig): Promise<Observable<T>> {
+        if (runningOnBrowser) {
+            return this.paramsStreamViaApi<T>(topicId, config);
+        }
         const consumer = await this.getConsumer(topicId, config);
-        Observable.create();
+        // TODO: set ttl?
         const rxObservable = Observable.create((observer: Observer<T>) => {
             consumer.on('message', (message) => {
                 try {
-                    const messageString = message.value.toString();
-                    const messageObject = JSON.parse(messageString);
-                    const classEnum = [messageObject.protocol, messageObject.type].join(':') as ClassType;
-                    const fromJsonMethod = this._classEnumToMethod.get(classEnum);
-                    if (!!fromJsonMethod) {
-                        const finalObjectFromStream = fromJsonMethod(messageString);
-                        observer.next(finalObjectFromStream as T);
-                    } else {
-                        observer.error(`unrecognized message type, topic: ${message.topic}, message: ${message.value}`);
-                    }
+                    observer.next(this.convertMessage(message.value.toString()));
                 } catch (error) {
                     observer.error(`error while trying to parse message. topic: ${topicId} error: ${error}, message: ${message}`);
                 }

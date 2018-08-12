@@ -9,6 +9,7 @@ export default interface IConfig {
     needTtl?: number;
     missionConsumerTtl?: number;
     missionProviderTtl?: number;
+    kafkaPollingInterval?: number;
     blockchainType?: BlockchainType;
     contracts?: { [T in ContractTypes]: any };
 }

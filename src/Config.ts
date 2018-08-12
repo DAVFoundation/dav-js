@@ -10,6 +10,7 @@ const defaultValues = {
     needTtl: 10000,
     missionConsumerTtl: 10000,
     missionProviderTtl: 10000,
+    kafkaPollingInterval: 1000,
     blockchainType: BlockchainType.ropsten,
     contracts: '',
 };
