@@ -2,6 +2,7 @@ import Config from './Config';
 import IConfig from './IConfig';
 import BasicParams from './BasicParams';
 import { TimeoutError } from 'promise-timeout';
+import { Observable } from './common-types';
 
 describe('Kafka class', () => {
   let config: IConfig = new Config({ kafkaPollingInterval: 1000 });
@@ -243,7 +244,7 @@ describe('Kafka class', () => {
       };
       require('kafka-node').KafkaClient.mockImplementation(() => kafkaClientMock);
 
-      const streamPromise = kafka.paramsStream('topic', config);
+      const streamPromise: Observable<BasicParams> = kafka.paramsStream('topic', config);
       jest.runAllTimers();
 
       await expect(streamPromise).rejects.toEqual(new TimeoutError());
@@ -289,7 +290,7 @@ describe('Kafka class', () => {
       };
       require('kafka-node').Consumer.mockImplementation(() => consumerMock);
 
-      const stream = await kafka.paramsStream('topic', config);
+      const stream: Observable<BasicParams> = await kafka.paramsStream('topic', config);
       const message = await new Promise<any> ((resolve, reject) => {
         stream.subscribe(
           (next) => {
@@ -327,7 +328,7 @@ describe('Kafka class', () => {
       };
       require('kafka-node').Consumer.mockImplementation(() => consumerMock);
 
-      const stream = await kafka.paramsStream(topic, config);
+      const stream: Observable<BasicParams> = await kafka.paramsStream(topic, config);
       const errorMessage = await new Promise<any> ((resolve, reject) => {
         stream.subscribe(
           (next) => {
@@ -362,7 +363,7 @@ describe('Kafka class', () => {
       };
       require('kafka-node').Consumer.mockImplementation(() => consumerMock);
 
-      const stream = await kafka.paramsStream(topic, config);
+      const stream: Observable<BasicParams> = await kafka.paramsStream(topic, config);
       const errorMessage = await new Promise<any> ((resolve, reject) => {
         stream.subscribe(
           (next) => {
@@ -500,7 +501,7 @@ describe('Kafka class', () => {
         }));
         const kafka = (await import('./Kafka')).default;
 
-        const observable = await kafka.paramsStream('testTopic', config);
+        const observable: Observable<BasicParams> = await kafka.paramsStream('testTopic', config);
         const messages = await new Promise((resolve, reject) => {
           observable.subscribe(
             (next) => resolve(next),
@@ -528,7 +529,7 @@ describe('Kafka class', () => {
         }));
         const kafka = (await import('./Kafka')).default;
 
-        const observable = await kafka.paramsStream('testTopic', config);
+        const observable: Observable<BasicParams> = await kafka.paramsStream('testTopic', config);
         const messageArray: any[] = [];
         let counter = 0;
         const messages = await new Promise((resolve, reject) => {
@@ -567,7 +568,7 @@ describe('Kafka class', () => {
         }));
         const kafka = (await import('./Kafka')).default;
 
-        const observable = await kafka.paramsStream('testTopic', config);
+        const observable: Observable<BasicParams> = await kafka.paramsStream('testTopic', config);
         const messageArray: any[] = [];
         let counter = 0;
         const messages = await new Promise((resolve, reject) => {
@@ -605,7 +606,7 @@ describe('Kafka class', () => {
         }));
         const kafka = (await import('./Kafka')).default;
 
-        const stream = await kafka.paramsStream(topic, config);
+        const stream: Observable<BasicParams> = await kafka.paramsStream(topic, config);
         const errorMessage = await new Promise<any> ((resolve, reject) => {
           stream.subscribe(
             (next) => {
@@ -637,7 +638,7 @@ describe('Kafka class', () => {
         }));
         const kafka = (await import('./Kafka')).default;
 
-        const stream = await kafka.paramsStream(topic, config);
+        const stream: Observable<BasicParams> = await kafka.paramsStream(topic, config);
         await expect(new Promise<any> ((resolve, reject) => {
           stream.subscribe(
             (next) => {
@@ -664,7 +665,7 @@ describe('Kafka class', () => {
         }));
         const kafka = (await import('./Kafka')).default;
 
-        const stream = await kafka.paramsStream(topic, config);
+        const stream: Observable<BasicParams> = await kafka.paramsStream(topic, config);
         await expect(new Promise<any> ((resolve, reject) => {
           stream.subscribe(
             (next) => {
@@ -692,7 +693,7 @@ describe('Kafka class', () => {
         }));
         const kafka = (await import('./Kafka')).default;
 
-        const stream = await kafka.paramsStream(topic, config);
+        const stream: Observable<BasicParams> = await kafka.paramsStream(topic, config);
         await expect(new Promise<any> ((resolve, reject) => {
           stream.subscribe(
             (next) => {
