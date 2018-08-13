@@ -18,5 +18,6 @@ module.exports = [
   'enum',
   'rx',
   'sdk',
-  'axios'
+  'axios',
+  'ethereum',
 ];

@@ -1,6 +1,5 @@
-import BaseBidParams from '../BidParams';
+import BaseBidParams, { IBidParams } from '../BidParams';
 import Price from '../Price';
-import { log } from 'handlebars';
 
 export default class BidParams extends BaseBidParams {
 
@@ -24,8 +23,8 @@ export default class BidParams extends BaseBidParams {
         return bidParams;
     }
 
-    constructor(init: Partial<BidParams>) {
-        super(init.id, init.price, init.vehicleId, init.needTypeId);
+    constructor(values: Partial<IBidParams>) {
+        super(values);
     }
 
     public toJson() {

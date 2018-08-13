@@ -90,9 +90,9 @@ describe('KafkaMessageStream', () => {
         expect.assertions(2);
         const kafkaMessages: IKafkaMessage[] = [
             { messageType: 'DroneDelivery:Need', contents: '{"startAt":1}' },
-            { messageType: 'DroneDelivery:Bid', contents: '{"name":"1"}' },
+            { messageType: 'DroneDelivery:Bid', contents: '{"name":"1","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID"}' },
             { messageType: 'DroneDelivery:Need', contents: '{"startAt":2}' },
-            { messageType: 'DroneDelivery:Bid', contents: '{"name":"2"}' },
+            { messageType: 'DroneDelivery:Bid', contents: '{"name":"2","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID"}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
@@ -110,11 +110,11 @@ describe('KafkaMessageStream', () => {
                 expect(passedBids).toEqual([
                     {
                         id: undefined, name: '1', needTypeId: undefined,
-                        price: { description: undefined, type: 'flat', value: undefined }, vehicleId: undefined,
+                        price: { description: undefined, type: 'flat', value: '1000' }, vehicleId: 'DAV_ID',
                     },
                     {
                         id: undefined, name: '2', needTypeId: undefined,
-                        price: { description: undefined, type: 'flat', value: undefined }, vehicleId: undefined,
+                        price: { description: undefined, type: 'flat', value: '1000' }, vehicleId: 'DAV_ID',
                     },
                 ]);
                 done();

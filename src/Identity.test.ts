@@ -19,8 +19,16 @@ describe('Identity class', () => {
   const config = new Config({}) as IConfig;
   const needFilterParams = new NeedFilterParams({ area: { lat: 0, long: 0, radius: 0 } });
   const needParams = new NeedParams();
-  const bidParams = new BidParams({});
-  const missionParams = new MissionParams('SOURCE_ID_', 'DAV_ID', 'DAV_ID', '100');
+  const bidParams = new BidParams({
+    vehicleId: 'DAV_ID',
+    price: '100',
+  });
+  const missionParams = new MissionParams({
+    id: 'MISSION_ID',
+    neederDavId: 'DAV_ID',
+    vehicleId: 'DAV_ID',
+    price: '100',
+  });
 
   const forContextSwitch = () => {
     return new Promise((resolve, reject) => {
@@ -192,6 +200,25 @@ describe('Identity class', () => {
 
   describe('missions method', () => {
 
+    const missionParams1 = new MissionParams({
+      id: 'MISSION_ID_1',
+      neederDavId: 'DAV_ID',
+      vehicleId: 'DAV_ID',
+      price: '100',
+    });
+    const missionParams2 = new MissionParams({
+      id: 'MISSION_ID_2',
+      neederDavId: 'DAV_ID',
+      vehicleId: 'DAV_ID',
+      price: '100',
+    });
+    const missionParams3 = new MissionParams({
+      id: 'MISSION_ID_3',
+      neederDavId: 'DAV_ID',
+      vehicleId: 'DAV_ID',
+      price: '100',
+    });
+
     const kafkaMock = {
       generateTopicId: jest.fn(() => TOPIC_ID),
       createTopic: jest.fn(() => Promise.resolve()),
@@ -215,9 +242,6 @@ describe('Identity class', () => {
     });
 
     it('should receive missions and relevant functions', async () => {
-      const missionParams1 = new MissionParams('SOURCE_ID_1', 'DAV_ID', 'DAV_ID', '100');
-      const missionParams2 = new MissionParams('SOURCE_ID_2', 'DAV_ID', 'DAV_ID', '100');
-      const missionParams3 = new MissionParams('SOURCE_ID_3', 'DAV_ID', 'DAV_ID', '100');
       kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.from([
         missionParams1, missionParams2, missionParams3,
       ])));
@@ -239,9 +263,6 @@ describe('Identity class', () => {
 
     it('should receive missions with specified topicId and relevant functions', async () => {
       const anotherTopic = 'anotherTopic';
-      const missionParams1 = new MissionParams('SOURCE_ID_1', 'DAV_ID', 'DAV_ID', '100');
-      const missionParams2 = new MissionParams('SOURCE_ID_2', 'DAV_ID', 'DAV_ID', '100');
-      const missionParams3 = new MissionParams('SOURCE_ID_3', 'DAV_ID', 'DAV_ID', '100');
       kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.from([
         missionParams1, missionParams2, missionParams3,
       ])));

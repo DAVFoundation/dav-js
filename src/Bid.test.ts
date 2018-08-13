@@ -2,7 +2,7 @@ import Config from './Config';
 import BidParams from './drone-charging/BidParams';
 import Price from './Price';
 import { PriceType, MessageStatus, MessageDomain } from './common-enums';
-import { DavID, ID } from './common-types';
+import { DavID, ID, BigInteger } from './common-types';
 import MessageParams from './drone-charging/MessageParams';
 import MissionParams from './drone-charging/MissionParams';
 import IConfig from './IConfig';
@@ -21,7 +21,12 @@ describe('Bid class', () => {
     status: MessageStatus.accepted,
     domain: MessageDomain.bid,
   });
-  const missionParams = new MissionParams('MISSION_ID', 'DAV_ID', 'DAV_ID', '100');
+  const missionParams = new MissionParams({
+    id: 'MISSION_ID',
+    neederDavId: 'DAV_ID',
+    vehicleId: 'DAV_ID',
+    price: '100',
+  });
   const kafkaError = { msg: 'Kafka error' };
 
   beforeEach(() => {
@@ -91,7 +96,7 @@ describe('Bid class', () => {
       const bid = new Bid('needId', bidParams, config);
       await expect(bid.accept(missionParams, 'Private_key')).rejects.toBe(kafkaError);
       expect(kafkaMock.createTopic).toHaveBeenCalledWith('topicId', config);
-      expect(kafkaMock.sendParams).toHaveBeenCalledWith('TOPIC_ID', missionParams, config);
+      expect(kafkaMock.sendParams).toHaveBeenCalledWith(bidParams.needTypeId, missionParams, config);
     });
   });
 

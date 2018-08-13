@@ -23,7 +23,7 @@ describe('Need class', () => {
   const topicId = 'TOPIC_ID';
   const needParams = new NeedParams();
   const kafkaError = { msg: 'Kafka error' };
-  const bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat) });
+  const bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID'});
   bidParams.id = 'bidSource';
 
   describe('createBid method', () => {

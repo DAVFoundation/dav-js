@@ -5,15 +5,32 @@ import Price from './Price';
 import { PriceType } from './common-enums';
 
 export default abstract class BidParams extends BasicParams {
+    public id: ID;
     public price: IPrice;
+    public vehicleId: ID;
+    public needTypeId: ID;
 
-    public constructor(public id: ID, price: IPrice | BigInteger, public vehicleId: ID, public needTypeId: ID) {
+    public constructor(values: Partial<IBidParams>) {
         super();
-        const priceObject = price as IPrice;
-        if (!!priceObject) {
-            this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
+        if (!values.price) {
+            throw new Error ('price is this a required field');
+        }
+        if (!values.vehicleId) {
+            throw new Error ('vehicleId is this a required field');
+        }
+        Object.assign(this, values);
+        const priceObject = values.price;
+        if (typeof priceObject === 'string') {
+            this.price = new Price(priceObject as BigInteger, PriceType.flat);
         } else {
-            this.price = new Price(price as BigInteger, PriceType.flat);
+            this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
         }
     }
+}
+
+export interface IBidParams {
+    id: ID;
+    price: IPrice | BigInteger;
+    vehicleId: ID;
+    needTypeId: ID;
 }

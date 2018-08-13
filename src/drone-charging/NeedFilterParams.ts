@@ -9,7 +9,9 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         return new NeedFilterParams(json);
     }
 
-    constructor(values: Partial<NeedFilterParams>) { super(); }
+    constructor(values: Partial<NeedFilterParams>) {
+        super(values);
+   }
 
     public toJson(): string {
         throw new Error('Method not implemented.');

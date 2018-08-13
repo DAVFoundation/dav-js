@@ -1,8 +1,5 @@
 import IConfig from './IConfig';
 import { ID } from './common-types';
-import Bid from './Bid';
-import BidParams from './BidParams';
-import Mission from './Mission';
 import MessageParams from './MessageParams';
 import Kafka from './Kafka';
 

@@ -15,9 +15,14 @@ export default class NeedParams extends BaseNeedParams {
     }
 
     public static fromJson(json: any): NeedParams {
-        const needParams = new NeedParams();
+        const needParams = new NeedParams(json);
         Object.assign(needParams, json);
         return needParams;
+    }
+
+    constructor(values: Partial<NeedParams>) {
+        super();
+        Object.assign(this, values);
     }
 
     public toJson(): string {
