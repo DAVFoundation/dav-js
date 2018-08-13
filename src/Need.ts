@@ -31,7 +31,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
     }
 
     public async bids<V extends BidParams>(): Promise<Observable<Bid<V, U>>> {
-        const kafkaStream = await Kafka.paramsStream<V>(this._params.id, this.config); // Channel#3
+        const kafkaStream: Observable<V> = await Kafka.paramsStream(this._params.id, this.config); // Channel#3
         const bidStream = kafkaStream.map((bidParams) => new Bid(this._selfId, bidParams, this.config));
         return Observable.fromObservable(bidStream, this._params.id);
     }

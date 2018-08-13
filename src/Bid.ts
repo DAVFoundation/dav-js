@@ -49,7 +49,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
     }
 
     public async messages(): Promise<Observable<Message<U>>> {
-        const stream = await Kafka.paramsStream<U>(this._params.id, this.config); // Channel#6
+        const stream: Observable<U> = await Kafka.paramsStream(this._params.id, this.config); // Channel#6
         const messageStream = stream.map((params: MessageParams) =>
             new Message<U>(this._selfId, params, this.config));
         return Observable.fromObservable(messageStream, stream.topic);

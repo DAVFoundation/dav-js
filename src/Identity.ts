@@ -47,7 +47,7 @@ export default class Identity {
         throw new Error(`Needs registration failed: ${err}`);
       }
     }
-    const stream = await Kafka.paramsStream(identityChannelName, this.config);
+    const stream: Observable<T> = await Kafka.paramsStream(identityChannelName, this.config);
     const observable = Observable.fromObservable(stream.map((needParams: T) =>
         new Need<T, U>(identityChannelName, needParams, this.config)), stream.topic);
     return observable;
@@ -59,7 +59,7 @@ export default class Identity {
       identityChannelName = await this.registerNewTopic();
       this._needTypeId = identityChannelName;
     }
-    const stream = await Kafka.paramsStream(identityChannelName, this.config); // Channel#2
+    const stream: Observable<T> = await Kafka.paramsStream(identityChannelName, this.config); // Channel#2
     const messageStream = stream.map(async (params: T) => {
       return new Mission<T, U>(identityChannelName, params, this.config);
     })

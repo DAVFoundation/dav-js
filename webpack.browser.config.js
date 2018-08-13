@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+  entry: './build/SDKFactory.js',
   output: {
     path: path.resolve(__dirname, 'dist/browser'),
     publicPath: '/',
@@ -9,6 +10,7 @@ module.exports = {
     sourceMapFilename: '[file].map',
   },
   module: {
+    noParse: /KafkaNode/,
     rules: [
       {
         test: /\.js$/,
