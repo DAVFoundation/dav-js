@@ -13,7 +13,9 @@ const defaultValues = {
     kafkaPollingInterval: 1000,
     blockchainType: BlockchainType.test,
 };
-
+/**
+ * @class The DavSDK Config Class is used to create configuration object to the SDK.
+ */
 export default class Config implements IConfig {
 /**
  * @param props  Partial configuration object
