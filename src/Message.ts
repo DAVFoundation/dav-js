@@ -12,7 +12,7 @@ export default class Message<T extends MessageParams> {
         /* */
     }
 
-    public async respond(params: MessageParams) {
+    public respond(params: MessageParams) {
         params.senderId = this.selfId;
         return Kafka.sendParams(this.messageParams.senderId, params, this.config);
     }
