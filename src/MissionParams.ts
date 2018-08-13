@@ -6,20 +6,23 @@ import { PriceType } from './common-enums';
 
 export default abstract class MissionParams extends BasicParams {
     public price: IPrice;
-
-    // public id: ID;
-    // public neederDavId: DavID;
-    // public vehicleId: DavID;
-    // price: IPrice | BigInteger;
-
-    // constructor(values: Partial<MissionParams>) { super(values); }
-    constructor(public id: ID, public neederDavId: DavID, public vehicleId: DavID, price: IPrice | BigInteger) {
+    public id: ID;
+    public neederDavId: DavID;
+    public vehicleId: DavID;
+    constructor(values: Partial<MissionParams>) {
         super();
-        const priceObject = price as IPrice;
-        if (!!priceObject) {
-            this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
+        if (!values.price) {
+            throw new Error ('price is this a required field');
+        }
+        if (!values.vehicleId) {
+            throw new Error ('vehicleId is this a required field');
+        }
+        Object.assign(this, values);
+        const priceObject = values.price;
+        if (typeof priceObject === 'string') {
+            this.price = new Price(priceObject as BigInteger, PriceType.flat);
         } else {
-            this.price = new Price(price as BigInteger, PriceType.flat);
+            this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
         }
     }
 }

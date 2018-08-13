@@ -17,7 +17,12 @@ describe('Mission class', () => {
     price: new Price('3', PriceType.flat),
     vehicleId: '34',
   });
-  const missionParams = new MissionParams('SOURCE_ID_1', 'DAV_ID', 'DAV_ID', '100');
+  const missionParams = new MissionParams({
+    id: 'SOURCE_ID_1',
+    neederDavId: 'DAV_ID',
+    vehicleId: 'DAV_ID',
+    price: '100',
+  });
   const selfId = 'selfId';
   const bid = new Bid(selfId, bidParams, configuration);
   const kafkaError = { msg: 'KAFKA_ERROR' };

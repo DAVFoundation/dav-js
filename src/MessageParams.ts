@@ -1,9 +1,9 @@
 import BasicParams from './BasicParams';
-import { ID } from './common-types';
+import { ID, BigInteger } from './common-types';
 import { MessageStatus, MessageDomain } from './common-enums';
 
 export default abstract class MessageParams extends BasicParams {
-    public senderId: ID;
+    public senderId: ID | BigInteger;
     public status: MessageStatus;
     public domain: MessageDomain;
     constructor(values: Partial<MessageParams>) {

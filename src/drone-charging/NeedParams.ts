@@ -11,6 +11,10 @@ export default class NeedParams extends BaseNeedParams {
         return needParams;
     }
 
+    constructor() {
+        super();
+    }
+
     public toJson(): string {
         throw new Error('Method not implemented.');
     }

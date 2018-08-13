@@ -20,9 +20,6 @@ export default class MissionParams extends BaseMissionParams {
         throw new Error('Method not implemented.');
     }
 
-    public toString(): string {
-        // TODO?
-        return '';
-    }
+    public toString(): string { return ''; } // TODO?
 
 }
