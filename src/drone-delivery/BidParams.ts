@@ -7,7 +7,7 @@ import IPrice from '../IPrice';
  */
 interface IBidParams {
     /**
-     * @property The bid's topic id.
+     * @property The bid's topic id (used to send messages to service provider).
      */
     id: ID;
     /**
@@ -32,7 +32,7 @@ interface IBidParams {
     eta: number;
 }
 /**
- * @class The Class drone-delivery/BidParams represent the parameters of drone-delivery Bid.
+ * @class The Class drone-delivery/BidParams represent the parameters of drone-delivery bid.
  */
 export default class BidParams extends BaseBidParams {
     /**

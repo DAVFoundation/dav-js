@@ -8,7 +8,7 @@ import { BigInteger, ID, DavID } from '../common-types';
  */
 interface IBidParams {
     /**
-     * @property The bid's topic id.
+     * @property The bid's topic id (used to send messages to service provider).
      */
     id: ID;
     /**
@@ -29,7 +29,7 @@ interface IBidParams {
     plugType: string;
 }
 /**
- * @class The Class drone-charging/BidParams represent the parameters of drone-delivery Bid.
+ * @class The Class drone-charging/BidParams represent the parameters of drone-delivery bid.
  */
 export default class BidParams extends BaseBidParams {
     /**

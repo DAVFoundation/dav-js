@@ -8,21 +8,21 @@ import { PriceType } from './common-enums';
  * @interface IBidParams The interface IBidParams represent a valid argument of BidParams constructor.
  */
 interface IBidParams {
-   /**
-    * @property The bid's topic id.
-    */
+    /**
+     * @property The bid's topic id (used to send messages to service provider).
+     */
     id: ID;
-   /**
-    * @property The bid's price.
-    */
+    /**
+     * @property The bid's price.
+     */
     price: IPrice | BigInteger;
-   /**
-    * @property The bid's vehicle DAV Id.
-    */
+    /**
+     * @property The bid's vehicle DAV Id.
+     */
     vehicleId: DavID;
-   /**
-    * @property Topic id for mission (Identity.needsForType().topic).
-    */
+    /**
+     * @property Topic id for mission (Identity.needsForType().topic).
+     */
     needTypeId: ID;
 }
 /**
@@ -37,10 +37,10 @@ export default abstract class BidParams extends BasicParams {
     public constructor(values: Partial<IBidParams>) {
         super();
         if (!values.price) {
-            throw new Error ('price is this a required field');
+            throw new Error('price is this a required field');
         }
         if (!values.vehicleId) {
-            throw new Error ('vehicleId is this a required field');
+            throw new Error('vehicleId is this a required field');
         }
         Object.assign(this, values);
         const priceObject = values.price;
