@@ -3,69 +3,47 @@ import { ConstructsArtifacts } from './common-types';
 export default interface IConfig {
 
    /**
-    * Description: Ethereum blockchain node url.
-    *
-    * Default: https://ropsten.infura.io/wUiZtmeZ1KwjFrcC8zRO
+    * Ethereum blockchain node url.
     */
     ethNodeUrl?: string;
    /**
-    * Description: Array of Dav API node urls.
-    *
-    * Default: ['']
+    * Array of Dav API nodes url.
     */
     apiSeedUrls?: string[];
    /**
-    * Description: Array of Dav kafka node urls.
-    *
-    * Default: ['']
+    * Array of Dav kafka nodes url.
     */
     kafkaSeedUrls?: string[];
    /**
-    * Description: Hop limit (in ms) for Identity messages to expires (not in use).
-    *
-    * Default: 10000
+    * Hop limit (in ms) for Identity messages to expires (not in use).
     */
     identityTtl?: number;
    /**
-    * Description: Hop limit (in ms) needs subscription to expires.
-    *
-    * Default: 10000
+    * Hop limit (in ms) needs subscription to expires.
     */
     needTypeTtl?: number;
    /**
-    * Description: Hop limit (in ms) for need registration to expires.
-    *
-    * Default: 10000
+    * Hop limit (in ms) for need registration to expires.
     */
     needTtl?: number;
    /**
-    * Description: Hop limit (in ms) for missions to expires.
-    *
-    * Default: 10000
+    * Hop limit (in ms) for missions to expires.
     */
     missionConsumerTtl?: number;
    /**
-    * Description: Hop limit (in ms) for missionProvider to expires (not in use).
-    *
-    * Default: 10000
+    * Hop limit (in ms) for missionProvider to expires (not in use).
     */
     missionProviderTtl?: number;
    /**
-    * Description: Space of time (in ms) between reask kafka for new events.
-    *
-    * Default: 1000
+    * Time, in milliseconds, the timer should delay in between reask kafka for new events.
     */
     kafkaPollingInterval?: number;
    /**
-    * Description: Blockchain type (local/test/main). for using local blockchain, you must specify contracts.
-    *
-    * Default: BlockchainType.local
+    * Blockchain type (local/test/main). for using local blockchain, you must specify contracts.
     */
     blockchainType?: BlockchainType;
    /**
-    * Description: Constructs artifacts.
-    *
-    * Default: null
+    * Constructs artifacts.
     */
     contracts?: ConstructsArtifacts;
 }
