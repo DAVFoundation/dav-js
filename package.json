@@ -39,6 +39,8 @@
     "@types/web3": "https://github.com/srfrnk/types-dav-web3",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.2",

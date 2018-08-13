@@ -1,8 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
+require('babel-polyfill');
 
 module.exports = {
-  entry: './build/SDKFactory.js',
+  entry: ['babel-polyfill', './build/SDKFactory.js'],
   output: {
     path: path.resolve(__dirname, 'dist/browser'),
     publicPath: '/',
