@@ -7,7 +7,7 @@ import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
 /**
- * @class The Class Mission of DavSDK represent approved mission.
+ * @class The DavSDK Mission class represent approved mission.
  */
 export default class Mission<T extends MissionParams, U extends MessageParams> {
 
@@ -20,7 +20,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      */
     public async signContract(walletPrivateKey: string): Promise<TransactionReceipt> {
         const transactionReceipt = await Contracts.startMission(this._params.id, this._params.neederDavId, walletPrivateKey, this._params.vehicleId,
-             this._params.price.value, this.config);
+            this._params.price.value, this.config);
         return transactionReceipt;
     }
     /**

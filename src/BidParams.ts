@@ -1,13 +1,37 @@
 import BasicParams from './BasicParams';
 import IPrice from './IPrice';
-import { ID, BigInteger } from './common-types';
+import { ID, BigInteger, DavID } from './common-types';
 import Price from './Price';
 import { PriceType } from './common-enums';
 
+/**
+ * @interface IBidParams The interface IBidParams represent a valid argument of BidParams constructor.
+ */
+interface IBidParams {
+   /**
+    * @property The bid's topic id.
+    */
+    id: ID;
+   /**
+    * @property The bid's price.
+    */
+    price: IPrice | BigInteger;
+   /**
+    * @property The bid's vehicle DAV Id.
+    */
+    vehicleId: DavID;
+   /**
+    * @property Topic id for mission (Identity.needsForType().topic).
+    */
+    needTypeId: ID;
+}
+/**
+ * @class The abstract Class BidParams represent common parameters to all the SDK's BidParams classes.
+ */
 export default abstract class BidParams extends BasicParams {
     public id: ID;
     public price: IPrice;
-    public vehicleId: ID;
+    public vehicleId: DavID;
     public needTypeId: ID;
 
     public constructor(values: Partial<IBidParams>) {
@@ -26,11 +50,4 @@ export default abstract class BidParams extends BasicParams {
             this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
         }
     }
-}
-
-export interface IBidParams {
-    id: ID;
-    price: IPrice | BigInteger;
-    vehicleId: ID;
-    needTypeId: ID;
 }

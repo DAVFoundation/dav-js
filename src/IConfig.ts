@@ -2,48 +2,48 @@ import { BlockchainType } from './common-enums';
 import { ConstructsArtifacts } from './common-types';
 export default interface IConfig {
 
-   /**
-    * Ethereum blockchain node url.
-    */
+    /**
+     * @property Ethereum blockchain node url.
+     */
     ethNodeUrl?: string;
-   /**
-    * Array of Dav API nodes url.
-    */
+    /**
+     * @property Array of Dav API nodes url.
+     */
     apiSeedUrls?: string[];
-   /**
-    * Array of Dav kafka nodes url.
-    */
+    /**
+     * @property Array of Dav kafka nodes url.
+     */
     kafkaSeedUrls?: string[];
-   /**
-    * Hop limit (in ms) for Identity messages to expires (not in use).
-    */
+    /**
+     * @property Hop limit, in seconds, for Identity messages to expires (not in use).
+     */
     identityTtl?: number;
-   /**
-    * Hop limit (in ms) needs subscription to expires.
-    */
+    /**
+     * @property Hop limit, in seconds, needs subscription to expires.
+     */
     needTypeTtl?: number;
-   /**
-    * Hop limit (in ms) for need registration to expires.
-    */
+    /**
+     * @property Hop limit, in seconds, for need registration to expires.
+     */
     needTtl?: number;
-   /**
-    * Hop limit (in ms) for missions to expires.
-    */
+    /**
+     * @property Hop limit, in seconds, for missions to expires.
+     */
     missionConsumerTtl?: number;
-   /**
-    * Hop limit (in ms) for missionProvider to expires (not in use).
-    */
+    /**
+     * @property Hop limit, in seconds, for missionProvider to expires (not in use).
+     */
     missionProviderTtl?: number;
-   /**
-    * Time, in milliseconds, the timer should delay in between reask kafka for new events.
-    */
+    /**
+     * @property Time, in milliseconds, the timer should delay in between reask kafka for new events.
+     */
     kafkaPollingInterval?: number;
-   /**
-    * Blockchain type (local/test/main). for using local blockchain, you must specify contracts.
-    */
+    /**
+     * @property Blockchain type (local/test/main). for using local blockchain, you must specify contracts.
+     */
     blockchainType?: BlockchainType;
-   /**
-    * Constructs artifacts.
-    */
+    /**
+     * @property Constructs artifacts.
+     */
     contracts?: ConstructsArtifacts;
 }
