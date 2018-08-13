@@ -1,4 +1,4 @@
-import BaseBidParams from '../BidParams';
+import BaseBidParams, { IBidParams } from '../BidParams';
 
 export default class BidParams extends BaseBidParams {
     public name?: string;
@@ -14,7 +14,7 @@ export default class BidParams extends BaseBidParams {
         return bidParams;
     }
 
-    constructor(values: Partial<BidParams> | any) {
+    constructor(values: Partial<IBidParams>) {
         super(values);
     }
 

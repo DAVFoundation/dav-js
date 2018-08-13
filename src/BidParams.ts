@@ -10,7 +10,7 @@ export default abstract class BidParams extends BasicParams {
     public vehicleId: ID;
     public needTypeId: ID;
 
-    public constructor(values: Partial<BidParams>) {
+    public constructor(values: Partial<IBidParams>) {
         super();
         if (!values.price) {
             throw new Error ('price is this a required field');
@@ -26,4 +26,11 @@ export default abstract class BidParams extends BasicParams {
             this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
         }
     }
+}
+
+export interface IBidParams {
+    id: ID;
+    price: IPrice | BigInteger;
+    vehicleId: ID;
+    needTypeId: ID;
 }

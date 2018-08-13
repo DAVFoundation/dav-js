@@ -1,4 +1,4 @@
-import BaseMissionParams from '../MissionParams';
+import BaseMissionParams, { IMissionParams } from '../MissionParams';
 
 export default class MissionParams extends BaseMissionParams {
 
@@ -11,7 +11,7 @@ export default class MissionParams extends BaseMissionParams {
         return null;
     }
 
-    constructor(values: Partial<MissionParams> | any) {
+    constructor(values: Partial<IMissionParams>) {
         super(values);
     }
 

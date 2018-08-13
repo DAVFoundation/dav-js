@@ -20,7 +20,7 @@ export default class NeedParams extends BaseNeedParams {
         return needParams;
     }
 
-    constructor(values: Partial<NeedParams> | any) {
+    constructor(values: Partial<NeedParams>) {
         super();
         Object.assign(this, values);
     }

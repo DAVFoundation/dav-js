@@ -9,7 +9,8 @@ export default abstract class MissionParams extends BasicParams {
     public id: ID;
     public neederDavId: DavID;
     public vehicleId: DavID;
-    constructor(values: Partial<MissionParams>) {
+
+    constructor(values: Partial<IMissionParams>) {
         super();
         if (!values.price) {
             throw new Error ('price is this a required field');
@@ -25,4 +26,11 @@ export default abstract class MissionParams extends BasicParams {
             this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
         }
     }
+}
+
+export interface IMissionParams {
+    id: ID;
+    price: IPrice | BigInteger;
+    vehicleId: ID;
+    neederDavId: ID;
 }

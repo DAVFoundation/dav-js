@@ -1,6 +1,5 @@
-import BaseBidParams from '../BidParams';
+import BaseBidParams, { IBidParams } from '../BidParams';
 import Price from '../Price';
-import { log } from 'handlebars';
 
 export default class BidParams extends BaseBidParams {
 
@@ -24,7 +23,7 @@ export default class BidParams extends BaseBidParams {
         return bidParams;
     }
 
-    constructor(values: Partial<BidParams> | any) {
+    constructor(values: Partial<IBidParams>) {
         super(values);
     }
 
