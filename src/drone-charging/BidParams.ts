@@ -12,11 +12,11 @@ interface IBidParams {
      */
     id: ID;
     /**
-     * @property The bid's price.
+     * @property The bid's price (required).
      */
     price: IPrice | BigInteger;
     /**
-     * @property The bid's vehicle DAV Id.
+     * @property The bid's vehicle DAV Id (required).
      */
     vehicleId: DavID;
     /**
