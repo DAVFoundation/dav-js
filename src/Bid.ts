@@ -19,7 +19,12 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
     constructor(private _selfId: ID, private _params: T, private config: IConfig) {
         /**/
     }
-
+    /**
+     * @method accept Used to accept a bid and create a new mission, the mission will send to the bid provider.
+     * @param params the mission parameters.
+     * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
+     * @returns the created mission.
+     */
     public async accept<V extends MissionParams>(params: V, walletPrivateKey: string): Promise<Mission<V, U>> {
         const needTypeId = this._params.needTypeId;
         params.id = Kafka.generateTopicId(); // Channel#4
@@ -39,7 +44,10 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         const mission = new Mission<V, U>(this._missionId, params, this.config);
         return mission;
     }
-
+    /**
+     * @method sendMessage Used to send a message to the bid provider.
+     * @param params the message parameters.
+     */
     public async sendMessage(params: MessageParams): Promise<void> {
         if (this._selfId === this._params.id) {
             throw new Error(`You cannot send message to yore own channel`);
@@ -47,7 +55,10 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         params.senderId = this._selfId; // Channel#3
         return Kafka.sendParams(this._params.id, params, this.config); // Channel#6
     }
-
+    /**
+     * @method messages Used to subscribe to messages for the current bid.
+     * @returns Observable for messages subscription.
+     */
     public async messages(): Promise<Observable<Message<U>>> {
         const stream: Observable<U> = await Kafka.paramsStream(this._params.id, this.config); // Channel#6
         const messageStream = stream.map((params: MessageParams) =>

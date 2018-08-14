@@ -15,7 +15,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
     }
     /**
      * @method signContract Used to transfer tokens to the basicMission contract in order to start the mission.
-     * @param walletPrivateKey Ethereum wallet private key.
+     * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns Ethereum transaction receipt.
      */
     public async signContract(walletPrivateKey: string): Promise<TransactionReceipt> {
