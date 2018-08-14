@@ -14,8 +14,8 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
     constructor(private _selfId: ID, private _params: T, private config: IConfig) {
     }
     /**
-     * The Mission signContract method is used to transfer tokens to the basicMission contract in order to start the mission.
-     * @param walletPrivateKey Ethereum wallet private key
+     * @method signContract Used to transfer tokens to the basicMission contract in order to start the mission.
+     * @param walletPrivateKey Ethereum wallet private key.
      * @returns Ethereum transaction receipt.
      */
     public async signContract(walletPrivateKey: string): Promise<TransactionReceipt> {
@@ -24,17 +24,17 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
         return transactionReceipt;
     }
     /**
-     * The Mission finalizeMission method is used to approve the mission is completed,
+     * @method finalizeMission Used to approve the mission is completed,
      * and transfer the tokens from the basicMission contract to the service provider.
-     * @param walletPrivateKey Ethereum wallet private key
+     * @param walletPrivateKey Ethereum wallet private key.
      * @returns Ethereum transaction receipt object.
      */
     public async finalizeMission(walletPrivateKey: string): Promise<TransactionReceipt> {
         return Contracts.finalizeMission(this._params.id, this._params.neederDavId, walletPrivateKey, this.config);
     }
     /**
-     * The Mission sendMessage method is used to send message to the service provider.
-     * @param params message parameters
+     * @method sendMessage Used to send message to the service provider.
+     * @param params message parameters.
      */
     public async sendMessage(params: MessageParams): Promise<void> {
         if (this._selfId === this._params.id) {
@@ -44,7 +44,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
         return Kafka.sendParams(this._params.id, params, this.config); // Channel#4
     }
     /**
-     * The Mission messages method is used to subscribe to messages from the service provider.
+     * @method messages Used to subscribe to messages from the service provider.
      * @returns Observable object.
      */
     public async messages(): Promise<Observable<Message<U>>> {

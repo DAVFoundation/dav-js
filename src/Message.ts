@@ -12,7 +12,7 @@ export default class Message<T extends MessageParams> {
     }
 
     /**
-     * The Message respond method is used to send a message to the message sender.
+     * @method respond Used to send a message to the message sender.
      */
     public respond(params: MessageParams) {
         params.senderId = this.selfId;
