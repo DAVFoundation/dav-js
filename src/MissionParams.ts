@@ -26,7 +26,7 @@ interface IMissionParams {
     neederDavId: DavID;
 }
 /**
- * @class The abstract Class MissionParams represent common parameters to all the SDK's MissionParams classes.
+ * @class The abstract Class MissionParams represent common parameters of MissionParams classes.
  */
 export default abstract class MissionParams extends BasicParams {
     public price: IPrice;

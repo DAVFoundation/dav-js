@@ -26,7 +26,7 @@ interface IBidParams {
     needTypeId: ID;
 }
 /**
- * @class The abstract Class BidParams represent common parameters to all the SDK's BidParams classes.
+ * @class The abstract Class BidParams represent common parameters of BidParams classes.
  */
 export default abstract class BidParams extends BasicParams {
     public id: ID;

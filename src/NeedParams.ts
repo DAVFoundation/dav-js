@@ -2,7 +2,7 @@ import BasicParams from './BasicParams';
 import { ID } from './common-types';
 
 /**
- * @class The abstract Class NeedParams represent common parameters to all the SDK's NeedParams classes.
+ * @class The abstract Class NeedParams represent common parameters of NeedParams classes.
  */
 export default abstract class NeedParams extends BasicParams {
     /**
