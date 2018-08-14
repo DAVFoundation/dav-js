@@ -1,5 +1,5 @@
 /**
- * @class The abstract Class BasicParams of DavSDK represent common parameters to all the SDK's Params classes.
+ * @class The abstract Class BasicParams represent common parameters to all the SDK's Params classes.
  */
 export default abstract class BasicParams {
     /**

@@ -7,7 +7,9 @@ import Message from './Message';
 import Mission from './Mission';
 import Kafka from './Kafka';
 import Contracts from './Contracts';
-
+/**
+ * @class Bid class represent a bid for service request.
+ */
 export default class Bid<T extends BidParams, U extends MessageParams> {
 
     private _missionId: ID;
@@ -20,7 +22,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         /**/
     }
     /**
-     * @method accept Used to accept a bid and create a new mission, the mission will send to the bid provider.
+     * @method accept Used to accept a bid and create a new mission, the mission will sent to the bid provider.
      * @param params the mission parameters.
      * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns the created mission.
@@ -56,7 +58,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         return Kafka.sendParams(this._params.id, params, this.config); // Channel#6
     }
     /**
-     * @method messages Used to subscribe to messages for the current bid.
+     * @method messages Used to subscribe for messages for the current bid.
      * @returns Observable for messages subscription.
      */
     public async messages(): Promise<Observable<Message<U>>> {

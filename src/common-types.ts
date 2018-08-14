@@ -10,13 +10,13 @@ export type ID = string;
  */
 export type DavID = string;
 /**
- * @type The type BigInteger represent big numbers.
+ * @type The type BigInteger represent a big number.
  */
 export type BigInteger = string;
 /**
- * @type The type ConstructsArtifacts represent the DAV constructs artifacts that contain ABI and networks addresses.
+ * @type The type ContractArtifacts represent the DAV Contracts artifacts that contain ABI and networks addresses.
  */
-export type ConstructsArtifacts = { [T in ContractTypes]: any };
+export type ContractsArtifacts = { [T in ContractTypes]: any };
 /**
  * @type The type Observable represent the SDK observable object that used to subscribe to Needs/Bids/Messages/etc...
  */

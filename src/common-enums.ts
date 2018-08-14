@@ -1,5 +1,5 @@
 /**
- * @enum The enum PriceType represent the type of the service.
+ * @enum The enum PriceType represent the type of the price of the service.
  */
 export enum PriceType {
     flat = 'flat',

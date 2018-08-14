@@ -1,12 +1,12 @@
 import IConfig from './IConfig';
-import { DavID, BigInteger, ID, ConstructsArtifacts } from './common-types';
+import { DavID, BigInteger, ID, ContractsArtifacts } from './common-types';
 import Web3 = require('web3');
 import { ContractTypes } from './common-enums';
 import Contract from 'web3/eth/contract';
 import { EventLog, TransactionReceipt } from 'web3/types';
 import { Observable } from 'rxjs';
 
-let contracts: ConstructsArtifacts = {
+let contracts: ContractsArtifacts = {
     Identity: require('./contracts/Identity'),
     DAVToken: require('./contracts/DAVToken'),
     BasicMission: require('./contracts/BasicMission'),

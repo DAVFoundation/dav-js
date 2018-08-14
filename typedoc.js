@@ -3,6 +3,6 @@ module.exports = {
   module: 'commonjs',
   target: 'es6',
   name: 'DAV Network Javascript SDK',
-  exclude: '**/*+(test|ContractsIntegrationSimulator|Kafka|Contracts|KafkaMessageStream).ts',
+  exclude: '**/*+(test|ContractsIntegrationSimulator|Kafka|Contracts|KafkaMessageStream|KafkaApi|KafkaBase|KafkaNode).ts',
   excludeExternals: true,
 };

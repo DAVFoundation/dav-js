@@ -10,7 +10,7 @@ export default class SDK {
   /**
    * @method getIdentity Used to create an instance DAV Identity class.
    * @param davId the unique DAV identity string.
-   * @param config DAV configuration object.
+   * @param config DavSDK configuration object.
    * @returns Identity class instance with the specified configuration object and DavId.
    */
   public async getIdentity(davId: DavID, config?: IConfig): Promise<Identity> {
@@ -23,7 +23,7 @@ export default class SDK {
   }
   /**
    * @method isRegistered Used to check the DAV Identity is registered.
-   * @param davId the unique DAV identity string.
+   * @param davId The unique DAV identity string.
    * @returns true if the davId that specified is registered to the DAV identity contract, and false otherwise.
    */
   public async isRegistered(davId: DavID): Promise<boolean> {
@@ -31,7 +31,7 @@ export default class SDK {
   }
   /**
    * @method registerIdentity Used to register an instance to the DAV identity contract.
-   * @param davId the DAV identity string to register.
+   * @param davId The DAV identity string to register.
    * @param walletAddress Ethereum wallet address to register the identity with.
    * @param walletPrivateKey Ethereum wallet private key, to charge for the transaction.
    * @param identityPrivateKey Ethereum private key to sign the registration.

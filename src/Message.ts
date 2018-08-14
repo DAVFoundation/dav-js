@@ -3,7 +3,7 @@ import { ID } from './common-types';
 import MessageParams from './MessageParams';
 import Kafka from './Kafka';
 /**
- * @class The DavSDK Message Class represent a single message between consumer and service provider.
+ * @class The Message Class represent a single message between consumer and service provider.
  */
 export default class Message<T extends MessageParams> {
 
@@ -12,10 +12,10 @@ export default class Message<T extends MessageParams> {
     }
 
     /**
-     * @method respond Used to reply a message for the current message.
+     * @method respond Used to reply for the current message.
      * @param params the message parameters.
      */
-    public respond(params: MessageParams) {
+    public respond(params: MessageParams): Promise<void> {
         params.senderId = this.selfId;
         return Kafka.sendParams(this.messageParams.senderId, params, this.config);
     }

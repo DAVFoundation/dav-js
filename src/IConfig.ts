@@ -1,5 +1,5 @@
 import { BlockchainType } from './common-enums';
-import { ConstructsArtifacts } from './common-types';
+import { ContractsArtifacts } from './common-types';
 export default interface IConfig {
 
     /**
@@ -19,7 +19,7 @@ export default interface IConfig {
      */
     identityTtl?: number;
     /**
-     * @property Hop limit, in seconds, needs subscription to expires.
+     * @property Hop limit, in seconds, for needs subscription to expires.
      */
     needTypeTtl?: number;
     /**
@@ -43,7 +43,7 @@ export default interface IConfig {
      */
     blockchainType?: BlockchainType;
     /**
-     * @property Constructs artifacts.
+     * @property Contracts artifacts.
      */
-    contracts?: ConstructsArtifacts;
+    contracts?: ContractsArtifacts;
 }

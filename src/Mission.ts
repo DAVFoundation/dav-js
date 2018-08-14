@@ -7,7 +7,7 @@ import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
 /**
- * @class The DavSDK Mission class represent approved mission.
+ * @class Mission class represent an approved mission.
  */
 export default class Mission<T extends MissionParams, U extends MessageParams> {
 
@@ -26,14 +26,14 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
     /**
      * @method finalizeMission Used to approve the mission is completed,
      * and transfer the tokens from the basicMission contract to the service provider.
-     * @param walletPrivateKey Ethereum wallet private key.
+     * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns Ethereum transaction receipt object.
      */
     public async finalizeMission(walletPrivateKey: string): Promise<TransactionReceipt> {
         return Contracts.finalizeMission(this._params.id, this._params.neederDavId, walletPrivateKey, this.config);
     }
     /**
-     * @method sendMessage Used to send message to the service provider.
+     * @method sendMessage Used to send message to the service consumer.
      * @param params message parameters.
      */
     public async sendMessage(params: MessageParams): Promise<void> {
@@ -44,7 +44,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
         return Kafka.sendParams(this._params.id, params, this.config); // Channel#4
     }
     /**
-     * @method messages Used to subscribe to messages from the service provider.
+     * @method messages Used to subscribe for messages from the service provider.
      * @returns Observable object.
      */
     public async messages(): Promise<Observable<Message<U>>> {

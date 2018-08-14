@@ -1,7 +1,7 @@
 import BaseNeedParams from '../NeedParams';
 
 /**
- * @class The Class drone-charging/NeedParams represent the parameters of drone-delivery need.
+ * @class The Class drone-charging/NeedParams represent the parameters of drone-charging need.
  */
 export default class NeedParams extends BaseNeedParams {
     public static getMessageType(): string {

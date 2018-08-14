@@ -19,7 +19,7 @@ interface IBidParams {
      */
     vehicleId: DavID;
     /**
-     * @property Topic id for mission (Identity.needsForType().topic).
+     * @property The provider needType topic id (Identity.needsForType().topic).
      */
     needTypeId: ID;
     /**

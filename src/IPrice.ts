@@ -1,7 +1,7 @@
 import { BigInteger } from './common-types';
 import { PriceType } from './common-enums';
 /**
- * @interface IBidParams The interface IBidParams represent a mission price.
+ * @interface IPrice Represent a mission price.
  */
 export default interface IPrice {
     /**
@@ -17,7 +17,7 @@ export default interface IPrice {
      */
     description?: string;
     /**
-     * @method equals Used to compare between tew price objects.
+     * @method equals Used to compare between two price objects.
      */
     equals(other: IPrice): boolean;
 }

@@ -20,7 +20,7 @@ interface IBidParams {
      */
     vehicleId: DavID;
     /**
-     * @property Topic id for mission (Identity.needsForType().topic).
+     * @property The provider needType topic id (Identity.needsForType().topic).
      */
     needTypeId: ID;
     /**
@@ -29,7 +29,7 @@ interface IBidParams {
     plugType: string;
 }
 /**
- * @class The Class drone-charging/BidParams represent the parameters of drone-delivery bid.
+ * @class The Class drone-charging/BidParams represent the parameters of drone-charging bid.
  */
 export default class BidParams extends BaseBidParams {
     /**

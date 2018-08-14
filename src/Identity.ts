@@ -13,7 +13,7 @@ import Kafka from './Kafka';
 import axios from 'axios';
 
 /**
- * @class The DavSDK Identity class represent registered DAV identity instance.
+ * @class The Identity class represent registered DAV identity instance.
  */
 export default class Identity {
 
@@ -46,7 +46,7 @@ export default class Identity {
   /**
    * @method needsForType Used to subscribe for specific needs (filtered by params).
    * @param params the filter parameters.
-   * @param channelId used to get an observable for needs you already subscribed.
+   * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for needs subscription.
    */
   public async needsForType<T extends NeedParams, U extends MessageParams>(params: NeedFilterParams, channelId?: ID):
@@ -68,7 +68,7 @@ export default class Identity {
   }
   /**
    * @method missions Used to subscribe for missions.
-   * @param channelId used to get an observable for existed subscription.
+   * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for missions subscription.
    */
   public async missions<T extends MissionParams, U extends MessageParams>(channelId?: ID): Promise<Observable<Mission<T, U>>> {
@@ -87,7 +87,7 @@ export default class Identity {
   }
   /**
    * @method messages Used to subscribe for messages.
-   * @param channelId used to get an observable for existed subscription.
+   * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for messages subscription.
    */
   public async messages<T extends MessageParams>(channelId?: ID): Promise<Observable<Message<T>>> {
@@ -102,26 +102,27 @@ export default class Identity {
     return Observable.fromObservable(messageStream, stream.topic);
   }
   /**
-   * @method need Used to restore existed need.
-   * @param params the need parameters.
-   * @returns the restored need.
+   * @method need Used to restore an existed need.
+   * @param params The need parameters.
+   * @returns The restored need.
    */
   public need<T extends NeedParams, U extends MessageParams>(params: T): Need<T, U> {
     const selfId = this._needTypeId || params.id;
     return new Need(selfId, params, this.config);
   }
   /**
-   * @method bid Used to restore existed bid.
-   * @param params the bid parameters.
-   * @returns the restored bid.
+   * @method bid Used to restore an existed bid.
+   * @param bidSelfId The selfId that used to create the bid.
+   * @param params The bid parameters.
+   * @returns The restored bid.
    */
   public bid<T extends BidParams, U extends MessageParams>(bidSelfId: ID, params: T): Bid<T, U> {
     return new Bid(bidSelfId, params, this.config);
   }
   /**
-   * @method mission Used to restore existed mission.
-   * @param params the mission parameters.
-   * @returns the restored mission.
+   * @method mission Used to restore an existed mission.
+   * @param params The mission parameters.
+   * @returns The restored mission.
    */
   public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, params: T): Mission<T, U> {
     return new Mission(missionSelfId, params, this.config);

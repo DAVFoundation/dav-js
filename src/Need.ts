@@ -8,7 +8,7 @@ import Kafka from './Kafka';
 import Message from './Message';
 
 /**
- * @class The DavSDK Need class represent a service request.
+ * @class The Need class represent a service request.
  */
 export default class Need<T extends NeedParams, U extends MessageParams> {
 
@@ -21,8 +21,8 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
     }
     /**
      * @method createBid Used to create a new bid for the current need and publish it to the service consumer.
-     * @param params the bid parameters.
-     * @returns the created bid.
+     * @param params The bid parameters.
+     * @returns The created bid.
      */
     public async createBid<V extends BidParams>(params: V): Promise<Bid<V, U>> {
         const neederId = this._params.id; // Channel#3
@@ -38,7 +38,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
         return new Bid<V, U>(biderId, params, this.config);
     }
     /**
-     * @method bids Used to subscribe to bids for the current need.
+     * @method bids Used to subscribe for bids for the current need.
      * @returns Observable for bids subscription.
      */
     public async bids<V extends BidParams>(): Promise<Observable<Bid<V, U>>> {
@@ -47,8 +47,8 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
         return Observable.fromObservable(bidStream, this._params.id);
     }
     /**
-     * @method sendMessage Used to send a message to the need consumer.
-     * @param params the message parameters.
+     * @method sendMessage Used to send a message to the service consumer.
+     * @param params The message parameters.
      */
     public async sendMessage(params: U): Promise<void> {
         if (this._selfId === this._params.id) {
@@ -58,7 +58,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
         return Kafka.sendParams(this._params.id, params, this.config); // Channel#3
     }
     /**
-     * @method messages Used to subscribe to messages for the current need.
+     * @method messages Used to subscribe for messages for the current need.
      * @returns Observable for messages subscription.
      */
     public async messages(): Promise<Observable<Message<U>>> {
