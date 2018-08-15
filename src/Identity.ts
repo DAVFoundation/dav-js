@@ -12,6 +12,9 @@ import Mission from './Mission';
 import Kafka from './Kafka';
 import axios from 'axios';
 
+/**
+ * @class The Identity class represent registered DAV identity instance.
+ */
 export default class Identity {
 
   private _needTypeId: ID;
@@ -28,6 +31,11 @@ export default class Identity {
     return topic;
   }
 
+  /**
+   * @method publishNeed Used to create a new need and publish it to the relevant service providers.
+   * @param params the need parameters.
+   * @returns the created need.
+   */
   public async publishNeed<T extends NeedParams, U extends MessageParams>(params: T): Promise<Need<T, U>> {
     const bidsChannelName = await this.registerNewTopic(); // Channel#3
     params.id = bidsChannelName;
@@ -35,6 +43,12 @@ export default class Identity {
     return new Need<T, U>(bidsChannelName, params, this.config);
   }
 
+  /**
+   * @method needsForType Used to subscribe for specific needs (filtered by params).
+   * @param params the filter parameters.
+   * @param channelId Specify channelId only to get an observable for existed subscription.
+   * @returns Observable for needs subscription.
+   */
   public async needsForType<T extends NeedParams, U extends MessageParams>(params: NeedFilterParams, channelId?: ID):
   Promise<Observable<Need<T, U>>> {
     let identityChannelName = channelId || this._needTypeId;
@@ -52,7 +66,11 @@ export default class Identity {
         new Need<T, U>(identityChannelName, needParams, this.config)), stream.topic);
     return observable;
   }
-
+  /**
+   * @method missions Used to subscribe for missions.
+   * @param channelId Specify channelId only to get an observable for existed subscription.
+   * @returns Observable for missions subscription.
+   */
   public async missions<T extends MissionParams, U extends MessageParams>(channelId?: ID): Promise<Observable<Mission<T, U>>> {
     let identityChannelName = channelId || this._needTypeId;
     if (!identityChannelName) {
@@ -67,7 +85,11 @@ export default class Identity {
     .mergeAll();
     return Observable.fromObservable(messageStream, stream.topic);
   }
-
+  /**
+   * @method messages Used to subscribe for messages.
+   * @param channelId Specify channelId only to get an observable for existed subscription.
+   * @returns Observable for messages subscription.
+   */
   public async messages<T extends MessageParams>(channelId?: ID): Promise<Observable<Message<T>>> {
     let identityChannelName = channelId || this._needTypeId;
     if (!identityChannelName) {
@@ -79,16 +101,29 @@ export default class Identity {
         new Message<T>(identityChannelName, params, this.config));
     return Observable.fromObservable(messageStream, stream.topic);
   }
-
+  /**
+   * @method need Used to restore an existed need.
+   * @param params The need parameters.
+   * @returns The restored need.
+   */
   public need<T extends NeedParams, U extends MessageParams>(params: T): Need<T, U> {
     const selfId = this._needTypeId || params.id;
     return new Need(selfId, params, this.config);
   }
-
+  /**
+   * @method bid Used to restore an existed bid.
+   * @param bidSelfId The selfId that used to create the bid.
+   * @param params The bid parameters.
+   * @returns The restored bid.
+   */
   public bid<T extends BidParams, U extends MessageParams>(bidSelfId: ID, params: T): Bid<T, U> {
     return new Bid(bidSelfId, params, this.config);
   }
-
+  /**
+   * @method mission Used to restore an existed mission.
+   * @param params The mission parameters.
+   * @returns The restored mission.
+   */
   public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, params: T): Mission<T, U> {
     return new Mission(missionSelfId, params, this.config);
   }

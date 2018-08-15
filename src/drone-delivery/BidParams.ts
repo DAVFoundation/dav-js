@@ -1,7 +1,47 @@
-import BaseBidParams, { IBidParams } from '../BidParams';
+import BaseBidParams from '../BidParams';
+import { ID, BigInteger, DavID } from '../common-types';
+import IPrice from '../IPrice';
 
+/**
+ * @interface IBidParams The interface drone-delivery/IBidParams represent a valid argument of drone-delivery/BidParams constructor.
+ */
+interface IBidParams {
+    /**
+     * @property The bid's topic id (used to send messages to service provider).
+     */
+    id: ID;
+    /**
+     * @property The bid's price (required).
+     */
+    price: IPrice | BigInteger;
+    /**
+     * @property The bid's vehicle DAV Id (required).
+     */
+    vehicleId: DavID;
+    /**
+     * @property The provider needType topic id (Identity.needsForType().topic).
+     */
+    needTypeId: ID;
+    /**
+     * @property Time from contract signing to delivery in seconds.
+     */
+    name: string;
+    /**
+     * @property The drone name.
+     */
+    eta: number;
+}
+/**
+ * @class The Class drone-delivery/BidParams represent the parameters of drone-delivery bid.
+ */
 export default class BidParams extends BaseBidParams {
+    /**
+     * @property The drone name.
+     */
     public name?: string;
+    /**
+     * @property Time from contract signing to delivery in seconds.
+     */
     public eta?: number; // Time from contract signing to delivery in seconds
 
     public static getMessageType(): string {
@@ -16,6 +56,7 @@ export default class BidParams extends BaseBidParams {
 
     constructor(values: Partial<IBidParams>) {
         super(values);
+        Object.assign(this, values);
     }
 
     public toJson(): string {

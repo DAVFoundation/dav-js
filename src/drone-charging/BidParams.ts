@@ -1,11 +1,44 @@
-import BaseBidParams, { IBidParams } from '../BidParams';
+import BaseBidParams from '../BidParams';
+import IPrice from '../IPrice';
 import Price from '../Price';
+import { BigInteger, ID, DavID } from '../common-types';
 
+/**
+ * @interface IBidParams The interface drone-charging/IBidParams represent a valid argument of drone-charging/BidParams constructor.
+ */
+interface IBidParams {
+    /**
+     * @property The bid's topic id (used to send messages to service provider).
+     */
+    id: ID;
+    /**
+     * @property The bid's price (required).
+     */
+    price: IPrice | BigInteger;
+    /**
+     * @property The bid's vehicle DAV Id (required).
+     */
+    vehicleId: DavID;
+    /**
+     * @property The provider needType topic id (Identity.needsForType().topic).
+     */
+    needTypeId: ID;
+    /**
+     * @property The drone charging plug type.
+     */
+    plugType: string;
+}
+/**
+ * @class The Class drone-charging/BidParams represent the parameters of drone-charging bid.
+ */
 export default class BidParams extends BaseBidParams {
 
     private static _protocol = 'DroneCharging';
     private static _type = 'Bid';
 
+    /**
+     * @property The drone charging plug type.
+     */
     public plugType: string;
     public static getMessageType(): string {
         return `${this._protocol}:${this._type}`;
@@ -29,6 +62,7 @@ export default class BidParams extends BaseBidParams {
 
     constructor(values: Partial<IBidParams>) {
         super(values);
+        Object.assign(this, values);
     }
 
     public toJson() {

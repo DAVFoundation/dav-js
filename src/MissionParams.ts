@@ -4,6 +4,30 @@ import { ID, DavID, BigInteger } from './common-types';
 import Price from './Price';
 import { PriceType } from './common-enums';
 
+/**
+ * @interface IMissionParams The interface IMissionParams represent a valid argument of MissionParams constructor.
+ */
+interface IMissionParams {
+    /**
+     * @property The mission's topic id (used to send messages to consumer).
+     */
+    id: ID;
+    /**
+     * @property The mission's price.
+     */
+    price: IPrice | BigInteger;
+    /**
+     * @property The mission's vehicle DAV Id.
+     */
+    vehicleId: DavID;
+    /**
+     * @property The consumer DavID.
+     */
+    neederDavId: DavID;
+}
+/**
+ * @class The abstract Class MissionParams represent common parameters of MissionParams classes.
+ */
 export default abstract class MissionParams extends BasicParams {
     public price: IPrice;
     public id: ID;
@@ -26,11 +50,4 @@ export default abstract class MissionParams extends BasicParams {
             this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
         }
     }
-}
-
-export interface IMissionParams {
-    id: ID;
-    price: IPrice | BigInteger;
-    vehicleId: ID;
-    neederDavId: ID;
 }
