@@ -3,17 +3,21 @@ import Price from '../Price';
 
 export default class BidParams extends BaseBidParams {
 
+    private static _protocol = 'DroneCharging';
+    private static _type = 'Bid';
+
     public plugType: string;
     public static getMessageType(): string {
-        return 'DroneCharging:Bid';
+        return `${this._protocol}:${this._type}`;
     }
 
     public static fromJson(json: any): BidParams {
         const price = new Price(json.price.value, json.price.type);
+        const vehicleId = json.vehicleId;
         if (json.description) {
             price.description = json.price.description;
         }
-        const bidParams = new BidParams({ price });
+        const bidParams = new BidParams({ price, vehicleId });
         if (json.ttl) {
             bidParams.ttl = json.ttl;
         }
@@ -28,7 +32,7 @@ export default class BidParams extends BaseBidParams {
     }
 
     public toJson() {
-        const bidParams = Object.assign({ protocol: 'drone-charging', type: 'bid' }, this);
+        const bidParams = Object.assign({ protocol: BidParams._protocol, type: BidParams._type }, this);
         return JSON.stringify(bidParams);
     }
 

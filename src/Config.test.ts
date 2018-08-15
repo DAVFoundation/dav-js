@@ -25,7 +25,8 @@ describe('Config class', () => {
         needTtl: 56,
         missionConsumerTtl: 78,
         missionProviderTtl: 90,
-        kafkaPollingInterval: 1000,
+        kafkaBrowserPollingInterval: 1000,
+        kafkaBrowserRequestTimeout: 500,
         blockchainType: BlockchainType.local,
         contractPath: 'CONTRACT_PATH',
       };

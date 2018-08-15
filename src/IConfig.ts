@@ -37,7 +37,8 @@ export default interface IConfig {
    /**
     * Time, in milliseconds, the timer should delay in between reask kafka for new events.
     */
-    kafkaPollingInterval?: number;
+    kafkaBrowserPollingInterval?: number;
+    kafkaBrowserRequestTimeout?: number;
    /**
     * Blockchain type (local/test/main). for using local blockchain, you must specify contracts.
     */

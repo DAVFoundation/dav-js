@@ -100,24 +100,7 @@ export default class Kafka extends KafkaBase {
                 }
             });
         });
-
         return new KafkaMessageStream(kafkaStream);
-    }
-
-    public static async paramsStream<T extends BasicParams>(topicId: string, config: IConfig): Promise<Observable<T>> {
-        const consumer = await this.getConsumer(topicId, config);
-        // TODO: set ttl?
-        const rxObservable = Observable.create((observer: Observer<T>) => {
-            consumer.on('message', (message) => {
-                try {
-                    observer.next(this.convertMessage(message.value.toString()));
-                } catch (error) {
-                    observer.error(`error while trying to parse message. topic: ${topicId} error: ${error}, message: ${message}`);
-                }
-            });
-        });
-        const bidParamsObservable = Observable.fromObservable<T>(rxObservable, topicId);
-        return bidParamsObservable;
     }
 }
 

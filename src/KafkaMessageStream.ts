@@ -1,5 +1,6 @@
 import { Observable } from './common-types';
 import BasicParams from './BasicParams';
+import { copySync } from 'fs-extra';
 
 export interface IKafkaMessage {
     messageType: string;
