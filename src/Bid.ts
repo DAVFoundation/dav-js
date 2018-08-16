@@ -8,6 +8,7 @@ import Message from './Message';
 import Mission from './Mission';
 import Kafka from './Kafka';
 import Contracts from './Contracts';
+import KafkaMessageStream from './KafkaMessageStream';
 /**
  * @class Bid class represent a bid for service request.
  */
@@ -58,7 +59,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
     // TODO: rename params to messageParams
     public async sendMessage(params: MessageParams): Promise<void> {
         if (this._selfId === this._params.id) {
-            throw new Error(`You cannot send message to yore own channel`);
+            throw new Error(`You cannot send message to your own channel`);
         }
         params.senderId = this._selfId; // Channel#3
         // TODO: should await this call or remove the async keyword
@@ -66,14 +67,16 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
     }
     /**
      * @method messages Used to subscribe for messages for the current bid.
+     * @param messageParamsType The expected message params object type.
      * @returns Observable for messages subscription.
      */
-    public async messages(): Promise<Observable<Message<U>>> {
+    public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
         // TODO: rename stream to messageParamsStream (or another more meaningful name)
-        const stream: Observable<U> = await Kafka.paramsStream(this._params.id, this.config); // Channel#6
-        const messageStream = stream.map((params: MessageParams) =>
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this.config); // Channel#6
+        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
+        const messageStream = messageParamsStream.map((params: MessageParams) =>
             new Message<U>(this._selfId, params, this.config));
-        return Observable.fromObservable(messageStream, stream.topic);
+        return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }
 }
 

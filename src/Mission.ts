@@ -6,6 +6,7 @@ import MessageParams from './MessageParams';
 import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
+import KafkaMessageStream from './KafkaMessageStream';
 /**
  * @class Mission class represent an approved mission.
  */
@@ -47,12 +48,14 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
     }
     /**
      * @method messages Used to subscribe for messages from the service provider.
+     * @param The expected message param object type.
      * @returns Observable object.
      */
-    public async messages(): Promise<Observable<Message<U>>> {
-        const stream = await Kafka.paramsStream(this._params.id, this.config); // Channel#4
-        const messageStream = stream.map((params: MessageParams) =>
+    public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this.config); // Channel#4
+        const messageParamsStream = kafkaMessageStream.filterType(messageParamsType);
+        const messageStream = messageParamsStream.map((params: MessageParams) =>
             new Message<U>(this._selfId, params, this.config));
-        return Observable.fromObservable(messageStream, stream.topic);
+        return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }
 }
