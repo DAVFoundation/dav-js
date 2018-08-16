@@ -19,13 +19,16 @@ export default class Identity {
 
   private _needTypeId: ID;
 
+  // TODO: private members names should start with underscore
   constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
 
   private async registerNewTopic() {
+    // TODO: remove the channel comment
     const topic = Kafka.generateTopicId(); // Channel#2
     try {
       await Kafka.createTopic(topic, this.config);
     } catch (err) {
+      // TODO: move this general message to kafka class
       throw new Error(`Topic registration failed: ${err}`);
     }
     return topic;
@@ -51,6 +54,7 @@ export default class Identity {
    */
   public async needsForType<T extends NeedParams, U extends MessageParams>(params: NeedFilterParams, channelId?: ID):
   Promise<Observable<Need<T, U>>> {
+    // TODO: duplicated code, extract to private method
     let identityChannelName = channelId || this._needTypeId;
     if (!identityChannelName) {
       identityChannelName = await this.registerNewTopic();
@@ -72,6 +76,7 @@ export default class Identity {
    * @returns Observable for missions subscription.
    */
   public async missions<T extends MissionParams, U extends MessageParams>(channelId?: ID): Promise<Observable<Mission<T, U>>> {
+    // TODO: duplicated code, extract to private method
     let identityChannelName = channelId || this._needTypeId;
     if (!identityChannelName) {
       identityChannelName = await this.registerNewTopic();
@@ -91,6 +96,7 @@ export default class Identity {
    * @returns Observable for messages subscription.
    */
   public async messages<T extends MessageParams>(channelId?: ID): Promise<Observable<Message<T>>> {
+    // TODO: duplicated code, extract to private method
     let identityChannelName = channelId || this._needTypeId;
     if (!identityChannelName) {
       identityChannelName = await this.registerNewTopic();

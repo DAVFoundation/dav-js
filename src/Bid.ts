@@ -1,3 +1,4 @@
+// TODO: remove unused imports
 import { ID, Observable, DavID } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
@@ -18,6 +19,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         return this._params;
     }
 
+    // TODO: private members should start with underscore
     constructor(private _selfId: ID, private _params: T, private config: IConfig) {
         /**/
     }
@@ -27,6 +29,8 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns the created mission.
      */
+    // TODO: think why do mission params is a parameter of this method? does mission params have another source of information except bid params?
+    // TODO: rename 'params' to 'missionParams', might be very confusing with this._params
     public async accept<V extends MissionParams>(params: V, walletPrivateKey: string): Promise<Mission<V, U>> {
         const needTypeId = this._params.needTypeId;
         params.id = Kafka.generateTopicId(); // Channel#4
@@ -40,6 +44,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         try {
             await Kafka.createTopic(params.id, this.config);
         } catch (err) {
+            // TODO: move this general message to kafka.createTopic
             throw new Error(`Fail to create a topic: ${err}`);
         }
         await Kafka.sendParams(needTypeId, params, this.config);
@@ -50,11 +55,13 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @method sendMessage Used to send a message to the bid provider.
      * @param params the message parameters.
      */
+    // TODO: rename params to messageParams
     public async sendMessage(params: MessageParams): Promise<void> {
         if (this._selfId === this._params.id) {
             throw new Error(`You cannot send message to yore own channel`);
         }
         params.senderId = this._selfId; // Channel#3
+        // TODO: should await this call or remove the async keyword
         return Kafka.sendParams(this._params.id, params, this.config); // Channel#6
     }
     /**
@@ -62,6 +69,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @returns Observable for messages subscription.
      */
     public async messages(): Promise<Observable<Message<U>>> {
+        // TODO: rename stream to messageParamsStream (or another more meaningful name)
         const stream: Observable<U> = await Kafka.paramsStream(this._params.id, this.config); // Channel#6
         const messageStream = stream.map((params: MessageParams) =>
             new Message<U>(this._selfId, params, this.config));
