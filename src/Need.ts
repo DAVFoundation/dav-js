@@ -26,7 +26,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
      * @returns The created bid.
      */
     // TODO: rename params to bidParams
-     public async createBid<V extends BidParams>(params: V): Promise<Bid<V, U>> {
+    public async createBid<V extends BidParams>(params: V): Promise<Bid<V, U>> {
         const neederId = this._params.id; // Channel#3
         // TODO: fix typo (bidder)
         const biderId = Kafka.generateTopicId(); // Channel#6

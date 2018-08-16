@@ -31,7 +31,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      */
     // TODO: think why do mission params is a parameter of this method? does mission params have another source of information except bid params?
     // TODO: rename 'params' to 'missionParams', might be very confusing with this._params
-     public async accept<V extends MissionParams>(params: V, walletPrivateKey: string): Promise<Mission<V, U>> {
+    public async accept<V extends MissionParams>(params: V, walletPrivateKey: string): Promise<Mission<V, U>> {
         const needTypeId = this._params.needTypeId;
         params.id = Kafka.generateTopicId(); // Channel#4
         params.price = this._params.price;
@@ -56,7 +56,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @param params the message parameters.
      */
     // TODO: rename params to messageParams
-     public async sendMessage(params: MessageParams): Promise<void> {
+    public async sendMessage(params: MessageParams): Promise<void> {
         if (this._selfId === this._params.id) {
             throw new Error(`You cannot send message to yore own channel`);
         }
