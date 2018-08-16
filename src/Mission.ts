@@ -11,6 +11,7 @@ import Kafka from './Kafka';
  */
 export default class Mission<T extends MissionParams, U extends MessageParams> {
 
+    // TODO: private members names should start with underscore
     constructor(private _selfId: ID, private _params: T, private config: IConfig) {
     }
     /**
@@ -41,6 +42,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
             throw new Error(`You cannot send message to yore own channel`);
         }
         params.senderId = this._selfId;
+        // TODO: should await this call or remove the async keyword
         return Kafka.sendParams(this._params.id, params, this.config); // Channel#4
     }
     /**
