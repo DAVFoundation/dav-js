@@ -6,7 +6,8 @@ import Contracts from './Contracts';
  * @class The DavSDK class instance.
  */
 export default class SDK {
-  constructor(private config: IConfig) { /**/ }
+
+  constructor(private _config: IConfig) { /**/ }
   /**
    * @method getIdentity Used to create an instance DAV Identity class.
    * @param davId the unique DAV identity string.
@@ -19,7 +20,7 @@ export default class SDK {
       throw new Error(`${davId} is not a registered identity`);
     }
     // TODO: create topic for Identity Channel#1
-    return new Identity('NO_TOPIC', davId, config || this.config);
+    return new Identity('NO_TOPIC', davId, config || this._config);
   }
   /**
    * @method isRegistered Used to check the DAV Identity is registered.
@@ -27,7 +28,7 @@ export default class SDK {
    * @returns true if the davId that specified is registered to the DAV identity contract, and false otherwise.
    */
   public async isRegistered(davId: DavID): Promise<boolean> {
-    return await Contracts.isIdentityRegistered(davId, this.config);
+    return await Contracts.isIdentityRegistered(davId, this._config);
   }
   /**
    * @method registerIdentity Used to register an instance to the DAV identity contract.
@@ -38,6 +39,6 @@ export default class SDK {
    * @returns Ethereum transaction receipt object.
    */
   public async registerIdentity(davId: DavID, walletAddress: string, walletPrivateKey: string, identityPrivateKey: string): Promise<string> {
-    return await Contracts.registerIdentity(davId, identityPrivateKey, walletAddress, walletPrivateKey, this.config);
+    return await Contracts.registerIdentity(davId, identityPrivateKey, walletAddress, walletPrivateKey, this._config);
   }
 }
