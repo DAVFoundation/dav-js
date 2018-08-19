@@ -22,28 +22,26 @@ export default class Identity {
   // DON'T USE THIS VARIABLE DIRECTLY! ONLY VIA ITS GETTER!
   private _kafkaMessageStream: KafkaMessageStream;
 
-  // TODO: private members names should start with underscore
-  constructor(public id: ID, public davID: DavID, private config: IConfig) { /**/ }
+  constructor(public id: ID, public davID: DavID, private _config: IConfig) { /**/ }
 
   // sadly, async cannot be used in normal getter
   private async getKafkaMessageStream(channelId: ID): Promise<KafkaMessageStream> {
     if (channelId !== this._needTypeId) {
-      return await Kafka.messages(channelId, this.config);
+      return await Kafka.messages(channelId, this._config);
     }
     if (!this._kafkaMessageStream) {
-        this._kafkaMessageStream = await Kafka.messages(this._needTypeId, this.config);
+        this._kafkaMessageStream = await Kafka.messages(this._needTypeId, this._config);
     }
     return this._kafkaMessageStream;
   }
 
   private async registerNewTopic() {
-    // TODO: remove the channel comment
-    const topic = Kafka.generateTopicId(); // Channel#2
+    const topic = Kafka.generateTopicId();
     try {
-      await Kafka.createTopic(topic, this.config);
+      await Kafka.createTopic(topic, this._config);
     } catch (err) {
       // TODO: move this general message to kafka class
-      throw new Error(`Topic registration failed: ${err}`);
+      throw new Error(`Fail to create a topic: ${err}`);
     }
     return topic;
   }
@@ -56,8 +54,8 @@ export default class Identity {
   public async publishNeed<T extends NeedParams, U extends MessageParams>(params: T): Promise<Need<T, U>> {
     const bidsChannelName = await this.registerNewTopic(); // Channel#3
     params.id = bidsChannelName;
-    await axios.post(`${this.config.apiSeedUrls[0]}/publishNeed/:${bidsChannelName}`, params);
-    return new Need<T, U>(bidsChannelName, params, this.config);
+    await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/:${bidsChannelName}`, params);
+    return new Need<T, U>(bidsChannelName, params, this._config);
   }
 
   /**
@@ -67,16 +65,15 @@ export default class Identity {
    * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for needs subscription.
    */
-  // TODO: rename params to needFilterParams
-  public async needsForType<T extends NeedParams, U extends MessageParams>(params: NeedFilterParams, needParamsType: new (...all: any[]) => T,
-   channelId?: ID): Promise<Observable<Need<T, U>>> {
+  public async needsForType<T extends NeedParams, U extends MessageParams>(needFilterParams: NeedFilterParams,
+     needParamsType: new (...all: any[]) => T, channelId?: ID): Promise<Observable<Need<T, U>>> {
     // TODO: duplicated code, extract to private method
     let identityChannelName = channelId || this._needTypeId;
     if (!identityChannelName) {
       identityChannelName = await this.registerNewTopic();
       this._needTypeId = identityChannelName;
       try {
-        await axios.post(`${this.config.apiSeedUrls[0]}/needsForType/:${identityChannelName}`, params);
+        await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/:${identityChannelName}`, needFilterParams);
       } catch (err) {
         throw new Error(`Needs registration failed: ${err}`);
       }
@@ -84,7 +81,7 @@ export default class Identity {
     const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(identityChannelName);
     const needParamsStream: Observable<T> = kafkaMessageStream.filterType(needParamsType);
     const observable = Observable.fromObservable(needParamsStream.map((needParams: T) =>
-        new Need<T, U>(identityChannelName, needParams, this.config)), needParamsStream.topic);
+        new Need<T, U>(identityChannelName, needParams, this._config)), needParamsStream.topic);
     return observable;
   }
   /**
@@ -103,12 +100,9 @@ export default class Identity {
     }
     const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(identityChannelName); // Channel#2
     const missionParamsStream = kafkaMessageStream.filterType(missionParamsType);
-    // TODO: remove async
-    const messageStream = missionParamsStream.map(async (params: T) => {
-      return new Mission<T, U>(identityChannelName, params, this.config);
-    })
-    .map((promise) => Observable.fromPromise(promise))
-    .mergeAll();
+    const messageStream = missionParamsStream.map((params: T) => {
+      return new Mission<T, U>(identityChannelName, params, this._config);
+    });
     return Observable.fromObservable(messageStream, missionParamsStream.topic);
   }
   /**
@@ -127,7 +121,7 @@ export default class Identity {
     const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(identityChannelName); // Channel#2
     const messageParamsStream: Observable<T> = kafkaMessageStream.filterType(messageParamsType);
     const messageStream = messageParamsStream.map((params: MessageParams) =>
-        new Message<T>(identityChannelName, params, this.config));
+        new Message<T>(identityChannelName, params, this._config));
     return Observable.fromObservable(messageStream, messageParamsStream.topic);
   }
   /**
@@ -137,7 +131,7 @@ export default class Identity {
    */
   public need<T extends NeedParams, U extends MessageParams>(params: T): Need<T, U> {
     const selfId = this._needTypeId || params.id;
-    return new Need(selfId, params, this.config);
+    return new Need(selfId, params, this._config);
   }
   /**
    * @method bid Used to restore an existed bid.
@@ -146,7 +140,7 @@ export default class Identity {
    * @returns The restored bid.
    */
   public bid<T extends BidParams, U extends MessageParams>(bidSelfId: ID, params: T): Bid<T, U> {
-    return new Bid(bidSelfId, params, this.config);
+    return new Bid(bidSelfId, params, this._config);
   }
   /**
    * @method mission Used to restore an existed mission.
@@ -154,6 +148,6 @@ export default class Identity {
    * @returns The restored mission.
    */
   public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, params: T): Mission<T, U> {
-    return new Mission(missionSelfId, params, this.config);
+    return new Mission(missionSelfId, params, this._config);
   }
 }

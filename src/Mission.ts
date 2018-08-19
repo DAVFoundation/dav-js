@@ -12,8 +12,7 @@ import KafkaMessageStream from './KafkaMessageStream';
  */
 export default class Mission<T extends MissionParams, U extends MessageParams> {
 
-    // TODO: private members names should start with underscore
-    constructor(private _selfId: ID, private _params: T, private config: IConfig) {
+    constructor(private _selfId: ID, private _params: T, private _config: IConfig) {
     }
     /**
      * @method signContract Used to transfer tokens to the basicMission contract in order to start the mission.
@@ -22,7 +21,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      */
     public async signContract(walletPrivateKey: string): Promise<TransactionReceipt> {
         const transactionReceipt = await Contracts.startMission(this._params.id, this._params.neederDavId, walletPrivateKey, this._params.vehicleId,
-            this._params.price.value, this.config);
+            this._params.price.value, this._config);
         return transactionReceipt;
     }
     /**
@@ -32,7 +31,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      * @returns Ethereum transaction receipt object.
      */
     public async finalizeMission(walletPrivateKey: string): Promise<TransactionReceipt> {
-        return Contracts.finalizeMission(this._params.id, this._params.neederDavId, walletPrivateKey, this.config);
+        return Contracts.finalizeMission(this._params.id, this._params.neederDavId, walletPrivateKey, this._config);
     }
     /**
      * @method sendMessage Used to send message to the service consumer.
@@ -43,8 +42,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
             throw new Error(`You cannot send message to yore own channel`);
         }
         params.senderId = this._selfId;
-        // TODO: should await this call or remove the async keyword
-        return Kafka.sendParams(this._params.id, params, this.config); // Channel#4
+        return await Kafka.sendParams(this._params.id, params, this._config); // Channel#4
     }
     /**
      * @method messages Used to subscribe for messages from the service provider.
@@ -52,10 +50,10 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      * @returns Observable object.
      */
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
-        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this.config); // Channel#4
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this._config); // Channel#4
         const messageParamsStream = kafkaMessageStream.filterType(messageParamsType);
         const messageStream = messageParamsStream.map((params: MessageParams) =>
-            new Message<U>(this._selfId, params, this.config));
+            new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }
 }

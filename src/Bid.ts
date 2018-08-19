@@ -1,5 +1,4 @@
-// TODO: remove unused imports
-import { ID, Observable, DavID } from './common-types';
+import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
 import MissionParams from './MissionParams';
@@ -20,50 +19,46 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         return this._params;
     }
 
-    // TODO: private members should start with underscore
-    constructor(private _selfId: ID, private _params: T, private config: IConfig) {
+    constructor(private _selfId: ID, private _params: T, private _config: IConfig) {
         /**/
     }
     /**
      * @method accept Used to accept a bid and create a new mission, the mission will sent to the bid provider.
-     * @param params the mission parameters.
+     * @param missionParams the mission parameters.
      * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns the created mission.
      */
     // TODO: think why do mission params is a parameter of this method? does mission params have another source of information except bid params?
-    // TODO: rename 'params' to 'missionParams', might be very confusing with this._params
-    public async accept<V extends MissionParams>(params: V, walletPrivateKey: string): Promise<Mission<V, U>> {
+    public async accept<V extends MissionParams>(missionParams: V, walletPrivateKey: string): Promise<Mission<V, U>> {
         const needTypeId = this._params.needTypeId;
-        params.id = Kafka.generateTopicId(); // Channel#4
-        params.price = this._params.price;
-        this._missionId = params.id;
+        missionParams.id = Kafka.generateTopicId(); // Channel#4
+        missionParams.price = this._params.price;
+        this._missionId = missionParams.id;
         try {
-            await Contracts.approveMission(params.neederDavId, walletPrivateKey, this.config);
+            await Contracts.approveMission(missionParams.neederDavId, walletPrivateKey, this._config);
         } catch (err) {
             throw new Error(`Fail to approve mission, you might not have enough DAV Tokens: ${err}`);
         }
         try {
-            await Kafka.createTopic(params.id, this.config);
+            await Kafka.createTopic(missionParams.id, this._config);
         } catch (err) {
             // TODO: move this general message to kafka.createTopic
             throw new Error(`Fail to create a topic: ${err}`);
         }
-        await Kafka.sendParams(needTypeId, params, this.config);
-        const mission = new Mission<V, U>(this._missionId, params, this.config);
+        await Kafka.sendParams(needTypeId, missionParams, this._config);
+        const mission = new Mission<V, U>(this._missionId, missionParams, this._config);
         return mission;
     }
     /**
      * @method sendMessage Used to send a message to the bid provider.
-     * @param params the message parameters.
+     * @param messageParams the message parameters.
      */
-    // TODO: rename params to messageParams
-    public async sendMessage(params: MessageParams): Promise<void> {
+    public async sendMessage(messageParams: MessageParams): Promise<void> {
         if (this._selfId === this._params.id) {
             throw new Error(`You cannot send message to your own channel`);
         }
-        params.senderId = this._selfId; // Channel#3
-        // TODO: should await this call or remove the async keyword
-        return Kafka.sendParams(this._params.id, params, this.config); // Channel#6
+        messageParams.senderId = this._selfId; // Channel#3
+        return await Kafka.sendParams(this._params.id, messageParams, this._config); // Channel#6
     }
     /**
      * @method messages Used to subscribe for messages for the current bid.
@@ -71,11 +66,10 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @returns Observable for messages subscription.
      */
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
-        // TODO: rename stream to messageParamsStream (or another more meaningful name)
-        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this.config); // Channel#6
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this._config); // Channel#6
         const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
         const messageStream = messageParamsStream.map((params: MessageParams) =>
-            new Message<U>(this._selfId, params, this.config));
+            new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }
 }

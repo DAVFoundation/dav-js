@@ -86,7 +86,7 @@ describe('Identity class', () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
       const identity = new Identity('id', 'davId', config);
-      await expect(identity.publishNeed(needParams)).rejects.toThrow(`Topic registration failed: ${kafkaError}`);
+      await expect(identity.publishNeed(needParams)).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
       expect(axiosMock.post).not.toHaveBeenCalled();
     });
 
@@ -219,7 +219,7 @@ describe('Identity class', () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
-      await expect(identity.needsForType(needFilterParams, NeedParams)).rejects.toThrow(`Topic registration failed: ${kafkaError}`);
+      await expect(identity.needsForType(needFilterParams, NeedParams)).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
       expect(axiosMock.post).not.toHaveBeenCalled();
@@ -350,7 +350,7 @@ describe('Identity class', () => {
       const Identity: any = (await import('./Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       await forContextSwitch();
-      await expect(identity.missions()).rejects.toThrow(`Topic registration failed: ${kafkaError}`);
+      await expect(identity.missions()).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
       expect(kafkaMock.messages).not.toHaveBeenCalled();

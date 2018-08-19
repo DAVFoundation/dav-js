@@ -38,14 +38,14 @@ export default abstract class MissionParams extends BasicParams {
     constructor(values: Partial<IMissionParams>) {
         super();
         if (!values.price) {
-            // TODO: fix grammar
-            throw new Error ('price is this a required field');
+            throw new Error ('price is a required field');
         }
         if (!values.vehicleId) {
-            // TODO: fix grammar
-            throw new Error ('vehicleId is this a required field');
+            throw new Error ('vehicleId is a required field');
         }
-        // TODO: need to throw also if there is no neederDavId
+        if (!values.neederDavId) {
+            throw new Error ('neederDavId is a required field');
+        }
         Object.assign(this, values);
         const priceObject = values.price;
         if (typeof priceObject === 'string') {

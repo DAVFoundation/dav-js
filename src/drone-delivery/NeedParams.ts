@@ -8,7 +8,7 @@ export default class NeedParams extends BaseNeedParams {
     /**
      * @property The delivery pick up time.
      */
-    public startAt: number;
+    public startAt: Date;
     /**
      * @property The delivery pick up latitude.
      */
