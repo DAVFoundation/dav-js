@@ -68,12 +68,15 @@ export default class Identity {
   public async needsForType<T extends NeedParams, U extends MessageParams>(needFilterParams: NeedFilterParams,
      needParamsType: new (...all: any[]) => T, channelId?: ID): Promise<Observable<Need<T, U>>> {
     // TODO: duplicated code, extract to private method
+    needFilterParams.davId = this.davID;
     let identityChannelName = channelId || this._needTypeId;
     if (!identityChannelName) {
       identityChannelName = await this.registerNewTopic();
       this._needTypeId = identityChannelName;
       try {
-        await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/:${identityChannelName}`, needFilterParams);
+        console.log(needFilterParams);
+        console.log(`${this._config.apiSeedUrls[0]}/needsForType/${identityChannelName}`);
+        await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/${identityChannelName}`, needFilterParams);
       } catch (err) {
         throw new Error(`Needs registration failed: ${err}`);
       }

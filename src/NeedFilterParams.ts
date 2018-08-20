@@ -1,4 +1,5 @@
 import BasicParams from './BasicParams';
+import { DavID } from './common-types';
 /**
  * @class The abstract Class NeedFilterParams represent common parameters of NeedFilterParams classes.
  */
@@ -20,6 +21,10 @@ export default abstract class NeedFilterParams extends BasicParams {
      */
     radius: number;
   };
+  /**
+   * @property Provider Dav ID.
+   */
+  public davId: DavID;
 
   constructor(values: Partial<NeedFilterParams>) {
     super();
