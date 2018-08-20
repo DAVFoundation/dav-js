@@ -1,32 +1,18 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
-const jest = require('jest-cli');
+const jest = require('gulp-jest').default;
 const exec = require('child_process').exec;
+const ts = require('gulp-typescript');
+const tslint = require('gulp-tslint');
+const typedoc = require('gulp-typedoc');
+const sourcemaps = require('gulp-sourcemaps');
+const spellcheck = require('gulp-ts-spellcheck').default;
 
-// const ganache = require('ganache-cli');
-
-// const server = ganache.server();
-// server.listen(8545, () => {
-//   console.log(
-//     `Local Ethereum testnet started on http://localhost:${port}`
-//   );
-//   exec('truffle deploy', function (err, stdout, stderr) {
-//     console.log(stdout);
-//     console.log(stderr);
-//     console.log(err);
-//   });
-// });
-
-const jestConfig = {
-  verbose: false,
-  rootDir: '.'
-};
-
-gulp.task('deploy-contracts', (calback) => {
+gulp.task('deploy-contracts', (callback) => {
   exec('truffle deploy', function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
-    calback(err);
+    callback(err);
   });
 });
 
@@ -38,18 +24,57 @@ gulp.task('lint', () => {
 });
 
 gulp.task('jest', (done) => {
-  jest.runCLI({
-    config: Object.assign(jestConfig, { testMatch: ['**/test/specs/*.js'] })
-  }, '.')
-    .then(({ results }) => {
-      if (results.numFailedTests || results.numFailedTestSuites) {
-        done('Tests Failed');
-      }
-      else {
-        done();
-      }
-    });
-
+  return gulp.src('')
+    .on('error', function (err) {
+      done(err);
+    })
+    .pipe(jest({}));
 });
 
-gulp.task('js', ['lint', 'jest']);
+gulp.task('tslint', (done) => {
+  return gulp.src('src/**/*.ts')
+    .on('error', function (err) {
+      done(err);
+    })
+    .pipe(tslint({
+      formatter: 'prose'
+    }))
+    .pipe(tslint.report());
+});
+
+gulp.task('tsc', function (done) {
+  var tsProject = ts.createProject('tsconfig.json');
+  return tsProject.src()
+    .pipe(sourcemaps.init())
+    .pipe(tsProject())
+    .on('error', function (err) {
+      done(err);
+    })
+    .js
+    .pipe(sourcemaps.write(''))
+    .pipe(gulp.dest('build'));
+});
+
+gulp.task('typedoc', function (done) {
+  return gulp
+    .src(['src/**/*.ts'])
+    .on('error', function (err) {
+      done(err);
+    })
+    .pipe(typedoc(require('./typedoc.js')));
+});
+
+gulp.task('spellcheck', function (done) {
+  return gulp.src('src/**/*.ts')
+    .on('error', function (err) {
+      done(err);
+    })
+    .pipe(spellcheck({
+      dictionary: require('./speller-dictionary.js')
+    }))
+    .pipe(spellcheck.report({}));
+});
+
+gulp.task('compile', ['tslint', 'tsc']);
+gulp.task('test', ['tslint', 'jest']);
+gulp.task('pre-publish', ['tslint', 'jest', 'tsc', 'typedoc']);

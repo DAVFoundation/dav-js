@@ -1,12 +1,26 @@
 FORCE:
 
-tests: FORCE
-	npm run test
+tslint: FORCE
+	npm run tslint
 
-build-dev: tests
+jest: FORCE
+	npm run jest
+
+tsc: FORCE
+	npm run tsc
+
+spellcheck: FORCE
+	npm run spellcheck
+
+pre-push: tslint tsc jest
+
+pre-publish: FORCE
+	npm run typedoc
+
+build-dev: test
 	npm run build-dev
 
-build-prod: tests
+build-prod: test
 	npm run build-prod
 
 publish: build-prod
