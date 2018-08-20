@@ -13,7 +13,6 @@ describe('Mission class', () => {
   const configuration = new Config({});
   const bidParams = new BidParams({
     id: 'BID_TOPIC_ID',
-    needTypeId: 'needTypeId',
     price: new Price('3', PriceType.flat),
     vehicleId: '34',
   });

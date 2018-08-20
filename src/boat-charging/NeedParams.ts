@@ -15,7 +15,7 @@ export default class NeedParams extends BaseNeedParams {
     }
 
     constructor(values: Partial<NeedParams>) {
-        super();
+        super(values);
         Object.assign(this, values);
     }
 

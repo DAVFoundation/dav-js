@@ -9,7 +9,8 @@ export default abstract class NeedParams extends BasicParams {
      * @property The need's topic id (used to send messages and bids to consumer).
      */
     public id: ID;
-    constructor() {
-        super();
+    constructor(values: Partial<NeedParams>) {
+        super(values);
+        this.id = values.id;
     }
 }

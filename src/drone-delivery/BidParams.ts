@@ -19,10 +19,6 @@ interface IBidParams {
      */
     vehicleId: DavID;
     /**
-     * @property The provider needType topic id (Identity.needsForType().topic).
-     */
-    needTypeId: ID;
-    /**
      * @property Time from contract signing to delivery in seconds.
      */
     name: string;

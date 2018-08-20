@@ -27,7 +27,7 @@ export default abstract class NeedFilterParams extends BasicParams {
   public davId: DavID;
 
   constructor(values: Partial<NeedFilterParams>) {
-    super();
-    Object.assign(this, values);
+    super(values);
+    this.area = values.area;
   }
 }

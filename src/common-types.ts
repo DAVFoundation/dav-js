@@ -17,6 +17,13 @@ export type BigInteger = string;
  * @type The type ContractArtifacts represent the DAV Contracts artifacts that contain ABI and networks addresses.
  */
 export type ContractsArtifacts = { [T in ContractTypes]: any };
+
+/**
+ * @type The Location interface represents location which contains Latitude and Longitude.
+ */
+
+export interface ILocation {Lat: number; Long: number; }
+
 /**
  * @type The type Observable represent the SDK observable object that used to subscribe to Needs/Bids/Messages/etc...
  */

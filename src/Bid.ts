@@ -30,7 +30,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      */
     // TODO: think why do mission params is a parameter of this method? does mission params have another source of information except bid params?
     public async accept<V extends MissionParams>(missionParams: V, walletPrivateKey: string): Promise<Mission<V, U>> {
-        const needTypeId = this._params.needTypeId;
+        const bidderId = this._params.id; // Channel #6
         missionParams.id = Kafka.generateTopicId(); // Channel#4
         missionParams.price = this._params.price;
         this._missionId = missionParams.id;
@@ -45,7 +45,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
             // TODO: move this general message to kafka.createTopic
             throw new Error(`Fail to create a topic: ${err}`);
         }
-        await Kafka.sendParams(needTypeId, missionParams, this._config);
+        await Kafka.sendParams(bidderId, missionParams, this._config);
         const mission = new Mission<V, U>(this._missionId, missionParams, this._config);
         return mission;
     }
@@ -68,9 +68,18 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this._config); // Channel#6
         const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
-        const messageStream = messageParamsStream.map((params: MessageParams) =>
+        const messageStream = messageParamsStream.map((params: U) =>
             new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
+    }
+
+    // TODO: tests
+    public async missions<V extends MissionParams>(missionParamsType: new (...all: any[]) => V): Promise<Observable<Mission<V, U>>> {
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#6
+        const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(missionParamsType);
+        const missionStream = missionParamsStream.map((params: V) =>
+            new Mission<V, U>(this._selfId, params, this._config));
+        return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 }
 

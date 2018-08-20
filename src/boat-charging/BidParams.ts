@@ -19,10 +19,6 @@ interface IBidParams {
      * @property The bid's vehicle DAV Id (required).
      */
     vehicleId: DavID;
-    /**
-     * @property The provider needType topic id (Identity.needsForType().topic).
-     */
-    needTypeId: ID;
 }
 /**
  * @class The Class boat-charging/BidParams represent the parameters of boat-charging bid.

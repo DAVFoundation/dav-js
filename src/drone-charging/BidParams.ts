@@ -20,10 +20,6 @@ interface IBidParams {
      */
     vehicleId: DavID;
     /**
-     * @property The provider needType topic id (Identity.needsForType().topic).
-     */
-    needTypeId: ID;
-    /**
      * @property The drone charging plug type.
      */
     plugType: string;

@@ -36,7 +36,6 @@ describe('Bid class', () => {
       id: 'BID_TOPIC_ID',
       price: new Price('3', PriceType.flat),
       vehicleId: '34',
-      needTypeId: 'TOPIC_ID',
     });
     messageParams = new MessageParams({
       status: MessageStatus.accepted,
@@ -65,7 +64,7 @@ describe('Bid class', () => {
 
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith('topicId', config);
-      expect(kafkaMock.sendParams).toHaveBeenCalledWith(bidParams.needTypeId, missionParams, config);
+      expect(kafkaMock.sendParams).toHaveBeenCalledWith(bidParams.id, missionParams, config);
     });
 
     it('should throw due to topic creation failure', async () => {
@@ -96,7 +95,7 @@ describe('Bid class', () => {
       const bid = new Bid('needId', bidParams, config);
       await expect(bid.accept(missionParams, 'Private_key')).rejects.toBe(kafkaError);
       expect(kafkaMock.createTopic).toHaveBeenCalledWith('topicId', config);
-      expect(kafkaMock.sendParams).toHaveBeenCalledWith(bidParams.needTypeId, missionParams, config);
+      expect(kafkaMock.sendParams).toHaveBeenCalledWith(bidParams.id, missionParams, config);
     });
   });
 
