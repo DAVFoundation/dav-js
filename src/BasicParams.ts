@@ -1,3 +1,5 @@
+import IBasicParams from './IBasicParams';
+
 /**
  * @class The abstract Class BasicParams represent common parameters to all the SDK's Params classes.
  */
@@ -13,6 +15,10 @@ export default abstract class BasicParams {
 
     public static getMessageType(): string {
         throw new Error('Must be implemented by derived class');
+    }
+
+    public constructor(values: Partial<IBasicParams>) {
+        this.ttl = values.ttl;
     }
 
     public abstract toJson(): string;

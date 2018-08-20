@@ -22,7 +22,7 @@ export default abstract class NeedFilterParams extends BasicParams {
   };
 
   constructor(values: Partial<NeedFilterParams>) {
-    super();
-    Object.assign(this, values);
+    super(values);
+    this.area = values.area;
   }
 }

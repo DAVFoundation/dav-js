@@ -40,7 +40,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
         const neederId = this._params.id; // Channel#3
         const bidderId = Kafka.generateTopicId(); // Channel#6
         bidParams.id = bidderId;
-        bidParams.needTypeId = this._selfId;
+        bidParams.needTypeId = this._selfId; // Channel#2
         try {
             await Kafka.createTopic(bidderId, this._config);
         } catch (err) {
@@ -58,7 +58,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
     public async bids<V extends BidParams>(bidParamsType: new (...all: any[]) => V): Promise<Observable<Bid<V, U>>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream();
         const bidParamsStream = kafkaMessageStream.filterType(bidParamsType);
-        const bidStream = bidParamsStream.map((bidParams) => new Bid(this._selfId, bidParams, this._config));
+        const bidStream = bidParamsStream.map((bidParams) => new Bid(this._selfId, bidParams, this._config)); // this._selfId - Channel#3
         return Observable.fromObservable(bidStream, this._params.id);
     }
     /**

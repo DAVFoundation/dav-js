@@ -19,7 +19,8 @@ export default abstract class MessageParams extends BasicParams {
      */
     public domain: MessageDomain;
     constructor(values: Partial<MessageParams>) {
-        super();
-        Object.assign(this, values);
+        super(values);
+        this.senderId = values.senderId;
+        this.status = values.status;
     }
 }
