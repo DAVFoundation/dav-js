@@ -11,6 +11,14 @@ export default interface IMissionParams extends IBasicParams {
      */
     id: ID;
     /**
+     * @property The mission's price.
+     */
+    price: IPrice | BigInteger;
+    /**
+     * @property The mission's vehicle DAV Id.
+     */
+    vehicleId: DavID;
+    /**
      * @property The consumer DavID.
      */
     neederDavId: DavID;
