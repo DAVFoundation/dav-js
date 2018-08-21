@@ -1,7 +1,32 @@
 import BaseBidParams from '../BidParams';
 import IBaseBidParams from '../IBidParams';
 import Price from '../Price';
-import { callbackify } from 'util';
+
+/**
+ * @interface IVehicleDetails The interface for vehicle details in bid for ride-hailing protocol
+ */
+interface IVehicleDetails {
+    /**
+     * @property The vehicle's type.
+     */
+    type: string;
+    /**
+     * @property The vehicle's manufacturer.
+     */
+    manufacturer: string;
+    /**
+     * @property The vehicle's model.
+     */
+    model: string;
+    /**
+     * @property The vehicle's color.
+     */
+    color: string;
+    /**
+     * @property The vehicle's license plate.
+     */
+    licensePlate: string;
+}
 
 /**
  * @interface IBidParams The interface ride-hailing/IBidParams represent a valid argument of ride-hailing/BidParams constructor.
@@ -12,22 +37,21 @@ interface IBidParams extends IBaseBidParams {
      */
     currentVehicleLocation: Location;
     /**
-     * @property The provider's car model (required).
+     * @property The vehicle details.
      */
-    carModel: string;
-    /**
-     * @property The provider's car color (required).
-     */
-    color: string;
-    /**
-     * @property The provider's car license plate (required).
-     */
-    licensePlate: string;
+    vehicle: IVehicleDetails;
     /**
      * @property The driver name.
      */
     driverName: string;
-    // TODO: add rank? completed rides? model year?
+    /**
+     * @property Average rating from 1 to 5.
+     */
+    averageRating: number;
+    /**
+     * @property Number of times the driver was rated.
+     */
+    ratingCounter: number;
 }
 /**
  * @class The Class ride-hailing/BidParams represent the parameters of ride-hailing bid.
@@ -42,45 +66,38 @@ export default class BidParams extends BaseBidParams {
      */
     public currentVehicleLocation: Location;
     /**
-     * @property The provider's car model.
+     * @property The vehicle details.
      */
-    public carModel: string;
-    /**
-     * @property The provider's car color.
-     */
-    public color: string;
-    /**
-     * @property The provider's car license plate.
-     */
-    public licensePlate: string;
+    public vehicle: IVehicleDetails;
     /**
      * @property The driver name.
      */
     public driverName: string;
+    /**
+     * @property Average rating from 1 to 5.
+     */
+    public averageRating: number;
+    /**
+     * @property Number of times the driver was rated.
+     */
+    public ratingCounter: number;
 
     public static getMessageType(): string {
         return `${this._protocol}:${this._type}`;
     }
 
     public static fromJson(json: any): BidParams {
-        const price = new Price(json.price.value, json.price.type);
-        const vehicleId = json.vehicleId;
-        if (!!json.description) {
-            price.description = json.price.description;
-        }
-        const bidParams = new BidParams({ price, vehicleId });
-        if (!!json.ttl) {
-            bidParams.ttl = json.ttl;
-        }
-        return bidParams;
+        return new BidParams(json);
     }
 
     constructor(values: Partial<IBidParams>) {
         super(values);
+        // TODO: throw if not enough details
         this.currentVehicleLocation = values.currentVehicleLocation;
-        this.color = values.color;
-        this.carModel = values.carModel;
+        this.vehicle = values.vehicle;
         this.driverName = values.driverName;
+        this.averageRating = values.averageRating;
+        this.ratingCounter = values.ratingCounter;
     }
 
     public toJson() {

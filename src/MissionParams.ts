@@ -4,7 +4,6 @@ import { ID, DavID, BigInteger } from './common-types';
 import Price from './Price';
 import { PriceType } from './common-enums';
 import IMissionParams from './IMissionParams';
-import { callbackify } from 'util';
 
 /**
  * @class The abstract Class MissionParams represent common parameters of MissionParams classes.
