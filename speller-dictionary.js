@@ -20,4 +20,6 @@ module.exports = [
   'sdk',
   'axios',
   'ethereum',
+  'lon',
+  'incircle'
 ];
