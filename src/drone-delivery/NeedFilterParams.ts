@@ -4,6 +4,7 @@ import BaseNeedFilterParams from '../NeedFilterParams';
  * @class The Class drone-delivery/NeedFilterParams represent the parameters that used to filter drone-delivery needs.
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
+    private static _protocol = 'drone_delivery';
     public static getMessageType(): string {
         return 'DroneDelivery:NeedFilter';
     }
@@ -16,7 +17,10 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
          super(values);
     }
 
-    public toJson(): string {
-        throw new Error('Method not implemented.');
+    public toJson() {
+        const needFilterParams = Object.assign({ protocol: NeedFilterParams._protocol }, this);
+        return JSON.stringify(needFilterParams);
     }
+
+    public toString(): string { return ''; }
 }

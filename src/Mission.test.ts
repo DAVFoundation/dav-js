@@ -20,7 +20,7 @@ describe('Mission class', () => {
     id: 'SOURCE_ID_1',
     neederDavId: 'DAV_ID',
     vehicleId: 'DAV_ID',
-    price: '100',
+    price: new Price('100', PriceType.flat),
   });
   const selfId = 'selfId';
   const bid = new Bid(selfId, bidParams, configuration);

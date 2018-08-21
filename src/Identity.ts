@@ -31,6 +31,37 @@ export default class Identity {
     return topic;
   }
 
+  private async formatFilterParams(needFilterParams: NeedFilterParams) {
+    const getIncirclePoint = (latitude: number, longitude: number, radius: number) => {
+      const earthRadius = 6371e3;
+      const δ = radius * Math.sqrt(2) / earthRadius;
+      const θ = Math.PI / 4;
+      const φ1 = latitude * Math.PI / 180;
+      const λ1 = longitude * Math.PI / 180;
+      const sinφ1 = Math.sin(φ1);
+      const cosφ1 = Math.cos(φ1);
+      const sinδ = Math.sin(δ);
+      const cosδ = Math.cos(δ);
+      const sinθ = Math.sin(θ);
+      const cosθ = Math.cos(θ);
+      const sinφ2 = sinφ1 * cosδ + cosφ1 * sinδ * cosθ;
+      const φ2 = Math.asin(sinφ2);
+      const y = sinθ * sinδ * cosφ1;
+      const x = cosδ - sinφ1 * sinφ2;
+      const λ2 = λ1 + Math.atan2(y, x);
+      return {latitude: φ2 * 180 / Math.PI, longitude: (λ2 * 180 / Math.PI + 540) % 360 - 180};
+    };
+
+    const formatArea = (area: any) => ({
+      max: getIncirclePoint(area.latitude, area.longitude, area.radius),
+      min: getIncirclePoint(area.latitude, area.longitude, -area.radius),
+    });
+
+    const formatedParams = JSON.parse(needFilterParams.toJson());
+    formatedParams.area = formatArea(formatedParams.area);
+    return formatedParams;
+  }
+
   /**
    * @method publishNeed Used to create a new need and publish it to the relevant service providers.
    * @param params the need parameters.
@@ -50,18 +81,18 @@ export default class Identity {
    * @returns Observable for needs subscription.
    */
   public async needsForType<T extends NeedParams, U extends MessageParams>(needFilterParams: NeedFilterParams,
-     needParamsType: new (...all: any[]) => T): Promise<Observable<Need<T, U>>> {
+    needParamsType: new (...all: any[]) => T): Promise<Observable<Need<T, U>>> {
     needFilterParams.davId = this.davID;
     const needTypeTopic = await this.registerNewTopic();
     try {
-      await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/:${needTypeTopic}`, needFilterParams);
+      await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/:${needTypeTopic}`, this.formatFilterParams(needFilterParams));
     } catch (err) {
       throw new Error(`Needs registration failed: ${err}`);
     }
     const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(needTypeTopic, this._config); // Channel#2
     const needParamsStream: Observable<T> = kafkaMessageStream.filterType(needParamsType);
     const observable = Observable.fromObservable(needParamsStream.map((needParams: T) =>
-        new Need<T, U>(needTypeTopic, needParams, this._config)), needParamsStream.topic);
+      new Need<T, U>(needTypeTopic, needParams, this._config)), needParamsStream.topic);
     return observable;
   }
   /**
@@ -71,7 +102,7 @@ export default class Identity {
    * @returns Observable for missions subscription.
    */
   public async missions<T extends MissionParams, U extends MessageParams>(missionParamsType: new (...all: any[]) => T,
-   channelId?: ID): Promise<Observable<Mission<T, U>>> {
+    channelId?: ID): Promise<Observable<Mission<T, U>>> {
 
     throw new Error('Not implemented in this version');
   }
@@ -85,7 +116,7 @@ export default class Identity {
     const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this.id, this._config); // Channel#1
     const messageParamsStream: Observable<T> = kafkaMessageStream.filterType(messageParamsType);
     const messageStream = messageParamsStream.map((params: MessageParams) =>
-        new Message<T>(this.id, params, this._config));
+      new Message<T>(this.id, params, this._config));
     return Observable.fromObservable(messageStream, messageParamsStream.topic);
   }
   /**

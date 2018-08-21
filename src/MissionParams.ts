@@ -24,14 +24,6 @@ export default abstract class MissionParams extends BasicParams {
         if (!values.vehicleId) {
             throw new Error('vehicleId is a required field');
         }
-        this.id = values.id;
-        this.neederDavId = values.neederDavId;
-        this.vehicleId = values.vehicleId;
-        const priceObject = values.price;
-        if (typeof priceObject === 'string') {
-            this.price = new Price(priceObject as BigInteger, PriceType.flat);
-        } else {
-            this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
-        }
+        Object.assign(this, values);
     }
 }
