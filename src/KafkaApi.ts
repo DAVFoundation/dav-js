@@ -42,11 +42,13 @@ export default class Kafka extends KafkaBase {
         // TODO: make sure what is the correct way to use api seed url
         const messagesUrl = `http://${config.apiSeedUrls[0]}/topic/consume/${topicId}?timeout=${config.kafkaBrowserRequestTimeout}`;
         const kafkaStream: Observable<IKafkaMessage> =  Observable.create((observer: Observer<IKafkaMessage>) => {
+            // CR_COMMENT: Might look better in a private function
             const sendRequest = async () => {
                 try {
                     const messages = await axios.get(messagesUrl);
                     if (messages.status !== 200) {
                         observer.error(messages.data.error);
+                        // CR_COMMENT: I think use return and save this else will be cleaner
                     } else {
                         messages.data.forEach((message: string) => {
                             const messageString = JSON.parse(message);
@@ -63,6 +65,7 @@ export default class Kafka extends KafkaBase {
             };
             sendRequest();
             // TODO: set ttl
+            // CR_COMMENT: Using rxObservable.interval will be better, you cn see example in Contracts.watchContract
             setInterval(() => sendRequest(), config.kafkaBrowserPollingInterval);
         });
         return new KafkaMessageStream(kafkaStream);

@@ -54,6 +54,7 @@ export default class Kafka extends KafkaBase {
 
     public static async createTopic(topicId: string, config: IConfig): Promise<void> {
         const producer = await this.getProducer(config);
+        // CR_COMMENT: For me it sound like a name of a function, I think topicPromise is better
         const createTopicPromise = new Promise<void>((resolve, reject) => {
             producer.createTopics([topicId], true, (err: any, data: any) => {
                 if (err) {
@@ -71,6 +72,7 @@ export default class Kafka extends KafkaBase {
         const payloads = [
             { topic: topicId, messages: basicParams.toJson()},
         ];
+        // CR_COMMENT: Same, but I couldn't think of a better name /:
         const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {
                 if (err) {
