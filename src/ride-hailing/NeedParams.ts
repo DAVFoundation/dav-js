@@ -1,4 +1,5 @@
 import BaseNeedParams from '../NeedParams';
+import { ILocation } from '../common-types';
 
 /**
  * @class The Class ride-hailing/NeedParams represent the parameters of ride-hailing need.
@@ -11,15 +12,11 @@ export default class NeedParams extends BaseNeedParams {
     /**
      * @property The passenger's pickup location (required).
      */
-    public pickupLocation: Location;
-    /**
-     * @property The passenger's pickup time - timestamp or 'now' for pickup as soon as possible (required).
-     */
-    public pickupTime: string;
+    public pickupLocation: ILocation;
     /**
      * @property The passenger's desired location (required).
      */
-    public destinationLocation: Location;
+    public destinationLocation: ILocation;
 
     public static getMessageType(): string {
         return `${this._protocol}:${this._type}`;
@@ -30,12 +27,11 @@ export default class NeedParams extends BaseNeedParams {
     }
 
     constructor(values: Partial<NeedParams>) {
-        if (!values.pickupLocation || !values.pickupTime || !values.destinationLocation) {
+        if (!values.pickupLocation || !values.destinationLocation) {
             throw new Error('Need lack of essential details');
         }
         super(values);
         this.pickupLocation = values.pickupLocation;
-        this.pickupTime = values.pickupTime;
         this.destinationLocation = values.destinationLocation;
     }
 
