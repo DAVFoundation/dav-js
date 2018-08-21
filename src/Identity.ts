@@ -34,22 +34,22 @@ export default class Identity {
   private async formatFilterParams(needFilterParams: NeedFilterParams) {
     const getIncirclePoint = (latitude: number, longitude: number, radius: number) => {
       const earthRadius = 6371e3;
-      const δ = radius * Math.sqrt(2) / earthRadius;
-      const θ = Math.PI / 4;
-      const φ1 = latitude * Math.PI / 180;
-      const λ1 = longitude * Math.PI / 180;
-      const sinφ1 = Math.sin(φ1);
-      const cosφ1 = Math.cos(φ1);
-      const sinδ = Math.sin(δ);
-      const cosδ = Math.cos(δ);
-      const sinθ = Math.sin(θ);
-      const cosθ = Math.cos(θ);
-      const sinφ2 = sinφ1 * cosδ + cosφ1 * sinδ * cosθ;
-      const φ2 = Math.asin(sinφ2);
-      const y = sinθ * sinδ * cosφ1;
-      const x = cosδ - sinφ1 * sinφ2;
-      const λ2 = λ1 + Math.atan2(y, x);
-      return {latitude: φ2 * 180 / Math.PI, longitude: (λ2 * 180 / Math.PI + 540) % 360 - 180};
+      const distance = radius * Math.sqrt(2) / earthRadius;
+      const quarterPi = Math.PI / 4;
+      const latitudeRadian = latitude * Math.PI / 180;
+      const longitudeRadian = longitude * Math.PI / 180;
+      const sinLatitude = Math.sin(latitudeRadian);
+      const cosLatitude = Math.cos(latitudeRadian);
+      const sinDistance = Math.sin(distance);
+      const cosDistance = Math.cos(distance);
+      const sinQuarterPi = Math.sin(quarterPi);
+      const cosQuarterPi = Math.cos(quarterPi);
+      const sinLat = sinLatitude * cosDistance + cosLatitude * sinDistance * cosQuarterPi;
+      const lat = Math.asin(sinLat);
+      const y = sinQuarterPi * sinDistance * cosLatitude;
+      const x = cosDistance - sinLatitude * sinLat;
+      const lon = longitudeRadian + Math.atan2(y, x);
+      return {latitude: lat * 180 / Math.PI, longitude: (lon * 180 / Math.PI + 540) % 360 - 180};
     };
 
     const formatArea = (area: any) => ({
