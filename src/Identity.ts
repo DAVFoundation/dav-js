@@ -12,7 +12,7 @@ import Mission from './Mission';
 import Kafka from './Kafka';
 import axios from 'axios';
 import KafkaMessageStream from './KafkaMessageStream';
-
+import { LatLonSpherical as LatLon } from 'geodesy';
 /**
  * @class The Identity class represent registered DAV identity instance.
  */
@@ -32,31 +32,22 @@ export default class Identity {
   }
 
   private async formatFilterParams(needFilterParams: NeedFilterParams) {
-    const getIncirclePoint = (latitude: number, longitude: number, radius: number) => {
-      const earthRadius = 6371e3;
-      const distance = radius * Math.sqrt(2) / earthRadius;
-      const quarterPi = Math.PI / 4;
-      const latitudeRadian = latitude * Math.PI / 180;
-      const longitudeRadian = longitude * Math.PI / 180;
-      const sinLatitude = Math.sin(latitudeRadian);
-      const cosLatitude = Math.cos(latitudeRadian);
-      const sinDistance = Math.sin(distance);
-      const cosDistance = Math.cos(distance);
-      const sinQuarterPi = Math.sin(quarterPi);
-      const cosQuarterPi = Math.cos(quarterPi);
-      const sinLat = sinLatitude * cosDistance + cosLatitude * sinDistance * cosQuarterPi;
-      const lat = Math.asin(sinLat);
-      const y = sinQuarterPi * sinDistance * cosLatitude;
-      const x = cosDistance - sinLatitude * sinLat;
-      const lon = longitudeRadian + Math.atan2(y, x);
-      return {latitude: lat * 180 / Math.PI, longitude: (lon * 180 / Math.PI + 540) % 360 - 180};
+    const formatArea = (area: any) => {
+      const center = new LatLon(area.lat, area.long);
+      const distance = area.radius * Math.sqrt(2);
+      const topLeft = center.destinationPoint(distance, 45);
+      const bottomRight = center.destinationPoint(-distance, 45);
+      return {
+        max: {
+          latitude: topLeft.lat,
+          longitude: topLeft.lon,
+        },
+        min: {
+          latitude: bottomRight.lat,
+          longitude: bottomRight.lon,
+        },
+      };
     };
-
-    const formatArea = (area: any) => ({
-      max: getIncirclePoint(area.latitude, area.longitude, area.radius),
-      min: getIncirclePoint(area.latitude, area.longitude, -area.radius),
-    });
-
     const formatedParams = JSON.parse(needFilterParams.toJson());
     formatedParams.area = formatArea(formatedParams.area);
     return formatedParams;

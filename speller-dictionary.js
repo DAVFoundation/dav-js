@@ -21,5 +21,4 @@ module.exports = [
   'axios',
   'ethereum',
   'lon',
-  'incircle'
 ];
