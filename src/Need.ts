@@ -3,7 +3,7 @@ import IConfig from './IConfig';
 import BidParams from './BidParams';
 import NeedParams from './NeedParams';
 import Bid from './Bid';
-import MessageParams from './MessageParams';
+import { MessageParams } from './MessageParams';
 import Kafka from './Kafka';
 import Message from './Message';
 import KafkaMessageStream from './KafkaMessageStream';
@@ -13,9 +13,6 @@ import KafkaMessageStream from './KafkaMessageStream';
  */
 export default class Need<T extends NeedParams, U extends MessageParams> {
 
-    // DON'T USE THIS VARIABLE DIRECTLY! ONLY VIA ITS GETTER!
-    private _kafkaMessageStream: KafkaMessageStream;
-
     get params(): T {
         return this._params;
     }
@@ -24,13 +21,6 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
         /**/
     }
 
-    // sadly, async cannot be used in normal getter
-    private async getKafkaMessageStream(): Promise<KafkaMessageStream> {
-        if (!this._kafkaMessageStream) {
-            this._kafkaMessageStream = await Kafka.messages(this._params.id, this._config); // Channel#3
-        }
-        return this._kafkaMessageStream;
-    }
     /**
      * @method createBid Used to create a new bid for the current need and publish it to the service consumer.
      * @param bidParams The bid parameters.
@@ -55,7 +45,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
      * @returns Observable for bids subscription.
      */
     public async bids<V extends BidParams>(bidParamsType: new (...all: any[]) => V): Promise<Observable<Bid<V, U>>> {
-        const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream();
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config);
         const bidParamsStream = kafkaMessageStream.filterType(bidParamsType);
         const bidStream = bidParamsStream.map((bidParams) => new Bid(this._selfId, bidParams, this._config)); // this._selfId - Channel#3
         return Observable.fromObservable(bidStream, this._params.id);
@@ -77,7 +67,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
      * @returns Observable for messages subscription.
      */
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
-        const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream();
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config);
         const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
         const messageStream = messageParamsStream.map((params: MessageParams) =>
             new Message<U>(this._selfId, params, this._config));

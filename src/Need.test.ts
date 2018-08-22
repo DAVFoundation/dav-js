@@ -98,7 +98,7 @@ describe('Need class', () => {
           (error) => reject(error),
         );
       });
-      expect(kafkaMock.messages).toHaveBeenCalledWith(needParams.id, config);
+      expect(kafkaMock.messages).toHaveBeenCalledWith(selfId, config);
       expect(bid).toEqual(new Bid(selfId, bidParams, config));
     });
 
