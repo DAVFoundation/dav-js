@@ -1,13 +1,12 @@
 import Config from './Config';
 import BidParams from './ride-hailing/BidParams';
 import Price from './Price';
-import { PriceType, MessageStatus, MessageDomain } from './common-enums';
-import { DavID, ID, BigInteger } from './common-types';
-import MessageParams from './ride-hailing/MessageParams';
-import MissionParams from './ride-hailing/MissionParams';
+import MessageParams from './drone-charging/MessageParams';
+import MissionParams from './drone-charging/MissionParams';
 import IConfig from './IConfig';
 import { Observable } from 'rxjs';
 import Mission from './Mission';
+import { PriceType } from './common-enums';
 
 describe('Bid class', () => {
   const config = new Config({});
@@ -18,8 +17,7 @@ describe('Bid class', () => {
     vehicleId: '34',
   });
   let messageParams = new MessageParams({
-    status: MessageStatus.accepted,
-    domain: MessageDomain.bid,
+    senderId: 'sender',
   });
   const missionParams = new MissionParams({
     id: 'MISSION_ID',
@@ -46,8 +44,7 @@ describe('Bid class', () => {
       vehicleId: '34',
     });
     messageParams = new MessageParams({
-      status: MessageStatus.accepted,
-      domain: MessageDomain.bid,
+      senderId: 'sender',
     });
   });
 

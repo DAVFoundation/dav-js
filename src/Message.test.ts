@@ -1,11 +1,10 @@
 import Config from './Config';
-import { MessageStatus, MessageDomain } from './common-enums';
 import MessageParams from './drone-charging/MessageParams';
 
 describe('Message class', () => {
 
   const configuration = new Config({});
-  const messageContent = new MessageParams({status: MessageStatus.accepted, senderId: 'peerId'});
+  const messageContent = new MessageParams({senderId: 'peerId'});
   const selfId = 'selfId';
 
   describe('respond method', () => {
