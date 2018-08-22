@@ -20,7 +20,7 @@ export interface IMessageParams {
 /**
  * @class The abstract Class MessageParams represent common parameters of MessageParams classes.
  */
-export abstract class MessageParams extends BasicParams {
+export default abstract class MessageParams extends BasicParams {
     /**
      * @property The message sender id.
      */

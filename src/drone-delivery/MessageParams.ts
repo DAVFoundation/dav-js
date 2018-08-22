@@ -1,4 +1,4 @@
-import { MessageParams as BaseMessageParams } from '../MessageParams';
+import BaseMessageParams from '../MessageParams';
 
 /**
  * @class The Class drone-delivery/MessageParams represent the parameters of drone-delivery message.

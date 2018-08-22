@@ -27,9 +27,10 @@ interface IMissionParams {
  * @class The Class boat-charging/MissionParams represent the parameters of boat-charging mission.
  */
 export default class MissionParams extends BaseMissionParams {
-
+    private static _protocol = 'boat_charging';
+    private static _type = 'mission';
     public static getMessageType(): string {
-        return 'BoatCharging:Mission';
+        return 'boat_charging:mission';
     }
 
     public static fromJson(json: any): MissionParams {
@@ -41,9 +42,9 @@ export default class MissionParams extends BaseMissionParams {
         super(values);
     }
 
-    public toJson(): string {
-        // TODO?
-        throw new Error('Method not implemented.');
+    public toJson() {
+        const needParams = Object.assign({ protocol: MissionParams._protocol, type: MissionParams._type }, this);
+        return JSON.stringify(needParams);
     }
 
     public toString(): string {

@@ -1,5 +1,7 @@
 import BasicParams from './BasicParams';
 import { DavID } from './common-types';
+import { LatLonSpherical as LatLon } from 'geodesy';
+
 /**
  * @class The abstract Class NeedFilterParams represent common parameters of NeedFilterParams classes.
  */
@@ -30,4 +32,27 @@ export default abstract class NeedFilterParams extends BasicParams {
     super(values);
     this.area = values.area;
   }
+
+  public getFormatedParams() {
+    const formatArea = (area: any) => {
+      const center = new LatLon(area.lat, area.long);
+      const distance = area.radius * Math.sqrt(2);
+      const topLeft = center.destinationPoint(distance, 45);
+      const bottomRight = center.destinationPoint(-distance, 45);
+      return {
+        max: {
+          latitude: topLeft.lat,
+          longitude: topLeft.lon,
+        },
+        min: {
+          latitude: bottomRight.lat,
+          longitude: bottomRight.lon,
+        },
+      };
+    };
+    const formatedParams = JSON.parse(this.toJson());
+    formatedParams.area = formatArea(formatedParams.area);
+    return formatedParams;
+  }
+
 }

@@ -5,8 +5,9 @@ import BaseNeedFilterParams from '../NeedFilterParams';
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
     private static _protocol = 'boat_charging';
+    private static _type = 'need';
     public static getMessageType(): string {
-        return 'Boat:NeedFilter';
+        return 'boat_charging:need';
     }
 
     public static fromJson(json: any): NeedFilterParams {
@@ -18,8 +19,8 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     }
 
     public toJson() {
-        const needFilterParams = Object.assign({ protocol: NeedFilterParams._protocol }, this);
-        return JSON.stringify(needFilterParams);
+        const needParams = Object.assign({ protocol: NeedFilterParams._protocol, type: NeedFilterParams._type }, this);
+        return JSON.stringify(needParams);
     }
 
     public toString(): string { return ''; }

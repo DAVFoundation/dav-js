@@ -4,7 +4,7 @@ import NeedFilterParams from './NeedFilterParams';
 import NeedParams from './NeedParams';
 import BidParams from './BidParams';
 import MissionParams from './MissionParams';
-import { MessageParams } from './MessageParams';
+import MessageParams from './MessageParams';
 import Need from './Need';
 import Bid from './Bid';
 import Message from './Message';
@@ -12,11 +12,12 @@ import Mission from './Mission';
 import Kafka from './Kafka';
 import axios from 'axios';
 import KafkaMessageStream from './KafkaMessageStream';
-import { LatLonSpherical as LatLon } from 'geodesy';
 /**
  * @class The Identity class represent registered DAV identity instance.
  */
 export default class Identity {
+
+  private topics: any = {};
 
   constructor(public id: ID, public davID: DavID, private _config: IConfig) { /**/ }
 
@@ -31,38 +32,21 @@ export default class Identity {
     return topic;
   }
 
-  private async formatFilterParams(needFilterParams: NeedFilterParams) {
-    const formatArea = (area: any) => {
-      const center = new LatLon(area.lat, area.long);
-      const distance = area.radius * Math.sqrt(2);
-      const topLeft = center.destinationPoint(distance, 45);
-      const bottomRight = center.destinationPoint(-distance, 45);
-      return {
-        max: {
-          latitude: topLeft.lat,
-          longitude: topLeft.lon,
-        },
-        min: {
-          latitude: bottomRight.lat,
-          longitude: bottomRight.lon,
-        },
-      };
-    };
-    const formatedParams = JSON.parse(needFilterParams.toJson());
-    formatedParams.area = formatArea(formatedParams.area);
-    return formatedParams;
-  }
-
   /**
    * @method publishNeed Used to create a new need and publish it to the relevant service providers.
    * @param params the need parameters.
    * @returns the created need.
    */
-  public async publishNeed<T extends NeedParams, U extends MessageParams>(params: T): Promise<Need<T, U>> {
+  public async publishNeed<T extends NeedParams, U extends MessageParams>(needParams: T): Promise<Need<T, U>> {
     const bidsChannelName = await this.registerNewTopic(); // Channel#3
-    params.id = bidsChannelName;
-    await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/:${bidsChannelName}`, params);
-    return new Need<T, U>(bidsChannelName, params, this._config);
+    needParams.id = bidsChannelName;
+    const formatedParams = JSON.parse(needParams.toJson());
+    try {
+      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/:${bidsChannelName}`, formatedParams);
+    } catch (err) {
+      throw new Error(`Fail to publish need: ${err}`);
+    }
+    return new Need<T, U>(bidsChannelName, formatedParams, this._config);
   }
 
   /**
@@ -73,12 +57,18 @@ export default class Identity {
    */
   public async needsForType<T extends NeedParams, U extends MessageParams>(needFilterParams: NeedFilterParams,
     needParamsType: new (...all: any[]) => T): Promise<Observable<Need<T, U>>> {
-    needFilterParams.davId = this.davID;
-    const needTypeTopic = await this.registerNewTopic();
-    try {
-      await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/:${needTypeTopic}`, this.formatFilterParams(needFilterParams));
-    } catch (err) {
-      throw new Error(`Needs registration failed: ${err}`);
+    const formatedParams = needFilterParams.getFormatedParams();
+    let needTypeTopic = '';
+    if (this.topics[formatedParams.protocol]) {
+      needTypeTopic = this.topics[formatedParams.protocol];
+    } else {
+      needTypeTopic = await this.registerNewTopic();
+      this.topics[formatedParams.protocol] = needTypeTopic;
+      try {
+        await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/${needTypeTopic}`, formatedParams);
+      } catch (err) {
+        throw new Error(`Needs registration failed: ${err}`);
+      }
     }
     const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(needTypeTopic, this._config); // Channel#2
     const needParamsStream: Observable<T> = kafkaMessageStream.filterType(needParamsType);

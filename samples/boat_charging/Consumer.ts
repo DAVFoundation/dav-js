@@ -7,6 +7,10 @@ import MessageParams from '../../src/boat-charging/MessageParams';
 import Identity from '../../src/Identity';
 
 const needParams = new NeedParams({
+  location: {
+    latitude: 32.050382,
+    longitude: 34.766149,
+  },
 });
 const missionParams = new MissionParams({
   vehicleId: '0x48a699a79fB7d2a7E9096df09f426837369d1F85',

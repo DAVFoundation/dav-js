@@ -1,4 +1,4 @@
-import { MessageParams as BaseMessageParams, IMessageParams as IBaseMessageParams } from '../MessageParams';
+import BaseMessageParams, { IMessageParams as IBaseMessageParams } from '../MessageParams';
 import { ILocation } from '../common-types';
 
 /**

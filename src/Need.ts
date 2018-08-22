@@ -3,7 +3,7 @@ import IConfig from './IConfig';
 import BidParams from './BidParams';
 import NeedParams from './NeedParams';
 import Bid from './Bid';
-import { MessageParams } from './MessageParams';
+import MessageParams from './MessageParams';
 import Kafka from './Kafka';
 import Message from './Message';
 import KafkaMessageStream from './KafkaMessageStream';

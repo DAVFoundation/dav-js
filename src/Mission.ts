@@ -2,7 +2,7 @@ import { ID, Observable, DavID } from './common-types';
 import { TransactionReceipt } from 'web3/types';
 import IConfig from './IConfig';
 import Message from './Message';
-import { MessageParams } from './MessageParams';
+import MessageParams from './MessageParams';
 import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';

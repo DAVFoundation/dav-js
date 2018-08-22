@@ -4,8 +4,10 @@ import BaseNeedParams from '../NeedParams';
  * @class The Class boat-charging/NeedParams represent the parameters of boat-charging need.
  */
 export default class NeedParams extends BaseNeedParams {
+    private static _protocol = 'boat_charging';
+    private static _type = 'need';
     public static getMessageType(): string {
-        return 'BoatCharging:Need';
+        return 'boat_charging:need';
     }
 
     public static fromJson(json: any): NeedParams {
@@ -19,7 +21,8 @@ export default class NeedParams extends BaseNeedParams {
         Object.assign(this, values);
     }
 
-    public toJson(): string {
-        throw new Error('Method not implemented.');
+    public toJson() {
+        const needParams = Object.assign({ protocol: NeedParams._protocol, type: NeedParams._type }, this);
+        return JSON.stringify(needParams);
     }
 }
