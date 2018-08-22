@@ -104,7 +104,7 @@ describe('Bid class', () => {
     });
   });
 
-  xdescribe('missions method', () => {
+  describe('missions method', () => {
 
     const missionParams1 = new MissionParams({
       id: 'MISSION_ID_1',
@@ -140,7 +140,7 @@ describe('Bid class', () => {
       }));
     });
 
-    it('should receive missions and relevant functions', async () => {
+    it('should receive missions and call relevant functions', async () => {
 
       const kafkaMessageStreamMock = {
         filterType: jest.fn(() => Observable.from([missionParams1,  missionParams2, missionParams3])),
@@ -156,17 +156,15 @@ describe('Bid class', () => {
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid(TOPIC_ID, bidParams, config);
       const spy = jest.fn();
-      const missions = await identity.missions(MissionParams);
+      const missions = await bid.missions(MissionParams);
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
       expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1, config));
       expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2, config));
-      expect(kafkaMock.generateTopicId).toHaveBeenCalled();
-      expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
     });
 
 
@@ -187,10 +185,10 @@ describe('Bid class', () => {
 
       const anotherTopic = 'anotherTopic';
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid(anotherTopic, bidParams, config);
       const spy = jest.fn();
-      const missions = await identity.missions(MissionParams, anotherTopic);
+      const missions = await bid.missions(MissionParams);
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
@@ -203,35 +201,16 @@ describe('Bid class', () => {
     xit('should receive Kafka error event', async () => {
       // kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.fromPromise(Promise.reject(kafkaError))));
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
+      const Bid = (await import('./Bid')).default;
+      const bid = new Bid('needId', bidParams, config);
       const successSpy = jest.fn();
       const errorSpy = jest.fn();
-      const missions = await identity.missions();
+      const missions = await bid.missions(MissionParams);
       missions.subscribe(successSpy, errorSpy);
       await forContextSwitch();
       expect(successSpy.mock.calls.length).toBe(0);
       expect(errorSpy.mock.calls.length).toBe(1);
       expect(errorSpy.mock.calls[0][0]).toBe(kafkaError);
-    });
-
-    it('should fail due to topic creation failure', async () => {
-
-      const kafkaMock = {
-        generateTopicId: jest.fn(() => TOPIC_ID),
-        createTopic: jest.fn(() => Promise.reject(kafkaError)),
-        messages: jest.fn(),
-      };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
-
-      // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
-      await forContextSwitch();
-      await expect(identity.missions()).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
-      expect(kafkaMock.generateTopicId).toHaveBeenCalled();
-      expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-      expect(kafkaMock.messages).not.toHaveBeenCalled();
     });
 
   });
