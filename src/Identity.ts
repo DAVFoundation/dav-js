@@ -42,11 +42,11 @@ export default class Identity {
     needParams.id = bidsChannelName;
     const formatedParams = JSON.parse(needParams.toJson());
     try {
-      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/:${bidsChannelName}`, formatedParams);
+      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, formatedParams);
     } catch (err) {
       throw new Error(`Fail to publish need: ${err}`);
     }
-    return new Need<T, U>(bidsChannelName, formatedParams, this._config);
+    return new Need<T, U>(bidsChannelName, needParams, this._config);
   }
 
   /**

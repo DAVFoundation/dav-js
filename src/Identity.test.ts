@@ -43,7 +43,7 @@ describe('Identity class', () => {
     });
   };
 
-  xdescribe('publishNeed method', () => {
+  describe('publishNeed method', () => {
 
     const kafkaMock = {
       generateTopicId: jest.fn(() => TOPIC_ID),
@@ -76,7 +76,7 @@ describe('Identity class', () => {
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
       expect(axiosMock.post).toHaveBeenCalled();
-      // expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/publishNeed/${TOPIC_ID}`, needParams);
+      expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/publishNeed/${TOPIC_ID}`, JSON.parse(needParams.toJson()));
     });
 
     it('should fail due to dav node exception', async () => {
@@ -84,7 +84,7 @@ describe('Identity class', () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
       const identity = new Identity('id', 'davId', config);
-      await expect(identity.publishNeed(needParams)).rejects.toThrow(`Fail to create a topic: ${davNodeError}`);
+      await expect(identity.publishNeed(needParams)).rejects.toThrow(`Fail to publish need: ${davNodeError}`);
     });
 
     it('should fail due to topic creation failure', async () => {

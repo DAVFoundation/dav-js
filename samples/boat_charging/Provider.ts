@@ -68,9 +68,9 @@ export default class Provider {
         console.log('Mission message respond: ', message);
       });
     });
-    const messages = await this.identity.messages(MessageParams);
-    messages.take(1).subscribe((message) => {
-      console.log('Need message respond: ', message);
-    });
+    // const messages = await this.identity.messages(MessageParams);
+    // messages.take(1).subscribe((message) => {
+    //   console.log('Need message respond: ', message);
+    // });
   }
 }
