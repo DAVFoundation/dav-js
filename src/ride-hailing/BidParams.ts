@@ -58,8 +58,8 @@ interface IBidParams extends IBaseBidParams {
  */
 export default class BidParams extends BaseBidParams {
 
-    private static _protocol = 'RideHailing';
-    private static _type = 'Bid';
+    private static _protocol = 'ride_hailing';
+    private static _type = 'bid';
 
     /**
      * @property The provider's vehicle current location.

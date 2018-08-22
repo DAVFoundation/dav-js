@@ -1,6 +1,6 @@
 import IConfig from './IConfig';
 import { ID } from './common-types';
-import MessageParams from './MessageParams';
+import { MessageParams } from './MessageParams';
 import Kafka from './Kafka';
 /**
  * @class The Message Class represent a single message between consumer and service provider.

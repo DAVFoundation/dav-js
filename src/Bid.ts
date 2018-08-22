@@ -2,7 +2,7 @@ import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
 import MissionParams from './MissionParams';
-import MessageParams from './MessageParams';
+import { MessageParams } from './MessageParams';
 import Message from './Message';
 import Mission from './Mission';
 import Kafka from './Kafka';

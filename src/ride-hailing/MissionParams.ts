@@ -6,8 +6,8 @@ import IBaseMissionParams from '../IMissionParams';
  */
 export default class MissionParams extends BaseMissionParams {
 
-    private static _protocol = 'RideHailing';
-    private static _type = 'Mission';
+    private static _protocol = 'ride_hailing';
+    private static _type = 'mission';
 
     public static getMessageType(): string {
         return `${this._protocol}:${this._type}`;

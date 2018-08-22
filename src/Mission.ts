@@ -2,7 +2,7 @@ import { ID, Observable, DavID } from './common-types';
 import { TransactionReceipt } from 'web3/types';
 import IConfig from './IConfig';
 import Message from './Message';
-import MessageParams from './MessageParams';
+import { MessageParams } from './MessageParams';
 import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
@@ -11,6 +11,10 @@ import KafkaMessageStream from './KafkaMessageStream';
  * @class Mission class represent an approved mission.
  */
 export default class Mission<T extends MissionParams, U extends MessageParams> {
+
+    public get params(): T {
+        return this._params;
+    }
 
     constructor(private _selfId: ID, private _params: T, private _config: IConfig) {
     }

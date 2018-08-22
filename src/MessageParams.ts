@@ -2,10 +2,25 @@ import BasicParams from './BasicParams';
 import { ID, BigInteger } from './common-types';
 import { MessageStatus, MessageDomain } from './common-enums';
 
+export interface IMessageParams {
+    /**
+     * @property The message sender id.
+     */
+    senderId: ID | BigInteger;
+    /**
+     * @property The message status, accepted/contractSigned/etc...
+     */
+    status: MessageStatus;
+    /**
+     * @property The message domain, bid/mission/etc...
+     */
+    domain: MessageDomain;
+}
+
 /**
  * @class The abstract Class MessageParams represent common parameters of MessageParams classes.
  */
-export default abstract class MessageParams extends BasicParams {
+export abstract class MessageParams extends BasicParams {
     /**
      * @property The message sender id.
      */

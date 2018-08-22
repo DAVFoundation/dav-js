@@ -1,4 +1,4 @@
-import BaseMessageParams from '../MessageParams';
+import { MessageParams as BaseMessageParams } from '../MessageParams';
 
 /**
  * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.

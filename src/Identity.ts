@@ -4,7 +4,7 @@ import NeedFilterParams from './NeedFilterParams';
 import NeedParams from './NeedParams';
 import BidParams from './BidParams';
 import MissionParams from './MissionParams';
-import MessageParams from './MessageParams';
+import { MessageParams } from './MessageParams';
 import Need from './Need';
 import Bid from './Bid';
 import Message from './Message';

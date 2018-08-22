@@ -6,8 +6,8 @@ import { ILocation } from '../common-types';
  */
 export default class NeedParams extends BaseNeedParams {
 
-    private static _protocol = 'RideHailing';
-    private static _type = 'Need';
+    private static _protocol = 'ride_hailing';
+    private static _type = 'need';
 
     /**
      * @property The passenger's pickup location (required).
@@ -35,8 +35,12 @@ export default class NeedParams extends BaseNeedParams {
         this.destinationLocation = values.destinationLocation;
     }
 
-    public toJson(): string {
+    public toJson(): any {
         const bidParams = Object.assign({ protocol: NeedParams._protocol, type: NeedParams._type }, this);
-        return JSON.stringify(bidParams);
+        return bidParams;
+    }
+
+    public toString(): any {
+        return JSON.stringify(this.toJson());
     }
 }
