@@ -107,135 +107,135 @@ describe('Bid class', () => {
     });
   });
 
-  xdescribe('missions method', () => {
+  // xdescribe('missions method', () => {
 
-    const missionParams1 = new MissionParams({
-      id: 'MISSION_ID_1',
-      neederDavId: 'DAV_ID',
-      vehicleId: 'DAV_ID',
-      price: '100',
-    });
-    const missionParams2 = new MissionParams({
-      id: 'MISSION_ID_2',
-      neederDavId: 'DAV_ID',
-      vehicleId: 'DAV_ID',
-      price: '100',
-    });
-    const missionParams3 = new MissionParams({
-      id: 'MISSION_ID_3',
-      neederDavId: 'DAV_ID',
-      vehicleId: 'DAV_ID',
-      price: '100',
-    });
+  //   const missionParams1 = new MissionParams({
+  //     id: 'MISSION_ID_1',
+  //     neederDavId: 'DAV_ID',
+  //     vehicleId: 'DAV_ID',
+  //     price: '100',
+  //   });
+  //   const missionParams2 = new MissionParams({
+  //     id: 'MISSION_ID_2',
+  //     neederDavId: 'DAV_ID',
+  //     vehicleId: 'DAV_ID',
+  //     price: '100',
+  //   });
+  //   const missionParams3 = new MissionParams({
+  //     id: 'MISSION_ID_3',
+  //     neederDavId: 'DAV_ID',
+  //     vehicleId: 'DAV_ID',
+  //     price: '100',
+  //   });
 
-    const axiosMock = {
-      post: jest.fn(() => Promise.resolve()),
-    };
+  //   const axiosMock = {
+  //     post: jest.fn(() => Promise.resolve()),
+  //   };
 
-    beforeEach(() => {
-      jest.clearAllMocks();
-      jest.resetAllMocks();
-      jest.resetModules();
-      jest.doMock('axios', () => ({
-        default: axiosMock,
-      }));
-    });
+  //   beforeEach(() => {
+  //     jest.clearAllMocks();
+  //     jest.resetAllMocks();
+  //     jest.resetModules();
+  //     jest.doMock('axios', () => ({
+  //       default: axiosMock,
+  //     }));
+  //   });
 
-    it('should receive missions and relevant functions', async () => {
+  //   it('should receive missions and relevant functions', async () => {
 
-      const kafkaMessageStreamMock = {
-        filterType: jest.fn(() => Observable.from([missionParams1,  missionParams2, missionParams3])),
-      };
-      const kafkaMock = {
-        generateTopicId: jest.fn(() => TOPIC_ID),
-        createTopic: jest.fn(() => Promise.resolve()),
-        messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
-      };
-      jest.doMock('./KafkaMessageStream', () => ({
-        default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
-      }));
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+  //     const kafkaMessageStreamMock = {
+  //       filterType: jest.fn(() => Observable.from([missionParams1,  missionParams2, missionParams3])),
+  //     };
+  //     const kafkaMock = {
+  //       generateTopicId: jest.fn(() => TOPIC_ID),
+  //       createTopic: jest.fn(() => Promise.resolve()),
+  //       messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
+  //     };
+  //     jest.doMock('./KafkaMessageStream', () => ({
+  //       default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
+  //     }));
+  //     jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
-      // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
-      const spy = jest.fn();
-      const missions = await identity.missions(MissionParams);
-      missions.subscribe(spy);
-      await forContextSwitch();
-      expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1, config));
-      expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2, config));
-      expect(kafkaMock.generateTopicId).toHaveBeenCalled();
-      expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-    });
+  //     // tslint:disable-next-line:variable-name
+  //     const Identity: any = (await import('./Identity')).default;
+  //     const identity = new Identity('selfId', 'davId', config);
+  //     const spy = jest.fn();
+  //     const missions = await identity.missions(MissionParams);
+  //     missions.subscribe(spy);
+  //     await forContextSwitch();
+  //     expect(spy.mock.calls.length).toBe(3);
+  //     expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1, config));
+  //     expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2, config));
+  //     expect(kafkaMock.generateTopicId).toHaveBeenCalled();
+  //     expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
+  //   });
 
 
-    it('should receive missions with specified topicId and relevant functions', async () => {
+  //   it('should receive missions with specified topicId and relevant functions', async () => {
 
-      const kafkaMessageStreamMock = {
-        filterType: jest.fn(() => Observable.from([missionParams1,  missionParams2, missionParams3])),
-      };
-      const kafkaMock = {
-        generateTopicId: jest.fn(() => TOPIC_ID),
-        createTopic: jest.fn(() => Promise.resolve()),
-        messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
-      };
-      jest.doMock('./KafkaMessageStream', () => ({
-        default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
-      }));
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+  //     const kafkaMessageStreamMock = {
+  //       filterType: jest.fn(() => Observable.from([missionParams1,  missionParams2, missionParams3])),
+  //     };
+  //     const kafkaMock = {
+  //       generateTopicId: jest.fn(() => TOPIC_ID),
+  //       createTopic: jest.fn(() => Promise.resolve()),
+  //       messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
+  //     };
+  //     jest.doMock('./KafkaMessageStream', () => ({
+  //       default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
+  //     }));
+  //     jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
-      const anotherTopic = 'anotherTopic';
-      // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
-      const spy = jest.fn();
-      const missions = await identity.missions(MissionParams, anotherTopic);
-      missions.subscribe(spy);
-      await forContextSwitch();
-      expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Mission(anotherTopic, missionParams1, config));
-      expect(spy.mock.calls[1][0]).toEqual(new Mission(anotherTopic, missionParams2, config));
-      expect(kafkaMock.generateTopicId).not.toHaveBeenCalled();
-      expect(kafkaMock.createTopic).not.toHaveBeenCalled();
-    });
+  //     const anotherTopic = 'anotherTopic';
+  //     // tslint:disable-next-line:variable-name
+  //     const Identity: any = (await import('./Identity')).default;
+  //     const identity = new Identity('selfId', 'davId', config);
+  //     const spy = jest.fn();
+  //     const missions = await identity.missions(MissionParams, anotherTopic);
+  //     missions.subscribe(spy);
+  //     await forContextSwitch();
+  //     expect(spy.mock.calls.length).toBe(3);
+  //     expect(spy.mock.calls[0][0]).toEqual(new Mission(anotherTopic, missionParams1, config));
+  //     expect(spy.mock.calls[1][0]).toEqual(new Mission(anotherTopic, missionParams2, config));
+  //     expect(kafkaMock.generateTopicId).not.toHaveBeenCalled();
+  //     expect(kafkaMock.createTopic).not.toHaveBeenCalled();
+  //   });
 
-    xit('should receive Kafka error event', async () => {
-      // kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.fromPromise(Promise.reject(kafkaError))));
-      // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
-      const successSpy = jest.fn();
-      const errorSpy = jest.fn();
-      const missions = await identity.missions();
-      missions.subscribe(successSpy, errorSpy);
-      await forContextSwitch();
-      expect(successSpy.mock.calls.length).toBe(0);
-      expect(errorSpy.mock.calls.length).toBe(1);
-      expect(errorSpy.mock.calls[0][0]).toBe(kafkaError);
-    });
+  //   xit('should receive Kafka error event', async () => {
+  //     // kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.fromPromise(Promise.reject(kafkaError))));
+  //     // tslint:disable-next-line:variable-name
+  //     const Identity: any = (await import('./Identity')).default;
+  //     const identity = new Identity('selfId', 'davId', config);
+  //     const successSpy = jest.fn();
+  //     const errorSpy = jest.fn();
+  //     const missions = await identity.missions();
+  //     missions.subscribe(successSpy, errorSpy);
+  //     await forContextSwitch();
+  //     expect(successSpy.mock.calls.length).toBe(0);
+  //     expect(errorSpy.mock.calls.length).toBe(1);
+  //     expect(errorSpy.mock.calls[0][0]).toBe(kafkaError);
+  //   });
 
-    it('should fail due to topic creation failure', async () => {
+  //   it('should fail due to topic creation failure', async () => {
 
-      const kafkaMock = {
-        generateTopicId: jest.fn(() => TOPIC_ID),
-        createTopic: jest.fn(() => Promise.reject(kafkaError)),
-        messages: jest.fn(),
-      };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+  //     const kafkaMock = {
+  //       generateTopicId: jest.fn(() => TOPIC_ID),
+  //       createTopic: jest.fn(() => Promise.reject(kafkaError)),
+  //       messages: jest.fn(),
+  //     };
+  //     jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
-      // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
-      const identity = new Identity('selfId', 'davId', config);
-      await forContextSwitch();
-      await expect(identity.missions()).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
-      expect(kafkaMock.generateTopicId).toHaveBeenCalled();
-      expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-      expect(kafkaMock.messages).not.toHaveBeenCalled();
-    });
+  //     // tslint:disable-next-line:variable-name
+  //     const Identity: any = (await import('./Identity')).default;
+  //     const identity = new Identity('selfId', 'davId', config);
+  //     await forContextSwitch();
+  //     await expect(identity.missions()).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
+  //     expect(kafkaMock.generateTopicId).toHaveBeenCalled();
+  //     expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
+  //     expect(kafkaMock.messages).not.toHaveBeenCalled();
+  //   });
 
-  });
+  // });
 
   describe('messages method', () => {
 
