@@ -1,20 +1,11 @@
 import BasicParams from './BasicParams';
 import { ID, BigInteger } from './common-types';
-import { MessageStatus, MessageDomain } from './common-enums';
 
 export interface IMessageParams {
     /**
      * @property The message sender id.
      */
     senderId: ID | BigInteger;
-    /**
-     * @property The message status, accepted/contractSigned/etc...
-     */
-    status: MessageStatus;
-    /**
-     * @property The message domain, bid/mission/etc...
-     */
-    domain: MessageDomain;
 }
 
 /**
@@ -25,17 +16,8 @@ export abstract class MessageParams extends BasicParams {
      * @property The message sender id.
      */
     public senderId: ID | BigInteger;
-    /**
-     * @property The message status, accepted/contractSigned/etc...
-     */
-    public status: MessageStatus;
-    /**
-     * @property The message domain, bid/mission/etc...
-     */
-    public domain: MessageDomain;
     constructor(values: Partial<MessageParams>) {
         super(values);
         this.senderId = values.senderId;
-        this.status = values.status;
     }
 }
