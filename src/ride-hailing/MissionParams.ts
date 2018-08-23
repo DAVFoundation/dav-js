@@ -19,14 +19,16 @@ export default class MissionParams extends BaseMissionParams {
     }
 
     constructor(values: Partial<IBaseMissionParams>) {
-        super(values);
+        super(values, MissionParams._protocol, MissionParams._type);
     }
 
     public toJson(): string {
-        // TODO?
-        throw new Error('Method not implemented.');
+        const missionParams = Object.assign({protocol: MissionParams._protocol, type: MissionParams._type});
+        return missionParams;
     }
 
-    public toString(): string { return ''; } // TODO?
+    public toString(): string {
+        return JSON.stringify(this.toJson());
+    }
 
 }

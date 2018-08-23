@@ -40,9 +40,8 @@ export default class Identity {
   public async publishNeed<T extends NeedParams, U extends MessageParams>(needParams: T): Promise<Need<T, U>> {
     const bidsChannelName = await this.registerNewTopic(); // Channel#3
     needParams.id = bidsChannelName;
-    const formatedParams = JSON.parse(needParams.toJson());
     try {
-      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, formatedParams);
+      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, needParams);
     } catch (err) {
       throw new Error(`Fail to publish need: ${err}`);
     }

@@ -7,7 +7,7 @@ import IBasicParams from './IBasicParams';
  */
 export default interface IBidParams extends IBasicParams {
     /**
-     * @property The bid's topic id (used to send messages to service provider).
+     * @property The bid's topic id (used to send messages).
      */
     id: ID;
     /**
@@ -18,8 +18,4 @@ export default interface IBidParams extends IBasicParams {
      * @property The bid's vehicle DAV Id (required).
      */
     vehicleId: DavID;
-    /**
-     * @property The provider needType topic id (Identity.needsForType().topic).
-     */
-    needTypeId: ID;
 }

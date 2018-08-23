@@ -7,7 +7,7 @@ export default class NeedParams extends BaseNeedParams {
     private static _protocol = 'boat_charging';
     private static _type = 'need';
     public static getMessageType(): string {
-        return 'boat_charging:need';
+        return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
     public static fromJson(json: any): NeedParams {
@@ -17,7 +17,7 @@ export default class NeedParams extends BaseNeedParams {
     }
 
     constructor(values: Partial<NeedParams>) {
-        super(values);
+        super(values, NeedParams._protocol, NeedParams._type);
         Object.assign(this, values);
     }
 

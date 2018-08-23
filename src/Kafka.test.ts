@@ -119,11 +119,11 @@ describe('Kafka class', () => {
     it('should send message to kafka without errors when input is valid and no errors from kafka', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
-      const paramsMockType = jest.fn<BasicParams>(() => ({
-        toJson: () => {
-          return 'basic params mock content';
-        },
-      }));
+      const content = {
+        id: 1,
+        price: 3,
+      };
+      const paramsMockType = jest.fn<BasicParams>(() => (content));
       const paramsMock = new paramsMockType();
 
       const producerMock = {
@@ -134,7 +134,7 @@ describe('Kafka class', () => {
 
       await expect(kafka.sendParams('topic', paramsMock, config)).resolves.toBeUndefined();
       expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
-      expect(producerMock.send).toHaveBeenCalledWith([{ topic: 'topic', messages: 'basic params mock content' }], expect.any(Function));
+      expect(producerMock.send).toHaveBeenCalledWith([{ topic: 'topic', messages: JSON.stringify(content) }], expect.any(Function));
     });
 
     it('should get connection timeout', async () => {
@@ -188,11 +188,11 @@ describe('Kafka class', () => {
     it('should get error from kafka in send method', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
-      const paramsMockType = jest.fn<BasicParams>(() => ({
-        toJson: () => {
-          return 'basic params mock content';
-        },
-      }));
+      const content = {
+        id: 1,
+        price: 3,
+      };
+      const paramsMockType = jest.fn<BasicParams>(() => (content));
       const paramsMock = new paramsMockType();
 
       const producerMock = {
@@ -203,7 +203,7 @@ describe('Kafka class', () => {
 
       await expect(kafka.sendParams('topic', paramsMock, config)).rejects.toBe('kafka error');
       expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
-      expect(producerMock.send).toHaveBeenCalledWith([{topic: 'topic', messages: 'basic params mock content'}], expect.anything());
+      expect(producerMock.send).toHaveBeenCalledWith([{topic: 'topic', messages: JSON.stringify(content)}], expect.anything());
     });
 
     it('should get timeout in send method', async () => {
@@ -396,11 +396,11 @@ describe('Kafka class', () => {
 
     describe ('sendParams method', () => {
 
-      const paramsMockType = jest.fn<BasicParams>(() => ({
-        toJson: () => {
-          return 'basic params mock content';
-        },
-      }));
+      const paramsContent = {
+        id: 1,
+        price: 3,
+      };
+      const paramsMockType = jest.fn<BasicParams>(() => (paramsContent));
       const paramsMock = new paramsMockType();
 
       it('should send params without errors when input is valid', async () => {
@@ -413,7 +413,7 @@ describe('Kafka class', () => {
         const kafka = (await import('./Kafka')).default;
 
         await expect(kafka.sendParams('testTopic', paramsMock, config)).resolves.toBeUndefined();
-        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', 'basic params mock content', expect.anything());
+        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsContent), expect.anything());
       });
 
       it('should fail to send params due to error from api', async () => {
@@ -426,7 +426,7 @@ describe('Kafka class', () => {
         const kafka = (await import('./Kafka')).default;
 
         await expect(kafka.sendParams('testTopic', paramsMock, config)).rejects.toBe('kafka error');
-        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', 'basic params mock content', expect.anything());
+        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsContent), expect.anything());
       });
 
       it('should fail to send params due to network error', async () => {
@@ -439,7 +439,7 @@ describe('Kafka class', () => {
         const kafka = (await import('./Kafka')).default;
 
         await expect(kafka.sendParams('testTopic', paramsMock, config)).rejects.toBe('net::ERR_CONNECTION_REFUSED');
-        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', 'basic params mock content', expect.anything());
+        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsContent), expect.anything());
       });
     });
 

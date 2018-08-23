@@ -16,8 +16,8 @@ export default abstract class MessageParams extends BasicParams {
      * @property The message sender id.
      */
     public senderId: ID | BigInteger;
-    constructor(values: Partial<MessageParams>) {
-        super(values);
+    constructor(values: Partial<MessageParams>, protocol: string, type: string) {
+        super(values, protocol, type);
         this.senderId = values.senderId;
     }
 }

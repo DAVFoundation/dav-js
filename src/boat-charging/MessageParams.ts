@@ -14,7 +14,9 @@ export default class MessageParams extends BaseMessageParams {
         return new MessageParams(json);
     }
 
-    constructor(values: Partial<MessageParams>) { super(values); }
+    constructor(values: Partial<MessageParams>) {
+        super(values, MessageParams._protocol, MessageParams._type);
+    }
 
     public toJson() {
         const needParams = Object.assign({ protocol: MessageParams._protocol, type: MessageParams._type }, this);

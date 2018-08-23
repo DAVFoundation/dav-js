@@ -22,7 +22,7 @@ export default class Kafka extends KafkaBase {
         // TODO: make sure what is the correct way to use api seed url
         const fullEndpoint = `http://${config.apiSeedUrls[0]}/topic/publish/${topicId}`;
         try {
-            const response = await axios.post(fullEndpoint, basicParams.toJson(), {headers: {'Content-Type': 'application/json'}});
+            const response = await axios.post(fullEndpoint, JSON.stringify(basicParams), {headers: {'Content-Type': 'application/json'}});
             if (response.status === 200) {
                 return Promise.resolve();
             }
@@ -47,23 +47,23 @@ export default class Kafka extends KafkaBase {
                     const messages = await axios.get(messagesUrl);
                     if (messages.status !== 200) {
                         observer.error(messages.data.error);
-                    } else {
-                        messages.data.forEach((message: string) => {
-                            const messageString = JSON.parse(message);
-                            const messageType = [messageString.protocol, messageString.type].join(':');
-                            observer.next({
-                                messageType,
-                                contents: message,
-                            });
-                        });
+                        return;
                     }
+                    messages.data.forEach((message: string) => {
+                        const messageString = JSON.parse(message);
+                        const messageType = [messageString.protocol, messageString.type].join(':');
+                        observer.next({
+                            messageType,
+                            contents: message,
+                        });
+                    });
                 } catch (error) {
                     observer.error(error);
                 }
             };
             sendRequest();
             // TODO: set ttl
-            setInterval(() => sendRequest(), config.kafkaBrowserPollingInterval);
+            Observable.interval(config.kafkaBrowserPollingInterval).map(() => sendRequest());
         });
         return new KafkaMessageStream(kafkaStream);
     }

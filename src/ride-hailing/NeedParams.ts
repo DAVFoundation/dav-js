@@ -30,17 +30,8 @@ export default class NeedParams extends BaseNeedParams {
         if (!values.pickupLocation || !values.destinationLocation) {
             throw new Error('Need lack of essential details');
         }
-        super(values);
+        super(values, NeedParams._protocol, NeedParams._type);
         this.pickupLocation = values.pickupLocation;
         this.destinationLocation = values.destinationLocation;
-    }
-
-    public toJson(): any {
-        const bidParams = Object.assign({ protocol: NeedParams._protocol, type: NeedParams._type }, this);
-        return bidParams;
-    }
-
-    public toString(): any {
-        return JSON.stringify(this.toJson());
     }
 }

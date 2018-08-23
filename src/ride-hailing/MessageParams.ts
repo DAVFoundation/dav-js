@@ -39,13 +39,7 @@ export default class MessageParams extends BaseMessageParams {
         return new MessageParams(json);
     }
 
-    constructor(values: Partial<IMessageParams>) { super(values); }
-
-    public toJson(): string {
-        throw new Error('Method not implemented.');
-    }
-
-    public toString(): string {
-        throw new Error('Method not implemented.');
+    constructor(values: Partial<IMessageParams>) {
+        super(values, MessageParams._protocol, MessageParams._type);
     }
 }

@@ -17,9 +17,9 @@ export default abstract class BasicParams {
         throw new Error('Must be implemented by derived class');
     }
 
-    public constructor(values: Partial<IBasicParams>) {
-        this.ttl = values.ttl;
+    public constructor(values: Partial<IBasicParams>, private protocol: string, private type: string) {
+        if (!!values) {
+            this.ttl = values.ttl;
+        }
     }
-
-    public abstract toJson(): string;
 }

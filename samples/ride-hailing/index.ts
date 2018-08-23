@@ -1,10 +1,11 @@
 import runProvider from './driver';
 import runConsumer from './passenger';
+import Config from '../../src/Config';
 
 const sdkConfiguration = {
     apiSeedUrls: ['http://localhost'],
     kafkaSeedUrls: ['localhost:9092'],
   };
-
-runProvider(sdkConfiguration);
-runConsumer(sdkConfiguration);
+const config = new Config(sdkConfiguration);
+runProvider(config);
+runConsumer(config);

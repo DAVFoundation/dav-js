@@ -1,23 +1,10 @@
 import BaseBidParams from '../BidParams';
-import { ID, BigInteger, DavID } from '../common-types';
-import IPrice from '../IPrice';
+import IBaseBidParams from '../IBidParams';
 
 /**
  * @interface IBidParams The interface drone-delivery/IBidParams represent a valid argument of drone-delivery/BidParams constructor.
  */
-interface IBidParams {
-    /**
-     * @property The bid's topic id (used to send messages to service provider).
-     */
-    id: ID;
-    /**
-     * @property The bid's price (required).
-     */
-    price: IPrice | BigInteger;
-    /**
-     * @property The bid's vehicle DAV Id (required).
-     */
-    vehicleId: DavID;
+interface IBidParams extends IBaseBidParams {
     /**
      * @property Time from contract signing to delivery in seconds.
      */
@@ -31,6 +18,9 @@ interface IBidParams {
  * @class The Class drone-delivery/BidParams represent the parameters of drone-delivery bid.
  */
 export default class BidParams extends BaseBidParams {
+    private static _protocol = 'DroneDelivery';
+    private static _type = 'Bid';
+
     /**
      * @property The drone name.
      */
@@ -41,21 +31,16 @@ export default class BidParams extends BaseBidParams {
     public eta?: number; // Time from contract signing to delivery in seconds
 
     public static getMessageType(): string {
-        return 'DroneDelivery:Bid';
+        return `${BidParams._protocol}:${BidParams._type}`;
     }
 
     public static fromJson(json: any): BidParams {
-        const bidParams = new BidParams(json);
-        Object.assign(bidParams, json);
-        return bidParams;
+        return new BidParams(json);
     }
 
     constructor(values: Partial<IBidParams>) {
-        super(values);
-        Object.assign(this, values);
-    }
-
-    public toJson(): string {
-        throw new Error('Method not implemented.');
+        super(values, BidParams._protocol, BidParams._type);
+        this.name = values.name;
+        this.eta = values.eta;
     }
 }

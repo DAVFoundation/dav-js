@@ -15,7 +15,7 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     }
 
     constructor(values: Partial<NeedFilterParams>) {
-        super(values);
+        super(values, NeedFilterParams._protocol, NeedFilterParams._type);
     }
 
     public toJson() {

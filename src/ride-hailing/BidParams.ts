@@ -91,22 +91,13 @@ export default class BidParams extends BaseBidParams {
     }
 
     constructor(values: Partial<IBidParams>) {
-        super(values);
+        super(values, BidParams._protocol, BidParams._type);
         // TODO: throw if not enough details
         this.currentVehicleLocation = values.currentVehicleLocation;
         this.vehicle = values.vehicle;
         this.driverName = values.driverName;
         this.averageRating = values.averageRating;
         this.ratingCounter = values.ratingCounter;
-    }
-
-    public toJson() {
-        const bidParams = Object.assign({ protocol: BidParams._protocol, type: BidParams._type }, this);
-        return JSON.stringify(bidParams);
-    }
-
-    public toString(): string {
-        return this.toJson();
     }
 
     public equals(other: BidParams): boolean {

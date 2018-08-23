@@ -30,7 +30,7 @@ export default class MissionParams extends BaseMissionParams {
     private static _protocol = 'boat_charging';
     private static _type = 'mission';
     public static getMessageType(): string {
-        return 'boat_charging:mission';
+        return `${MissionParams._protocol}:${MissionParams._type}`;
     }
 
     public static fromJson(json: any): MissionParams {
@@ -39,7 +39,7 @@ export default class MissionParams extends BaseMissionParams {
     }
 
     constructor(values: Partial<IMissionParams>) {
-        super(values);
+        super(values, MissionParams._protocol, MissionParams._type);
     }
 
     public toJson() {

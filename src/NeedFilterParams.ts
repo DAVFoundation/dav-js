@@ -28,8 +28,8 @@ export default abstract class NeedFilterParams extends BasicParams {
    */
   public davId: DavID;
 
-  constructor(values: Partial<NeedFilterParams>) {
-    super(values);
+  constructor(values: Partial<NeedFilterParams>, protocol: string, type: string) {
+    super(values, protocol, type);
     this.area = values.area;
   }
 
@@ -50,7 +50,7 @@ export default abstract class NeedFilterParams extends BasicParams {
         },
       };
     };
-    const formatedParams = JSON.parse(this.toJson());
+    const formatedParams: any = Object.assign({}, this);
     formatedParams.area = formatArea(formatedParams.area);
     return formatedParams;
   }

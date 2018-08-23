@@ -69,7 +69,7 @@ export default class Kafka extends KafkaBase {
     public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void> {
         const producer = await this.getProducer(config);
         const payloads = [
-            { topic: topicId, messages: basicParams.toJson()},
+            { topic: topicId, messages: JSON.stringify(basicParams)},
         ];
         const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {

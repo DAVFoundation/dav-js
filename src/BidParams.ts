@@ -13,14 +13,14 @@ export default abstract class BidParams extends BasicParams {
     public price: IPrice;
     public vehicleId: DavID;
 
-    public constructor(values: Partial<IBidParams>) {
+    public constructor(values: Partial<IBidParams>, protocol: string, type: string) {
         if (!values.price) {
             throw new Error('price is this a required field');
         }
         if (!values.vehicleId) {
             throw new Error('vehicleId is this a required field');
         }
-        super(values);
+        super(values, protocol, type);
         this.id = values.id;
         this.vehicleId = values.vehicleId;
         const priceObject = values.price;

@@ -15,8 +15,8 @@ export default abstract class MissionParams extends BasicParams {
     public vehicleId: DavID;
 
     // TODO: think if it does make sense let the user give id, but override it anyway when bid is accepted
-    constructor(values: Partial<IMissionParams>) {
-        super(values);
+    constructor(values: Partial<IMissionParams>, protocol: string, type: string) {
+        super(values, protocol, type);
         if (!values.neederDavId) {
             throw new Error('neederDavId is a required field');
         }

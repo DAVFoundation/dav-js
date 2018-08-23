@@ -17,18 +17,9 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     }
 
     constructor(values: Partial<NeedFilterParams>) {
+        super(values, NeedFilterParams._protocol, NeedFilterParams._type);
         if (!values.area || !values.area.lat || !values.area.long || !values.area.radius) {
             throw new Error('NeedFilter lack of essential parameters');
         }
-        super(values);
    }
-
-    public toJson(): any {
-        const bidParams = Object.assign({ protocol: NeedFilterParams._protocol, type: NeedFilterParams._type }, this);
-        return bidParams;
-    }
-
-    public toString(): string {
-        return JSON.stringify(this.toJson());
-    }
 }

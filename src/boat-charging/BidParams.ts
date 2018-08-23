@@ -46,7 +46,7 @@ export default class BidParams extends BaseBidParams {
     }
 
     constructor(values: Partial<IBidParams>) {
-        super(values);
+        super(values, BidParams._protocol, BidParams._type);
         Object.assign(this, values);
     }
 

@@ -4,17 +4,18 @@ import BaseMessageParams from '../MessageParams';
  * @class The Class drone-charging/MessageParams represent the parameters of drone-charging message.
  */
 export default class MessageParams extends BaseMessageParams {
+    private static _protocol = 'drone_charging';
+    private static _type = 'Message';
+
     public static getMessageType(): string {
-        return 'DroneCharging:Message';
+        return `${MessageParams._protocol}:${MessageParams._type}`;
     }
 
     public static fromJson(json: any): MessageParams {
         return new MessageParams(json);
     }
 
-    constructor(values: Partial<MessageParams>) { super(values); }
-
-    public toJson(): string {
-        throw new Error('Method not implemented.');
+    constructor(values: Partial<MessageParams>) {
+        super(values, MessageParams._protocol, MessageParams._type);
     }
 }

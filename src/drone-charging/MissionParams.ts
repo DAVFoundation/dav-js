@@ -1,54 +1,23 @@
 import BaseMissionParams from '../MissionParams';
-import { ID, DavID, BigInteger } from '../common-types';
-import IPrice from '../IPrice';
+import IMissionParams from '../IMissionParams';
 
-/**
- * @interface IMissionParams The interface drone-charging/IMissionParams represent a valid argument of drone-charging/MissionParams constructor.
- */
-interface IMissionParams {
-    /**
-     * @property The mission's topic id (used to send messages to consumer).
-     */
-    id: ID;
-    /**
-     * @property The mission's price.
-     */
-    price: IPrice | BigInteger;
-    /**
-     * @property The mission's vehicle DAV Id.
-     */
-    vehicleId: DavID;
-    /**
-     * @property The consumer DavID.
-     */
-    neederDavId: DavID;
-}
 /**
  * @class The Class drone-charging/MissionParams represent the parameters of drone-charging mission.
  */
 export default class MissionParams extends BaseMissionParams {
 
+    private static _protocol = 'drone_charging';
+    private static _type = 'Mission';
+
     public static getMessageType(): string {
-        return 'DroneCharging:Mission';
+        return `${MissionParams._protocol}${MissionParams._type}`;
     }
 
     public static fromJson(json: any): MissionParams {
-        // TODO?
-        return null;
+        return new MissionParams(json);
     }
 
     constructor(values: Partial<IMissionParams>) {
-        super(values);
+        super(values, MissionParams._protocol, MissionParams._type);
     }
-
-    public toJson(): string {
-        // TODO?
-        throw new Error('Method not implemented.');
-    }
-
-    public toString(): string {
-        // TODO?
-        return '';
-    }
-
 }

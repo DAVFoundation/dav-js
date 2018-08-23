@@ -20,8 +20,8 @@ export default abstract class NeedParams extends BasicParams {
         longitude: number;
     };
 
-    constructor(values: Partial<NeedParams>) {
-        super(values);
+    constructor(values: Partial<NeedParams>, protocol: string, type: string) {
+        super(values, protocol, type);
         this.id = values.id;
     }
 }

@@ -2,7 +2,7 @@ import SDKFactory from '../../src/SDKFactory';
 import NeedFilterParams from '../../src/ride-hailing/NeedFilterParams';
 import NeedParams from '../../src/ride-hailing/NeedParams';
 import BidParams from '../../src/ride-hailing/BidParams';
-import { MessageParams } from '../../src/MessageParams';
+import MessageParams from '../../src/MessageParams';
 import Need from '../../src/Need';
 import MissionParams from '../../src/ride-hailing/MissionParams';
 import Mission from '../../src/Mission';

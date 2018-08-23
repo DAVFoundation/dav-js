@@ -5,6 +5,10 @@ import VehicleTypes from './VehicleTypes';
  * @class The Class drone-delivery/NeedParams represent the parameters of drone-delivery need.
  */
 export default class NeedParams extends BaseNeedParams {
+
+    private static _protocol = 'DroneDelivery';
+    private static _type = 'Need';
+
     /**
      * @property The delivery pick up time.
      */
@@ -35,21 +39,15 @@ export default class NeedParams extends BaseNeedParams {
     public maxAltitude: number;
 
     public static getMessageType(): string {
-        return 'DroneDelivery:Need';
+        return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
     public static fromJson(json: any): NeedParams {
-        const needParams = new NeedParams(json);
-        Object.assign(needParams, json);
-        return needParams;
+        return new NeedParams(json);
     }
 
     constructor(values: Partial<NeedParams>) {
-        super(values);
+        super(values, NeedParams._protocol, NeedParams._type);
         Object.assign(this, values);
-    }
-
-    public toJson(): string {
-        throw new Error('Method not implemented.');
     }
 }

@@ -5,8 +5,10 @@ import BaseNeedFilterParams from '../NeedFilterParams';
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
     private static _protocol = 'drone_charging';
+    private static _type = 'NeedFilter';
+
     public static getMessageType(): string {
-        return 'DroneCharging:NeedFilter';
+        return `${NeedFilterParams._protocol}:${NeedFilterParams._type}`;
     }
 
     public static fromJson(json: any): NeedFilterParams {
@@ -14,13 +16,6 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     }
 
     constructor(values: Partial<NeedFilterParams>) {
-        super(values);
+        super(values, NeedFilterParams._protocol, NeedFilterParams._type);
     }
-
-    public toJson() {
-        const needFilterParams = Object.assign({ protocol: NeedFilterParams._protocol }, this);
-        return JSON.stringify(needFilterParams);
-    }
-
-    public toString(): string { return ''; }
 }

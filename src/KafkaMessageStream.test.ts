@@ -1,7 +1,7 @@
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import { Observable } from './common-types';
 import DroneDeliveryNeedParams from './drone-delivery/NeedParams';
-import DroneDeliveryBidParams from './drone-delivery/BidParams';
+import DroneDeliveryMissionParams from './drone-delivery/MissionParams';
 
 describe('KafkaMessageStream', () => {
     it('should instantiate', () => {
@@ -47,8 +47,10 @@ describe('KafkaMessageStream', () => {
     it('should filter first message and pass second when first is not correct type and second is', (done) => {
         expect.assertions(1);
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'NOT_DroneDelivery:Need', contents: '{"startAt":1}' },
-            { messageType: 'DroneDelivery:Need', contents: '{"startAt":2}' },
+            { messageType: 'NOT_DroneDelivery:Need', contents:
+            '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":"3000", "startAt":1}' },
+            { messageType: 'DroneDelivery:Need', contents:
+            '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
@@ -60,7 +62,7 @@ describe('KafkaMessageStream', () => {
             },
             (error) => { fail(error); },
             () => {
-                expect(passedMessages).toEqual([{ startAt: 2 }]);
+                expect(passedMessages).toEqual([{ id: '123', protocol: 'DroneDelivery', type: 'Bid', ttl: 3000, startAt: 2 }]);
                 done();
             });
     });
@@ -68,8 +70,10 @@ describe('KafkaMessageStream', () => {
     it('should pass first message and filter second when first is correct type and second is not', (done) => {
         expect.assertions(1);
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'DroneDelivery:Need', contents: '{"startAt":1}' },
-            { messageType: 'NOT_DroneDelivery:Need', contents: '{"startAt":2}' },
+            { messageType: 'DroneDelivery:Need', contents:
+            '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}' },
+            { messageType: 'NOT_DroneDelivery:Need', contents:
+            '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
@@ -81,7 +85,7 @@ describe('KafkaMessageStream', () => {
             },
             (error) => { fail(error); },
             () => {
-                expect(passedMessages).toEqual([{ startAt: 1 }]);
+                expect(passedMessages).toEqual([{ id: '123', protocol: 'DroneDelivery', type: 'Bid', ttl: 3000, startAt: 1 }]);
                 done();
             });
     });
@@ -89,31 +93,36 @@ describe('KafkaMessageStream', () => {
     it('should pass each type to correct stream', (done) => {
         expect.assertions(2);
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'DroneDelivery:Need', contents: '{"startAt":1}' },
-            { messageType: 'DroneDelivery:Bid', contents: '{"name":"1","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID"}' },
-            { messageType: 'DroneDelivery:Need', contents: '{"startAt":2}' },
-            { messageType: 'DroneDelivery:Bid', contents: '{"name":"2","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID"}' },
+            { messageType: 'DroneDelivery:Need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}' },
+            { messageType: 'DroneDelivery:Mission', contents:
+            '{"id":"1","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
+            ' "ttl":3000}' },
+            { messageType: 'DroneDelivery:Need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
+            { messageType: 'DroneDelivery:Mission', contents:
+            '{"id":"2","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
+            ' "ttl":3000}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
         const streamNeeds = messageStream.filterType(DroneDeliveryNeedParams);
-        const streamBids = messageStream.filterType(DroneDeliveryBidParams);
+        const streamMissions = messageStream.filterType(DroneDeliveryMissionParams);
 
         const passedNeeds: any[] = [];
-        const passedBids: any[] = [];
+        const passedMissions: any[] = [];
         let doneNeeds = false;
-        let doneBids = false;
+        let doneMissions = false;
 
         const test = () => {
-            if (doneBids && doneNeeds) {
-                expect(passedNeeds).toEqual([{ startAt: 1 }, { startAt: 2 }]);
-                expect(passedBids).toEqual([
+            if (doneMissions && doneNeeds) {
+                expect(passedNeeds).toEqual([{ id: '123', protocol: 'DroneDelivery', type: 'Bid', ttl: 3000, startAt: 1 },
+                                             { id: '123', protocol: 'DroneDelivery', type: 'Bid', ttl: 3000, startAt: 2 }]);
+                expect(passedMissions).toEqual([
                     {
-                        id: undefined, name: '1', needTypeId: undefined,
+                        id: '1', protocol: 'DroneDelivery', type: 'Mission', neederDavId: 'abc', ttl: 3000,
                         price: { description: undefined, type: 'flat', value: '1000' }, vehicleId: 'DAV_ID',
                     },
                     {
-                        id: undefined, name: '2', needTypeId: undefined,
+                        id: '2', protocol: 'DroneDelivery', type: 'Mission', neederDavId: 'abc', ttl: 3000,
                         price: { description: undefined, type: 'flat', value: '1000' }, vehicleId: 'DAV_ID',
                     },
                 ]);
@@ -131,13 +140,13 @@ describe('KafkaMessageStream', () => {
                 test();
             });
 
-        streamBids.subscribe(
+        streamMissions.subscribe(
             (bid) => {
-                passedBids.push(bid);
+                passedMissions.push(bid);
             },
             (error) => { fail(error); },
             () => {
-                doneBids = true;
+                doneMissions = true;
                 test();
             });
     });
