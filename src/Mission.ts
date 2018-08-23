@@ -24,9 +24,13 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      * @returns Ethereum transaction receipt.
      */
     public async signContract(walletPrivateKey: string): Promise<TransactionReceipt> {
-        const transactionReceipt = await Contracts.startMission(this._params.id, this._params.neederDavId, walletPrivateKey, this._params.vehicleId,
-            this._params.price.value, this._config);
-        return transactionReceipt;
+        try {
+            const transactionReceipt = await Contracts.startMission(this._params.id, this._params.neederDavId, walletPrivateKey,
+                this._params.vehicleId, this._params.price.value, this._config);
+            return transactionReceipt;
+        } catch (err) {
+            throw new Error(`Fail to sign contract ${err}`);
+        }
     }
     /**
      * @method finalizeMission Used to approve the mission is completed,
@@ -35,7 +39,12 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      * @returns Ethereum transaction receipt object.
      */
     public async finalizeMission(walletPrivateKey: string): Promise<TransactionReceipt> {
-        return Contracts.finalizeMission(this._params.id, this._params.neederDavId, walletPrivateKey, this._config);
+        try {
+            const transactionReceipt = await Contracts.finalizeMission(this._params.id, this._params.neederDavId, walletPrivateKey, this._config);
+            return transactionReceipt;
+        } catch (err) {
+            throw new Error(`Fail to finalize mission ${err}`);
+        }
     }
     /**
      * @method sendMessage Used to send message to the service consumer.
@@ -54,7 +63,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      * @returns Observable object.
      */
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
-        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this._config); // Channel#4
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
         const messageParamsStream = kafkaMessageStream.filterType(messageParamsType);
         const messageStream = messageParamsStream.map((params: MessageParams) =>
             new Message<U>(this._selfId, params, this._config));

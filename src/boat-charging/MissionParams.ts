@@ -34,8 +34,7 @@ export default class MissionParams extends BaseMissionParams {
     }
 
     public static fromJson(json: any): MissionParams {
-        // TODO?
-        return null;
+        return new MissionParams(json);
     }
 
     constructor(values: Partial<IMissionParams>) {

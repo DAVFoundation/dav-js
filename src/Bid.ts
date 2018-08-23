@@ -30,9 +30,11 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      */
     // TODO: think why do mission params is a parameter of this method? does mission params have another source of information except bid params?
     public async accept<V extends MissionParams>(missionParams: V, walletPrivateKey: string): Promise<Mission<V, U>> {
-        const bidderId = this._params.id; // Channel #6
-        missionParams.id = Kafka.generateTopicId(); // Channel#4
+        const bidderId = this._params.id; // Channel#6
+        missionParams.id = Contracts.generateMissionId(this._config); // Channel#4
         missionParams.price = this._params.price;
+        missionParams.neederDavId = this._params.neederDavId;
+        missionParams.vehicleId = this._params.vehicleId;
         this._missionId = missionParams.id;
         try {
             await Contracts.approveMission(missionParams.neederDavId, walletPrivateKey, this._config);
@@ -66,14 +68,17 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @returns Observable for messages subscription.
      */
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
-        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this._config); // Channel#6
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#6 or Channel#3
         const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
         const messageStream = messageParamsStream.map((params: U) =>
             new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }
-
-    // TODO: tests
+    /**
+     * @method missions Used to subscribe for missions.
+     * @param missionParamsType The expected mission param object type.
+     * @returns Observable for missions subscription.
+     */
     public async missions<V extends MissionParams>(missionParamsType: new (...all: any[]) => V): Promise<Observable<Mission<V, U>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#6
         const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(missionParamsType);
@@ -82,4 +87,3 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 }
-

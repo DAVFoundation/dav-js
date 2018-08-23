@@ -173,7 +173,7 @@ describe('Mission class', () => {
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
       const mission = new Mission(missionParams.id, missionParams, configuration);
-      await expect(mission.signContract(privateKey)).rejects.toBe(web3Error);
+      await expect(mission.signContract(privateKey)).rejects.toThrow(`Fail to sign contract ${web3Error}`);
     });
 
   });
@@ -208,7 +208,7 @@ describe('Mission class', () => {
       // tslint:disable-next-line:variable-name
       const Mission: any = (await import('./Mission')).default;
       const mission = new Mission(missionParams.id, missionParams, configuration);
-      await expect(mission.finalizeMission(WALLET_PRIVATE_KEY)).rejects.toBe(web3Error);
+      await expect(mission.finalizeMission(WALLET_PRIVATE_KEY)).rejects.toThrow(`Fail to finalize mission ${web3Error}`);
     });
   });
 

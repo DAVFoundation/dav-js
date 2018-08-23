@@ -55,6 +55,12 @@ export default class Contracts {
         return Math.min(gasAmount + 100, 4000000);
     }
 
+    public static generateMissionId(config: IConfig): string {
+        const web3 = Contracts.initWeb3(config);
+        const { address } = web3.eth.accounts.create();
+        return address;
+    }
+
     public static async isIdentityRegistered(davId: DavID, config: IConfig): Promise<boolean> {
         const web3 = Contracts.initWeb3(config);
         const { contract } = Contracts.getContract(ContractTypes.identity, web3, config);
