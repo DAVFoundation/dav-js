@@ -54,7 +54,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
      * @returns Observable object.
      */
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
-        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._params.id, this._config); // Channel#4
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
         const messageParamsStream = kafkaMessageStream.filterType(messageParamsType);
         const messageStream = messageParamsStream.map((params: MessageParams) =>
             new Message<U>(this._selfId, params, this._config));

@@ -243,7 +243,7 @@ describe('Bid class', () => {
         );
       });
       expect(message.selfId).toBe(selfId);
-      expect(kafkaMock.messages).toHaveBeenCalledWith(bidParams.id, config);
+      expect(kafkaMock.messages).toHaveBeenCalledWith(selfId, config);
     });
 
     xit('should throw because paramsStream is throwing', async () => {
