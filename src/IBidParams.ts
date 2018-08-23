@@ -11,15 +11,19 @@ export default interface IBidParams extends IBasicParams {
      */
     id: ID;
     /**
-     * @property The bid's price (required).
+     * @property The bid's price.
      */
     price: IPrice | BigInteger;
     /**
-     * @property The bid's vehicle DAV Id (required).
+     * @property The bid's vehicle DAV Id.
      */
     vehicleId: DavID;
     /**
      * @property The provider needType topic id (Identity.needsForType().topic).
      */
     needTypeId: ID;
+    /**
+     * @property The consumer DAV Id.
+     */
+    neederDavId: DavID;
 }

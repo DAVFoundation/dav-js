@@ -1,5 +1,5 @@
 import BasicParams from './BasicParams';
-import { ID } from './common-types';
+import { ID, DavID } from './common-types';
 
 /**
  * @class The abstract Class NeedParams represent common parameters of NeedParams classes.
@@ -9,6 +9,10 @@ export default abstract class NeedParams extends BasicParams {
      * @property The need's topic id (used to send messages and bids to consumer).
      */
     public id: ID;
+    /**
+     * @property The need's topic id (used to send messages and bids to consumer).
+     */
+    public davId: DavID;
     public location: {
         /**
          * @property supported area latitude.

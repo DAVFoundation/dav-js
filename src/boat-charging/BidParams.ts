@@ -33,21 +33,11 @@ export default class BidParams extends BaseBidParams {
     }
 
     public static fromJson(json: any): BidParams {
-        const price = new Price(json.price.value, json.price.type);
-        const vehicleId = json.vehicleId;
-        if (json.description) {
-            price.description = json.price.description;
-        }
-        const bidParams = new BidParams({ price, vehicleId });
-        if (json.ttl) {
-            bidParams.ttl = json.ttl;
-        }
-        return bidParams;
+        return new BidParams(json);
     }
 
     constructor(values: Partial<IBidParams>) {
         super(values);
-        Object.assign(this, values);
     }
 
     public toJson() {

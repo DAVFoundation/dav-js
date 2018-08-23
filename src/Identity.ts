@@ -19,7 +19,7 @@ export default class Identity {
 
   private topics: any = {};
 
-  constructor(public id: ID, public davID: DavID, private _config: IConfig) { /**/ }
+  constructor(public id: ID, public davId: DavID, private _config: IConfig) { /**/ }
 
   private async registerNewTopic() {
     const topic = Kafka.generateTopicId();
@@ -40,6 +40,7 @@ export default class Identity {
   public async publishNeed<T extends NeedParams, U extends MessageParams>(needParams: T): Promise<Need<T, U>> {
     const bidsChannelName = await this.registerNewTopic(); // Channel#3
     needParams.id = bidsChannelName;
+    needParams.davId = this.davId;
     const formatedParams = JSON.parse(needParams.toJson());
     try {
       await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, formatedParams);
@@ -84,7 +85,6 @@ export default class Identity {
    */
   public async missions<T extends MissionParams, U extends MessageParams>(missionParamsType: new (...all: any[]) => T,
     channelId?: ID): Promise<Observable<Mission<T, U>>> {
-
     throw new Error('Not implemented in this version');
   }
   /**

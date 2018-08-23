@@ -17,12 +17,12 @@ export default abstract class MissionParams extends BasicParams {
     // TODO: think if it does make sense let the user give id, but override it anyway when bid is accepted
     constructor(values: Partial<IMissionParams>) {
         super(values);
-        if (!values.neederDavId) {
-            throw new Error('neederDavId is a required field');
-        }
-        if (!values.vehicleId) {
-            throw new Error('vehicleId is a required field');
-        }
         Object.assign(this, values);
+        const priceObject = values.price;
+        if (priceObject) {
+            this.price = typeof priceObject === 'string' ?
+            this.price = new Price(priceObject as BigInteger, PriceType.flat) :
+            this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
+        }
     }
 }

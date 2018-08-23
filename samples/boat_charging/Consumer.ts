@@ -6,18 +6,8 @@ import MissionParams from '../../src/boat-charging/MissionParams';
 import MessageParams from '../../src/boat-charging/MessageParams';
 import Identity from '../../src/Identity';
 
-const needParams = new NeedParams({
-  location: {
-    latitude: 32.050382,
-    longitude: 34.766149,
-  },
-});
-const missionParams = new MissionParams({
-  vehicleId: '0x48a699a79fB7d2a7E9096df09f426837369d1F85',
-  neederDavId: '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6',
-});
-const messageParams = new MessageParams({
-});
+const printLine = () => console.log('====================================================================================================');
+
 const sdkConfiguration = {
   apiSeedUrls: ['http://localhost'],
   kafkaSeedUrls: ['localhost:9092'],
@@ -44,26 +34,48 @@ export default class Consumer {
 }
 
   public async createNeed() {
+    const needParams = new NeedParams({
+      location: {
+        latitude: 32.050382,
+        longitude: 34.766149,
+      },
+    });
+    const missionParams = new MissionParams({
+    });
+    const messageParams = new MessageParams({
+    });
+
     const need = await this.identity.publishNeed(needParams);
     const needMessages = await need.messages(MessageParams);
     needMessages.take(1).subscribe((message) => {
       console.log('Need message: ', message);
+      printLine();
       message.respond(messageParams);
     });
-    needMessages.take(2).subscribe((message) => {
-      console.log('Bid message respond: ', message);
-    });
+
     const bids = await need.bids(BidParams);
     bids.subscribe(async (bid) => {
       bid.sendMessage(messageParams);
+      const bidMessages = await bid.messages(MessageParams);
+      bidMessages.take(1).subscribe((message) => {
+        console.log('Bid message respond: ', message);
+        printLine();
+      });
+
       const mission = await bid.accept(missionParams, this._privateKey);
       const missionMessages = await mission.messages(MessageParams);
       missionMessages.take(1).subscribe((message) => {
         console.log('Mission message: ', message);
+        printLine();
         message.respond(messageParams);
       });
-      mission.signContract(this._privateKey);
-      mission.finalizeMission(this._privateKey);
+
+      const startMissionTransactionReceipt = await mission.signContract(this._privateKey);
+      console.log('Start mission transaction receipt:', startMissionTransactionReceipt);
+      printLine();
+      const finalizeMissionTransactionReceipt = await mission.finalizeMission(this._privateKey);
+      console.log('Finalize mission transaction receipt: ', finalizeMissionTransactionReceipt);
+      printLine();
     });
   }
 }

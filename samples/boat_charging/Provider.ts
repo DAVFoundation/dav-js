@@ -7,35 +7,21 @@ import BidParams from '../../src/boat-charging/BidParams';
 import MissionParams from '../../src/boat-charging/MissionParams';
 import MessageParams from '../../src/boat-charging/MessageParams';
 
+const printLine = () => console.log('====================================================================================================');
+
 const sdkConfiguration = {
   apiSeedUrls: ['http://localhost'],
   kafkaSeedUrls: ['localhost:9092'],
 };
 
-const needFilterParams = new NeedFilterParams({
-  area: {
-    lat: 32.050382,
-    long: 34.766149,
-    radius: 4000,
-  },
-  davId: '0x48a699a79fB7d2a7E9096df09f426837369d1F85',
-});
-
-const bidParams = new BidParams({
-  price: '100000000000000000',
-  vehicleId: '0x48a699a79fB7d2a7E9096df09f426837369d1F85',
-});
-
-const messageParams = new MessageParams({
-
-});
-
 export default class Provider {
   private _privateKey: string;
+  public davId: string;
   public identity: Identity;
 
   public async init(davId: string, privateKey: string) {
     this._privateKey = privateKey;
+    this.davId = davId;
     const config = new Config(sdkConfiguration);
     const davSDK = SDKFactory(config);
     // try {
@@ -51,26 +37,50 @@ export default class Provider {
   }
 
   public async subscribeForNeeds() {
+    const needFilterParams = new NeedFilterParams({
+      area: {
+        lat: 32.050382,
+        long: 34.766149,
+        radius: 4000,
+      },
+      davId: this.davId,
+    });
+
+    const bidParams = new BidParams({
+      price: '100000000000000000',
+      vehicleId: this.davId,
+    });
+
+    const messageParams = new MessageParams({
+
+    });
     const needs = await this.identity.needsForType(needFilterParams, NeedParams);
     needs.subscribe(async (need) => {
       need.sendMessage(messageParams);
-      const bid = await need.createBid(bidParams);
-      const missions = await bid.missions(MissionParams);
-      missions.subscribe((mission) => {
-        mission.sendMessage(messageParams);
+      const needMessages = await need.messages(MessageParams);
+      needMessages.take(1).subscribe((message) => {
+        console.log('Need message respond: ', message);
+        printLine();
       });
+
+      const bid = await need.createBid(bidParams);
+
       const bidMessages = await bid.messages(MessageParams);
       bidMessages.take(1).subscribe((message) => {
         console.log('Bid message: ', message);
+        printLine();
         message.respond(messageParams);
       });
-      bidMessages.take(2).subscribe((message) => {
-        console.log('Mission message respond: ', message);
+
+      const missions = await bid.missions(MissionParams);
+      missions.subscribe(async (mission) => {
+        mission.sendMessage(messageParams);
+        const missionMessages = await mission.messages(MessageParams);
+        missionMessages.take(1).subscribe((message) => {
+          console.log('Mission message respond: ', message);
+          printLine();
+        });
       });
     });
-    // const messages = await this.identity.messages(MessageParams);
-    // messages.take(1).subscribe((message) => {
-    //   console.log('Need message respond: ', message);
-    // });
   }
 }

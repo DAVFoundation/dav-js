@@ -12,6 +12,7 @@ export default abstract class BidParams extends BasicParams {
     public id: ID;
     public price: IPrice;
     public vehicleId: DavID;
+    public neederDavId: DavID;
 
     public constructor(values: Partial<IBidParams>) {
         if (!values.price) {
@@ -23,6 +24,7 @@ export default abstract class BidParams extends BasicParams {
         super(values);
         this.id = values.id;
         this.vehicleId = values.vehicleId;
+        this.neederDavId = values.neederDavId;
         const priceObject = values.price;
         if (typeof priceObject === 'string') {
             this.price = new Price(priceObject as BigInteger, PriceType.flat);
