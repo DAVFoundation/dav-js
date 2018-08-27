@@ -13,7 +13,7 @@ export default interface IBidParams extends IBasicParams {
     /**
      * @property The bid's price.
      */
-    price: IPrice | BigInteger;
+    price: IPrice | BigInteger | Array<IPrice | BigInteger>;
     /**
      * @property The bid's vehicle DAV Id.
      */

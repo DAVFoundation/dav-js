@@ -32,8 +32,12 @@ export default class BidParams extends BaseBidParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static fromJson(json: any): BidParams {
-        return new BidParams(json);
+    public static deserialize(json: any) {
+        const bidParams = super.deserialize(json);
+        Object.assign(bidParams, {
+            plugType: json.plugType,
+        });
+        return bidParams;
     }
 
     constructor(values: Partial<IBidParams>) {
@@ -41,16 +45,14 @@ export default class BidParams extends BaseBidParams {
         Object.assign(this, values);
     }
 
-    public toJson() {
-        const bidParams = Object.assign({ protocol: BidParams._protocol, type: BidParams._type }, this);
-        return JSON.stringify(bidParams);
-    }
-
-    public toString(): string {
-        return this.toJson();
+    public serialize() {
+        const formatedParams = super.serialize();
+        Object.assign(formatedParams, {
+        });
+        return formatedParams;
     }
 
     public equals(other: BidParams): boolean {
-        return this.ttl === other.ttl && this.price.equals(other.price);
+        return super.equals(other);
     }
 }

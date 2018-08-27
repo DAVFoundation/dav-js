@@ -10,9 +10,19 @@ import IBidParams from './IBidParams';
  */
 export default abstract class BidParams extends BasicParams {
     public id: ID;
-    public price: IPrice;
+    public price: IPrice[];
     public vehicleId: DavID;
     public neederDavId: DavID;
+
+    public static deserialize(json: any) {
+        const bidParams = this.constructor({
+            id: json.id,
+            price: json.price,
+            vehicleId: json.vehicleId,
+            neederDavId: json.neederDavId,
+        });
+        return bidParams;
+    }
 
     public constructor(values: Partial<IBidParams>, protocol: string, type: string) {
         if (!values.price) {
@@ -25,11 +35,32 @@ export default abstract class BidParams extends BasicParams {
         this.id = values.id;
         this.vehicleId = values.vehicleId;
         this.neederDavId = values.neederDavId;
-        const priceObject = values.price;
-        if (typeof priceObject === 'string') {
-            this.price = new Price(priceObject as BigInteger, PriceType.flat);
-        } else {
-            this.price = new Price(priceObject.value, priceObject.type, priceObject.description);
-        }
+        const priceObject = values.price instanceof Array ? values.price : [values.price];
+        priceObject.map((price: string | IPrice): IPrice => {
+            return typeof price === 'string' ?
+            new Price(price as BigInteger, PriceType.flat) :
+            new Price(price.value, price.type, price.description);
+        });
+        this.price = priceObject as IPrice[];
     }
+
+    public serialize() {
+        const formatedParams: any = {
+            id: this.id,
+            price: this.price,
+            vehicleId: this.vehicleId,
+            neederDavId: this.neederDavId,
+        };
+        return formatedParams;
+    }
+
+    public equals(other: BidParams): boolean {
+        const isPriceEqual = this.price.map((price, index) =>
+            other.price[index] && price.equals(other.price[index]))
+            .find((x: any) => !x) === undefined;
+        return this.ttl === other.ttl && isPriceEqual
+            && this.vehicleId === other.vehicleId
+            && this.neederDavId === other.neederDavId;
+    }
+
 }
