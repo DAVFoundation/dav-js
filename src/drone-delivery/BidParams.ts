@@ -43,6 +43,8 @@ export default class BidParams extends BaseBidParams {
         const formatedParams = super.serialize();
         Object.assign(formatedParams, {
             eta: this.eta,
+            protocol: BidParams._protocol,
+            type: BidParams._type,
         });
         return formatedParams;
     }

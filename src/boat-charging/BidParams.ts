@@ -48,10 +48,11 @@ export default class BidParams extends BaseBidParams {
     public serialize() {
         const formatedParams = super.serialize();
         Object.assign(formatedParams, {
+            protocol: BidParams._protocol,
+            type: BidParams._type,
         });
         return formatedParams;
     }
-
     public equals(other: BidParams): boolean {
         return super.equals(other);
     }

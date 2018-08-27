@@ -26,6 +26,8 @@ export default class NeedParams extends BaseNeedParams {
     public serialize() {
         const formatedParams = super.serialize();
         Object.assign(formatedParams, {
+            protocol: NeedParams._protocol,
+            type: NeedParams._type,
         });
         return formatedParams;
     }

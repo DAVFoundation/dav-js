@@ -8,9 +8,11 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     private static _protocol = 'boat_charging';
     private static _type = 'need';
     public maxDimensions: IDimensions;
+
     public static getMessageType(): string {
         return 'boat_charging:need';
     }
+
     public static deserialize(json: any) {
         const needFilterParams = super.deserialize(json);
         return needFilterParams;

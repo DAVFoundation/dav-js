@@ -58,7 +58,10 @@ export default class NeedParams extends BaseNeedParams {
             endLocation: this.endLocation,
             vehicleType: this.vehicleType,
             maxAltitude: this.maxAltitude,
+            protocol: NeedParams._protocol,
+            type: NeedParams._type,
         });
         return formatedParams;
     }
 }
+
