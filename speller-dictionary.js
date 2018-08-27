@@ -21,4 +21,5 @@ module.exports = [
   'axios',
   'ethereum',
   'lon',
+  'deserialize',
 ];
