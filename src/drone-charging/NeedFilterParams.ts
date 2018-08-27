@@ -11,11 +11,19 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         return `${NeedFilterParams._protocol}:${NeedFilterParams._type}`;
     }
 
-    public static fromJson(json: any): NeedFilterParams {
-        return new NeedFilterParams(json);
+    public static deserialize(json: any) {
+        const needFilterParams = super.deserialize(json);
+        return needFilterParams;
     }
 
     constructor(values: Partial<NeedFilterParams>) {
         super(values, NeedFilterParams._protocol, NeedFilterParams._type);
+    }
+
+    public serialize() {
+        const formatedParams = super.serialize();
+        formatedParams.protocol = NeedFilterParams._protocol;
+        formatedParams.type = NeedFilterParams._type;
+        return formatedParams;
     }
 }

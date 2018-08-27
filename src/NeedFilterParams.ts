@@ -28,12 +28,29 @@ export default abstract class NeedFilterParams extends BasicParams {
    */
   public davId: DavID;
 
+  public static deserialize(json: any) {
+    const formatArea = (area: any) => {
+      const topLeft = new LatLon(area.max.latitude, area.max.longitude);
+      const bottomRight = new LatLon(area.min.latitude, area.min.longitude);
+      const distance = topLeft.distanceTo(bottomRight);
+      const center = topLeft.intermediatePointTo(bottomRight, 0.5);
+      return {
+        lat: center.lat,
+        long: center.lon,
+        radius: (distance * 1000) / 2,
+      };
+    };
+    const needFilterParams = this.constructor({davId: json.dav_id});
+    Object.assign(needFilterParams, {area: formatArea(json.area)});
+    return needFilterParams;
+  }
+
   constructor(values: Partial<NeedFilterParams>, protocol: string, type: string) {
     super(values, protocol, type);
     this.area = values.area;
   }
 
-  public getFormatedParams() {
+  public serialize() {
     const formatArea = (area: any) => {
       const center = new LatLon(area.lat, area.long);
       const distance = area.radius * Math.sqrt(2);
@@ -50,7 +67,7 @@ export default abstract class NeedFilterParams extends BasicParams {
         },
       };
     };
-    const formatedParams: any = Object.assign({}, this);
+    const formatedParams: any = {dav_id: this.davId};
     formatedParams.area = formatArea(formatedParams.area);
     return formatedParams;
   }
