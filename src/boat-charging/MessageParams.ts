@@ -10,16 +10,23 @@ export default class MessageParams extends BaseMessageParams {
         return 'boat_charging:message';
     }
 
-    public static fromJson(json: any): MessageParams {
-        return new MessageParams(json);
+    public static deserialize(json: any) {
+        const messageParams = super.deserialize(json);
+        Object.assign(messageParams, {
+        });
+        return messageParams;
     }
 
     constructor(values: Partial<MessageParams>) {
         super(values, MessageParams._protocol, MessageParams._type);
     }
 
-    public toJson() {
-        const needParams = Object.assign({ protocol: MessageParams._protocol, type: MessageParams._type }, this);
-        return JSON.stringify(needParams);
+    public serialize() {
+        const formatedParams = super.serialize();
+        Object.assign(formatedParams, {
+            protocol: MessageParams._protocol,
+            type: MessageParams._type,
+        });
+        return formatedParams;
     }
 }

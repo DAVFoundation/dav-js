@@ -16,8 +16,24 @@ export default abstract class MessageParams extends BasicParams {
      * @property The message sender id.
      */
     public senderId: ID | BigInteger;
+
+    public static deserialize(json: any) {
+        const messageParams = this.constructor({
+            formatedParams: json.formatedParams,
+        });
+        return messageParams;
+    }
+
     constructor(values: Partial<MessageParams>, protocol: string, type: string) {
         super(values, protocol, type);
         this.senderId = values.senderId;
     }
+
+    public serialize() {
+        const formatedParams: any = {
+            senderId: this.senderId,
+        };
+        return formatedParams;
+    }
+
 }
