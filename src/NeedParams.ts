@@ -28,6 +28,7 @@ export default abstract class NeedParams extends BasicParams {
         const needParams = {
             id: json.id,
             location: json.location,
+            davId: json.davId,
         };
         return needParams  as NeedParams;
     }
@@ -48,6 +49,7 @@ export default abstract class NeedParams extends BasicParams {
         const formatedParams: any = {
             id: this.id,
             location: this.location,
+            davId: this.davId,
         };
         return formatedParams;
     }
