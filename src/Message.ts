@@ -7,7 +7,7 @@ import Kafka from './Kafka';
  */
 export default class Message<T extends MessageParams> {
 
-    constructor(public selfId: ID, public messageParams: MessageParams, private config: IConfig) {
+    constructor(public selfId: ID, public messageParams: T, private config: IConfig) {
         /* */
     }
 

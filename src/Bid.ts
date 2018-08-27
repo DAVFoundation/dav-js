@@ -29,7 +29,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @returns the created mission.
      */
     // TODO: think why do mission params is a parameter of this method? does mission params have another source of information except bid params?
-    public async accept<V extends MissionParams>(missionParams: V, walletPrivateKey: string): Promise<Mission<V, U>> {
+    public async accept<V extends MissionParams>(missionParams: V, walletPrivateKey: string): Promise<Mission<V>> {
         const bidderId = this._params.id; // Channel#6
         missionParams.id = Contracts.generateMissionId(this._config); // Channel#4
         missionParams.price = this._params.price;
@@ -48,7 +48,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
             throw new Error(`Fail to create a topic: ${err}`);
         }
         await Kafka.sendParams(bidderId, missionParams, this._config);
-        const mission = new Mission<V, U>(this._missionId, missionParams, this._config);
+        const mission = new Mission<V>(this._missionId, missionParams, this._config);
         return mission;
     }
     /**
@@ -79,11 +79,11 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @param missionParamsType The expected mission param object type.
      * @returns Observable for missions subscription.
      */
-    public async missions<V extends MissionParams>(missionParamsType: new (...all: any[]) => V): Promise<Observable<Mission<V, U>>> {
+    public async missions<V extends MissionParams>(missionParamsType: new (...all: any[]) => V): Promise<Observable<Mission<V>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#6
         const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(missionParamsType);
         const missionStream = missionParamsStream.map((params: V) =>
-            new Mission<V, U>(this._selfId, params, this._config));
+            new Mission<V>(this._selfId, params, this._config));
         return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 }

@@ -7,6 +7,7 @@ import MessageParams from './MessageParams';
 import Kafka from './Kafka';
 import Message from './Message';
 import KafkaMessageStream from './KafkaMessageStream';
+import { Observable as RxObservable } from 'rxjs';
 
 /**
  * @class The Need class represent a service request.
@@ -48,7 +49,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
     public async bids<V extends BidParams>(bidParamsType: new (...all: any[]) => V): Promise<Observable<Bid<V, U>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // this._selfId - Channel#3
         const bidParamsStream = kafkaMessageStream.filterType(bidParamsType);
-        const bidStream = bidParamsStream.map((bidParams) => {
+        const bidStream: RxObservable<Bid<V, U>> = bidParamsStream.map((bidParams) => {
             return new Bid(this._selfId, bidParams, this._config);
         });
         return Observable.fromObservable(bidStream, this._params.id);
@@ -72,7 +73,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
     public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config);
         const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
-        const messageStream = messageParamsStream.map((params: MessageParams) =>
+        const messageStream: RxObservable<Message<U>> = messageParamsStream.map((params: U) =>
             new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }

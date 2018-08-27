@@ -3,7 +3,7 @@ import { ID, DavID, BigInteger } from './common-types';
 import IBasicParams from './IBasicParams';
 
 /**
- * @interface IMissionParams The interface IMissionParams represent a valid argument of MissionParams constructor.
+ * @interface IMissionParams The interface IMissionParams represents valid arguments of MissionParams constructor.
  */
 export default interface IMissionParams extends IBasicParams {
     /**
