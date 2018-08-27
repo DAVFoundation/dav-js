@@ -33,22 +33,24 @@ export default class MissionParams extends BaseMissionParams {
         return `${MissionParams._protocol}:${MissionParams._type}`;
     }
 
-    public static fromJson(json: any): MissionParams {
-        return new MissionParams(json);
+    public static deserialize(json: any) {
+        const missionParams = super.deserialize(json);
+        Object.assign(missionParams, {
+            plugType: json.plugType,
+        });
+        return missionParams;
     }
 
     constructor(values: Partial<IMissionParams>) {
         super(values, MissionParams._protocol, MissionParams._type);
     }
 
-    public toJson() {
-        const needParams = Object.assign({ protocol: MissionParams._protocol, type: MissionParams._type }, this);
-        return JSON.stringify(needParams);
+    public serialize() {
+        const formatedParams = super.serialize();
+        Object.assign(formatedParams, {
+            protocol: MissionParams._protocol,
+            type: MissionParams._type,
+        });
+        return formatedParams;
     }
-
-    public toString(): string {
-        // TODO?
-        return '';
-    }
-
 }

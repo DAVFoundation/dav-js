@@ -13,7 +13,7 @@ export default interface IMissionParams extends IBasicParams {
     /**
      * @property The mission's price.
      */
-    price: IPrice | BigInteger;
+    price: IPrice | BigInteger | Array<IPrice | BigInteger>;
     /**
      * @property The mission's vehicle DAV Id.
      */
