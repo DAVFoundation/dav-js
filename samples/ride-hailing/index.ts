@@ -8,4 +8,4 @@ const sdkConfiguration = {
   };
 const config = new Config(sdkConfiguration);
 runProvider(config);
-runConsumer(config);
+setTimeout(() => runConsumer(config), 1000);

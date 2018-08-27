@@ -27,5 +27,12 @@ export default abstract class NeedParams extends BasicParams {
     constructor(values: Partial<NeedParams>, protocol: string, type: string) {
         super(values, protocol, type);
         this.id = values.id;
+        this.davId = values.davId;
+        if (!!values.location) {
+            this.location = {
+                latitude: values.location.latitude,
+                longitude: values.location.longitude,
+            };
+        }
     }
 }

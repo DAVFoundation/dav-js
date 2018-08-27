@@ -17,7 +17,9 @@ export default abstract class MissionParams extends BasicParams {
     // TODO: think if it does make sense let the user give id, but override it anyway when bid is accepted
     constructor(values: Partial<IMissionParams>, protocol: string, type: string) {
         super(values, protocol, type);
-        Object.assign(this, values);
+        this.id = values.id;
+        this.neederDavId = values.neederDavId;
+        this.vehicleId = values.vehicleId;
         const priceObject = values.price;
         if (priceObject) {
             this.price = typeof priceObject === 'string' ?

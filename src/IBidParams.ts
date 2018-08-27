@@ -3,7 +3,7 @@ import { ID, BigInteger, DavID } from './common-types';
 import IBasicParams from './IBasicParams';
 
 /**
- * @interface IBidParams extends The interface IBidParams represent a valid argument of BidParams constructor.
+ * @interface IBidParams extends The interface IBidParams represents valid arguments of BidParams constructor.
  */
 export default interface IBidParams extends IBasicParams {
     /**

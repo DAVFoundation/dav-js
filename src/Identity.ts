@@ -83,7 +83,7 @@ export default class Identity {
    * @returns Observable for missions subscription.
    */
   public async missions<T extends MissionParams, U extends MessageParams>(missionParamsType: new (...all: any[]) => T,
-    channelId?: ID): Promise<Observable<Mission<T, U>>> {
+    channelId?: ID): Promise<Observable<Mission<T>>> {
     throw new Error('Not implemented in this version');
   }
   /**
@@ -95,7 +95,7 @@ export default class Identity {
   public async messages<T extends MessageParams>(messageParamsType: new (...all: any[]) => T, channelId?: ID): Promise<Observable<Message<T>>> {
     const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this.id, this._config); // Channel#1
     const messageParamsStream: Observable<T> = kafkaMessageStream.filterType(messageParamsType);
-    const messageStream = messageParamsStream.map((params: MessageParams) =>
+    const messageStream = messageParamsStream.map((params: T) =>
       new Message<T>(this.id, params, this._config));
     return Observable.fromObservable(messageStream, messageParamsStream.topic);
   }
@@ -122,7 +122,7 @@ export default class Identity {
    * @param params The mission parameters.
    * @returns The restored mission.
    */
-  public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, params: T): Mission<T, U> {
+  public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, params: T): Mission<T> {
     return new Mission(missionSelfId, params, this._config);
   }
 }
