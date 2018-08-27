@@ -27,10 +27,10 @@ export default abstract class BidParams extends BasicParams {
 
     public constructor(values: Partial<IBidParams>, protocol: string, type: string) {
         if (!values.price) {
-            throw new Error('price is this a required field');
+            throw new Error('price is a required field');
         }
         if (!values.vehicleId) {
-            throw new Error('vehicleId is this a required field');
+            throw new Error('vehicleId is a required field');
         }
         super(values, protocol, type);
         this.id = values.id;

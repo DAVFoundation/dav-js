@@ -20,6 +20,7 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
 
     constructor(values: Partial<NeedFilterParams>) {
         super(values, NeedFilterParams._protocol, NeedFilterParams._type);
+        this.maxDimensions = values.maxDimensions;
     }
 
     public serialize() {

@@ -26,6 +26,24 @@ export interface IDimensions {
     width: number;
     height: number;
     weight: number;
+}
+
+/**
+ * @property IArea represent supported area, if null then it is a global service (not limited to a geographic area).
+ */
+export interface  IArea {
+    /**
+     * @property supported area latitude.
+     */
+    lat: number;
+    /**
+     * @property supported area longitude.
+     */
+    long: number;
+    /**
+     * @property supported radius in meters.
+     */
+    radius: number;
   }
 
 /**

@@ -1,5 +1,5 @@
 import BasicParams from './BasicParams';
-import { DavID } from './common-types';
+import { DavID, IArea } from './common-types';
 import { LatLonSpherical as LatLon } from 'geodesy';
 
 /**
@@ -9,20 +9,7 @@ export default abstract class NeedFilterParams extends BasicParams {
   /**
    * @property The service provider supported area, if null then it is a global service (not limited to a geographic area).
    */
-  public area?: {
-    /**
-     * @property supported area latitude.
-     */
-    lat: number;
-    /**
-     * @property supported area longitude.
-     */
-    long: number;
-    /**
-     * @property supported radius in meters.
-     */
-    radius: number;
-  };
+  public area?: IArea;
   /**
    * @property Provider Dav ID.
    */

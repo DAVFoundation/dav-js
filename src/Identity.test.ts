@@ -23,6 +23,11 @@ describe('Identity class', () => {
       latitude: 32.050382,
       longitude: 34.766149,
     },
+    area: {
+      lat: 32.050382,
+      long: 34.766149,
+      radius: 4000,
+    },
   });
   const bidParams = new BidParams({
     vehicleId: 'DAV_ID',
@@ -100,9 +105,39 @@ describe('Identity class', () => {
 
   describe('needsForType method', () => {
 
-    const needParams1 = new NeedParams({});
-    const needParams2 = new NeedParams({});
-    const needParams3 = new NeedParams({});
+    const needParams1 = new NeedParams({
+      location: {
+        latitude: 32.050382,
+        longitude: 34.766149,
+      },
+      area: {
+        lat: 32.050382,
+        long: 34.766149,
+        radius: 4000,
+      },
+    });
+    const needParams2 = new NeedParams({
+      location: {
+        latitude: 32.050382,
+        longitude: 34.766149,
+      },
+      area: {
+        lat: 32.050382,
+        long: 34.766149,
+        radius: 4000,
+      },
+    });
+    const needParams3 = new NeedParams({
+      location: {
+        latitude: 32.050382,
+        longitude: 34.766149,
+      },
+      area: {
+        lat: 32.050382,
+        long: 34.766149,
+        radius: 4000,
+      },
+    });
 
     const axiosMock = {
       post: jest.fn(() => Promise.resolve()),

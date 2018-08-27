@@ -39,6 +39,11 @@ export default class Consumer {
         latitude: 32.050382,
         longitude: 34.766149,
       },
+      area: {
+        lat: 32.050382,
+        long: 34.766149,
+        radius: 4000,
+      },
     });
     const missionParams = new MissionParams({
     });

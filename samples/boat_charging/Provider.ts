@@ -44,6 +44,12 @@ export default class Provider {
         radius: 4000,
       },
       davId: this.davId,
+      maxDimensions: {
+        length: 1,
+        width: 1,
+        height: 2,
+        weight: 5,
+      },
     });
 
     const bidParams = new BidParams({
