@@ -57,7 +57,7 @@ export default class Identity {
    */
   public async needsForType<T extends NeedParams, U extends MessageParams>(needFilterParams: NeedFilterParams,
     needParamsType: new (...all: any[]) => T): Promise<Observable<Need<T, U>>> {
-    const formatedParams = needFilterParams.getFormatedParams();
+    const formatedParams = needFilterParams.serialize();
     let needTypeTopic = '';
     if (this.topics[formatedParams.protocol]) {
       needTypeTopic = this.topics[formatedParams.protocol];

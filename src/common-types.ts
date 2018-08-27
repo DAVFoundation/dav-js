@@ -19,9 +19,18 @@ export type BigInteger = string;
 export type ContractsArtifacts = { [T in ContractTypes]: any };
 
 /**
+ * @type The Dimensions interface represents dimensions for service, (package dimensions, drone dimensions, boat dimensions, etc.).
+ */
+export interface IDimensions {
+    length: number;
+    width: number;
+    height: number;
+    weight: number;
+  }
+
+/**
  * @type The Location interface represents location which contains Latitude and Longitude.
  */
-
 export interface ILocation {Lat: number; Long: number; }
 
 /**
