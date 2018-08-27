@@ -24,8 +24,24 @@ export default abstract class NeedParams extends BasicParams {
         longitude: number;
     };
 
+    public static deserialize(json: any) {
+        const needParams = this.constructor({
+            id: json.id,
+            location: json.location,
+        });
+        return needParams;
+    }
+
     constructor(values: Partial<NeedParams>, protocol: string, type: string) {
         super(values, protocol, type);
         this.id = values.id;
+    }
+
+    public serialize() {
+        const formatedParams: any = {
+            id: this.id,
+            location: this.location,
+        };
+        return formatedParams;
     }
 }

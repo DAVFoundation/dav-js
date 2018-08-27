@@ -12,11 +12,22 @@ export default class NeedParams extends BaseNeedParams {
         return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
-    public static fromJson(json: any): NeedParams {
-        return new NeedParams(json);
+    public static deserialize(json: any) {
+        const needParams = super.deserialize(json);
+        Object.assign(needParams, {
+        });
+        return needParams;
     }
 
     constructor(values: Partial<BaseNeedParams>) {
         super(values, NeedParams._protocol, NeedParams._type);
     }
+
+    public serialize() {
+        const formatedParams = super.serialize();
+        Object.assign(formatedParams, {
+        });
+        return formatedParams;
+    }
+
 }

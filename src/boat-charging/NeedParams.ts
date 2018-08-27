@@ -6,13 +6,15 @@ import BaseNeedParams from '../NeedParams';
 export default class NeedParams extends BaseNeedParams {
     private static _protocol = 'boat_charging';
     private static _type = 'need';
+
     public static getMessageType(): string {
         return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
-    public static fromJson(json: any): NeedParams {
-        const needParams = new NeedParams({});
-        Object.assign(needParams, json);
+    public static deserialize(json: any) {
+        const needParams = super.deserialize(json);
+        Object.assign(needParams, {
+        });
         return needParams;
     }
 
@@ -21,8 +23,11 @@ export default class NeedParams extends BaseNeedParams {
         Object.assign(this, values);
     }
 
-    public toJson() {
-        const needParams = Object.assign({ protocol: NeedParams._protocol, type: NeedParams._type }, this);
-        return JSON.stringify(needParams);
+    public serialize() {
+        const formatedParams = super.serialize();
+        Object.assign(formatedParams, {
+        });
+        return formatedParams;
     }
+
 }

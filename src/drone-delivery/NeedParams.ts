@@ -1,5 +1,6 @@
 import BaseNeedParams from '../NeedParams';
 import VehicleTypes from './VehicleTypes';
+import { ILocation } from '../common-types';
 
 /**
  * @class The Class drone-delivery/NeedParams represent the parameters of drone-delivery need.
@@ -14,21 +15,13 @@ export default class NeedParams extends BaseNeedParams {
      */
     public startAt: Date;
     /**
-     * @property The delivery pick up latitude.
+     * @property The delivery pick up location.
      */
-    public startLatitude: number;
+    public startLocation: ILocation;
     /**
-     * @property The delivery pick up longitude.
+     * @property The delivery drop off location.
      */
-    public startLongitude: number;
-    /**
-     * @property The delivery drop off latitude.
-     */
-    public endLatitude: number;
-    /**
-     * @property The delivery drop off longitude.
-     */
-    public endLongitude: number;
+    public endLocation: ILocation;
     /**
      * @property The delivery vehicle.
      */
@@ -42,12 +35,30 @@ export default class NeedParams extends BaseNeedParams {
         return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
-    public static fromJson(json: any): NeedParams {
-        return new NeedParams(json);
+    public static deserialize(json: any) {
+        const needParams = super.deserialize(json);
+        Object.assign(needParams, {
+            startLocation: json.startLocation,
+            endLocation: json.endLocation,
+            vehicleType: json.vehicleType,
+            maxAltitude: json.maxAltitude,
+        });
+        return needParams;
     }
 
     constructor(values: Partial<NeedParams>) {
         super(values, NeedParams._protocol, NeedParams._type);
         Object.assign(this, values);
+    }
+
+    public serialize() {
+        const formatedParams = super.serialize();
+        Object.assign(formatedParams, {
+            startLocation: this.startLocation,
+            endLocation: this.endLocation,
+            vehicleType: this.vehicleType,
+            maxAltitude: this.maxAltitude,
+        });
+        return formatedParams;
     }
 }
