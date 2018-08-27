@@ -26,7 +26,7 @@ export default class Mission<T extends MissionParams, U extends MessageParams> {
     public async signContract(walletPrivateKey: string): Promise<TransactionReceipt> {
         try {
             const transactionReceipt = await Contracts.startMission(this._params.id, this._params.neederDavId, walletPrivateKey,
-                this._params.vehicleId, this._params.price.value, this._config);
+                this._params.vehicleId, this._params.price, this._config);
             return transactionReceipt;
         } catch (err) {
             throw new Error(`Fail to sign contract ${err}`);

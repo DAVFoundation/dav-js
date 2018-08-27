@@ -163,7 +163,7 @@ describe('Mission class', () => {
       const mission = new Mission(missionParams.id, missionParams, configuration);
       await mission.signContract(privateKey);
       expect(contractsMock.startMission).toHaveBeenCalledWith(missionParams.id, missionParams.neederDavId, privateKey,
-        missionParams.vehicleId, missionParams.price.value, configuration);
+        missionParams.vehicleId, missionParams.price, configuration);
     });
 
     it('should fail due to blockchain exception', async () => {

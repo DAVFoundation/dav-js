@@ -42,7 +42,7 @@ export default class Identity {
     needParams.id = bidsChannelName;
     needParams.davId = this.davId;
     try {
-      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, needParams);
+      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, needParams.serialize());
     } catch (err) {
       throw new Error(`Fail to publish need: ${err}`);
     }

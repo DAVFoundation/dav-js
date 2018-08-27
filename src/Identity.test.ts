@@ -76,7 +76,7 @@ describe('Identity class', () => {
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
       expect(axiosMock.post).toHaveBeenCalled();
-      expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/publishNeed/${TOPIC_ID}`, JSON.parse(needParams.toJson()));
+      expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/publishNeed/${TOPIC_ID}`, needParams.serialize());
     });
 
     it('should fail due to dav node exception', async () => {
@@ -145,8 +145,8 @@ describe('Identity class', () => {
       expect(spy.mock.calls[1][0]).toEqual(new Need(TOPIC_ID, needParams2, config));
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-      expect(axiosMock.post).toHaveBeenCalled();
-    });
+      expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
+  });
 
     // xit('should receive Kafka error event', async () => {
     //   kafkaMock.paramsStream.mockImplementation(() => Observable.fromPromise(Promise.reject(kafkaError)));
@@ -163,7 +163,7 @@ describe('Identity class', () => {
     //   expect(errorSpy.mock.calls[0][0]).toBe(kafkaError);
     //   expect(kafkaMock.generateTopicId).toHaveBeenCalled();
     //   expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-    //   expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.getFormatedParams());
+    //   expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
     // });
 
     it('should fail due to dav node exception', async () => {
@@ -181,7 +181,7 @@ describe('Identity class', () => {
       await expect(identity.needsForType(needFilterParams, NeedParams)).rejects.toThrow(`Needs registration failed: ${davNodeError}`);
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-      expect(axiosMock.post).toHaveBeenCalled();
+      expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
     });
 
     xit('should fail due to topic creation failure', async () => {
@@ -198,7 +198,7 @@ describe('Identity class', () => {
       await expect(identity.needsForType(needFilterParams, NeedParams)).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-      expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.getFormatedParams());
+      expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
     });
 
   });
