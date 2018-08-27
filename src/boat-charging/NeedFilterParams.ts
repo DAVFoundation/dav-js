@@ -15,7 +15,7 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
 
     public static deserialize(json: any) {
         const needFilterParams = super.deserialize(json);
-        return needFilterParams;
+        return new NeedFilterParams(needFilterParams);
     }
 
     constructor(values: Partial<NeedFilterParams>) {

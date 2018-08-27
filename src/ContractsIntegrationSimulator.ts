@@ -6,13 +6,13 @@ To use this script fill in all params.
 // tslint:disable:no-console
 import Contracts from './Contracts';
 import Config from './Config';
-import { ContractTypes } from './common-enums';
-
+import { ContractTypes, PriceType } from './common-enums';
+import Price from './Price';
 const configuration = new Config({});
 
 // params start
 const MISSION_ID = '0xf3229680B0166F0812e0ECEAd69B1dd144334229';
-const MISSION_PRICE = '100000000000000000';
+const MISSION_PRICE = [new Price('100000000000000000', PriceType.flat, '')];
 const DAV_ID = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
 const WALLET_PRIVATE_KEY = 'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
 const IDENTITY_PRIVATE_KEY = 'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';

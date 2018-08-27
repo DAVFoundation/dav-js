@@ -5,6 +5,7 @@ import { ContractTypes } from './common-enums';
 import Contract from 'web3/eth/contract';
 import { EventLog, TransactionReceipt } from 'web3/types';
 import { Observable } from 'rxjs';
+import IPrice from './IPrice';
 
 let contracts: ContractsArtifacts = {
     Identity: require('./contracts/Identity'),
@@ -53,6 +54,10 @@ export default class Contracts {
 
     private static toSafeGasLimit(gasAmount: number) {
         return Math.min(gasAmount + 100, 4000000);
+    }
+
+    private static calculatePrice(price: IPrice[]) {
+        return '150000000000000000';
     }
 
     public static generateMissionId(config: IConfig): string {
@@ -112,7 +117,8 @@ export default class Contracts {
     }
 
     public static async startMission(missionId: ID, davId: DavID, walletPrivateKey: string, vehicleId: DavID,
-        price: BigInteger, config: IConfig): Promise<TransactionReceipt> {
+        price: IPrice[], config: IConfig): Promise<TransactionReceipt> {
+        const fullPrice = Contracts.calculatePrice(price);
         const web3 = Contracts.initWeb3(config);
         const { contract, contractAddress } = Contracts.getContract(ContractTypes.basicMission, web3, config);
         const { encodeABI, estimateGas } = await contract.methods.create(missionId, vehicleId, davId, TOKEN_AMOUNT);
@@ -120,8 +126,8 @@ export default class Contracts {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress, value: price })),
-            value: price,
+            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress, value: fullPrice })),
+            value: fullPrice,
             gasPrice: await web3.eth.getGasPrice(),
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);

@@ -15,13 +15,14 @@ export default abstract class BidParams extends BasicParams {
     public neederDavId: DavID;
 
     public static deserialize(json: any) {
-        const bidParams = this.constructor({
+        const bidParams = {
             id: json.id,
             price: json.price,
             vehicleId: json.vehicleId,
             neederDavId: json.neederDavId,
-        });
-        return bidParams;
+            ttl: json.ttl,
+        };
+        return bidParams as BidParams;
     }
 
     public constructor(values: Partial<IBidParams>, protocol: string, type: string) {
@@ -50,6 +51,7 @@ export default abstract class BidParams extends BasicParams {
             price: this.price,
             vehicleId: this.vehicleId,
             neederDavId: this.neederDavId,
+            ttl: this.ttl,
         };
         return formatedParams;
     }

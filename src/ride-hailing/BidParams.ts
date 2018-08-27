@@ -101,6 +101,6 @@ export default class BidParams extends BaseBidParams {
     }
 
     public equals(other: BidParams): boolean {
-        return this.ttl === other.ttl && this.price.equals(other.price);
+        return this.ttl === other.ttl && super.equals(other);
     }
 }

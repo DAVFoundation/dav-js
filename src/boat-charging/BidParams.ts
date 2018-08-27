@@ -2,21 +2,18 @@ import BaseBidParams from '../BidParams';
 import IPrice from '../IPrice';
 import Price from '../Price';
 import { BigInteger, ID, DavID } from '../common-types';
+import IBaseBidParams from '../IBidParams';
 
 /**
  * @interface IBidParams The interface boat-charging/IBidParams represent a valid argument of boat-charging/BidParams constructor.
  */
-interface IBidParams {
+interface IBidParams extends IBaseBidParams {
     /**
      * @property The bid's topic id (used to send messages to service provider).
      */
     id: ID;
     /**
      * @property The bid's price (required).
-     */
-    price: IPrice | BigInteger;
-    /**
-     * @property The bid's vehicle DAV Id (required).
      */
     vehicleId: DavID;
 }
@@ -35,9 +32,8 @@ export default class BidParams extends BaseBidParams {
     public static deserialize(json: any) {
         const bidParams = super.deserialize(json);
         Object.assign(bidParams, {
-            plugType: json.plugType,
         });
-        return bidParams;
+        return new BidParams(bidParams);
     }
 
     constructor(values: Partial<IBidParams>) {

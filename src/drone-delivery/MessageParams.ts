@@ -16,7 +16,7 @@ export default class MessageParams extends BaseMessageParams {
         const messageParams = super.deserialize(json);
         Object.assign(messageParams, {
         });
-        return messageParams;
+        return new MessageParams(messageParams);
     }
 
     constructor(values: Partial<MessageParams>) {

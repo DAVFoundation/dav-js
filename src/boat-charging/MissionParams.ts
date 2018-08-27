@@ -1,27 +1,16 @@
 import BaseMissionParams from '../MissionParams';
+import BaseIMissionParams from '../IMissionParams';
 import { ID, DavID, BigInteger } from '../common-types';
 import IPrice from '../IPrice';
 
 /**
  * @interface IMissionParams The interface boat-charging/IMissionParams represent a valid argument of boat-charging/MissionParams constructor.
  */
-interface IMissionParams {
+interface IMissionParams extends BaseIMissionParams {
     /**
      * @property The mission's topic id (used to send messages to consumer).
      */
     id: ID;
-    /**
-     * @property The mission's price.
-     */
-    price: IPrice | BigInteger;
-    /**
-     * @property The mission's vehicle DAV Id.
-     */
-    vehicleId: DavID;
-    /**
-     * @property The consumer DavID.
-     */
-    neederDavId: DavID;
 }
 /**
  * @class The Class boat-charging/MissionParams represent the parameters of boat-charging mission.
@@ -38,7 +27,7 @@ export default class MissionParams extends BaseMissionParams {
         Object.assign(missionParams, {
             plugType: json.plugType,
         });
-        return missionParams;
+        return new MissionParams(missionParams);
     }
 
     constructor(values: Partial<IMissionParams>) {

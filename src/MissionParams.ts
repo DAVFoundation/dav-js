@@ -4,6 +4,7 @@ import { ID, DavID, BigInteger } from './common-types';
 import Price from './Price';
 import { PriceType } from './common-enums';
 import IMissionParams from './IMissionParams';
+import BidParams from './BidParams';
 
 /**
  * @class The abstract Class MissionParams represent common parameters of MissionParams classes.
@@ -15,13 +16,14 @@ export default abstract class MissionParams extends BasicParams {
     public vehicleId: DavID;
 
     public static deserialize(json: any) {
-        const bidParams = this.constructor({
+        const bidParams = {
             id: json.id,
             price: json.price,
             vehicleId: json.vehicleId,
             neederDavId: json.neederDavId,
-        });
-        return bidParams;
+            ttl: json.ttl,
+        };
+        return bidParams as MissionParams;
     }
 
     // TODO: think if it does make sense let the user give id, but override it anyway when bid is accepted
@@ -46,6 +48,7 @@ export default abstract class MissionParams extends BasicParams {
             price: this.price,
             vehicleId: this.vehicleId,
             neederDavId: this.neederDavId,
+            ttl: this.ttl,
         };
         return formatedParams;
     }

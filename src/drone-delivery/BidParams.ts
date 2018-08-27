@@ -31,7 +31,7 @@ export default class BidParams extends BaseBidParams {
         Object.assign(bidParams, {
             eta: json.eta,
         });
-        return bidParams;
+        return new BidParams(bidParams);
     }
 
     constructor(values: Partial<IBidParams>) {

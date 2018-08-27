@@ -19,7 +19,7 @@ export default class MissionParams extends BaseMissionParams {
         const missionParams = super.deserialize(json);
         Object.assign(missionParams, {
         });
-        return missionParams;
+        return new MissionParams(missionParams);
     }
 
     constructor(values: Partial<IMissionParams>) {

@@ -13,7 +13,7 @@ export default class NeedParams extends BaseNeedParams {
     /**
      * @property The delivery pick up time.
      */
-    public startAt: Date;
+    public startAt: number;
     /**
      * @property The delivery pick up location.
      */
@@ -42,8 +42,9 @@ export default class NeedParams extends BaseNeedParams {
             endLocation: json.endLocation,
             vehicleType: json.vehicleType,
             maxAltitude: json.maxAltitude,
+            ttl: json.ttl,
         });
-        return needParams;
+        return new NeedParams(needParams);
     }
 
     constructor(values: Partial<NeedParams>) {
@@ -60,6 +61,7 @@ export default class NeedParams extends BaseNeedParams {
             maxAltitude: this.maxAltitude,
             protocol: NeedParams._protocol,
             type: NeedParams._type,
+            ttl: this.ttl,
         });
         return formatedParams;
     }

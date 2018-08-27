@@ -25,11 +25,11 @@ export default abstract class NeedParams extends BasicParams {
     };
 
     public static deserialize(json: any) {
-        const needParams = this.constructor({
+        const needParams = {
             id: json.id,
             location: json.location,
-        });
-        return needParams;
+        };
+        return needParams  as NeedParams;
     }
 
     constructor(values: Partial<NeedParams>, protocol: string, type: string) {

@@ -15,7 +15,7 @@ export default class NeedParams extends BaseNeedParams {
         const needParams = super.deserialize(json);
         Object.assign(needParams, {
         });
-        return needParams;
+        return new NeedParams(needParams);
     }
 
     constructor(values: Partial<NeedParams>) {
