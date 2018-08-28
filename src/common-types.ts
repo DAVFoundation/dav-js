@@ -1,5 +1,8 @@
 import { Observable as RxObservable } from 'rxjs';
 import { ContractTypes } from './common-enums';
+import IConfig from './IConfig';
+import BasicParams from './BasicParams';
+import KafkaMessageStream from './KafkaMessageStream';
 
 /**
  * @type The type ID represent kafka topic id.
@@ -50,6 +53,13 @@ export interface  IArea {
  * @type The Location interface represents location which contains Latitude and Longitude.
  */
 export interface ILocation {Lat: number; Long: number; }
+
+export interface IKafka {
+    generateTopicId(): string;
+    createTopic(topicId: string, config: IConfig): Promise<void>;
+    sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void>;
+    messages(topicId: string, config: IConfig): Promise<KafkaMessageStream>;
+}
 
 /**
  * @type The type Observable represent the SDK observable object that used to subscribe to Needs/Bids/Messages/etc...
