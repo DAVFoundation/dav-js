@@ -36,10 +36,13 @@ export default async function runProvider(config?: IConfig) {
 
     const onMissionCreated = async (mission: Mission<MissionParams>) => {
         console.log(`got mission: ${JSON.stringify(mission.params)}`);
-        mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 2}}));
-        mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 3}}));
-        mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 4}}));
-        mission.sendMessage(new MessageParams({missionStatus: RideHailingMissionStatus.VehicleAtPickupLocation}));
+        setTimeout(() => {
+            mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 2}}));
+            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 3}}));
+            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 4}}));
+            mission.sendMessage(new MessageParams({missionStatus: RideHailingMissionStatus.VehicleAtPickupLocation}));
+        }, 1000);
+
         const messageStream = await mission.messages(MessageParams);
         messageStream.subscribe(
             (message) => {

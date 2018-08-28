@@ -12,10 +12,8 @@ export default class NeedParams extends BaseNeedParams {
         return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): NeedParams {
         const needParams = super.deserialize(json);
-        Object.assign(needParams, {
-        });
         return new NeedParams(needParams);
     }
 
@@ -25,10 +23,6 @@ export default class NeedParams extends BaseNeedParams {
 
     public serialize() {
         const formatedParams = super.serialize();
-        Object.assign(formatedParams, {
-            protocol: NeedParams._protocol,
-            type: NeedParams._type,
-        });
         return formatedParams;
     }
 

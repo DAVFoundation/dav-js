@@ -25,12 +25,13 @@ export default abstract class NeedParams extends BasicParams {
     };
 
     public static deserialize(json: any) {
-        const needParams = {
+        const needParams = super.deserialize(json);
+        Object.assign(needParams, {
             id: json.id,
             location: json.location,
             davId: json.davId,
-        };
-        return needParams  as NeedParams;
+        });
+        return needParams as NeedParams;
     }
 
     constructor(values: Partial<NeedParams>, protocol: string, type: string) {
@@ -46,11 +47,12 @@ export default abstract class NeedParams extends BasicParams {
     }
 
     public serialize() {
-        const formatedParams: any = {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             id: this.id,
             location: this.location,
             davId: this.davId,
-        };
-        return formatedParams;
+        });
+        return formattedParams;
     }
 }

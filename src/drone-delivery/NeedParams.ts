@@ -35,14 +35,13 @@ export default class NeedParams extends BaseNeedParams {
         return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): NeedParams {
         const needParams = super.deserialize(json);
         Object.assign(needParams, {
             startLocation: json.startLocation,
             endLocation: json.endLocation,
             vehicleType: json.vehicleType,
             maxAltitude: json.maxAltitude,
-            ttl: json.ttl,
         });
         return new NeedParams(needParams);
     }
@@ -59,9 +58,6 @@ export default class NeedParams extends BaseNeedParams {
             endLocation: this.endLocation,
             vehicleType: this.vehicleType,
             maxAltitude: this.maxAltitude,
-            protocol: NeedParams._protocol,
-            type: NeedParams._type,
-            ttl: this.ttl,
         });
         return formatedParams;
     }

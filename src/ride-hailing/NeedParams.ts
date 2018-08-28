@@ -22,7 +22,12 @@ export default class NeedParams extends BaseNeedParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static fromJson(json: any): NeedParams {
+    public static deserialize(json: any): NeedParams {
+        const needParams = super.deserialize(json);
+        Object.assign(needParams, {
+            pickupLocation: json.pickupLocation,
+            destinationLocation: json.destinationLocation,
+        });
         return new NeedParams(json);
     }
 
@@ -33,5 +38,14 @@ export default class NeedParams extends BaseNeedParams {
         super(values, NeedParams._protocol, NeedParams._type);
         this.pickupLocation = values.pickupLocation;
         this.destinationLocation = values.destinationLocation;
+    }
+
+    public serialize() {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
+            pickupLocation: this.pickupLocation,
+            destinationLocation: this.destinationLocation,
+        });
+        return formattedParams;
     }
 }

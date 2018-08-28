@@ -15,10 +15,8 @@ export default class MissionParams extends BaseMissionParams {
         return `${MissionParams._protocol}:${MissionParams._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): MissionParams {
         const missionParams = super.deserialize(json);
-        Object.assign(missionParams, {
-        });
         return new MissionParams(missionParams);
     }
 
@@ -28,10 +26,6 @@ export default class MissionParams extends BaseMissionParams {
 
     public serialize() {
         const formatedParams = super.serialize();
-        Object.assign(formatedParams, {
-            protocol: MissionParams._protocol,
-            type: MissionParams._type,
-        });
         return formatedParams;
     }
 }

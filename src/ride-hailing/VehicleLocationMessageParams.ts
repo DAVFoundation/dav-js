@@ -27,7 +27,12 @@ export default class MessageParams extends BaseMessageParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static fromJson(json: any): MessageParams {
+    public static deserialize(json: any): MessageParams {
+        const messageParams = super.deserialize(json);
+        Object.assign(messageParams, {
+            missionStatus: json.missionStatus,
+            vehicleLocation: json.vehicleLocation,
+        });
         return new MessageParams(json);
     }
 
@@ -35,5 +40,14 @@ export default class MessageParams extends BaseMessageParams {
         super(values, MessageParams._protocol, MessageParams._type);
         this.vehicleLocation = values.vehicleLocation;
         this.missionStatus = RideHailingMissionStatus.OnTheWay;
+    }
+
+    public serialize() {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
+            missionStatus: this.missionStatus,
+            vehicleLocation: this.vehicleLocation,
+        });
+        return formattedParams;
     }
 }

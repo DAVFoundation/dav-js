@@ -25,12 +25,24 @@ export default class MessageParams extends BaseMessageParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static fromJson(json: any): MessageParams {
+    public static deserialize(json: any): MessageParams {
+        const messageParams = super.deserialize(json);
+        Object.assign(messageParams, {
+            missionStatus: json.missionStatus,
+        });
         return new MessageParams(json);
     }
 
     constructor(values: Partial<IMessageParams>) {
         super(values, MessageParams._protocol, MessageParams._type);
         this.missionStatus = values.missionStatus;
+    }
+
+    public serialize() {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
+            missionStatus: this.missionStatus,
+        });
+        return formattedParams;
     }
 }

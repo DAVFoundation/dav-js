@@ -86,8 +86,16 @@ export default class BidParams extends BaseBidParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static fromJson(json: any): BidParams {
-        return new BidParams(json);
+    public static deserialize(json: any): BidParams {
+        const bidParams = super.deserialize(json);
+        Object.assign(bidParams, {
+            currentVehicleLocation: json.currentVehicleLocation,
+            vehicle: json.vehicle,
+            driverName: json.driverName,
+            averageRating: json.averageRating,
+            ratingCounter: json.ratingCounter,
+        });
+        return new BidParams(bidParams);
     }
 
     constructor(values: Partial<IBidParams>) {
@@ -98,6 +106,18 @@ export default class BidParams extends BaseBidParams {
         this.driverName = values.driverName;
         this.averageRating = values.averageRating;
         this.ratingCounter = values.ratingCounter;
+    }
+
+    public serialize() {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
+            currentVehicleLocation: this.currentVehicleLocation,
+            vehicle: this.vehicle,
+            driverName: this.driverName,
+            averageRating: this.averageRating,
+            ratingCounter: this.ratingCounter,
+        });
+        return formattedParams;
     }
 
     public equals(other: BidParams): boolean {

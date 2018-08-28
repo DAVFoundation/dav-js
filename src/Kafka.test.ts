@@ -119,9 +119,10 @@ describe('Kafka class', () => {
     it('should send message to kafka without errors when input is valid and no errors from kafka', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
-      const content = {
+      const content: any = {
         id: 1,
         price: 3,
+        serialize: jest.fn(() => content),
       };
       const paramsMockType = jest.fn<BasicParams>(() => (content));
       const paramsMock = new paramsMockType();
@@ -141,7 +142,7 @@ describe('Kafka class', () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
       const paramsMockType = jest.fn<BasicParams>(() => ({
-        toJson: () => {
+        serialize: () => {
           return 'basic params mock content';
         },
       }));
@@ -166,7 +167,7 @@ describe('Kafka class', () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
       const paramsMockType = jest.fn<BasicParams>(() => ({
-        toJson: () => {
+        serialize: () => {
           return 'basic params mock content';
         },
       }));
@@ -188,9 +189,10 @@ describe('Kafka class', () => {
     it('should get error from kafka in send method', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
-      const content = {
+      const content: any = {
         id: 1,
         price: 3,
+        serialize: jest.fn(() => content),
       };
       const paramsMockType = jest.fn<BasicParams>(() => (content));
       const paramsMock = new paramsMockType();
@@ -209,7 +211,7 @@ describe('Kafka class', () => {
     it('should get timeout in send method', async () => {
       jest.doMock('kafka-node');
       const paramsMockType = jest.fn<BasicParams>(() => ({
-        toJson: () => {
+        serialize: () => {
           return 'basic params mock content';
         },
       }));
@@ -396,14 +398,15 @@ describe('Kafka class', () => {
 
     describe ('sendParams method', () => {
 
-      const paramsContent = {
-        id: 1,
-        price: 3,
-      };
-      const paramsMockType = jest.fn<BasicParams>(() => (paramsContent));
-      const paramsMock = new paramsMockType();
-
       it('should send params without errors when input is valid', async () => {
+        const paramsObject: any = {
+          id: 1,
+          price: 3,
+          serialize: jest.fn(() => paramsObject),
+        };
+        const paramsMockType = jest.fn<BasicParams>(() => (paramsObject));
+        const paramsMock = new paramsMockType();
+
         const postMock = jest.fn((url: string, content: string, conf: any) => Promise.resolve({status: 200}));
         jest.doMock('axios', () => ({
           default: {
@@ -413,10 +416,18 @@ describe('Kafka class', () => {
         const kafka = (await import('./Kafka')).default;
 
         await expect(kafka.sendParams('testTopic', paramsMock, config)).resolves.toBeUndefined();
-        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsContent), expect.anything());
+        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsObject), expect.anything());
       });
 
       it('should fail to send params due to error from api', async () => {
+        const paramsObject: any = {
+          id: 1,
+          price: 3,
+          serialize: jest.fn(() => paramsObject),
+        };
+        const paramsMockType = jest.fn<BasicParams>(() => (paramsObject));
+        const paramsMock = new paramsMockType();
+
         const postMock = jest.fn((url: string, conf: any) => Promise.resolve({status: 500, data: {error: 'kafka error'}}));
         jest.doMock('axios', () => ({
           default: {
@@ -426,10 +437,18 @@ describe('Kafka class', () => {
         const kafka = (await import('./Kafka')).default;
 
         await expect(kafka.sendParams('testTopic', paramsMock, config)).rejects.toBe('kafka error');
-        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsContent), expect.anything());
+        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsObject), expect.anything());
       });
 
       it('should fail to send params due to network error', async () => {
+        const paramsObject: any = {
+          id: 1,
+          price: 3,
+          serialize: jest.fn(() => paramsObject),
+        };
+        const paramsMockType = jest.fn<BasicParams>(() => (paramsObject));
+        const paramsMock = new paramsMockType();
+
         const postMock = jest.fn((url: string, conf: any) => Promise.reject('net::ERR_CONNECTION_REFUSED'));
         jest.doMock('axios', () => ({
           default: {
@@ -439,7 +458,7 @@ describe('Kafka class', () => {
         const kafka = (await import('./Kafka')).default;
 
         await expect(kafka.sendParams('testTopic', paramsMock, config)).rejects.toBe('net::ERR_CONNECTION_REFUSED');
-        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsContent), expect.anything());
+        expect(postMock).toHaveBeenCalledWith('http://testUrl/topic/publish/testTopic', JSON.stringify(paramsObject), expect.anything());
       });
     });
 

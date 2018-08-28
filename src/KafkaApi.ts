@@ -22,7 +22,7 @@ export default class Kafka extends KafkaBase {
         // TODO: make sure what is the correct way to use api seed url
         const fullEndpoint = `http://${config.apiSeedUrls[0]}/topic/publish/${topicId}`;
         try {
-            const response = await axios.post(fullEndpoint, JSON.stringify(basicParams), {headers: {'Content-Type': 'application/json'}});
+            const response = await axios.post(fullEndpoint, JSON.stringify(basicParams.serialize()), {headers: {'Content-Type': 'application/json'}});
             if (response.status === 200) {
                 return Promise.resolve();
             }
