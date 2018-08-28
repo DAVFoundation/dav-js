@@ -18,10 +18,8 @@ export default abstract class MessageParams extends BasicParams {
     public senderId: ID | BigInteger;
 
     public static deserialize(json: any) {
-        const messageParams = {
-            senderId: json.senderId,
-            ttl: json.ttl,
-        };
+        const messageParams = super.deserialize(json);
+        Object.assign(messageParams, {senderId: json.senderId});
         return messageParams as MessageParams;
     }
 
@@ -31,11 +29,9 @@ export default abstract class MessageParams extends BasicParams {
     }
 
     public serialize() {
-        const formatedParams: any = {
-            senderId: this.senderId,
-            ttl: this.ttl,
-        };
-        return formatedParams;
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {senderId: this.senderId});
+        return formattedParams;
     }
 
 }

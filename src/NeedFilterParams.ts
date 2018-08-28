@@ -27,8 +27,11 @@ export default abstract class NeedFilterParams extends BasicParams {
         radius: (distance * 1000) / 2,
       };
     };
-    const needFilterParams = {davId: json.dav_id, ttl: json.ttl};
-    Object.assign(needFilterParams, {area: formatArea(json.area)});
+    const needFilterParams = super.deserialize(json);
+    Object.assign(needFilterParams, {
+      davId: json.dav_id,
+      area: formatArea(json.area),
+    });
     return needFilterParams as NeedFilterParams;
   }
 
@@ -54,9 +57,12 @@ export default abstract class NeedFilterParams extends BasicParams {
         },
       };
     };
-    const formatedParams: any = {dav_id: this.davId, ttl: this.ttl};
-    formatedParams.area = formatArea(this.area);
-    return formatedParams;
+    const formattedParams = super.serialize();
+    Object.assign(formattedParams, {
+      dav_id: this.davId,
+      area: formatArea(this.area),
+    });
+    return formattedParams;
   }
 
 }

@@ -15,13 +15,13 @@ export default abstract class BidParams extends BasicParams {
     public neederDavId: DavID;
 
     public static deserialize(json: any) {
-        const bidParams = {
+        const bidParams = super.deserialize(json);
+        Object.assign(bidParams, {
             id: json.id,
             price: json.price,
             vehicleId: json.vehicleId,
             neederDavId: json.neederDavId,
-            ttl: json.ttl,
-        };
+        });
         return bidParams as BidParams;
     }
 
@@ -46,14 +46,15 @@ export default abstract class BidParams extends BasicParams {
     }
 
     public serialize() {
-        const formatedParams: any = {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             id: this.id,
             price: this.price,
             vehicleId: this.vehicleId,
             neederDavId: this.neederDavId,
             ttl: this.ttl,
-        };
-        return formatedParams;
+        });
+        return formattedParams;
     }
 
     public equals(other: BidParams): boolean {

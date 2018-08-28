@@ -68,7 +68,7 @@ export default class BidParams extends BaseBidParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): BidParams {
         const bidParams = super.deserialize(json);
         Object.assign(bidParams, {
             entranceLocation: json.entranceLocation,
@@ -93,8 +93,6 @@ export default class BidParams extends BaseBidParams {
     public serialize() {
         const formatedParams = super.serialize();
         Object.assign(formatedParams, {
-            protocol: BidParams._protocol,
-            type: BidParams._type,
             entranceLocation: this.entranceLocation,
             exitLocation: this.exitLocation,
             availableFrom: this.availableFrom,

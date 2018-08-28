@@ -16,15 +16,16 @@ export default abstract class NeedParams extends BasicParams {
     public location: ILocation;
 
     public static deserialize(json: any) {
-        const needParams = {
+        const needParams = super.deserialize(json);
+        Object.assign(needParams, {
             id: json.id,
             location: {
                 lat: json.location && json.location.latitude,
                 long: json.location && json.location.longitude,
             },
             davId: json.davId,
-        };
-        return needParams  as NeedParams;
+        });
+        return needParams as NeedParams;
     }
 
     constructor(values: Partial<NeedParams>, protocol: string, type: string) {
@@ -40,14 +41,15 @@ export default abstract class NeedParams extends BasicParams {
     }
 
     public serialize() {
-        const formatedParams: any = {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             id: this.id,
             location: {
                 latitude: this.location && this.location.lat,
                 longitude: this.location && this.location.long,
             },
             davId: this.davId,
-        };
-        return formatedParams;
+        });
+        return formattedParams;
     }
 }

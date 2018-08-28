@@ -12,8 +12,9 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static fromJson(json: any): NeedFilterParams {
-        return new NeedFilterParams(json);
+    public static deserialize(json: any): NeedFilterParams {
+        const needFilterParams = super.deserialize(json);
+        return new NeedFilterParams(needFilterParams);
     }
 
     constructor(values: Partial<NeedFilterParams>) {
@@ -21,5 +22,10 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         if (!values.area || !values.area.lat || !values.area.long || !values.area.radius) {
             throw new Error('NeedFilter lack of essential parameters');
         }
+   }
+
+    public serialize() {
+       const formattedParams = super.serialize();
+       return formattedParams;
    }
 }

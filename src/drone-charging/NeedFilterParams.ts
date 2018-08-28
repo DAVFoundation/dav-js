@@ -11,7 +11,7 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         return `${NeedFilterParams._protocol}:${NeedFilterParams._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): NeedFilterParams {
         const needFilterParams = super.deserialize(json);
         return new NeedFilterParams(needFilterParams);
     }
@@ -22,8 +22,6 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
 
     public serialize() {
         const formatedParams = super.serialize();
-        formatedParams.protocol = NeedFilterParams._protocol;
-        formatedParams.type = NeedFilterParams._type;
         return formatedParams;
     }
 }

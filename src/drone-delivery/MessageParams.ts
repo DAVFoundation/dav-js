@@ -12,14 +12,16 @@ export default class MessageParams extends BaseMessageParams {
         return `${MessageParams._protocol}:${MessageParams._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): MessageParams {
         const messageParams = super.deserialize(json);
-        Object.assign(messageParams, {
-        });
         return new MessageParams(messageParams);
     }
 
     constructor(values: Partial<MessageParams>) {
         super(values, MessageParams._protocol, MessageParams._type);
+    }
+
+    public serialize() {
+        return super.serialize();
     }
 }

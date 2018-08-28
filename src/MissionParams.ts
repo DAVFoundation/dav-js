@@ -16,14 +16,14 @@ export default abstract class MissionParams extends BasicParams {
     public vehicleId: DavID;
 
     public static deserialize(json: any) {
-        const bidParams = {
+        const missionParams = super.deserialize(json);
+        Object.assign(missionParams, {
             id: json.id,
             price: json.price,
             vehicleId: json.vehicleId,
             neederDavId: json.neederDavId,
-            ttl: json.ttl,
-        };
-        return bidParams as MissionParams;
+        });
+        return missionParams as MissionParams;
     }
 
     // TODO: think if it does make sense let the user give id, but override it anyway when bid is accepted
@@ -43,14 +43,14 @@ export default abstract class MissionParams extends BasicParams {
     }
 
     public serialize() {
-        const formatedParams: any = {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             id: this.id,
             price: this.price,
             vehicleId: this.vehicleId,
             neederDavId: this.neederDavId,
-            ttl: this.ttl,
-        };
-        return formatedParams;
+        });
+        return formattedParams;
     }
 
 }

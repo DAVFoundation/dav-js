@@ -19,7 +19,7 @@ export default class NeedParams extends BaseNeedParams {
         return `${NeedParams._protocol}:${NeedParams._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): NeedParams {
         const needParams = super.deserialize(json);
         Object.assign(needParams, {
             startAt: json.startAt,
@@ -43,8 +43,6 @@ export default class NeedParams extends BaseNeedParams {
     public serialize() {
         const formatedParams = super.serialize();
         Object.assign(formatedParams, {
-            protocol: NeedParams._protocol,
-            type: NeedParams._type,
             startAt: this.startAt,
             dimensions: this.dimensions,
             batteryCapacity: this.batteryCapacity,

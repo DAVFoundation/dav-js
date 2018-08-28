@@ -26,7 +26,7 @@ export default class BidParams extends BaseBidParams {
         return `${BidParams._protocol}:${BidParams._type}`;
     }
 
-    public static deserialize(json: any) {
+    public static deserialize(json: any): BidParams {
         const bidParams = super.deserialize(json);
         Object.assign(bidParams, {
             eta: json.eta,
@@ -43,8 +43,6 @@ export default class BidParams extends BaseBidParams {
         const formatedParams = super.serialize();
         Object.assign(formatedParams, {
             eta: this.eta,
-            protocol: BidParams._protocol,
-            type: BidParams._type,
         });
         return formatedParams;
     }
