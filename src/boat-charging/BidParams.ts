@@ -8,14 +8,45 @@ import { EnergySources, Amenities } from './enums';
  */
 interface IBidParams extends IBaseBidParams {
     /**
-     * @property The bid's topic id (used to send messages to service provider).
+     * @property The charging station entrance location.
      */
-    id: ID;
+    entranceLocation: ILocation;
     /**
-     * @property The bid's price (required).
+     * @property The charging station exir location.
      */
-    vehicleId: DavID;
+    exitLocation: ILocation;
+    /**
+     * @property The time from which the charger can be made available for the vessel requesting a charge.
+     * Specified as time in milliseconds since Epoch/Unix Time.
+     */
+    availableFrom: number;
+    /**
+     * @property The time until which the charger can be made available for the vessel requesting a charge.
+     * Specified as time in milliseconds since Epoch/Unix Time
+     */
+    availableUntil: number;
+    /**
+     * @property The source of the energy used by this charger. Specified as an energy source id.
+     */
+    energySource: EnergySources;
+    /**
+     * @property A list of amenities that are present at this charger. Specified as a comma separated list of amenity ids.
+     */
+    amenities: Amenities[];
+    /**
+     * @property Name of the service provider or charging network operating this charger.
+     */
+    provider: string;
+    /**
+     * @property Name of the manufacturer of this charger.
+     */
+    manufacturer: string;
+    /**
+     * @property Name of the model of this charger.
+     */
+    model: string;
 }
+
 /**
  * @class The Class boat-charging/BidParams represent the parameters of boat-charging bid.
  */

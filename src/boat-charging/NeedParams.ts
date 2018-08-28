@@ -9,7 +9,6 @@ export default class NeedParams extends BaseNeedParams {
     private static _protocol = 'boat_charging';
     private static _type = 'need';
     public startAt: number;
-    public area: IArea;
     public dimensions: IDimensions;
     public batteryCapacity: number;
     public currentBatteryCharge: number;
@@ -24,7 +23,6 @@ export default class NeedParams extends BaseNeedParams {
         const needParams = super.deserialize(json);
         Object.assign(needParams, {
             startAt: json.startAt,
-            area: json.area,
             dimensions: json.dimensions,
             batteryCapacity: json.batteryCapacity,
             currentBatteryCharge: json.currentBatteryCharge,
@@ -35,8 +33,8 @@ export default class NeedParams extends BaseNeedParams {
     }
 
     constructor(values: Partial<NeedParams>) {
-        if (!values.area) {
-            throw new Error('area is a required field');
+        if (!values.location) {
+            throw new Error('location is a required field');
         }
         super(values, NeedParams._protocol, NeedParams._type);
         Object.assign(this, values);
@@ -48,7 +46,6 @@ export default class NeedParams extends BaseNeedParams {
             protocol: NeedParams._protocol,
             type: NeedParams._type,
             startAt: this.startAt,
-            area: this.area,
             dimensions: this.dimensions,
             batteryCapacity: this.batteryCapacity,
             currentBatteryCharge: this.currentBatteryCharge,

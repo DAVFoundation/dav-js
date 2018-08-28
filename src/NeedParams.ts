@@ -1,5 +1,5 @@
 import BasicParams from './BasicParams';
-import { ID, DavID } from './common-types';
+import { ID, DavID, ILocation } from './common-types';
 
 /**
  * @class The abstract Class NeedParams represent common parameters of NeedParams classes.
@@ -13,21 +13,15 @@ export default abstract class NeedParams extends BasicParams {
      * @property The need's topic id (used to send messages and bids to consumer).
      */
     public davId: DavID;
-    public location: {
-        /**
-         * @property supported area latitude.
-         */
-        latitude: number;
-        /**
-         * @property supported area longitude.
-         */
-        longitude: number;
-    };
+    public location: ILocation;
 
     public static deserialize(json: any) {
         const needParams = {
             id: json.id,
-            location: json.location,
+            location: {
+                lat: json.location && json.location.latitude,
+                long: json.location && json.location.longitude,
+            },
             davId: json.davId,
         };
         return needParams  as NeedParams;
@@ -39,8 +33,8 @@ export default abstract class NeedParams extends BasicParams {
         this.davId = values.davId;
         if (!!values.location) {
             this.location = {
-                latitude: values.location.latitude,
-                longitude: values.location.longitude,
+                lat: values.location.lat,
+                long: values.location.long,
             };
         }
     }
@@ -48,7 +42,10 @@ export default abstract class NeedParams extends BasicParams {
     public serialize() {
         const formatedParams: any = {
             id: this.id,
-            location: this.location,
+            location: {
+                latitude: this.location && this.location.lat,
+                longitude: this.location && this.location.long,
+            },
             davId: this.davId,
         };
         return formatedParams;

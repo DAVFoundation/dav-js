@@ -20,13 +20,8 @@ describe('Identity class', () => {
   const needFilterParams = new NeedFilterParams({ area: { lat: 10, long: 10, radius: 1000 } });
   const needParams = new NeedParams({
     location: {
-      latitude: 32.050382,
-      longitude: 34.766149,
-    },
-    area: {
       lat: 32.050382,
       long: 34.766149,
-      radius: 4000,
     },
   });
   const bidParams = new BidParams({
@@ -107,35 +102,20 @@ describe('Identity class', () => {
 
     const needParams1 = new NeedParams({
       location: {
-        latitude: 32.050382,
-        longitude: 34.766149,
-      },
-      area: {
         lat: 32.050382,
         long: 34.766149,
-        radius: 4000,
       },
     });
     const needParams2 = new NeedParams({
       location: {
-        latitude: 32.050382,
-        longitude: 34.766149,
-      },
-      area: {
         lat: 32.050382,
         long: 34.766149,
-        radius: 4000,
       },
     });
     const needParams3 = new NeedParams({
       location: {
-        latitude: 32.050382,
-        longitude: 34.766149,
-      },
-      area: {
         lat: 32.050382,
         long: 34.766149,
-        radius: 4000,
       },
     });
 

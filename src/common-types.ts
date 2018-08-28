@@ -31,25 +31,17 @@ export interface IDimensions {
 /**
  * @property IArea represent supported area, if null then it is a global service (not limited to a geographic area).
  */
-export interface  IArea {
-    /**
-     * @property supported area latitude.
-     */
-    lat: number;
-    /**
-     * @property supported area longitude.
-     */
-    long: number;
+export interface  IArea extends ILocation {
     /**
      * @property supported radius in meters.
      */
     radius: number;
-  }
+}
 
 /**
  * @type The Location interface represents location which contains Latitude and Longitude.
  */
-export interface ILocation {Lat: number; Long: number; }
+export interface ILocation {lat: number; long: number; }
 
 /**
  * @type The type Observable represent the SDK observable object that used to subscribe to Needs/Bids/Messages/etc...
