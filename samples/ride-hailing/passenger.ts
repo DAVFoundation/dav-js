@@ -24,8 +24,8 @@ export default async function runConsumer(config?: IConfig) {
     const identity = await sdk.getIdentity(davId, config);
     console.log('needer identity created');
 
-    const needParams = new NeedParams({davId, pickupLocation: {Lat: 32.050307, Long: 34.7644916},
-                                       destinationLocation: {Lat: 32.050307, Long: 34.7644916}});
+    const needParams = new NeedParams({davId, pickupLocation: {lat: 32.050307, long: 34.7644916},
+                                       destinationLocation: {lat: 32.050307, long: 34.7644916}});
     const need = await identity.publishNeed(needParams);
     console.log('need was published: ', JSON.stringify(needParams));
     const bids = await need.bids(BidParams);

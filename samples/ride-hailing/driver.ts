@@ -26,7 +26,7 @@ export default async function runProvider(config?: IConfig) {
     const identity = await sdk.getIdentity(davId, config);
     console.log('bidder identity created');
 
-    const needFilterParams = new NeedFilterParams({area: {lat: 32.050307, long: 34.7644916, radius: 1000}});
+    const needFilterParams = new NeedFilterParams({location: {lat: 32.050307, long: 34.7644916}, radius: 1000});
     const needs = await identity.needsForType(needFilterParams, NeedParams);
     console.log('need type was sent');
 
@@ -38,9 +38,9 @@ export default async function runProvider(config?: IConfig) {
     const onMissionCreated = async (mission: Mission<MissionParams>) => {
         console.log(`got mission: ${JSON.stringify(mission.params)}`);
         setTimeout(() => {
-            mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 2}}));
-            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 3}}));
-            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 4}}));
+            mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {lat: 1, long: 2}}));
+            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {lat: 1, long: 3}}));
+            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {lat: 1, long: 4}}));
             mission.sendMessage(new MessageParams({missionStatus: RideHailingMissionStatus.VehicleAtPickupLocation}));
         }, 1000);
 

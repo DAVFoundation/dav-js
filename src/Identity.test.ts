@@ -17,16 +17,11 @@ describe('Identity class', () => {
   const kafkaError = { msg: 'Kafka error' };
   const davNodeError = { msg: 'Dav node error' };
   const config = new Config({}) as IConfig;
-  const needFilterParams = new NeedFilterParams({ area: { lat: 10, long: 10, radius: 1000 } });
+  const needFilterParams = new NeedFilterParams({ location: { lat: 10, long: 10 }, radius: 1000 });
   const needParams = new NeedParams({
     location: {
-      latitude: 32.050382,
-      longitude: 34.766149,
-    },
-    area: {
       lat: 32.050382,
       long: 34.766149,
-      radius: 4000,
     },
   });
   const bidParams = new BidParams({
@@ -107,35 +102,20 @@ describe('Identity class', () => {
 
     const needParams1 = new NeedParams({
       location: {
-        latitude: 32.050382,
-        longitude: 34.766149,
-      },
-      area: {
         lat: 32.050382,
         long: 34.766149,
-        radius: 4000,
       },
     });
     const needParams2 = new NeedParams({
       location: {
-        latitude: 32.050382,
-        longitude: 34.766149,
-      },
-      area: {
         lat: 32.050382,
         long: 34.766149,
-        radius: 4000,
       },
     });
     const needParams3 = new NeedParams({
       location: {
-        latitude: 32.050382,
-        longitude: 34.766149,
-      },
-      area: {
         lat: 32.050382,
         long: 34.766149,
-        radius: 4000,
       },
     });
 
@@ -296,8 +276,8 @@ describe('Identity class', () => {
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1, config));
-      expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2, config));
+      expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1.id, missionParams1, config));
+      expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2.id, missionParams2, config));
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
     });
@@ -327,8 +307,8 @@ describe('Identity class', () => {
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Mission(anotherTopic, missionParams1, config));
-      expect(spy.mock.calls[1][0]).toEqual(new Mission(anotherTopic, missionParams2, config));
+      expect(spy.mock.calls[0][0]).toEqual(new Mission(anotherTopic, missionParams1.id, missionParams1, config));
+      expect(spy.mock.calls[1][0]).toEqual(new Mission(anotherTopic, missionParams2.id, missionParams2, config));
       expect(kafkaMock.generateTopicId).not.toHaveBeenCalled();
       expect(kafkaMock.createTopic).not.toHaveBeenCalled();
     });
@@ -400,8 +380,8 @@ describe('Identity class', () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
-      const mission = identity.mission('missionId', missionParams);
-      expect(mission).toEqual(new Mission('missionId', missionParams, config));
+      const mission = identity.mission('missionSelfId', 'missionPeerId', missionParams);
+      expect(mission).toEqual(new Mission('missionSelfId', 'missionPeerId', missionParams, config));
     });
   });
 

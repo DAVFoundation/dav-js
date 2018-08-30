@@ -1,5 +1,5 @@
 import BasicParams from './BasicParams';
-import { DavID, IArea } from './common-types';
+import { DavID, ILocation } from './common-types';
 import { LatLonSpherical as LatLon } from 'geodesy';
 
 /**
@@ -7,9 +7,13 @@ import { LatLonSpherical as LatLon } from 'geodesy';
  */
 export default abstract class NeedFilterParams extends BasicParams {
   /**
-   * @property The service provider supported area, if null then it is a global service (not limited to a geographic area).
+   * @property The service provider location.
    */
-  public area?: IArea;
+  public location: ILocation;
+  /**
+   * @property The service provider max supported distance. if null then it is a global service (not limited to a geographic area)
+   */
+  public radius: number;
   /**
    * @property Provider Dav ID.
    */
@@ -37,7 +41,9 @@ export default abstract class NeedFilterParams extends BasicParams {
 
   constructor(values: Partial<NeedFilterParams>, protocol: string, type: string) {
     super(values, protocol, type);
-    this.area = values.area;
+    this.location = values.location;
+    this.davId = values.davId;
+    this.radius = values.radius;
   }
 
   public serialize() {
@@ -60,7 +66,7 @@ export default abstract class NeedFilterParams extends BasicParams {
     const formattedParams = super.serialize();
     Object.assign(formattedParams, {
       dav_id: this.davId,
-      area: formatArea(this.area),
+      area: formatArea({ ...this.location, radius: this.radius }),
     });
     return formattedParams;
   }
