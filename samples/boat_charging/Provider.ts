@@ -42,11 +42,11 @@ export default class Provider {
     });
     // Subscribe for bid needs
     const needFilterParams = new NeedFilterParams({
-      area: {
+      location: {
         lat: 32.050382,
         long: 34.766149,
-        radius: 4000,
       },
+      radius: 4000,
       davId: this.davId,
       maxDimensions: {
         length: 1,

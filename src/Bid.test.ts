@@ -65,7 +65,7 @@ describe('Bid class', () => {
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(selfId, bidParams, config);
 
-      await expect(bid.accept(missionParams, 'Private_key')).resolves.toEqual(new Mission(missionParams.id, missionParams, config));
+      await expect(bid.accept(missionParams, 'Private_key')).resolves.toEqual(new Mission(missionParams.id, null, missionParams, config));
 
       expect(contractsMock.generateMissionId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith('topicId', config);
@@ -154,6 +154,7 @@ describe('Bid class', () => {
       };
       const kafkaMock = {
         generateTopicId: jest.fn(() => TOPIC_ID),
+        sendParams: jest.fn((params) => Promise.resolve(true)),
         createTopic: jest.fn(() => Promise.resolve()),
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
@@ -170,8 +171,8 @@ describe('Bid class', () => {
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1, config));
-      expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2, config));
+      expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1.id, missionParams1, config));
+      expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2.id, missionParams2, config));
     });
 
 
@@ -182,6 +183,7 @@ describe('Bid class', () => {
       };
       const kafkaMock = {
         generateTopicId: jest.fn(() => TOPIC_ID),
+        sendParams: jest.fn((params) => Promise.resolve(true)),
         createTopic: jest.fn(() => Promise.resolve()),
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
@@ -199,10 +201,10 @@ describe('Bid class', () => {
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
-      expect(spy.mock.calls[0][0]).toEqual(new Mission(anotherTopic, missionParams1, config));
-      expect(spy.mock.calls[1][0]).toEqual(new Mission(anotherTopic, missionParams2, config));
-      expect(kafkaMock.generateTopicId).not.toHaveBeenCalled();
-      expect(kafkaMock.createTopic).not.toHaveBeenCalled();
+      expect(spy.mock.calls[0][0]).toEqual(new Mission(TOPIC_ID, missionParams1.id, missionParams1, config));
+      expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2.id, missionParams2, config));
+      expect(kafkaMock.generateTopicId).toHaveBeenCalled();
+      expect(kafkaMock.createTopic).toHaveBeenCalled();
     });
 
     xit('should receive Kafka error event', async () => {

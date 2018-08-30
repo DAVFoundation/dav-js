@@ -29,16 +29,6 @@ export interface IDimensions {
 }
 
 /**
- * @property IArea represent supported area, if null then it is a global service (not limited to a geographic area).
- */
-export interface  IArea extends ILocation {
-    /**
-     * @property supported radius in meters.
-     */
-    radius: number;
-}
-
-/**
  * @type The Location interface represents location which contains Latitude and Longitude.
  */
 export interface ILocation {lat: number; long: number; }

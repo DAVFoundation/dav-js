@@ -48,7 +48,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
             throw new Error(`Fail to create a topic: ${err}`);
         }
         await Kafka.sendParams(bidderId, missionParams, this._config);
-        const mission = new Mission<V>(this._missionId, missionParams, this._config);
+        const mission = new Mission<V>(this._missionId, null, missionParams, this._config);
         return mission;
     }
     /**
@@ -82,8 +82,18 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
     public async missions<V extends MissionParams>(missionParamsType: new (...all: any[]) => V): Promise<Observable<Mission<V>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#6
         const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(missionParamsType);
-        const missionStream = missionParamsStream.map((params: V) =>
-            new Mission<V>(this._selfId, params, this._config));
+        const missionStream = missionParamsStream
+        .map(async (params: V) => {
+            this._missionId = Kafka.generateTopicId();
+            await Kafka.createTopic(this._missionId, this._config); // Channel #5
+            return new Mission<V>(this._missionId, params.id, params, this._config);
+        })
+        .map((promise) => Observable.fromPromise(promise))
+        .mergeAll()
+        .do((mission) => {
+            const message = new MessageParams({senderId: this._missionId});
+            mission.sendMessage(message);
+        });
         return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 }

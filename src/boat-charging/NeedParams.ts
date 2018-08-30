@@ -1,5 +1,5 @@
 import BaseNeedParams from '../NeedParams';
-import { IArea, IDimensions } from '../common-types';
+import { IDimensions } from '../common-types';
 import { EnergySources, Amenities } from './enums';
 
 /**

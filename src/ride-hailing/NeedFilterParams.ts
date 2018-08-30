@@ -19,7 +19,7 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
 
     constructor(values: Partial<NeedFilterParams>) {
         super(values, NeedFilterParams._protocol, NeedFilterParams._type);
-        if (!values.area || !values.area.lat || !values.area.long || !values.area.radius) {
+        if (!values.location || !values.location.lat || !values.location.long || !values.radius) {
             throw new Error('NeedFilter lack of essential parameters');
         }
    }

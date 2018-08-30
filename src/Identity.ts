@@ -119,10 +119,12 @@ export default class Identity {
   }
   /**
    * @method mission Used to restore an existed mission.
+   * @param missionSelfId The mission self topic ID.
+   * @param missionPeerId The mission peer topic ID.
    * @param params The mission parameters.
    * @returns The restored mission.
    */
-  public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, params: T): Mission<T> {
-    return new Mission(missionSelfId, params, this._config);
+  public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, missionPeerId: ID, params: T): Mission<T> {
+    return new Mission(missionSelfId, missionPeerId, params, this._config);
   }
 }
