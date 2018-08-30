@@ -11,6 +11,7 @@ import IConfig from '../../src/IConfig';
 import { RideHailingMissionStatus } from '../../src/common-enums';
 import { Observable } from '../../src/common-types';
 import Message from '../../src/Message';
+import CommitmentRequest from '../../src/CommitmentRequest';
 
 export default async function runProvider(config?: IConfig) {
     const sdk = SDKFactory({});
@@ -59,9 +60,20 @@ export default async function runProvider(config?: IConfig) {
 
     const onNeed = async (need: Need<NeedParams, MessageParams>) => {
         console.log(`got need: ${JSON.stringify(need.params)}`);
-        const bidParams = new BidParams({price: '0.1', vehicleId: davId});
+        const bidParams = new BidParams({price: '0.1', vehicleId: davId, isCommitted: false});
         const bid = await need.createBid(bidParams);
         console.log('bid created');
+        const requestsStream = await bid.commitmentRequests();
+        console.log('got commitment request stream');
+        await new Promise<void>((resolve) => {
+            requestsStream.subscribe(
+                async (commitmentRequest: CommitmentRequest) => {
+                    console.log(`got commitment request`);
+                    await commitmentRequest.confirm();
+                    resolve();
+                },
+            );
+        });
         const missions = await bid.missions(MissionParams);
         missions.subscribe(onMissionCreated);
     };

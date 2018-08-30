@@ -50,7 +50,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // this._selfId - Channel#3
         const bidParamsStream = kafkaMessageStream.filterType(bidParamsType);
         const bidStream: RxObservable<Bid<V, U>> = bidParamsStream.map((bidParams) => {
-            return new Bid(this._selfId, bidParams, this._config);
+            return new Bid(this._selfId, bidParams, this._config, kafkaMessageStream);
         });
         return Observable.fromObservable(bidStream, this._params.id);
     }

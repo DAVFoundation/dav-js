@@ -58,6 +58,12 @@ export default async function runConsumer(config?: IConfig) {
 
     const onBid = async (bid: Bid<BidParams, VehicleLocationMessageParams>) => {
         console.log(`got bid: ${JSON.stringify(bid.params)}`);
+        const confirmation = await bid.requestCommitment();
+        if (confirmation.BidId !== bid.params.id) {
+            console.log(`confirmation bidId is: ${confirmation.BidId}, bidId is: ${bid.params.id}`);
+            return;
+        }
+
         const missionParams = new MissionParams({price: bid.params.price, vehicleId: bid.params.vehicleId, neederDavId: davId});
         const mission = await bid.accept(missionParams, walletPrivateKey);
         console.log('bid was accepted');
