@@ -6,6 +6,8 @@ import MissionParams from '../../src/boat-charging/MissionParams';
 import MessageParams from '../../src/boat-charging/MessageParams';
 import Identity from '../../src/Identity';
 import { EnergySources, Amenities } from '../../src/boat-charging/enums';
+import Mission from '../../src/Mission';
+import Bid from '../../src/Bid';
 
 const printLine = () => console.log('====================================================================================================');
 
@@ -34,12 +36,19 @@ export default class Consumer {
     }
 }
 
-  public async createNeed() {
+  public async start() {
 
-    let messageParams = new MessageParams({
+    const need = await this.createNeed();
+    const bids = await need.bids(BidParams);
+    bids.subscribe(async (bid) => {
+      console.log('Bid received: ', bid);
+      printLine();
+      const mission = await this.createMission(bid);
+      this.simulateMission(mission);
     });
+  }
 
-    // Create need
+  public async createNeed() {
     const needParams = new NeedParams({
       location: {
         lat: 32.050382,
@@ -58,50 +67,20 @@ export default class Consumer {
       amenities: [Amenities.Park],
     });
     const need = await this.identity.publishNeed(needParams);
+    return need;
+  }
 
-    // Subscribe for need messages
-    const needMessages = await need.messages(MessageParams);
-    needMessages.take(1).subscribe((message) => {
-      // Respond for bid message
-      messageParams = new MessageParams({
-      });
-      message.respond(messageParams);
-      console.log('Need message: ', message);
-      printLine();
+  public async createMission(bid: Bid<BidParams, MessageParams>) {
+    const missionParams = new MissionParams({
     });
+    const mission = await bid.accept(missionParams, this._privateKey);
+    return mission;
+  }
 
-    // Subscribe for bids
-    const bids = await need.bids(BidParams);
-    bids.subscribe(async (bid) => {
 
-      // Send message for bid.
-      messageParams = new MessageParams({
-      });
-      bid.sendMessage(messageParams);
-      const bidMessages = await bid.messages(MessageParams);
+  public async simulateMission(mission: Mission<MissionParams>) {
 
-      // Subscribe for an answer
-      bidMessages.take(1).subscribe((message) => {
-        console.log('Bid message respond: ', message);
-        printLine();
-      });
 
-      // Accept bid and create a mission
-      const missionParams = new MissionParams({
-      });
-      const mission = await bid.accept(missionParams, this._privateKey);
-
-      // Subscribe for mission messages
-      const missionMessages = await mission.messages(MessageParams);
-      missionMessages.take(1).subscribe((message) => {
-
-        // Respond for mission message
-        messageParams = new MessageParams({
-        });
-        message.respond(messageParams);
-        console.log('Mission message: ', message);
-        printLine();
-      });
 
       // Commit payment
       const startMissionTransactionReceipt = await mission.signContract(this._privateKey);
@@ -112,6 +91,7 @@ export default class Consumer {
       const finalizeMissionTransactionReceipt = await mission.finalizeMission(this._privateKey);
       console.log('Finalize mission transaction receipt: ', finalizeMissionTransactionReceipt);
       printLine();
-    });
   }
+
 }
+

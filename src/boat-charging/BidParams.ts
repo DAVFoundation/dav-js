@@ -6,13 +6,42 @@ import { EnergySources, Amenities } from './enums';
 /**
  * @interface IBidParams The interface boat-charging/IBidParams represent a valid argument of boat-charging/BidParams constructor.
  */
+
 interface IBidParams extends IBaseBidParams {
+    /**
+     * @property A human readable name/description of the charger location (e.g., Cal Maritime Dock C).
+     */
+    locationName: string;
+    /**
+     * @property The language used in location_name. Specified using the 3 letter ISO 639-3 language code.
+     */
+    locationNameLang: string;
+    /**
+     * @property The city where the charger is located.
+     */
+    locationCity: string;
+    /**
+     * @property The postal code of the charger address.
+     */
+    locationPostalCode: string;
+    /**
+     * @property The county where the charger is located.
+     */
+    locationCounty: string;
+    /**
+     * @property The state where the charger is located.
+     */
+    locationState: string;
+    /**
+     * @property The country where the charger is located.
+     */
+    locationCountry: string;
     /**
      * @property The charging station entrance location.
      */
     entranceLocation: ILocation;
     /**
-     * @property The charging station exir location.
+     * @property The charging station exit location.
      */
     exitLocation: ILocation;
     /**
@@ -54,6 +83,13 @@ export default class BidParams extends BaseBidParams {
 
     private static _protocol = 'BoatCharging';
     private static _type = 'Bid';
+    public locationName: string;
+    public locationNameLang: string;
+    public locationCity: string;
+    public locationPostalCode: string;
+    public locationCounty: string;
+    public locationState: string;
+    public locationCountry: string;
     public entranceLocation: ILocation;
     public exitLocation: ILocation;
     public availableFrom: number;
@@ -87,6 +123,9 @@ export default class BidParams extends BaseBidParams {
 
     constructor(values: Partial<IBidParams>) {
         super(values, BidParams._protocol, BidParams._type);
+        if (!values.availableFrom) {
+            throw new Error('availableFrom is a required field');
+        }
         Object.assign(this, values);
     }
 

@@ -22,4 +22,5 @@ module.exports = [
   'ethereum',
   'lon',
   'deserialize',
+  'lang'
 ];
