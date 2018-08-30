@@ -142,7 +142,6 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      */
     public async commitmentRequests(): Promise<Observable<CommitmentRequest>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
-        console.log('driver wait for bid commitment request in ', this._selfId);
         const commitmentRequestParamsStream: Observable<CommitmentRequestParams> = kafkaMessageStream.filterType(CommitmentRequestParams);
         const commitmentRequestStream = commitmentRequestParamsStream.map(
             (commitmentRequestParams) => new CommitmentRequest(this._selfId, commitmentRequestParams, this._config));

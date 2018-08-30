@@ -23,7 +23,7 @@ describe('Need class', () => {
   const topicId = 'TOPIC_ID';
   const needParams = new NeedParams({});
   const kafkaError = { msg: 'Kafka error' };
-  const bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID'});
+  let bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID'});
   bidParams.id = 'bidSource';
 
   describe('createBid method', () => {
@@ -74,6 +74,7 @@ describe('Need class', () => {
     beforeEach(() => {
       jest.resetModules();
       jest.clearAllMocks();
+      bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID'});
     });
 
     it('should create bid observable with one message', async () => {
@@ -99,7 +100,8 @@ describe('Need class', () => {
         );
       });
       expect(kafkaMock.messages).toHaveBeenCalledWith(selfId, config);
-      expect(bid).toEqual(new Bid(selfId, bidParams, config));
+      expect(bid.params.id).toBe('BID_ID');
+      expect(bid.params.price[0].value).toBe('3');
     });
 
     xit('should throw error when paramsStream throws error', async () => {
