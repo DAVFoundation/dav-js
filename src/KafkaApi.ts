@@ -2,13 +2,13 @@ import KafkaBase from './KafkaBase';
 import IConfig from './IConfig';
 import axios from 'axios';
 import BasicParams from './BasicParams';
-import { Observable } from './common-types';
+import { Observable, IKafka } from './common-types';
 import { Observer } from 'rxjs';
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 
-export default class Kafka extends KafkaBase {
+export default class Kafka extends KafkaBase implements IKafka {
 
-    public static async createTopic(topicId: string, config: IConfig): Promise<void> {
+    public async createTopic(topicId: string, config: IConfig): Promise<void> {
         // TODO: make sure what is the correct way to use api seed url
         const fullEndpoint = `http://${config.apiSeedUrls[0]}/topic/create/${topicId}`;
         const response = await axios.post(fullEndpoint);
@@ -18,7 +18,7 @@ export default class Kafka extends KafkaBase {
         return Promise.reject(response.data.error);
     }
 
-    public static async sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void> {
+    public async sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void> {
         // TODO: make sure what is the correct way to use api seed url
         const fullEndpoint = `http://${config.apiSeedUrls[0]}/topic/publish/${topicId}`;
         try {
@@ -32,7 +32,7 @@ export default class Kafka extends KafkaBase {
         }
     }
 
-    public static async messages(topicId: string, config: IConfig): Promise<KafkaMessageStream> {
+    public async messages(topicId: string, config: IConfig): Promise<KafkaMessageStream> {
         if (!config.kafkaBrowserRequestTimeout) {
             config.kafkaBrowserRequestTimeout = 500;
         }
