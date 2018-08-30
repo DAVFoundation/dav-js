@@ -4,7 +4,7 @@ import Need from './Need';
 import NeedFilterParams from './boat-charging/NeedFilterParams';
 import NeedParams from './boat-charging/NeedParams';
 import MissionParams from './boat-charging/MissionParams';
-import MessageParams from './boat-charging/MessageParams';
+import MessageParams from './boat-charging/Messages/StatusRequestMessageParams';
 import BidParams from './boat-charging/BidParams';
 import { Observable, ID } from './common-types';
 import Message from './Message';
@@ -26,6 +26,7 @@ describe('Identity class', () => {
   });
   const bidParams = new BidParams({
     vehicleId: 'DAV_ID',
+    availableFrom: Date.now(),
     price: '100',
   });
   const missionParams = new MissionParams({
