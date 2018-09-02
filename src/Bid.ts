@@ -29,7 +29,6 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         this._kafkaMessageStream = kafkaMessageStream;
     }
 
-    // sadly, normal getter cannot be async
     private async getKafkaMessageStream(): Promise<KafkaMessageStream> {
         if (!this._kafkaMessageStream) {
             this._kafkaMessageStream = await Kafka.messages(this._selfId, this._config);
@@ -46,16 +45,12 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         await Kafka.sendParams(bidderId, commitmentRequestParams, this._config);
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#3
         const commitmentConfirmationParamsStream = kafkaMessageStream.filterType(CommitmentConfirmationParams);
-        return await new Promise<CommitmentConfirmation>((resolve) => {
-            commitmentConfirmationParamsStream.subscribe(
-                (commitmentConfirmationParams) => {
-                    if (commitmentConfirmationParams.bidId === this._params.id) {
-                        this._params.isCommitted = true;
-                        resolve(new CommitmentConfirmation(commitmentConfirmationParams));
-                    }
-                },
-            );
-        });
+        return commitmentConfirmationParamsStream.filter((commitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
+                                          .map((commitmentConfirmationParams) => {
+                                              this._params.isCommitted = true;
+                                              return new CommitmentConfirmation(commitmentConfirmationParams);
+                                            })
+                                          .toPromise();
     }
 
     /**
