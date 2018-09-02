@@ -1,6 +1,6 @@
 import BaseMessageParams from '../MessageParams';
 /**
- * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.
+ * @class The Class boat-charging/ChargingStartedMessageParams represent the parameters of provider notifying that charging has begun.
  */
 export default class MessageParams extends BaseMessageParams {
     private static _type = 'charging_started_message';

@@ -27,11 +27,11 @@
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
     "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
     "start-testnet": "dav-cli --start",
-    "tslint": "npx gulp tslint",
-    "tsc": "npx gulp tsc",
-    "jest": "npx gulp jest",
-    "typedoc": "npx gulp typedoc",
-    "spellcheck": "npx gulp spellcheck"
+    "tslint": "gulp tslint",
+    "tsc": "gulp tsc",
+    "jest": "gulp jest",
+    "typedoc": "gulp typedoc",
+    "spellcheck": "gulp spellcheck"
   },
   "dependencies": {
     "@types/geodesy": "^1.2.0",

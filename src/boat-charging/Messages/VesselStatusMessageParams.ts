@@ -1,7 +1,7 @@
 import BaseMessageParams from '../MessageParams';
 import { ILocation } from '../../common-types';
 /**
- * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.
+ * @class The Class boat-charging/VesselStatusMessageParams represent the parameters of boat-charging consumer status message.
  */
 export default class MessageParams extends BaseMessageParams {
     private static _type = 'vessel_status_message';

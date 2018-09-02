@@ -1,21 +1,16 @@
-import BasicParams from './BasicParams';
-import { ID, BigInteger } from './common-types';
-
-export interface IMessageParams {
-    /**
-     * @property The message sender id.
-     */
-    senderId: ID | BigInteger;
-}
+import BaseMessageParams from './MessageParams';
 
 /**
- * @class The abstract Class MessageParams represent common parameters of MessageParams classes.
+ * @class The Class MessageParams represent common parameters of MessageParams classes.
  */
-export default abstract class MessageParams extends BasicParams {
-    /**
-     * @property The message sender id.
-     */
-    public senderId: ID | BigInteger;
+export default class MessageParams extends BaseMessageParams {
+
+    private static _protocol = 'general';
+    private static _type = 'message';
+
+    public static getMessageType(): string {
+        return `${this._protocol}:${this._type}`;
+    }
 
     public static deserialize(json: any) {
         const messageParams = super.deserialize(json);
@@ -24,7 +19,7 @@ export default abstract class MessageParams extends BasicParams {
     }
 
     constructor(values: Partial<MessageParams>, protocol?: string, type?: string) {
-        super(values, protocol, type);
+        super(values, MessageParams._protocol, MessageParams._type);
         this.senderId = values.senderId;
     }
 

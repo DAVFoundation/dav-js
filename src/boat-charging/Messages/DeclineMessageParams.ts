@@ -1,6 +1,6 @@
 import BaseMessageParams from '../MessageParams';
 /**
- * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.
+ * @class The Class boat-charging/MessageParams represent the parameters of boat-charging decline mission message.
  */
 export default class MessageParams extends BaseMessageParams {
     private static _type = 'decline_message';
