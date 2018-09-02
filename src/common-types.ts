@@ -32,27 +32,9 @@ export interface IDimensions {
 }
 
 /**
- * @property IArea represent supported area, if null then it is a global service (not limited to a geographic area).
- */
-export interface  IArea {
-    /**
-     * @property supported area latitude.
-     */
-    lat: number;
-    /**
-     * @property supported area longitude.
-     */
-    long: number;
-    /**
-     * @property supported radius in meters.
-     */
-    radius: number;
-  }
-
-/**
  * @type The Location interface represents location which contains Latitude and Longitude.
  */
-export interface ILocation {Lat: number; Long: number; }
+export interface ILocation {lat: number; long: number; }
 
 export interface IKafka {
     generateTopicId(): string;

@@ -1,18 +1,21 @@
 import BaseMessageParams from '../MessageParams';
-
 /**
  * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.
  */
-export default abstract class MessageParams extends BaseMessageParams {
-    protected static _protocol = 'boat_charging';
+export default class MessageParams extends BaseMessageParams {
+    private static _type = 'decline_message';
+
+    public static getMessageType(): string {
+        return `${MessageParams._protocol}:${MessageParams._type}`;
+    }
 
     public static deserialize(json: any): MessageParams {
         const messageParams = super.deserialize(json);
-        return messageParams;
+        return new MessageParams(messageParams);
     }
 
-    constructor(values: Partial<MessageParams>, messageType: string) {
-        super(values, MessageParams._protocol, messageType);
+    constructor(values: Partial<MessageParams>) {
+        super(values, MessageParams._type);
     }
 
     public serialize() {

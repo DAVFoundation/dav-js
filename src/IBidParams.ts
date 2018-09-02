@@ -22,4 +22,8 @@ export default interface IBidParams extends IBasicParams {
      * @property The consumer DAV Id.
      */
     neederDavId: DavID;
+    /**
+     * @property Represents if the bidder is committed to provide this bid.
+     */
+    isCommitted: boolean;
 }

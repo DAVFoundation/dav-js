@@ -19,10 +19,21 @@ export default class Mission<T extends MissionParams> {
         return this._params;
     }
 
-    constructor(private _selfId: ID, private _params: T, private _config: IConfig) {
+    constructor(private _selfId: ID, private _peerId: ID, private _params: T, private _config: IConfig) {
     }
 
-
+    private async getPeerId(): Promise<ID> {
+        const messages = await this.messages(MessageParams);
+        const peerId = new Promise<ID>((resolve, reject) => {
+            messages.take(1).subscribe((message) => {
+                this._peerId = message.messageParams.senderId;
+                resolve(this._peerId);
+            }, (err) => {
+                reject(err);
+            });
+        });
+        return peerId;
+    }
     // sadly, normal getter cannot be async
     private async getKafkaMessageStream(): Promise<KafkaMessageStream> {
         if (!this._kafkaMessageStream) {
@@ -64,15 +75,15 @@ export default class Mission<T extends MissionParams> {
      * @param params message parameters.
      */
     public async sendMessage(params: MessageParams): Promise<void> {
-        if (this._selfId === this._params.id) {
-            throw new Error(`You cannot send message to yore own channel`);
+        if (!this._peerId) {
+            await this.getPeerId();
         }
         params.senderId = this._selfId;
-        return await Kafka.sendParams(this._params.id, params, this._config); // Channel#4
+        return await Kafka.sendParams(this._peerId, params, this._config); // Channel#4
     }
     /**
      * @method messages Used to subscribe for messages from the service provider.
-     * @param The expected message param object type.
+     * @param MessageParams The expected message param object type.
      * @returns Observable object.
      */
     public async messages<U extends MessageParams>(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {

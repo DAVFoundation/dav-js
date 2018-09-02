@@ -9,13 +9,17 @@ export interface IMessageParams {
 }
 
 /**
- * @class The abstract Class MessageParams represent common parameters of MessageParams classes.
+ * @class The Class MessageParams represent common parameters of MessageParams classes.
  */
-export default abstract class MessageParams extends BasicParams {
+export default class MessageParams extends BasicParams {
     /**
      * @property The message sender id.
      */
     public senderId: ID | BigInteger;
+
+    public static getMessageType(): string {
+        return 'general:message';
+    }
 
     public static deserialize(json: any) {
         const messageParams = super.deserialize(json);
@@ -23,7 +27,7 @@ export default abstract class MessageParams extends BasicParams {
         return messageParams as MessageParams;
     }
 
-    constructor(values: Partial<MessageParams>, protocol: string, type: string) {
+    constructor(values: Partial<MessageParams>, protocol?: string, type?: string) {
         super(values, protocol, type);
         this.senderId = values.senderId;
     }

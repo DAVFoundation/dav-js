@@ -24,8 +24,8 @@ export default async function runConsumer(config?: IConfig) {
     const identity = await sdk.getIdentity(davId, config);
     console.log('needer identity created');
 
-    const needParams = new NeedParams({davId, pickupLocation: {Lat: 32.050307, Long: 34.7644916},
-                                       destinationLocation: {Lat: 32.050307, Long: 34.7644916}});
+    const needParams = new NeedParams({davId, pickupLocation: {lat: 32.050307, long: 34.7644916},
+                                       destinationLocation: {lat: 32.050307, long: 34.7644916}});
     const need = await identity.publishNeed(needParams);
     console.log('need was published: ', JSON.stringify(needParams));
     const bids = await need.bids(BidParams);
@@ -58,6 +58,12 @@ export default async function runConsumer(config?: IConfig) {
 
     const onBid = async (bid: Bid<BidParams, VehicleLocationMessageParams>) => {
         console.log(`got bid: ${JSON.stringify(bid.params)}`);
+        const confirmation = await bid.requestCommitment();
+        if (confirmation.BidId !== bid.params.id) {
+            console.log(`confirmation bidId is: ${confirmation.BidId}, bidId is: ${bid.params.id}`);
+            return;
+        }
+
         const missionParams = new MissionParams({price: bid.params.price, vehicleId: bid.params.vehicleId, neederDavId: davId});
         const mission = await bid.accept(missionParams, walletPrivateKey);
         console.log('bid was accepted');

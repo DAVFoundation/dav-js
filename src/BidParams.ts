@@ -4,6 +4,7 @@ import { ID, BigInteger, DavID } from './common-types';
 import Price from './Price';
 import { PriceType } from './common-enums';
 import IBidParams from './IBidParams';
+import { callbackify } from 'util';
 
 /**
  * @class The abstract Class BidParams represent common parameters of BidParams classes.
@@ -13,6 +14,7 @@ export default abstract class BidParams extends BasicParams {
     public price: IPrice[];
     public vehicleId: DavID;
     public neederDavId: DavID;
+    public isCommitted: boolean;
 
     public static deserialize(json: any) {
         const bidParams = super.deserialize(json);
@@ -21,6 +23,7 @@ export default abstract class BidParams extends BasicParams {
             price: json.price,
             vehicleId: json.vehicleId,
             neederDavId: json.neederDavId,
+            isCommitted: json.isCommitted,
         });
         return bidParams as BidParams;
     }
@@ -36,6 +39,11 @@ export default abstract class BidParams extends BasicParams {
         this.id = values.id;
         this.vehicleId = values.vehicleId;
         this.neederDavId = values.neederDavId;
+        if (values.isCommitted === false) {
+            this.isCommitted = false;
+        } else {
+            this.isCommitted = true;
+        }
         const priceObject = values.price instanceof Array ? values.price : [values.price];
         priceObject.map((price: string | IPrice): IPrice => {
             return typeof price === 'string' ?
@@ -52,7 +60,7 @@ export default abstract class BidParams extends BasicParams {
             price: this.price,
             vehicleId: this.vehicleId,
             neederDavId: this.neederDavId,
-            ttl: this.ttl,
+            isCommitted: this.isCommitted,
         });
         return formattedParams;
     }
