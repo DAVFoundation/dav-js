@@ -2,6 +2,7 @@ import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
 import MissionParams from './MissionParams';
+import GeneralMessageParams from './GeneralMessageParams';
 import MessageParams from './MessageParams';
 import Message from './Message';
 import Mission from './Mission';
@@ -130,9 +131,9 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         .map((promise) => Observable.fromPromise(promise))
         .mergeAll()
         .do((mission) => {
-            const message = new MessageParams({senderId: this._missionId});
+            const message = new GeneralMessageParams({senderId: this._missionId});
             mission.sendMessage(message);
-        });
+    });
         return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 
