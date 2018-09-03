@@ -31,17 +31,11 @@ export default class BidParams extends BaseBidParams {
         return BidParams._protocol;
     }
 
-    public static deserialize(json: any): BidParams {
-        const bidParams = super.deserialize(json);
-        Object.assign(bidParams, {
-            eta: json.eta,
-        });
-        return new BidParams(bidParams);
-    }
-
     constructor(values: Partial<IBidParams>) {
-        super(values, BidParams._protocol, BidParams._type);
-        this.eta = values.eta;
+        super(BidParams._protocol, BidParams._type, values);
+        if (!!values) {
+            this.eta = values.eta;
+        }
     }
 
     public serialize() {
@@ -50,6 +44,11 @@ export default class BidParams extends BaseBidParams {
             eta: this.eta,
         });
         return formatedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.eta =  json.eta;
     }
 
     public equals(other: BidParams): boolean {

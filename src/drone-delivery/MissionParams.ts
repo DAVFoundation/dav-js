@@ -20,13 +20,8 @@ export default class MissionParams extends BaseMissionParams {
         return MissionParams._protocol;
     }
 
-    public static deserialize(json: any): MissionParams {
-        const missionParams = super.deserialize(json);
-        return new MissionParams(missionParams);
-    }
-
-    constructor(values: Partial<IMissionParams>) {
-        super(values, MissionParams._protocol, MissionParams._type);
+    constructor(values?: Partial<IMissionParams>) {
+        super(MissionParams._protocol, MissionParams._type, values);
     }
 
     public serialize() {
@@ -36,5 +31,9 @@ export default class MissionParams extends BaseMissionParams {
 
     public getProtocolTypes() {
         return ProtocolTypes;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
     }
 }

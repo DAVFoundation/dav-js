@@ -20,17 +20,11 @@ export default class CommitmentRequestParams extends BasicParams {
         return CommitmentRequestParams._protocol;
     }
 
-    public static deserialize(json: any): CommitmentRequestParams {
-        const commitmentRequestParams = super.deserialize(json);
-        Object.assign(commitmentRequestParams, {
-            neederId: json.neederId,
-        });
-        return new CommitmentRequestParams(commitmentRequestParams);
-    }
-
-    constructor(values: Partial<ICommitmentRequestParams>) {
-        super(values, CommitmentRequestParams._protocol, CommitmentRequestParams._type);
-        this.neederId = values.neederId;
+    constructor(values?: Partial<ICommitmentRequestParams>) {
+        super(CommitmentRequestParams._protocol, CommitmentRequestParams._type, values);
+        if (!!values) {
+            this.neederId = values.neederId;
+        }
     }
 
     public serialize() {
@@ -43,5 +37,10 @@ export default class CommitmentRequestParams extends BasicParams {
 
     public getProtocolTypes() {
         throw new Error('there is no protocol for general messages');
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.neederId = json.neederId;
     }
 }

@@ -11,13 +11,8 @@ export default abstract class MessageParams extends BaseMessageParams {
         return MessageParams._protocol;
     }
 
-    public static deserialize(json: any): MessageParams {
-        const messageParams = super.deserialize(json);
-        return messageParams;
-    }
-
-    constructor(values: Partial<MessageParams>, messageType: string) {
-        super(values, MessageParams._protocol, messageType);
+    constructor(messageType: string, values?: Partial<MessageParams>) {
+        super(MessageParams._protocol, messageType, values);
     }
 
     public serialize() {
@@ -27,5 +22,9 @@ export default abstract class MessageParams extends BaseMessageParams {
 
     public getProtocolTypes() {
         return ProtocolTypes;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
     }
 }

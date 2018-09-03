@@ -10,20 +10,14 @@ export default class MessageParams extends BaseMessageParams {
         return MessageParams._type;
     }
 
-    public static deserialize(json: any): MessageParams {
-        const messageParams = super.deserialize(json);
-        Object.assign(messageParams, {
-            finishEta: json.finishEta,
-        });
-        return new MessageParams(messageParams);
-    }
-
-    constructor(values: Partial<MessageParams>) {
-        super(values, MessageParams._type);
-        if (!values.finishEta) {
-            throw new Error('finishEta is a required field');
+    constructor(values?: Partial<MessageParams>) {
+        super(MessageParams._type, values);
+        if (!!values) {
+            if (!values.finishEta) {
+                throw new Error('finishEta is a required field');
+            }
+            this.finishEta = values.finishEta;
         }
-        this.finishEta = values.finishEta;
     }
 
     public serialize() {
@@ -32,5 +26,10 @@ export default class MessageParams extends BaseMessageParams {
             finishEta: this.finishEta,
         });
         return formatedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.finishEta = json.finishEta;
     }
 }

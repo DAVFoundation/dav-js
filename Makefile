@@ -17,12 +17,6 @@ pre-push: tslint tsc jest
 pre-publish: FORCE
 	npm run typedoc
 
-build-dev: test
-	npm run build-dev
-
-build-prod: test
-	npm run build-prod
-
 publish: build-prod
 	npm publish --access public
 

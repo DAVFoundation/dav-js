@@ -25,25 +25,19 @@ export default class NeedParams extends BaseNeedParams {
         return NeedParams._protocol;
     }
 
-    public static deserialize(json: any): NeedParams {
-        const needParams = super.deserialize(json);
-        Object.assign(needParams, {
-            startAt: json.startAt,
-            dimensions: json.dimensions,
-            batteryCapacity: json.batteryCapacity,
-            currentBatteryCharge: json.currentBatteryCharge,
-            energySource: json.energySource,
-            amenities: json.amenities,
-        });
-        return new NeedParams(needParams);
-    }
-
-    constructor(values: Partial<NeedParams>) {
-        if (!values.location) {
-            throw new Error('location is a required field');
+    constructor(values?: Partial<NeedParams>) {
+        super(NeedParams._protocol, NeedParams._type, values);
+        if (!!values) {
+            if (!values.location) {
+                throw new Error('location is a required field');
+            }
+            this.startAt = values.startAt;
+            this.dimensions = values.dimensions;
+            this.batteryCapacity = values.batteryCapacity;
+            this.currentBatteryCharge = values.currentBatteryCharge;
+            this.energySource = values.energySource;
+            this.amenities = values.amenities;
         }
-        super(values, NeedParams._protocol, NeedParams._type);
-        Object.assign(this, values);
     }
 
     public serialize() {
@@ -62,4 +56,15 @@ export default class NeedParams extends BaseNeedParams {
     public getProtocolTypes() {
         return ProtocolTypes;
     }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.startAt = json.startAt;
+        this.dimensions = json.dimensions;
+        this.batteryCapacity = json.batteryCapacity;
+        this.currentBatteryCharge = json.currentBatteryCharge;
+        this.energySource = json.energySource;
+        this.amenities = json.amenities;
+    }
+
 }

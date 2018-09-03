@@ -45,14 +45,6 @@ interface IBidParams extends IBaseBidParams {
      * @property The driver name.
      */
     driverName: string;
-    /**
-     * @property Average rating from 1 to 5.
-     */
-    averageRating: number;
-    /**
-     * @property Number of times the driver was rated.
-     */
-    ratingCounter: number;
 }
 /**
  * @class The Class ride-hailing/BidParams represent the parameters of ride-hailing bid.
@@ -74,14 +66,6 @@ export default class BidParams extends BaseBidParams {
      * @property The driver name.
      */
     public driverName: string;
-    /**
-     * @property Average rating from 1 to 5.
-     */
-    public averageRating: number;
-    /**
-     * @property Number of times the driver was rated.
-     */
-    public ratingCounter: number;
 
     public static getMessageType(): string {
         return BidParams._type;
@@ -91,26 +75,16 @@ export default class BidParams extends BaseBidParams {
         return BidParams._protocol;
     }
 
-    public static deserialize(json: any): BidParams {
-        const bidParams = super.deserialize(json);
-        Object.assign(bidParams, {
-            currentVehicleLocation: json.currentVehicleLocation,
-            vehicle: json.vehicle,
-            driverName: json.driverName,
-            averageRating: json.averageRating,
-            ratingCounter: json.ratingCounter,
-        });
-        return new BidParams(bidParams);
-    }
-
-    constructor(values: Partial<IBidParams>) {
-        super(values, BidParams._protocol, BidParams._type);
-        // TODO: throw if not enough details
-        this.currentVehicleLocation = values.currentVehicleLocation;
-        this.vehicle = values.vehicle;
-        this.driverName = values.driverName;
-        this.averageRating = values.averageRating;
-        this.ratingCounter = values.ratingCounter;
+    constructor(values?: Partial<IBidParams>) {
+        if (!values) {
+            super(BidParams._protocol, BidParams._type);
+        } else {
+            super(BidParams._protocol, BidParams._type, values);
+            // TODO: throw if not enough details
+            this.currentVehicleLocation = values.currentVehicleLocation;
+            this.vehicle = values.vehicle;
+            this.driverName = values.driverName;
+        }
     }
 
     public serialize() {
@@ -119,10 +93,15 @@ export default class BidParams extends BaseBidParams {
             currentVehicleLocation: this.currentVehicleLocation,
             vehicle: this.vehicle,
             driverName: this.driverName,
-            averageRating: this.averageRating,
-            ratingCounter: this.ratingCounter,
         });
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.currentVehicleLocation = json.currentVehicleLocation;
+        this.vehicle = json.vehicle;
+        this.driverName = json.driverName;
     }
 
     public equals(other: BidParams): boolean {

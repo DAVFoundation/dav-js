@@ -40,20 +40,15 @@ export default class NeedParams extends BaseNeedParams {
         return NeedParams._protocol;
     }
 
-    public static deserialize(json: any): NeedParams {
-        const needParams = super.deserialize(json);
-        Object.assign(needParams, {
-            startLocation: json.startLocation,
-            endLocation: json.endLocation,
-            vehicleType: json.vehicleType,
-            maxAltitude: json.maxAltitude,
-        });
-        return new NeedParams(needParams);
-    }
-
-    constructor(values: Partial<NeedParams>) {
-        super(values, NeedParams._protocol, NeedParams._type);
-        Object.assign(this, values);
+    constructor(values?: Partial<NeedParams>) {
+        super(NeedParams._protocol, NeedParams._type, values);
+        if (!!values) {
+            this.startAt = values.startAt;
+            this.startLocation = {lat: values.startLocation.lat, long: values.startLocation.lat};
+            this.endLocation = {lat: values.endLocation.lat, long: values.endLocation.lat};
+            this.vehicleType = values.vehicleType;
+            this.maxAltitude = values.maxAltitude;
+        }
     }
 
     public serialize() {
@@ -69,6 +64,14 @@ export default class NeedParams extends BaseNeedParams {
 
     public getProtocolTypes() {
         return ProtocolTypes;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.startLocation = json.startLocation;
+        this.endLocation = json.endLocation;
+        this.vehicleType = json.vehicleType;
+        this.maxAltitude = json.maxAltitude;
     }
 }
 

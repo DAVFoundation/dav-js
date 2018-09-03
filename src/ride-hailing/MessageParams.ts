@@ -30,17 +30,11 @@ export default class MessageParams extends BaseMessageParams {
         return MessageParams._protocol;
     }
 
-    public static deserialize(json: any): MessageParams {
-        const messageParams = super.deserialize(json);
-        Object.assign(messageParams, {
-            missionStatus: json.missionStatus,
-        });
-        return new MessageParams(json);
-    }
-
-    constructor(values: Partial<IMessageParams>) {
-        super(values, MessageParams._protocol, MessageParams._type);
-        this.missionStatus = values.missionStatus;
+    constructor(values?: Partial<IMessageParams>) {
+        super(MessageParams._protocol, MessageParams._type, values);
+        if (!!values) {
+            this.missionStatus = values.missionStatus;
+        }
     }
 
     public serialize() {
@@ -53,5 +47,10 @@ export default class MessageParams extends BaseMessageParams {
 
     public getProtocolTypes() {
         return ProtocolTypes;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.missionStatus = json.missionStatus;
     }
 }

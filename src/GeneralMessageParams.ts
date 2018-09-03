@@ -16,20 +16,12 @@ export default class GeneralMessageParams extends BaseMessageParams {
         return GeneralMessageParams._protocol;
     }
 
-    public static deserialize(json: any) {
-        const messageParams = super.deserialize(json);
-        Object.assign(messageParams, {senderId: json.senderId});
-        return messageParams as GeneralMessageParams;
-    }
-
-    constructor(values: Partial<GeneralMessageParams>, protocol?: string, type?: string) {
-        super(values, GeneralMessageParams._protocol, GeneralMessageParams._type);
-        this.senderId = values.senderId;
+    constructor(values?: Partial<GeneralMessageParams>) {
+        super(GeneralMessageParams._protocol, GeneralMessageParams._type, values);
     }
 
     public serialize() {
         const formattedParams = super.serialize();
-        Object.assign(formattedParams, {senderId: this.senderId});
         return formattedParams;
     }
 
@@ -37,4 +29,7 @@ export default class GeneralMessageParams extends BaseMessageParams {
         throw new Error('there is no protocol for general messages');
     }
 
+    public  deserialize(json: any): void {
+        super.deserialize(json);
+    }
 }

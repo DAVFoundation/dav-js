@@ -17,13 +17,8 @@ export default class NeedParams extends BaseNeedParams {
         return NeedParams._protocol;
     }
 
-    public static deserialize(json: any): NeedParams {
-        const needParams = super.deserialize(json);
-        return new NeedParams(needParams);
-    }
-
-    constructor(values: Partial<BaseNeedParams>) {
-        super(values, NeedParams._protocol, NeedParams._type);
+    constructor(values?: Partial<BaseNeedParams>) {
+        super(NeedParams._protocol, NeedParams._type, values);
     }
 
     public serialize() {
@@ -35,4 +30,7 @@ export default class NeedParams extends BaseNeedParams {
         return ProtocolTypes;
     }
 
+    public deserialize(json: any): void {
+        super.deserialize(json);
+    }
 }

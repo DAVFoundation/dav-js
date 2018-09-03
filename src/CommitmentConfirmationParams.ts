@@ -21,17 +21,11 @@ export default class CommitmentConfirmationParams extends BasicParams {
         return CommitmentConfirmationParams._protocol;
     }
 
-    public static deserialize(json: any): CommitmentConfirmationParams {
-        const commitmentConfirmationParams = super.deserialize(json);
-        Object.assign(commitmentConfirmationParams, {
-            bidId: json.bidId,
-        });
-        return new CommitmentConfirmationParams(commitmentConfirmationParams);
-    }
-
-    constructor(values: Partial<ICommitmentConfirmationParams>) {
-        super(values, CommitmentConfirmationParams._protocol, CommitmentConfirmationParams._type);
-        this.bidId = values.bidId;
+    constructor(values?: Partial<ICommitmentConfirmationParams>) {
+        super(CommitmentConfirmationParams._protocol, CommitmentConfirmationParams._type, values);
+        if (!!values) {
+            this.bidId = values.bidId;
+        }
     }
 
     public serialize() {
@@ -45,5 +39,10 @@ export default class CommitmentConfirmationParams extends BasicParams {
 
     public getProtocolTypes() {
         throw new Error('there is no protocol for general messages');
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.bidId = json.bidId;
     }
 }
