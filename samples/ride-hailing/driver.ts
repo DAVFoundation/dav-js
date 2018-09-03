@@ -38,8 +38,6 @@ export default async function runProvider(config?: IConfig) {
         console.log(`got mission: ${JSON.stringify(mission.params)}`);
         setTimeout(() => {
             mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {lat: 1, long: 2}}));
-            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 3}}));
-            // mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {Lat: 1, Long: 4}}));
             mission.sendMessage(new MessageParams({missionStatus: RideHailingMissionStatus.VehicleAtPickupLocation}));
         }, 1000);
 
@@ -63,15 +61,10 @@ export default async function runProvider(config?: IConfig) {
         const bid = await need.createBid(bidParams);
         console.log('bid created');
         const requestsStream = await bid.commitmentRequests();
-        await new Promise<void>((resolve) => {
-            requestsStream.subscribe(
-                async (commitmentRequest: CommitmentRequest) => {
-                    console.log(`got commitment request`);
-                    await commitmentRequest.confirm();
-                    resolve();
-                },
-            );
-        });
+        console.log('got commitment request stream');
+        const commitmentRequest = await (requestsStream.first().toPromise());
+        console.log('got commitment request');
+        await commitmentRequest.confirm();
         const missions = await bid.missions(MissionParams);
         missions.subscribe(onMissionCreated);
     };

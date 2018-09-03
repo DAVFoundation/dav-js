@@ -57,7 +57,7 @@ describe('Bid class', () => {
     let confirmationParams: CommitmentConfirmationParams;
 
     beforeEach(() => {
-      confirmationParams = new CommitmentConfirmationParams({bidId: bidParams.id});
+      confirmationParams = new CommitmentConfirmationParams({ bidId: bidParams.id });
     });
 
     it('should return confirmation for already confirmed bid', async () => {
@@ -77,20 +77,20 @@ describe('Bid class', () => {
         sendParams: jest.fn((topicId: string, requestParams: CommitmentRequestParams, configuration: IConfig) => Promise.resolve()),
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       bidParams.isCommitted = false;
       const bid = new Bid(selfId, bidParams, config);
 
-      await expect(bid.requestCommitment()).resolves.toEqual(new CommitmentConfirmation(new CommitmentConfirmationParams({bidId: bidParams.id})));
+      await expect(bid.requestCommitment()).resolves.toEqual(new CommitmentConfirmation(new CommitmentConfirmationParams({ bidId: bidParams.id })));
       expect(kafkaMock.sendParams).toHaveBeenCalledTimes(1);
       expect(kafkaMessageStreamMock.filterType).toHaveBeenCalledTimes(1);
     });
 
     it('should return confirmation after bidder had confirmed the bid, and another bid confirmation was filtered', async () => {
-      const anotherBidConfirmationParams = new CommitmentConfirmationParams({bidId: 'anotherBid'});
+      const anotherBidConfirmationParams = new CommitmentConfirmationParams({ bidId: 'anotherBid' });
 
       const kafkaMessageStreamMock = {
         filterType: jest.fn(() => Observable.from([anotherBidConfirmationParams, confirmationParams])),
@@ -100,14 +100,14 @@ describe('Bid class', () => {
         sendParams: jest.fn((topicId: string, requestParams: CommitmentRequestParams, configuration: IConfig) => Promise.resolve()),
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       bidParams.isCommitted = false;
       const bid = new Bid(selfId, bidParams, config);
 
-      await expect(bid.requestCommitment()).resolves.toEqual(new CommitmentConfirmation(new CommitmentConfirmationParams({bidId: bidParams.id})));
+      await expect(bid.requestCommitment()).resolves.toEqual(new CommitmentConfirmation(new CommitmentConfirmationParams({ bidId: bidParams.id })));
       expect(kafkaMock.sendParams).toHaveBeenCalledTimes(1);
       expect(kafkaMessageStreamMock.filterType).toHaveBeenCalledTimes(1);
     });
@@ -116,7 +116,7 @@ describe('Bid class', () => {
       const kafkaMock = {
         sendParams: jest.fn((topicId: string, requestParams: CommitmentRequestParams, configuration: IConfig) => Promise.reject('kafka error')),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
@@ -135,7 +135,7 @@ describe('Bid class', () => {
         sendParams: jest.fn((topicId: string, requestParams: CommitmentRequestParams, configuration: IConfig) => Promise.resolve()),
         messages: jest.fn(() => Promise.reject('kafka error')),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
@@ -158,8 +158,8 @@ describe('Bid class', () => {
         approveMission: jest.fn(() => Promise.resolve()),
         generateMissionId: jest.fn(() => 'topicId'),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
-      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('./Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(selfId, bidParams, config);
@@ -179,8 +179,8 @@ describe('Bid class', () => {
         approveMission: jest.fn(() => Promise.resolve()),
         generateMissionId: jest.fn(() => 'topicId'),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
-      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('./Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(selfId, bidParams, config);
@@ -199,8 +199,8 @@ describe('Bid class', () => {
       const contractsMock = {
         generateMissionId: jest.fn(() => 'topicId'),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
-      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('./Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid('needId', bidParams, config);
@@ -216,7 +216,7 @@ describe('Bid class', () => {
       const bid = new Bid(selfId, bidParams, config);
 
       await expect(bid.accept(missionParams, 'Private_key')).rejects.toThrow
-      (`Bidder hasn't confirmed commitment to this bid! please get commitment confirmation first.`);
+        (`Bidder hasn't confirmed commitment to this bid! please get commitment confirmation first.`);
     });
   });
 
@@ -259,7 +259,7 @@ describe('Bid class', () => {
     it('should receive missions and call relevant functions', async () => {
 
       const kafkaMessageStreamMock = {
-        filterType: jest.fn(() => Observable.from([missionParams1,  missionParams2, missionParams3])),
+        filterType: jest.fn(() => Observable.from([missionParams1, missionParams2, missionParams3])),
       };
       const kafkaMock = {
         generateTopicId: jest.fn(() => TOPIC_ID),
@@ -288,7 +288,7 @@ describe('Bid class', () => {
     it('should receive missions with specified topicId and relevant functions', async () => {
 
       const kafkaMessageStreamMock = {
-        filterType: jest.fn(() => Observable.from([missionParams1,  missionParams2, missionParams3])),
+        filterType: jest.fn(() => Observable.from([missionParams1, missionParams2, missionParams3])),
       };
       const kafkaMock = {
         generateTopicId: jest.fn(() => TOPIC_ID),
@@ -371,12 +371,12 @@ describe('Bid class', () => {
         sendParams: () => Promise.resolve(),
         paramsStream: jest.fn((topicId: string, configParam: IConfig) => Promise.reject('kafka error')),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       const contractsMock = {
         approveMission: () => Promise.resolve(),
         startMission: () => Promise.resolve(),
       };
-      jest.doMock('./Contracts', () => ({default: contractsMock}));
+      jest.doMock('./Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(selfId, bidParams, config);
@@ -391,7 +391,7 @@ describe('Bid class', () => {
       sendParams: jest.fn(() => Promise.resolve()),
     };
     beforeAll(() => {
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
     });
 
     it('should success and call relevant function', async () => {
@@ -414,7 +414,7 @@ describe('Bid class', () => {
     let requestParams: CommitmentRequestParams;
 
     beforeEach(() => {
-      requestParams = new CommitmentRequestParams({neederId: 'neederId'});
+      requestParams = new CommitmentRequestParams({ neederId: 'neederId' });
     });
 
     it('should return valid commitment requests when there are no kafka errors', async () => {
@@ -425,13 +425,13 @@ describe('Bid class', () => {
       const kafkaMock = {
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(bidParams.id, bidParams, config);
 
       const commitmentRequestStream = await bid.commitmentRequests();
-      const commitmentRequest =  await commitmentRequestStream.toPromise();
+      const commitmentRequest = await commitmentRequestStream.toPromise();
 
       expect(commitmentRequest).toEqual(new CommitmentRequest(bidParams.id, requestParams, config));
       expect(kafkaMock.messages).toHaveBeenCalledTimes(1);
@@ -441,7 +441,7 @@ describe('Bid class', () => {
       const kafkaMock = {
         messages: jest.fn(() => Promise.reject('kafka error')),
       };
-      jest.doMock('./Kafka', () => ({default: kafkaMock}));
+      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(bidParams.id, bidParams, config);
