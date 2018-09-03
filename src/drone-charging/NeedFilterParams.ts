@@ -6,7 +6,7 @@ import ProtocolTypes from './ProtocolTypes';
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
     private static _protocol = 'drone_charging';
-    private static _type = 'NeedFilter';
+    private static _type = 'need_filter';
 
     public static getMessageType(): string {
         return `${NeedFilterParams._protocol}:${NeedFilterParams._type}`;
