@@ -3,7 +3,7 @@ FORCE:
 tslint: FORCE
 	npm run tslint
 
-jest: FORCE
+test: FORCE
 	npm run jest
 
 tsc: FORCE
@@ -12,15 +12,15 @@ tsc: FORCE
 spellcheck: FORCE
 	npm run spellcheck
 
-pre-push: tslint tsc jest
+pre-push: tslint tsc test
 
 pre-publish: FORCE
 	npm run typedoc
 
-build-dev: jest
+build-dev: test
 	npm run build-dev
 
-build-prod: jest
+build-prod: test
 	npm run build-prod
 
 publish: build-prod
