@@ -1,5 +1,6 @@
 import BaseBidParams from '../BidParams';
 import IBaseBidParams from '../IBidParams';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IBidParams The interface drone-delivery/IBidParams represent a valid argument of drone-delivery/BidParams constructor.
@@ -14,8 +15,8 @@ interface IBidParams extends IBaseBidParams {
  * @class The Class drone-delivery/BidParams represent the parameters of drone-delivery bid.
  */
 export default class BidParams extends BaseBidParams {
-    private static _protocol = 'DroneDelivery';
-    private static _type = 'Bid';
+    private static _protocol = 'drone_delivery';
+    private static _type = 'bid';
 
     /**
      * @property Time from contract signing to delivery in seconds.
@@ -49,5 +50,9 @@ export default class BidParams extends BaseBidParams {
 
     public equals(other: BidParams): boolean {
         return super.equals(other) && this.eta === other.eta;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }

@@ -1,12 +1,13 @@
 import BaseNeedFilterParams from '../NeedFilterParams';
 import { IDimensions } from '../common-types';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class drone-delivery/NeedFilterParams represent the parameters that used to filter drone-delivery needs.
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
-    private static _protocol = 'DroneDelivery';
-    private static _type = 'NeedFilter';
+    private static _protocol = 'drone_delivery';
+    private static _type = 'need_filter';
     public maxDimensions: IDimensions;
 
     public static getMessageType(): string {
@@ -27,5 +28,9 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         const formattedParams = super.serialize();
         Object.assign(formattedParams, {dimensions: this.maxDimensions});
         return formattedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }
