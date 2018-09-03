@@ -17,10 +17,10 @@ pre-push: tslint tsc jest
 pre-publish: FORCE
 	npm run typedoc
 
-build-dev: test
+build-dev: jest
 	npm run build-dev
 
-build-prod: test
+build-prod: jest
 	npm run build-prod
 
 publish: build-prod
