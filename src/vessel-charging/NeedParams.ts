@@ -1,6 +1,7 @@
 import BaseNeedParams from '../NeedParams';
 import { IDimensions } from '../common-types';
 import { EnergySources, Amenities } from './enums';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class boat-charging/NeedParams represent the parameters of boat-charging need.
@@ -54,4 +55,7 @@ export default class NeedParams extends BaseNeedParams {
         return formatedParams;
     }
 
+    public getProtocolTypes() {
+        return ProtocolTypes;
+    }
 }

@@ -1,7 +1,7 @@
 import BaseMissionParams from '../MissionParams';
 import BaseIMissionParams from '../IMissionParams';
-import { ID, DavID, BigInteger } from '../common-types';
-import IPrice from '../IPrice';
+import { ID } from '../common-types';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IMissionParams The interface boat-charging/IMissionParams represent a valid argument of boat-charging/MissionParams constructor.
@@ -34,5 +34,9 @@ export default class MissionParams extends BaseMissionParams {
     public serialize() {
         const formatedParams = super.serialize();
         return formatedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }

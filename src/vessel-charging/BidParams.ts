@@ -2,6 +2,7 @@ import BaseBidParams from '../BidParams';
 import { ID, DavID, ILocation } from '../common-types';
 import IBaseBidParams from '../IBidParams';
 import { EnergySources, Amenities } from './enums';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IBidParams The interface boat-charging/IBidParams represent a valid argument of boat-charging/BidParams constructor.
@@ -146,5 +147,9 @@ export default class BidParams extends BaseBidParams {
     }
     public equals(other: BidParams): boolean {
         return super.equals(other);
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }

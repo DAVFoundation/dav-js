@@ -1,4 +1,5 @@
 import BaseMessageParams from '../MessageParams';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.
@@ -18,5 +19,9 @@ export default abstract class MessageParams extends BaseMessageParams {
     public serialize() {
         const formatedParams = super.serialize();
         return formatedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }

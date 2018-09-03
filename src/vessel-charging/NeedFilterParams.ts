@@ -1,5 +1,6 @@
 import BaseNeedFilterParams from '../NeedFilterParams';
 import { IDimensions } from '../common-types';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class boat-charging/NeedFilterParams represent the parameters that used to filter boat-charging needs.
@@ -28,5 +29,9 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         const formattedParams = super.serialize();
         Object.assign(formattedParams, {dimensions: this.maxDimensions});
         return formattedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }
