@@ -1,19 +1,19 @@
 import SDKFactory from '../../src/SDKFactory';
 import Identity from '../../src/Identity';
 import Config from '../../src/Config';
-import NeedFilterParams from '../../src/boat-charging/NeedFilterParams';
-import NeedParams from '../../src/boat-charging/NeedParams';
-import BidParams from '../../src/boat-charging/BidParams';
-import MissionParams from '../../src/boat-charging/MissionParams';
-import MessageParams from '../../src/boat-charging/MessageParams';
-import ProviderStatusMessageParams from '../../src/boat-charging/Messages/ProviderStatusMessageParams';
-import StartingMessageParams from '../../src/boat-charging/Messages/StartingMessageParams';
-import StatusRequestMessageParams from '../../src/boat-charging/Messages/StatusRequestMessageParams';
-import VesselStatusMessageParams from '../../src/boat-charging/Messages/VesselStatusMessageParams';
-import ChargingArrivalMessageParams from '../../src/boat-charging/Messages/ChargingArrivalMessageParams';
-import ChargingStartedMessageParams from '../../src/boat-charging/Messages/ChargingStartedMessageParams';
-import ChargingCompleteMessageParams from '../../src/boat-charging/Messages/ChargingCompleteMessageParams';
-import { EnergySources, Amenities } from '../../src/boat-charging/enums';
+import NeedFilterParams from '../../src/vessel-charging/NeedFilterParams';
+import NeedParams from '../../src/vessel-charging/NeedParams';
+import BidParams from '../../src/vessel-charging/BidParams';
+import MissionParams from '../../src/vessel-charging/MissionParams';
+import MessageParams from '../../src/vessel-charging/MessageParams';
+import ProviderStatusMessageParams from '../../src/vessel-charging/messages/ProviderStatusMessageParams';
+import StartingMessageParams from '../../src/vessel-charging/messages/StartingMessageParams';
+import StatusRequestMessageParams from '../../src/vessel-charging/messages/StatusRequestMessageParams';
+import VesselStatusMessageParams from '../../src/vessel-charging/messages/VesselStatusMessageParams';
+import ChargingArrivalMessageParams from '../../src/vessel-charging/messages/ChargingArrivalMessageParams';
+import ChargingStartedMessageParams from '../../src/vessel-charging/messages/ChargingStartedMessageParams';
+import ChargingCompleteMessageParams from '../../src/vessel-charging/messages/ChargingCompleteMessageParams';
+import { EnergySources, Amenities } from '../../src/vessel-charging/enums';
 import Need from '../../src/Need';
 import Bid from '../../src/Bid';
 import { Observable } from 'rxjs';
@@ -114,13 +114,13 @@ export default class Provider {
 
     const vesselStatusMessages = await mission.messages(VesselStatusMessageParams);
     vesselStatusMessages.subscribe((message) => {
-      console.log('Vessel status message received:', message);
+      console.log('Vessel status message received:', message.messageParams);
       printLine();
     });
 
     const statusRequestMessages = await mission.messages(StatusRequestMessageParams);
     statusRequestMessages.subscribe((message) => {
-      console.log('Status request message received:', message);
+      console.log('Status request message received:', message.messageParams);
       printLine();
 
       const providerStatusMessageParams = new ProviderStatusMessageParams({finishEta: Date.now() + 5000});
@@ -131,7 +131,7 @@ export default class Provider {
 
     const chargingArrivalMessages = await mission.messages(ChargingArrivalMessageParams);
     chargingArrivalMessages.subscribe((message) => {
-      console.log('Charging arrival message received:', message);
+      console.log('Charging arrival message received:', message.messageParams);
       printLine();
 
       const chargingStartedMessageParams = new ChargingStartedMessageParams({});

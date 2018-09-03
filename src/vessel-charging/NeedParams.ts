@@ -8,6 +8,7 @@ import { EnergySources, Amenities } from './enums';
 export default class NeedParams extends BaseNeedParams {
     private static _protocol = 'boat_charging';
     private static _type = 'need';
+    public radius: number;
     public startAt: number;
     public dimensions: IDimensions;
     public batteryCapacity: number;
