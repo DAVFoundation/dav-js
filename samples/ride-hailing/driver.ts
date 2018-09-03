@@ -60,13 +60,13 @@ export default async function runProvider(config?: IConfig) {
         const bidParams = new BidParams({price: '0.1', vehicleId: davId, isCommitted: false});
         const bid = await need.createBid(bidParams);
         console.log('bid created');
+        const missions = await bid.missions(MissionParams);
+        missions.subscribe(onMissionCreated);
         const requestsStream = await bid.commitmentRequests();
         console.log('got commitment request stream');
         const commitmentRequest = await (requestsStream.first().toPromise());
         console.log('got commitment request');
         await commitmentRequest.confirm();
-        const missions = await bid.missions(MissionParams);
-        missions.subscribe(onMissionCreated);
     };
 
     needs.subscribe(

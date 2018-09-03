@@ -8,7 +8,6 @@ import Mission from '../../src/Mission';
 import Bid from '../../src/Bid';
 import IConfig from '../../src/IConfig';
 import { RideHailingMissionStatus } from '../../src/common-enums';
-import { Observable } from '../../src/common-types';
 import Message from '../../src/Message';
 
 export default async function runConsumer(config?: IConfig) {
