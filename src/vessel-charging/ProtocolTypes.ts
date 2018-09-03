@@ -9,8 +9,10 @@ import ProviderStatusMessageParams from './messages/ProviderStatusMessageParams'
 import StartingMessageParams from './messages/StartingMessageParams';
 import StatusRequestMessageParams from './messages/StatusRequestMessageParams';
 import VesselStatusMessageParams from './messages/VesselStatusMessageParams';
+import NeedFilterParams from './NeedFilterParams';
 
 export default {
+    need_filter: NeedFilterParams,
     need: NeedParams,
     bid: BidParams,
     mission: MissionParams,

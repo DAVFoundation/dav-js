@@ -7,7 +7,7 @@ import ProtocolTypes from './ProtocolTypes';
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
     private static _protocol = 'boat_charging';
-    private static _type = 'need';
+    private static _type = 'need_filter';
     public maxDimensions: IDimensions;
 
     public static getMessageType(): string {
