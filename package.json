@@ -21,8 +21,6 @@
   "main": "./src/index.js",
   "scripts": {
     "preinstall": "(cp ./.githooks/* .git/hooks) || true",
-    "build-dev": "webpack --mode development",
-    "build-prod": "webpack --mode production",
     "build-browser-dev": "webpack --mode development --config webpack.browser.config.js",
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
     "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
