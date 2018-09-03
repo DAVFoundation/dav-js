@@ -20,11 +20,11 @@ export default class NeedParams extends BaseNeedParams {
     public destinationLocation: ILocation;
 
     public static getMessageType(): string {
-        return NeedParams._protocol;
+        return NeedParams._type;
     }
 
     public static getMessageProtocol(): string {
-        return NeedParams._type;
+        return NeedParams._protocol;
     }
 
     public static deserialize(json: any): NeedParams {

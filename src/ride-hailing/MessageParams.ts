@@ -23,11 +23,11 @@ export default class MessageParams extends BaseMessageParams {
     public missionStatus: RideHailingMissionStatus;
 
     public static getMessageType(): string {
-        return MessageParams._protocol;
+        return MessageParams._type;
     }
 
     public static getMessageProtocol(): string {
-        return MessageParams._type;
+        return MessageParams._protocol;
     }
 
     public static deserialize(json: any): MessageParams {

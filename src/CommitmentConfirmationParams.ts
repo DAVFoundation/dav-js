@@ -14,11 +14,11 @@ export default class CommitmentConfirmationParams extends BasicParams {
 
 
     public static getMessageType(): string {
-        return CommitmentConfirmationParams._protocol;
+        return CommitmentConfirmationParams._type;
     }
 
     public static getMessageProtocol(): string {
-        return CommitmentConfirmationParams._type;
+        return CommitmentConfirmationParams._protocol;
     }
 
     public static deserialize(json: any): CommitmentConfirmationParams {

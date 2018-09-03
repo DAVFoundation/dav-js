@@ -1,7 +1,4 @@
 import BaseBidParams from '../BidParams';
-import IPrice from '../IPrice';
-import Price from '../Price';
-import { BigInteger, ID, DavID } from '../common-types';
 import IBaseBidParams from '../IBidParams';
 import ProtocolTypes from './ProtocolTypes';
 
@@ -28,11 +25,11 @@ export default class BidParams extends BaseBidParams {
     public plugType: string;
 
     public static getMessageType(): string {
-        return BidParams._protocol;
+        return BidParams._type;
     }
 
     public static getMessageProtocol(): string {
-        return BidParams._type;
+        return BidParams._protocol;
     }
 
     public static deserialize(json: any): BidParams {
