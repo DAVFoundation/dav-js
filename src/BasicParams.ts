@@ -33,4 +33,6 @@ export default abstract class BasicParams {
             type: this._type,
         };
     }
+
+    public abstract getProtocolTypes(): any;
 }

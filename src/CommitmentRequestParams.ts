@@ -36,4 +36,8 @@ export default class CommitmentRequestParams extends BasicParams {
         });
         return formattedParams;
     }
+
+    public getProtocolTypes() {
+        throw new Error('there is no protocol for general messages');
+    }
 }

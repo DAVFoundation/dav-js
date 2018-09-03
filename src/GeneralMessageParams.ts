@@ -29,4 +29,8 @@ export default class MessageParams extends BaseMessageParams {
         return formattedParams;
     }
 
+    public getProtocolTypes() {
+        throw new Error('there is no protocol for general messages');
+    }
+
 }
