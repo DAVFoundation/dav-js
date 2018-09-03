@@ -1,4 +1,5 @@
 import BaseNeedFilterParams from '../NeedFilterParams';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class drone-charging/NeedFilterParams represent the parameters that used to filter drone-charging needs.
@@ -23,5 +24,9 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     public serialize() {
         const formatedParams = super.serialize();
         return formatedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }

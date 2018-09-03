@@ -3,6 +3,7 @@ import IPrice from '../IPrice';
 import Price from '../Price';
 import { BigInteger, ID, DavID } from '../common-types';
 import IBaseBidParams from '../IBidParams';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IBidParams The interface drone-charging/IBidParams represent a valid argument of drone-charging/BidParams constructor.
@@ -53,5 +54,9 @@ export default class BidParams extends BaseBidParams {
 
     public equals(other: BidParams): boolean {
         return super.equals(other) && this.plugType === other.plugType;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }
