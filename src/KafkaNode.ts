@@ -59,6 +59,7 @@ export default class Kafka extends KafkaBase implements IKafka {
                 if (err) {
                     reject(err);
                 } else {
+                    producer.close();
                     resolve();
                 }
             });
@@ -76,6 +77,7 @@ export default class Kafka extends KafkaBase implements IKafka {
                 if (err) {
                     reject(err);
                 } else {
+                    producer.close();
                     resolve();
                 }
             });
