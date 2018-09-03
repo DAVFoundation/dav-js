@@ -33,7 +33,11 @@ export default class NeedParams extends BaseNeedParams {
     public maxAltitude: number;
 
     public static getMessageType(): string {
-        return `${NeedParams._protocol}:${NeedParams._type}`;
+        return NeedParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        return NeedParams._type;
     }
 
     public static deserialize(json: any): NeedParams {
