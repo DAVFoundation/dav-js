@@ -8,7 +8,15 @@ import ProtocolTypes from './ProtocolTypes';
 export default class MissionParams extends BaseMissionParams {
 
     private static _protocol = 'drone_charging';
-    private static _type = 'Mission';
+    private static _type = 'mission';
+
+    public static getMessageType(): string {
+        throw MissionParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        throw MissionParams._type;
+    }
 
     public static deserialize(json: any): MissionParams {
         const missionParams = super.deserialize(json);

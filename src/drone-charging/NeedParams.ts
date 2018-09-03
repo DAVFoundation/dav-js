@@ -7,10 +7,14 @@ import ProtocolTypes from './ProtocolTypes';
 export default class NeedParams extends BaseNeedParams {
 
     private static _protocol = 'drone_charging';
-    private static _type = 'Need';
+    private static _type = 'need';
 
     public static getMessageType(): string {
-        return `${NeedParams._protocol}:${NeedParams._type}`;
+        throw NeedParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        throw NeedParams._type;
     }
 
     public static deserialize(json: any): NeedParams {

@@ -20,7 +20,7 @@ interface IBidParams extends IBaseBidParams {
 export default class BidParams extends BaseBidParams {
 
     private static _protocol = 'drone_charging';
-    private static _type = 'Bid';
+    private static _type = 'bid';
 
     /**
      * @property The drone charging plug type.
@@ -28,7 +28,11 @@ export default class BidParams extends BaseBidParams {
     public plugType: string;
 
     public static getMessageType(): string {
-        return `${this._protocol}:${this._type}`;
+        throw BidParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        throw BidParams._type;
     }
 
     public static deserialize(json: any): BidParams {

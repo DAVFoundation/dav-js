@@ -9,7 +9,11 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     private static _type = 'need_filter';
 
     public static getMessageType(): string {
-        return `${NeedFilterParams._protocol}:${NeedFilterParams._type}`;
+        throw NeedFilterParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        throw NeedFilterParams._type;
     }
 
     public static deserialize(json: any): NeedFilterParams {
