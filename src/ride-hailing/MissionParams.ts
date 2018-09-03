@@ -1,5 +1,6 @@
 import BaseMissionParams from '../MissionParams';
 import IBaseMissionParams from '../IMissionParams';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class ride-hailing/MissionParams represent the parameters of ride-hailing mission.
@@ -25,5 +26,9 @@ export default class MissionParams extends BaseMissionParams {
     public serialize() {
         const formattedParams = super.serialize();
         return formattedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }

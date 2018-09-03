@@ -1,4 +1,5 @@
 import BaseNeedFilterParams from '../NeedFilterParams';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class ride-hailing/NeedFilterParams represent the parameters that used to filter ride-hailing needs.
@@ -22,10 +23,14 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         if (!values.location || !values.location.lat || !values.location.long || !values.radius) {
             throw new Error('NeedFilter lack of essential parameters');
         }
-   }
+    }
 
     public serialize() {
-       const formattedParams = super.serialize();
-       return formattedParams;
-   }
+        const formattedParams = super.serialize();
+        return formattedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
+    }
 }

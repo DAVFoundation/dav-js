@@ -1,5 +1,6 @@
 import BaseMessageParams, { IMessageParams as IBaseMessageParams } from '../MessageParams';
 import { RideHailingMissionStatus } from '../common-enums';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IMessageParams extends The base interface IMessageParams for ride hailing protocol for all messages except OnTheWay message.
@@ -44,5 +45,9 @@ export default class MessageParams extends BaseMessageParams {
             missionStatus: this.missionStatus,
         });
         return formattedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }

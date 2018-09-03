@@ -1,5 +1,6 @@
 import BaseNeedParams from '../NeedParams';
 import { ILocation } from '../common-types';
+import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class ride-hailing/NeedParams represent the parameters of ride-hailing need.
@@ -47,5 +48,9 @@ export default class NeedParams extends BaseNeedParams {
             destinationLocation: this.destinationLocation,
         });
         return formattedParams;
+    }
+
+    public getProtocolTypes() {
+        return ProtocolTypes;
     }
 }
