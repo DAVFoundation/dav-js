@@ -63,9 +63,9 @@ describe('KafkaMessageStream', () => {
             },
             (error) => { fail(error); },
             () => {
-                const formatedNeedParams = new DroneDeliveryNeedParams();
-                formatedNeedParams.deserialize(JSON.parse('{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}'));
-                expect(passedMessages).toMatchObject([formatedNeedParams]);
+                const formattedNeedParams = new DroneDeliveryNeedParams();
+                formattedNeedParams.deserialize(JSON.parse('{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}'));
+                expect(passedMessages).toMatchObject([formattedNeedParams]);
                 done();
             });
     });
@@ -88,9 +88,9 @@ describe('KafkaMessageStream', () => {
             },
             (error) => { fail(error); },
             () => {
-                const formatedNeedParams = new DroneDeliveryNeedParams();
-                formatedNeedParams.deserialize(JSON.parse('{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}'));
-                expect(passedMessages).toEqual([formatedNeedParams]);
+                const formattedNeedParams = new DroneDeliveryNeedParams();
+                formattedNeedParams.deserialize(JSON.parse('{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}'));
+                expect(passedMessages).toEqual([formattedNeedParams]);
                 done();
             });
     });
@@ -119,11 +119,11 @@ describe('KafkaMessageStream', () => {
 
         const test = () => {
             if (doneMissions && doneNeeds) {
-                const formatedNeedParams1 = new DroneDeliveryNeedParams();
-                formatedNeedParams1.deserialize(JSON.parse(kafkaMessages[0].contents));
-                const formatedNeedParams2 = new DroneDeliveryNeedParams();
-                formatedNeedParams2.deserialize(JSON.parse(kafkaMessages[2].contents));
-                expect(passedNeeds).toEqual([formatedNeedParams1, formatedNeedParams2]);
+                const formattedNeedParams1 = new DroneDeliveryNeedParams();
+                formattedNeedParams1.deserialize(JSON.parse(kafkaMessages[0].contents));
+                const formattedNeedParams2 = new DroneDeliveryNeedParams();
+                formattedNeedParams2.deserialize(JSON.parse(kafkaMessages[2].contents));
+                expect(passedNeeds).toEqual([formattedNeedParams1, formattedNeedParams2]);
                 const expectedMission1 = new DroneDeliveryMissionParams();
                 expectedMission1.deserialize(JSON.parse(kafkaMessages[1].contents));
                 const expectedMission2 = new DroneDeliveryMissionParams();

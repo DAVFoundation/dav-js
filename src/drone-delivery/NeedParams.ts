@@ -47,14 +47,14 @@ export default class NeedParams extends BaseNeedParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        Object.assign(formatedParams, {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             startLocation: this.startLocation,
             endLocation: this.endLocation,
             vehicleType: this.vehicleType,
             maxAltitude: this.maxAltitude,
         });
-        return formatedParams;
+        return formattedParams;
     }
 
     public deserialize(json: any): void {

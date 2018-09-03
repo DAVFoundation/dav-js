@@ -123,8 +123,8 @@ export default class BidParams extends BaseBidParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        Object.assign(formatedParams, {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             entranceLocation: this.entranceLocation,
             exitLocation: this.exitLocation,
             availableFrom: this.availableFrom,
@@ -135,7 +135,7 @@ export default class BidParams extends BaseBidParams {
             manufacturer: this.amenities,
             model: this.amenities,
         });
-        return formatedParams;
+        return formattedParams;
     }
 
     public deserialize(json: any): void {
