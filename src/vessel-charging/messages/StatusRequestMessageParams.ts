@@ -6,7 +6,7 @@ export default class MessageParams extends BaseMessageParams {
     private static _type = 'status_request_message';
 
     public static getMessageType(): string {
-        return `${MessageParams._protocol}:${MessageParams._type}`;
+        return MessageParams._type;
     }
 
     public static deserialize(json: any): MessageParams {

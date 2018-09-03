@@ -7,7 +7,7 @@ export default class MessageParams extends BaseMessageParams {
     public finishEta: number;
 
     public static getMessageType(): string {
-        return `${MessageParams._protocol}:${MessageParams._type}`;
+        return MessageParams._type;
     }
 
     public static deserialize(json: any): MessageParams {

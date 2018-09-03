@@ -18,7 +18,11 @@ export default class NeedParams extends BaseNeedParams {
     public amenities: Amenities[];
 
     public static getMessageType(): string {
-        return `${NeedParams._protocol}:${NeedParams._type}`;
+        return NeedParams._type;
+    }
+
+    public static getMessageProtocol(): string {
+        return NeedParams._protocol;
     }
 
     public static deserialize(json: any): NeedParams {

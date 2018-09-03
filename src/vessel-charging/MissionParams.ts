@@ -18,8 +18,13 @@ interface IMissionParams extends BaseIMissionParams {
 export default class MissionParams extends BaseMissionParams {
     private static _protocol = 'boat_charging';
     private static _type = 'mission';
+
     public static getMessageType(): string {
-        return `${MissionParams._protocol}:${MissionParams._type}`;
+        return MissionParams._type;
+    }
+
+    public static getMessageProtocol(): string {
+        return MissionParams._protocol;
     }
 
     public static deserialize(json: any): MissionParams {

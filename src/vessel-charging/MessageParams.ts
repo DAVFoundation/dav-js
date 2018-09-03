@@ -7,6 +7,10 @@ import ProtocolTypes from './ProtocolTypes';
 export default abstract class MessageParams extends BaseMessageParams {
     protected static _protocol = 'boat_charging';
 
+    public static getMessageProtocol(): string {
+        return MessageParams._protocol;
+    }
+
     public static deserialize(json: any): MessageParams {
         const messageParams = super.deserialize(json);
         return messageParams;

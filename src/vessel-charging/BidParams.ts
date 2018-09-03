@@ -102,7 +102,11 @@ export default class BidParams extends BaseBidParams {
     public model: string;
 
     public static getMessageType(): string {
-        return `${this._protocol}:${this._type}`;
+        return BidParams._type;
+    }
+
+    public static getMessageProtocol(): string {
+        return BidParams._protocol;
     }
 
     public static deserialize(json: any): BidParams {

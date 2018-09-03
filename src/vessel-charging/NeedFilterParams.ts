@@ -11,7 +11,11 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     public maxDimensions: IDimensions;
 
     public static getMessageType(): string {
-        return `${NeedFilterParams._protocol}:${NeedFilterParams._type}`;
+        return NeedFilterParams._type;
+    }
+
+    public static getMessageProtocol(): string {
+        return NeedFilterParams._protocol;
     }
 
     public static deserialize(json: any): NeedFilterParams {
