@@ -9,5 +9,7 @@ export default {
     need: NeedParams,
     bid: BidParams,
     mission: MissionParams,
-    message: MessageParams,
+    message: {
+        message: MessageParams,
+    },
 };

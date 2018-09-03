@@ -10,6 +10,8 @@ export default {
     need: NeedParams,
     bid: BidParams,
     mission: MissionParams,
-    vehicle_location_message: VehicleLocationMessageParams,
-    message: MessageParams,
+    message: {
+        message: MessageParams,
+        vehicle_location_message: VehicleLocationMessageParams,
+    },
 };
