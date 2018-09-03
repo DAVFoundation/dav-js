@@ -1,11 +1,11 @@
 import Config from './Config';
 import IConfig from './IConfig';
 import Need from './Need';
-import NeedFilterParams from './boat-charging/NeedFilterParams';
-import NeedParams from './boat-charging/NeedParams';
-import MissionParams from './boat-charging/MissionParams';
-import MessageParams from './boat-charging/Messages/StatusRequestMessageParams';
-import BidParams from './boat-charging/BidParams';
+import NeedFilterParams from './vessel-charging/NeedFilterParams';
+import NeedParams from './vessel-charging/NeedParams';
+import MissionParams from './vessel-charging/MissionParams';
+import MessageParams from './vessel-charging/messages/StatusRequestMessageParams';
+import BidParams from './vessel-charging/BidParams';
 import { Observable, ID } from './common-types';
 import Message from './Message';
 import Mission from './Mission';

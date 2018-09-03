@@ -4,7 +4,6 @@ import { ID, BigInteger, DavID } from './common-types';
 import Price from './Price';
 import { PriceType } from './common-enums';
 import IBidParams from './IBidParams';
-import { callbackify } from 'util';
 
 /**
  * @class The abstract Class BidParams represent common parameters of BidParams classes.
@@ -39,11 +38,7 @@ export default abstract class BidParams extends BasicParams {
         this.id = values.id;
         this.vehicleId = values.vehicleId;
         this.neederDavId = values.neederDavId;
-        if (values.isCommitted === false) {
-            this.isCommitted = false;
-        } else {
-            this.isCommitted = true;
-        }
+        this.isCommitted = values.isCommitted === false ? false : true;
         const priceObject = values.price instanceof Array ? values.price : [values.price];
         priceObject.map((price: string | IPrice): IPrice => {
             return typeof price === 'string' ?

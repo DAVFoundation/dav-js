@@ -2,6 +2,7 @@ import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
 import MissionParams from './MissionParams';
+import GeneralMessageParams from './GeneralMessageParams';
 import MessageParams from './MessageParams';
 import Message from './Message';
 import Mission from './Mission';
@@ -29,7 +30,6 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         this._kafkaMessageStream = kafkaMessageStream;
     }
 
-    // sadly, normal getter cannot be async
     private async getKafkaMessageStream(): Promise<KafkaMessageStream> {
         if (!this._kafkaMessageStream) {
             this._kafkaMessageStream = await Kafka.messages(this._selfId, this._config);
@@ -46,16 +46,14 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         await Kafka.sendParams(bidderId, commitmentRequestParams, this._config);
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#3
         const commitmentConfirmationParamsStream = kafkaMessageStream.filterType(CommitmentConfirmationParams);
-        return await new Promise<CommitmentConfirmation>((resolve) => {
-            commitmentConfirmationParamsStream.subscribe(
-                (commitmentConfirmationParams) => {
-                    if (commitmentConfirmationParams.bidId === this._params.id) {
-                        this._params.isCommitted = true;
-                        resolve(new CommitmentConfirmation(commitmentConfirmationParams));
-                    }
-                },
-            );
-        });
+
+        const commitmentConfirmation = await commitmentConfirmationParamsStream.filter(
+            (commitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
+                                          .map((commitmentParams) => {
+                                              this._params.isCommitted = true;
+                                              return new CommitmentConfirmation(commitmentParams);
+                                            }).first().toPromise();
+        return commitmentConfirmation;
     }
 
     /**
@@ -130,9 +128,9 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         .map((promise) => Observable.fromPromise(promise))
         .mergeAll()
         .do((mission) => {
-            const message = new MessageParams({senderId: this._missionId});
+            const message = new GeneralMessageParams({senderId: this._missionId});
             mission.sendMessage(message);
-        });
+    });
         return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 

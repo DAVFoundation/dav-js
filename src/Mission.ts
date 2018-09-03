@@ -3,6 +3,7 @@ import { TransactionReceipt } from 'web3/types';
 import IConfig from './IConfig';
 import Message from './Message';
 import MessageParams from './MessageParams';
+import GeneralMessageParams from './GeneralMessageParams';
 import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
@@ -12,9 +13,6 @@ import KafkaMessageStream from './KafkaMessageStream';
  */
 export default class Mission<T extends MissionParams> {
 
-    // DON'T USE THIS MEMBER BUT ONLY VIA ITS GETTER!
-    private _kafkaMessageStream: KafkaMessageStream;
-
     public get params(): T {
         return this._params;
     }
@@ -23,7 +21,7 @@ export default class Mission<T extends MissionParams> {
     }
 
     private async getPeerId(): Promise<ID> {
-        const messages = await this.messages(MessageParams);
+        const messages = await this.messages(GeneralMessageParams);
         const peerId = new Promise<ID>((resolve, reject) => {
             messages.take(1).subscribe((message) => {
                 this._peerId = message.messageParams.senderId;
@@ -33,13 +31,6 @@ export default class Mission<T extends MissionParams> {
             });
         });
         return peerId;
-    }
-    // sadly, normal getter cannot be async
-    private async getKafkaMessageStream(): Promise<KafkaMessageStream> {
-        if (!this._kafkaMessageStream) {
-            this._kafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        }
-        return this._kafkaMessageStream;
     }
 
     /**
@@ -87,7 +78,7 @@ export default class Mission<T extends MissionParams> {
      * @returns Observable object.
      */
     public async messages<U extends MessageParams>(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
-        const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream();
+        const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
         const messageParamsStream = kafkaMessageStream.filterType(messageParamsType);
         const messageStream = messageParamsStream.map((params: U) => new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);

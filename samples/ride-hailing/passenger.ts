@@ -8,7 +8,6 @@ import Mission from '../../src/Mission';
 import Bid from '../../src/Bid';
 import IConfig from '../../src/IConfig';
 import { RideHailingMissionStatus } from '../../src/common-enums';
-import { Observable } from '../../src/common-types';
 import Message from '../../src/Message';
 
 export default async function runConsumer(config?: IConfig) {
@@ -59,11 +58,7 @@ export default async function runConsumer(config?: IConfig) {
     const onBid = async (bid: Bid<BidParams, VehicleLocationMessageParams>) => {
         console.log(`got bid: ${JSON.stringify(bid.params)}`);
         const confirmation = await bid.requestCommitment();
-        if (confirmation.BidId !== bid.params.id) {
-            console.log(`confirmation bidId is: ${confirmation.BidId}, bidId is: ${bid.params.id}`);
-            return;
-        }
-
+        console.log('bid was confirmed');
         const missionParams = new MissionParams({price: bid.params.price, vehicleId: bid.params.vehicleId, neederDavId: davId});
         const mission = await bid.accept(missionParams, walletPrivateKey);
         console.log('bid was accepted');
