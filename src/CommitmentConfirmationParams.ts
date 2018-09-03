@@ -12,8 +12,13 @@ export default class CommitmentConfirmationParams extends BasicParams {
 
     public bidId: string;
 
-    public static getMessageType() {
-        return `${CommitmentConfirmationParams._protocol}:${CommitmentConfirmationParams._type}`;
+
+    public static getMessageType(): string {
+        throw CommitmentConfirmationParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        throw CommitmentConfirmationParams._type;
     }
 
     public static deserialize(json: any): CommitmentConfirmationParams {

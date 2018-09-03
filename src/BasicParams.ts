@@ -20,6 +20,10 @@ export default abstract class BasicParams {
         throw new Error('Must be implemented by derived class');
     }
 
+    public static getMessageProtocol(): string {
+        throw new Error('Must be implemented by derived class');
+    }
+
     public constructor(values: Partial<IBasicParams>, private _protocol: string, private _type: string) {
         if (!!values) {
             this.ttl = values.ttl;
