@@ -28,11 +28,11 @@ export default class BidParams extends BaseBidParams {
     public plugType: string;
 
     public static getMessageType(): string {
-        throw BidParams._protocol;
+        return BidParams._protocol;
     }
 
     public static getMessageProtocol(): string {
-        throw BidParams._type;
+        return BidParams._type;
     }
 
     public static deserialize(json: any): BidParams {

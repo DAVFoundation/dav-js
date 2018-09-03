@@ -9,11 +9,11 @@ export default class GeneralMessageParams extends BaseMessageParams {
     private static _type = 'message';
 
     public static getMessageType(): string {
-        throw GeneralMessageParams._protocol;
+        return GeneralMessageParams._protocol;
     }
 
     public static getMessageProtocol(): string {
-        throw GeneralMessageParams._type;
+        return GeneralMessageParams._type;
     }
 
     public static deserialize(json: any) {

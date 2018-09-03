@@ -10,11 +10,11 @@ export default class NeedParams extends BaseNeedParams {
     private static _type = 'need';
 
     public static getMessageType(): string {
-        throw NeedParams._protocol;
+        return NeedParams._protocol;
     }
 
     public static getMessageProtocol(): string {
-        throw NeedParams._type;
+        return NeedParams._type;
     }
 
     public static deserialize(json: any): NeedParams {

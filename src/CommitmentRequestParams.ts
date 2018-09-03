@@ -13,11 +13,11 @@ export default class CommitmentRequestParams extends BasicParams {
     public neederId: string;
 
     public static getMessageType(): string {
-        throw CommitmentRequestParams._protocol;
+        return CommitmentRequestParams._protocol;
     }
 
     public static getMessageProtocol(): string {
-        throw CommitmentRequestParams._type;
+        return CommitmentRequestParams._type;
     }
 
     public static deserialize(json: any): CommitmentRequestParams {
