@@ -84,7 +84,11 @@ export default class BidParams extends BaseBidParams {
     public ratingCounter: number;
 
     public static getMessageType(): string {
-        return `${this._protocol}:${this._type}`;
+        return BidParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        return BidParams._type;
     }
 
     public static deserialize(json: any): BidParams {

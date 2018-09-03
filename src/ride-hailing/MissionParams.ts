@@ -11,7 +11,11 @@ export default class MissionParams extends BaseMissionParams {
     private static _type = 'mission';
 
     public static getMessageType(): string {
-        return `${this._protocol}:${this._type}`;
+        return MissionParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        return MissionParams._type;
     }
 
     public static deserialize(json: any): MissionParams {

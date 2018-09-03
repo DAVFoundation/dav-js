@@ -25,7 +25,11 @@ export default class MessageParams extends BaseMessageParams {
     public vehicleLocation: ILocation;
 
     public static getMessageType(): string {
-        return `${this._protocol}:${this._type}`;
+        return MessageParams._protocol;
+    }
+
+    public static getMessageProtocol(): string {
+        return MessageParams._type;
     }
 
     public static deserialize(json: any): MessageParams {
