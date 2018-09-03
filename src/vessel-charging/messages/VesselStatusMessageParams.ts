@@ -11,20 +11,14 @@ export default class MessageParams extends BaseMessageParams {
         return `${MessageParams._protocol}:${MessageParams._type}`;
     }
 
-    public static deserialize(json: any): MessageParams {
-        const messageParams = super.deserialize(json);
-        Object.assign(messageParams, {
-            location: json.location,
-        });
-        return new MessageParams(messageParams);
-    }
-
-    constructor(values: Partial<MessageParams>) {
-        super(values, MessageParams._type);
-        if (!values.location) {
-            throw new Error('location is a required field');
+    constructor(values?: Partial<MessageParams>) {
+        super(MessageParams._type, values);
+        if (!!values) {
+            if (!values.location) {
+                throw new Error('location is a required field');
+            }
+            this.location = values.location;
         }
-        this.location = values.location;
     }
 
     public serialize() {
@@ -34,4 +28,10 @@ export default class MessageParams extends BaseMessageParams {
         });
         return formatedParams;
     }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.location = json.location;
+    }
+
 }

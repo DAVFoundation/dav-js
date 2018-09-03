@@ -49,7 +49,9 @@ describe('NeedParams class', () => {
 
     describe('deserialize method', () => {
         it('should return NeedParams instance with the current parameters', () => {
-            expect(NeedParams.deserialize(serializedNeedParams)).toEqual(needParams);
+            const needParamsObject = new NeedParams();
+            needParamsObject.deserialize(serializedNeedParams);
+            expect(needParamsObject).toEqual(needParams);
         });
     });
 

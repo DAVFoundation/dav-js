@@ -15,30 +15,23 @@ export default abstract class MissionParams extends BasicParams {
     public neederDavId: DavID;
     public vehicleId: DavID;
 
-    public static deserialize(json: any) {
-        const missionParams = super.deserialize(json);
-        Object.assign(missionParams, {
-            id: json.id,
-            price: json.price,
-            vehicleId: json.vehicleId,
-            neederDavId: json.neederDavId,
-        });
-        return missionParams as MissionParams;
-    }
-
     // TODO: think if it does make sense let the user give id, but override it anyway when bid is accepted
-    constructor(values: Partial<IMissionParams>, protocol: string, type: string) {
-        super(values, protocol, type);
-        Object.assign(this, values);
-        let priceObject = values.price;
-        if (priceObject) {
-            priceObject = values.price instanceof Array ? values.price : [values.price];
-            priceObject.map((price: string | IPrice): IPrice => {
-                return typeof price === 'string' ?
-                new Price(price as BigInteger, PriceType.flat) :
-                new Price(price.value, price.type, price.description);
-            });
-            this.price = priceObject as IPrice[];
+    constructor(protocol: string, type: string, values?: Partial<IMissionParams>) {
+        super(protocol, type, values);
+        if (!!values) {
+            this.id = values.id;
+            this.vehicleId = values.vehicleId;
+            this.neederDavId = values.neederDavId;
+            let priceObject = values.price;
+            if (priceObject) {
+                priceObject = values.price instanceof Array ? values.price : [values.price];
+                priceObject.map((price: string | IPrice): IPrice => {
+                    return typeof price === 'string' ?
+                    new Price(price as BigInteger, PriceType.flat) :
+                    new Price(price.value, price.type, price.description);
+                });
+                this.price = priceObject as IPrice[];
+            }
         }
     }
 
@@ -51,6 +44,14 @@ export default abstract class MissionParams extends BasicParams {
             neederDavId: this.neederDavId,
         });
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.id = json.id;
+        this.price = json.price;
+        this.vehicleId = json.vehicleId;
+        this.neederDavId = json.neederDavId;
     }
 
 }

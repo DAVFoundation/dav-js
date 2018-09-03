@@ -70,22 +70,16 @@ export default class BidParams extends BaseBidParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static deserialize(json: any): BidParams {
-        const bidParams = super.deserialize(json);
-        Object.assign(bidParams, {
-            currentVehicleLocation: json.currentVehicleLocation,
-            vehicle: json.vehicle,
-            driverName: json.driverName,
-        });
-        return new BidParams(bidParams);
-    }
-
-    constructor(values: Partial<IBidParams>) {
-        super(values, BidParams._protocol, BidParams._type);
-        // TODO: throw if not enough details
-        this.currentVehicleLocation = values.currentVehicleLocation;
-        this.vehicle = values.vehicle;
-        this.driverName = values.driverName;
+    constructor(values?: Partial<IBidParams>) {
+        if (!values) {
+            super(BidParams._protocol, BidParams._type);
+        } else {
+            super(BidParams._protocol, BidParams._type, values);
+            // TODO: throw if not enough details
+            this.currentVehicleLocation = values.currentVehicleLocation;
+            this.vehicle = values.vehicle;
+            this.driverName = values.driverName;
+        }
     }
 
     public serialize() {
@@ -96,6 +90,13 @@ export default class BidParams extends BaseBidParams {
             driverName: this.driverName,
         });
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.currentVehicleLocation = json.currentVehicleLocation;
+        this.vehicle = json.vehicle;
+        this.driverName = json.driverName;
     }
 
     public equals(other: BidParams): boolean {

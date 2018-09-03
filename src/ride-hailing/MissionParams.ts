@@ -13,17 +13,16 @@ export default class MissionParams extends BaseMissionParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static deserialize(json: any): MissionParams {
-        const missionParams = super.deserialize(json);
-        return new MissionParams(missionParams);
-    }
-
-    constructor(values: Partial<IBaseMissionParams>) {
-        super(values, MissionParams._protocol, MissionParams._type);
+    constructor(values?: Partial<IBaseMissionParams>) {
+        super(MissionParams._protocol, MissionParams._type, values);
     }
 
     public serialize() {
         const formattedParams = super.serialize();
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
     }
 }

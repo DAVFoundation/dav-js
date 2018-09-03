@@ -27,19 +27,13 @@ export default class MessageParams extends BaseMessageParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static deserialize(json: any): MessageParams {
-        const messageParams = super.deserialize(json);
-        Object.assign(messageParams, {
-            missionStatus: json.missionStatus,
-            vehicleLocation: json.vehicleLocation,
-        });
-        return new MessageParams(json);
-    }
+    constructor(values?: Partial<IMessageParams>) {
+        super(MessageParams._protocol, MessageParams._type, values);
+        if (!!values) {
+            this.vehicleLocation = values.vehicleLocation;
+            this.missionStatus = RideHailingMissionStatus.OnTheWay;
+        }
 
-    constructor(values: Partial<IMessageParams>) {
-        super(values, MessageParams._protocol, MessageParams._type);
-        this.vehicleLocation = values.vehicleLocation;
-        this.missionStatus = RideHailingMissionStatus.OnTheWay;
     }
 
     public serialize() {
@@ -49,5 +43,11 @@ export default class MessageParams extends BaseMessageParams {
             vehicleLocation: this.vehicleLocation,
         });
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.missionStatus = json.missionStatus;
+        this.vehicleLocation = json.vehicleLocation;
     }
 }

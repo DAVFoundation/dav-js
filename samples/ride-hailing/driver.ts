@@ -10,7 +10,6 @@ import Mission from '../../src/Mission';
 import IConfig from '../../src/IConfig';
 import { RideHailingMissionStatus } from '../../src/common-enums';
 import Message from '../../src/Message';
-import CommitmentRequest from '../../src/CommitmentRequest';
 
 export default async function runProvider(config?: IConfig) {
     const sdk = SDKFactory({});

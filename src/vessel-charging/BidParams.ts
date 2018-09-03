@@ -104,29 +104,22 @@ export default class BidParams extends BaseBidParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static deserialize(json: any): BidParams {
-        const bidParams = super.deserialize(json);
-        Object.assign(bidParams, {
-            entranceLocation: json.entranceLocation,
-            exitLocation: json.exitLocation,
-            availableFrom: json.availableFrom,
-            availableUntil: json.availableUntil,
-            energySource: json.energySource,
-            amenities: json.amenities,
-            provider: json.amenities,
-            manufacturer: json.amenities,
-            model: json.amenities,
-
-        });
-        return new BidParams(bidParams);
-    }
-
-    constructor(values: Partial<IBidParams>) {
-        super(values, BidParams._protocol, BidParams._type);
-        if (!values.availableFrom) {
-            throw new Error('availableFrom is a required field');
+    constructor(values?: Partial<IBidParams>) {
+        super(BidParams._protocol, BidParams._type, values);
+        if (!!values) {
+            if (!values.availableFrom) {
+                throw new Error('availableFrom is a required field');
+            }
+            this.entranceLocation = values.entranceLocation;
+            this.exitLocation = values.exitLocation;
+            this.availableFrom = values.availableFrom;
+            this.availableUntil = values.availableUntil;
+            this.energySource = values.energySource;
+            this.amenities = values.amenities;
+            this.provider = values.provider;
+            this.manufacturer = values.manufacturer;
+            this.model = values.model;
         }
-        Object.assign(this, values);
     }
 
     public serialize() {
@@ -144,6 +137,20 @@ export default class BidParams extends BaseBidParams {
         });
         return formatedParams;
     }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.entranceLocation = json.entranceLocation;
+        this.exitLocation = json.exitLocation;
+        this.availableFrom = json.availableFrom;
+        this.availableUntil = json.availableUntil;
+        this.energySource = json.energySource;
+        this.amenities = json.amenities;
+        this.provider = json.provider;
+        this.manufacturer = json.manufacturer;
+        this.model = json.model;
+    }
+
     public equals(other: BidParams): boolean {
         return super.equals(other);
     }

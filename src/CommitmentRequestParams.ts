@@ -16,17 +16,11 @@ export default class CommitmentRequestParams extends BasicParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static deserialize(json: any): CommitmentRequestParams {
-        const commitmentRequestParams = super.deserialize(json);
-        Object.assign(commitmentRequestParams, {
-            neederId: json.neederId,
-        });
-        return new CommitmentRequestParams(commitmentRequestParams);
-    }
-
-    constructor(values: Partial<ICommitmentRequestParams>) {
-        super(values, CommitmentRequestParams._protocol, CommitmentRequestParams._type);
-        this.neederId = values.neederId;
+    constructor(values?: Partial<ICommitmentRequestParams>) {
+        super(CommitmentRequestParams._protocol, CommitmentRequestParams._type, values);
+        if (!!values) {
+            this.neederId = values.neederId;
+        }
     }
 
     public serialize() {
@@ -35,5 +29,10 @@ export default class CommitmentRequestParams extends BasicParams {
             neederId: this.neederId,
         });
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.neederId = json.neederId;
     }
 }

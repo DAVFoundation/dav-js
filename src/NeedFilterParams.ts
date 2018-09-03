@@ -19,31 +19,13 @@ export default abstract class NeedFilterParams extends BasicParams {
    */
   public davId: DavID;
 
-  public static deserialize(json: any) {
-    const formatArea = (area: any) => {
-      const topLeft = new LatLon(area.max.latitude, area.max.longitude);
-      const bottomRight = new LatLon(area.min.latitude, area.min.longitude);
-      const distance = topLeft.distanceTo(bottomRight);
-      const center = topLeft.intermediatePointTo(bottomRight, 0.5);
-      return {
-        lat: center.lat,
-        long: center.lon,
-        radius: (distance * 1000) / 2,
-      };
-    };
-    const needFilterParams = super.deserialize(json);
-    Object.assign(needFilterParams, {
-      davId: json.dav_id,
-      area: formatArea(json.area),
-    });
-    return needFilterParams as NeedFilterParams;
-  }
-
-  constructor(values: Partial<NeedFilterParams>, protocol: string, type: string) {
-    super(values, protocol, type);
-    this.location = values.location;
-    this.davId = values.davId;
-    this.radius = values.radius;
+  constructor(protocol: string, type: string, values?: Partial<NeedFilterParams>) {
+    super(protocol, type, values);
+    if (!!values) {
+      this.location = values.location;
+      this.davId = values.davId;
+      this.radius = values.radius;
+    }
   }
 
   public serialize() {
@@ -71,4 +53,22 @@ export default abstract class NeedFilterParams extends BasicParams {
     return formattedParams;
   }
 
+  public deserialize(json: any): void {
+    super.deserialize(json);
+    const formatArea = (area: any) => {
+      const topLeft = new LatLon(area.max.latitude, area.max.longitude);
+      const bottomRight = new LatLon(area.min.latitude, area.min.longitude);
+      const distance = topLeft.distanceTo(bottomRight);
+      const center = topLeft.intermediatePointTo(bottomRight, 0.5);
+      return {
+        lat: center.lat,
+        long: center.lon,
+        radius: (distance * 1000) / 2,
+      };
+    };
+    const formattedArea = formatArea(json.area);
+    this.davId = json.dav_id;
+    this.location = {lat: formattedArea.lat, long: formattedArea.long};
+    this.radius = formattedArea.radius;
+  }
 }

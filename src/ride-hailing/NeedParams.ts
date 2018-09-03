@@ -22,22 +22,15 @@ export default class NeedParams extends BaseNeedParams {
         return `${this._protocol}:${this._type}`;
     }
 
-    public static deserialize(json: any): NeedParams {
-        const needParams = super.deserialize(json);
-        Object.assign(needParams, {
-            pickupLocation: json.pickupLocation,
-            destinationLocation: json.destinationLocation,
-        });
-        return new NeedParams(json);
-    }
-
-    constructor(values: Partial<NeedParams>) {
-        if (!values.pickupLocation || !values.destinationLocation) {
-            throw new Error('Need lack of essential details');
+    constructor(values?: Partial<NeedParams>) {
+        super(NeedParams._protocol, NeedParams._type, values);
+        if (!!values) {
+            if (!values.pickupLocation || !values.destinationLocation) {
+                throw new Error('Need lack of essential details');
+            }
+            this.pickupLocation = values.pickupLocation;
+            this.destinationLocation = values.destinationLocation;
         }
-        super(values, NeedParams._protocol, NeedParams._type);
-        this.pickupLocation = values.pickupLocation;
-        this.destinationLocation = values.destinationLocation;
     }
 
     public serialize() {
@@ -47,5 +40,11 @@ export default class NeedParams extends BaseNeedParams {
             destinationLocation: this.destinationLocation,
         });
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.pickupLocation = json.pickupLocation;
+        this.destinationLocation = json.destinationLocation;
     }
 }

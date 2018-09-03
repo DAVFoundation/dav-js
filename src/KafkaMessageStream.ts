@@ -8,7 +8,9 @@ export interface IKafkaMessage {
 
 export default class KafkaMessageStream {
     private static fromJson<T extends BasicParams>(classType: new (...all: any[]) => T, json: any): T {
-        return (classType.prototype.constructor).deserialize(JSON.parse(json));
+        const objectInstance = new classType.prototype.constructor();
+        objectInstance.deserialize(JSON.parse(json));
+        return objectInstance;
     }
 
     private static getMessageType<T extends BasicParams>(classType: new (...all: any[]) => T): string {

@@ -15,37 +15,29 @@ export default abstract class BidParams extends BasicParams {
     public neederDavId: DavID;
     public isCommitted: boolean;
 
-    public static deserialize(json: any) {
-        const bidParams = super.deserialize(json);
-        Object.assign(bidParams, {
-            id: json.id,
-            price: json.price,
-            vehicleId: json.vehicleId,
-            neederDavId: json.neederDavId,
-            isCommitted: json.isCommitted,
-        });
-        return bidParams as BidParams;
-    }
-
-    public constructor(values: Partial<IBidParams>, protocol: string, type: string) {
-        if (!values.price) {
-            throw new Error('price is a required field');
+    public constructor(protocol: string, type: string, values?: Partial<IBidParams>) {
+        if (!values) {
+            super(protocol, type);
+        } else {
+            if (!values.price) {
+                throw new Error('price is a required field');
+            }
+            if (!values.vehicleId) {
+                throw new Error('vehicleId is a required field');
+            }
+            super(protocol, type, values);
+            this.id = values.id;
+            this.vehicleId = values.vehicleId;
+            this.neederDavId = values.neederDavId;
+            this.isCommitted = values.isCommitted === false ? false : true;
+            const priceObject = values.price instanceof Array ? values.price : [values.price];
+            priceObject.map((price: string | IPrice): IPrice => {
+                return typeof price === 'string' ?
+                new Price(price as BigInteger, PriceType.flat) :
+                new Price(price.value, price.type, price.description);
+            });
+            this.price = priceObject as IPrice[];
         }
-        if (!values.vehicleId) {
-            throw new Error('vehicleId is a required field');
-        }
-        super(values, protocol, type);
-        this.id = values.id;
-        this.vehicleId = values.vehicleId;
-        this.neederDavId = values.neederDavId;
-        this.isCommitted = values.isCommitted === false ? false : true;
-        const priceObject = values.price instanceof Array ? values.price : [values.price];
-        priceObject.map((price: string | IPrice): IPrice => {
-            return typeof price === 'string' ?
-            new Price(price as BigInteger, PriceType.flat) :
-            new Price(price.value, price.type, price.description);
-        });
-        this.price = priceObject as IPrice[];
     }
 
     public serialize() {
@@ -58,6 +50,15 @@ export default abstract class BidParams extends BasicParams {
             isCommitted: this.isCommitted,
         });
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.id = json.id;
+        this.price = json.price;
+        this.vehicleId = json.vehicleId;
+        this.neederDavId = json.neederDavId;
+        this.isCommitted = json.isCommitted;
     }
 
     public equals(other: BidParams): boolean {

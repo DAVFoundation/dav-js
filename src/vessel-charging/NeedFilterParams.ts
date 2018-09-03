@@ -13,20 +13,21 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         return `${NeedFilterParams._protocol}:${NeedFilterParams._type}`;
     }
 
-    public static deserialize(json: any): NeedFilterParams {
-        const needFilterParams = super.deserialize(json);
-        Object.assign(needFilterParams, {maxDimensions: json.dimensions});
-        return new NeedFilterParams(needFilterParams);
-    }
-
-    constructor(values: Partial<NeedFilterParams>) {
-        super(values, NeedFilterParams._protocol, NeedFilterParams._type);
-        this.maxDimensions = values.maxDimensions;
+    constructor(values?: Partial<NeedFilterParams>) {
+        super(NeedFilterParams._protocol, NeedFilterParams._type, values);
+        if (!!values) {
+            this.maxDimensions = values.maxDimensions;
+        }
     }
 
     public serialize() {
         const formattedParams = super.serialize();
         Object.assign(formattedParams, {dimensions: this.maxDimensions});
         return formattedParams;
+    }
+
+    public deserialize(json: any): void {
+        super.deserialize(json);
+        this.maxDimensions = json.dimensions;
     }
 }
