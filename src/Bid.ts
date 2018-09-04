@@ -45,7 +45,7 @@ export default class Bid<T extends BidParams> {
         const commitmentRequestParams = new CommitmentRequestParams({neederId: this._selfId});
         await Kafka.sendParams(bidderId, commitmentRequestParams, this._config);
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#3
-        const protocolTypesMap = commitmentRequestParams.getProtocolTypes();
+        const protocolTypesMap = new CommitmentConfirmationParams({}).getProtocolTypes();
         const commitmentConfirmationParamsStream = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.messages);
         const commitmentConfirmation = await commitmentConfirmationParamsStream.filter(
             (commitmentConfirmationParams: CommitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
