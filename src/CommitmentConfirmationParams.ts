@@ -38,7 +38,10 @@ export default class CommitmentConfirmationParams extends BasicParams {
     }
 
     public getProtocolTypes() {
-        throw new Error('there is no protocol for general messages');
+        const typeMap: any = {};
+        typeMap[CommitmentConfirmationParams._type] = CommitmentConfirmationParams;
+        typeMap.messages = [CommitmentConfirmationParams._type];
+        return typeMap;
     }
 
     public deserialize(json: any): void {

@@ -9,7 +9,20 @@ export default {
     need: NeedParams,
     bid: BidParams,
     mission: MissionParams,
-    message: {
-        message: MessageParams,
-    },
+    message: MessageParams,
+    needFilters: [
+        'need_filter',
+    ],
+    needs: [
+        'need',
+    ],
+    bids: [
+        'bid',
+    ],
+    missions: [
+        'mission',
+    ],
+    messages: [
+        'message',
+    ],
 };

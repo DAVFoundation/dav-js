@@ -6,7 +6,7 @@ import BaseMessageParams from './MessageParams';
 export default class MissionPeerIdMessageParams extends BaseMessageParams {
 
     private static _protocol = 'general';
-    private static _type = 'message';
+    private static _type = 'mission_peer_id_message';
 
     public static getMessageType(): string {
         return MissionPeerIdMessageParams._type;
@@ -26,7 +26,10 @@ export default class MissionPeerIdMessageParams extends BaseMessageParams {
     }
 
     public getProtocolTypes() {
-        throw new Error('there is no protocol for general messages');
+        const typeMap: any = {};
+        typeMap[MissionPeerIdMessageParams._type] = MissionPeerIdMessageParams;
+        typeMap.messages = [MissionPeerIdMessageParams._type];
+        return typeMap;
     }
 
     public  deserialize(json: any): void {

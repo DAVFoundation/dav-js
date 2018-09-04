@@ -74,4 +74,3 @@ export default class NeedParams extends BaseNeedParams {
         this.maxAltitude = json.maxAltitude;
     }
 }
-
