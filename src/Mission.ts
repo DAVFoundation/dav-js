@@ -3,7 +3,7 @@ import { TransactionReceipt } from 'web3/types';
 import IConfig from './IConfig';
 import Message from './Message';
 import MessageParams from './MessageParams';
-import GeneralMessageParams from './MissionPeerIdMessageParams';
+import MissionPeerIdMessageParams from './MissionPeerIdMessageParams';
 import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
@@ -22,10 +22,11 @@ export default class Mission<T extends MissionParams> {
 
     private async getPeerId(): Promise<ID> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        const messageParamsStream = kafkaMessageStream.filterType(GeneralMessageParams);
-        const messageStream = messageParamsStream.do((messageParams: GeneralMessageParams) => {
+        const typesMap = new MissionPeerIdMessageParams({}).getProtocolTypes();
+        const messageParamsStream = kafkaMessageStream.filterType(typesMap, typesMap.messages);
+        const messageStream = messageParamsStream.do((messageParams: MissionPeerIdMessageParams) => {
             this._peerId = messageParams.senderId;
-        }).map((messageParams: GeneralMessageParams) => messageParams.senderId).first().toPromise();
+        }).map((messageParams: MissionPeerIdMessageParams) => messageParams.senderId).first().toPromise();
         return messageStream;
     }
 
@@ -73,9 +74,10 @@ export default class Mission<T extends MissionParams> {
      * @param MessageParams The expected message param object type.
      * @returns Observable object.
      */
-    public async messages<U extends MessageParams>(): Promise<Observable<Message<MessageParams>>> {
+    public async messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<MessageParams>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        const messageParamsStream = kafkaMessageStream.filterType(this._params.getProtocolTypes().message);
+        const protocolTypesMap = this._params.getProtocolTypes();
+        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(protocolTypesMap, filterType || protocolTypesMap.messages);
         const messageStream = messageParamsStream.map((params: U) => new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }

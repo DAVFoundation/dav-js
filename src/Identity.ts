@@ -69,7 +69,8 @@ export default class Identity {
       }
     }
     const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(needTypeTopic, this._config); // Channel#2
-    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(needFilterParams.getProtocolTypes().need);
+    const protocolTypesMap = needFilterParams.getProtocolTypes();
+    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.needs);
     const observable = Observable.fromObservable(needParamsStream.map((needParams: T) =>
       new Need<T>(needTypeTopic, needParams, this._config)), needParamsStream.topic);
     return observable;
