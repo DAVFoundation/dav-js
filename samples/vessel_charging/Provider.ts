@@ -1,3 +1,5 @@
+// tslint:disable:no-console
+
 import SDKFactory from '../../src/SDKFactory';
 import Identity from '../../src/Identity';
 import Config from '../../src/Config';
@@ -50,11 +52,11 @@ export default class Provider {
 
   public async start() {
     const needs = await this.getNeeds();
-    needs.subscribe(async (need) => {
+    needs.subscribe(async (need: Need<NeedParams>) => {
       console.log('Need received: ', need);
       printLine();
       const bid = await this.createBid(need);
-      const missions = await bid.missions(MissionParams);
+      const missions = await bid.missions();
       missions.subscribe(async (mission) => {
         console.log('Mission received: ', mission);
         printLine();
@@ -78,11 +80,11 @@ export default class Provider {
         weight: 5,
       },
     });
-    const needs = await this.identity.needsForType(needFilterParams, NeedParams);
+    const needs = await this.identity.needsForType(needFilterParams);
     return needs;
   }
 
-  public async createBid(need: Need<NeedParams, MessageParams>): Promise<Bid<BidParams, MessageParams>> {
+  public async createBid(need: Need<NeedParams>): Promise<Bid<BidParams>> {
     const bidParams = new BidParams({
       price: '100000000000000000',
       vehicleId: this.davId,
@@ -112,13 +114,13 @@ export default class Provider {
     console.log('Mission starting message sent!');
     printLine();
 
-    const vesselStatusMessages = await mission.messages(VesselStatusMessageParams);
+    const vesselStatusMessages = await mission.messages(['vessel_status_message']);
     vesselStatusMessages.subscribe((message) => {
       console.log('Vessel status message received:', message.messageParams);
       printLine();
     });
 
-    const statusRequestMessages = await mission.messages(StatusRequestMessageParams);
+    const statusRequestMessages = await mission.messages(['status_request_message']);
     statusRequestMessages.subscribe((message) => {
       console.log('Status request message received:', message.messageParams);
       printLine();
@@ -129,7 +131,7 @@ export default class Provider {
       printLine();
     });
 
-    const chargingArrivalMessages = await mission.messages(ChargingArrivalMessageParams);
+    const chargingArrivalMessages = await mission.messages(['charging_arrival_message']);
     chargingArrivalMessages.subscribe((message) => {
       console.log('Charging arrival message received:', message.messageParams);
       printLine();
