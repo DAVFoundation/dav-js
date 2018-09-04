@@ -287,7 +287,7 @@ describe('Kafka class', () => {
       const jsonString = JSON.stringify(jsonObject);
       jest.doMock('./KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation((messageStream: Observable<IKafkaMessage>) => messageStream.subscribe((bid) => {
-          expect(bid).toEqual({messageType: 'drone-charging:bid', contents: jsonString});
+          expect(bid).toEqual({type: 'bid', protocol: 'drone-charging', contents: jsonString});
           expect(kafkaClientMock.on).toBeCalledWith('ready', expect.anything());
           expect(consumerMock.on).toHaveBeenCalledWith('message', expect.anything());
           done();
@@ -477,7 +477,7 @@ describe('Kafka class', () => {
 
         jest.doMock('./KafkaMessageStream', () => ({
           default: jest.fn().mockImplementation((messageStream: Observable<IKafkaMessage>) => messageStream.subscribe((bid) => {
-            expect(bid).toEqual({messageType: 'drone-charging:bid', contents: jsonString});
+            expect(bid).toEqual({type: 'bid', protocol: 'drone-charging', contents: jsonString});
             expect(getMock).toHaveBeenCalledTimes(1);
             done();
             return {};

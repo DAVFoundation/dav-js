@@ -21,7 +21,7 @@ describe('KafkaMessageStream', () => {
     it('should pass message', (done) => {
         expect.assertions(1);
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'DroneDelivery:Need', contents: '{}' },
+            { protocol: 'drone_delivery', type: 'need', contents: '{}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
@@ -34,7 +34,7 @@ describe('KafkaMessageStream', () => {
 
     it('should filter message', (done) => {
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'NOT_DroneDelivery:Need', contents: '{}' },
+            { protocol: 'drone_delivery', type: 'not_need', contents: '{}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
@@ -48,9 +48,9 @@ describe('KafkaMessageStream', () => {
     it('should filter first message and pass second when first is not correct type and second is', (done) => {
         expect.assertions(1);
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'NOT_DroneDelivery:Need', contents:
+            { protocol: 'drone_delivery', type: 'not_need', contents:
             '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":"3000", "startAt":1}' },
-            { messageType: 'DroneDelivery:Need', contents:
+            { protocol: 'drone_delivery', type: 'need', contents:
             '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
@@ -73,9 +73,9 @@ describe('KafkaMessageStream', () => {
     it('should pass first message and filter second when first is correct type and second is not', (done) => {
         // expect.assertions(1);
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'DroneDelivery:Need', contents:
+            { protocol: 'drone_delivery', type: 'need', contents:
             '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}' },
-            { messageType: 'NOT_DroneDelivery:Need', contents:
+            { protocol: 'drone_delivery', type: 'not_need', contents:
             '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
@@ -98,12 +98,12 @@ describe('KafkaMessageStream', () => {
     it('should pass each type to correct stream', (done) => {
         expect.assertions(2);
         const kafkaMessages: IKafkaMessage[] = [
-            { messageType: 'DroneDelivery:Need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}' },
-            { messageType: 'DroneDelivery:Mission', contents:
+            { protocol: 'drone_delivery', type: 'need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}' },
+            { protocol: 'drone_delivery', type: 'mission', contents:
             '{"id":"1","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
             ' "ttl":3000}' },
-            { messageType: 'DroneDelivery:Need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
-            { messageType: 'DroneDelivery:Mission', contents:
+            { protocol: 'drone_delivery', type: 'need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
+            { protocol: 'drone_delivery', type: 'mission', contents:
             '{"id":"2","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
             ' "ttl":3000}' },
         ];

@@ -90,9 +90,9 @@ export default class Kafka extends KafkaBase implements IKafka {
                 try {
                     const messageString = message.value.toString();
                     const messageObject = JSON.parse(messageString);
-                    const messageType = [messageObject.protocol, messageObject.type].join(':');
                     observer.next({
-                        messageType,
+                        type: messageObject.type,
+                        protocol: messageObject.protocol,
                         contents: messageString,
                     });
                 } catch (error) {

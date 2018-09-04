@@ -51,9 +51,9 @@ export default class Kafka extends KafkaBase implements IKafka {
                     }
                     messages.data.forEach((message: string) => {
                         const messageString = JSON.parse(message);
-                        const messageType = [messageString.protocol, messageString.type].join(':');
                         observer.next({
-                            messageType,
+                            protocol: messageString.protocol,
+                            type: messageString.type,
                             contents: message,
                         });
                     });
