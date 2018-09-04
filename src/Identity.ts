@@ -37,26 +37,24 @@ export default class Identity {
    * @param params the need parameters.
    * @returns the created need.
    */
-  public async publishNeed<T extends NeedParams, U extends MessageParams>(needParams: T): Promise<Need<T, U>> {
+  public async publishNeed<T extends NeedParams>(needParams: T): Promise<Need<T>> {
     const bidsChannelName = await this.registerNewTopic(); // Channel#3
     needParams.id = bidsChannelName;
-    needParams.davId = this.davId;
+    needParams.davId = this.davId || needParams.davId;
     try {
       await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, needParams.serialize());
     } catch (err) {
       throw new Error(`Fail to publish need: ${err}`);
     }
-    return new Need<T, U>(bidsChannelName, needParams, this._config);
+    return new Need<T>(bidsChannelName, needParams, this._config);
   }
 
   /**
    * @method needsForType Used to subscribe for specific needs (filtered by params).
    * @param params the filter parameters.
-   * @param needParamsType The expected need params object type.
    * @returns Observable for needs subscription.
    */
-  public async needsForType<T extends NeedParams, U extends MessageParams>(needFilterParams: NeedFilterParams,
-    needParamsType: new (...all: any[]) => T): Promise<Observable<Need<T, U>>> {
+  public async needsForType<T extends NeedParams>(needFilterParams: NeedFilterParams): Promise<Observable<Need<T>>> {
     const formatedParams = needFilterParams.serialize();
     let needTypeTopic = '';
     if (this.topics[formatedParams.protocol]) {
@@ -71,40 +69,33 @@ export default class Identity {
       }
     }
     const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(needTypeTopic, this._config); // Channel#2
-    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(needParamsType);
+    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(needFilterParams.getProtocolTypes().need);
     const observable = Observable.fromObservable(needParamsStream.map((needParams: T) =>
-      new Need<T, U>(needTypeTopic, needParams, this._config)), needParamsStream.topic);
+      new Need<T>(needTypeTopic, needParams, this._config)), needParamsStream.topic);
     return observable;
   }
   /**
    * @method missions Used to subscribe for missions.
-   * @param missionParamsType The expected mission param object type.
    * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for missions subscription.
    */
-  public async missions<T extends MissionParams, U extends MessageParams>(missionParamsType: new (...all: any[]) => T,
-    channelId?: ID): Promise<Observable<Mission<T>>> {
+  public async missions<T extends MissionParams, U extends MessageParams>(): Promise<Observable<Mission<T>>> {
     throw new Error('Not implemented in this version');
   }
   /**
    * @method messages Used to subscribe for messages.
-   * @param messageParamsType The expected mission param object type.
    * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for messages subscription.
    */
-  public async messages<T extends MessageParams>(messageParamsType: new (...all: any[]) => T, channelId?: ID): Promise<Observable<Message<T>>> {
-    const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this.id, this._config); // Channel#1
-    const messageParamsStream: Observable<T> = kafkaMessageStream.filterType(messageParamsType);
-    const messageStream = messageParamsStream.map((params: T) =>
-      new Message<T>(this.id, params, this._config));
-    return Observable.fromObservable(messageStream, messageParamsStream.topic);
+  public async messages<T extends MessageParams>(channelId?: ID): Promise<Observable<Message<T>>> {
+    throw new Error('Not implemented in this version');
   }
   /**
    * @method need Used to restore an existed need.
    * @param params The need parameters.
    * @returns The restored need.
    */
-  public need<T extends NeedParams, U extends MessageParams>(params: T): Need<T, U> {
+  public need<T extends NeedParams, U extends MessageParams>(params: T): Need<T> {
     const selfId = params.id;
     return new Need(selfId, params, this._config);
   }
@@ -114,7 +105,7 @@ export default class Identity {
    * @param params The bid parameters.
    * @returns The restored bid.
    */
-  public bid<T extends BidParams, U extends MessageParams>(bidSelfId: ID, params: T): Bid<T, U> {
+  public bid<T extends BidParams, U extends MessageParams>(bidSelfId: ID, params: T): Bid<T> {
     return new Bid(bidSelfId, params, this._config);
   }
   /**

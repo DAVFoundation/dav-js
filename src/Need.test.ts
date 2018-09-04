@@ -92,7 +92,7 @@ describe('Need class', () => {
       // tslint:disable-next-line:variable-name
       const Need = (await import('./Need')).default;
       const need = new Need(selfId, needParams, config);
-      const bids = await need.bids(BidParams);
+      const bids = await need.bids();
       const bid = await new Promise<any>((resolve, reject) => {
         bids.subscribe(
           (next) => resolve(next),
@@ -109,7 +109,7 @@ describe('Need class', () => {
       // tslint:disable-next-line:variable-name
       const Need = (await import('./Need')).default;
       const need = new Need(selfId, needParams, config);
-      const bids = await need.bids(BidParams);
+      const bids = await need.bids();
       const bid = new Promise<any>((resolve, reject) => {
         bids.subscribe(
           (next) => resolve(next),
@@ -203,7 +203,7 @@ describe('Need class', () => {
       const Need = (await import('./Need')).default;
       const need = new Need(selfId, needParams, config);
       const spy = jest.fn();
-      const messages = await need.messages(MessageParams);
+      const messages = await need.messages();
       messages.subscribe(spy);
       expect(spy.mock.calls.length).toBe(3);
       expect(spy.mock.calls[0][0]).toEqual(new Message(selfId, messageParams1, config));
@@ -221,7 +221,7 @@ describe('Need class', () => {
       const need = new Need(selfId, needParams, config);
       const successSpy = jest.fn();
       const errorSpy = jest.fn();
-      const messages = await need.messages(MessageParams);
+      const messages = await need.messages();
       messages.subscribe(successSpy, errorSpy);
       await forContextSwitch();
       expect(successSpy.mock.calls.length).toBe(0);

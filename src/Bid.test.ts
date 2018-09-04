@@ -276,7 +276,7 @@ describe('Bid class', () => {
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(TOPIC_ID, bidParams, config);
       const spy = jest.fn();
-      const missions = await bid.missions(MissionParams);
+      const missions = await bid.missions();
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
@@ -306,7 +306,7 @@ describe('Bid class', () => {
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(anotherTopic, bidParams, config);
       const spy = jest.fn();
-      const missions = await bid.missions(MissionParams);
+      const missions = await bid.missions();
       missions.subscribe(spy);
       await forContextSwitch();
       expect(spy.mock.calls.length).toBe(3);
@@ -323,7 +323,7 @@ describe('Bid class', () => {
       const bid = new Bid('needId', bidParams, config);
       const successSpy = jest.fn();
       const errorSpy = jest.fn();
-      const missions = await bid.missions(MissionParams);
+      const missions = await bid.missions();
       missions.subscribe(successSpy, errorSpy);
       await forContextSwitch();
       expect(successSpy.mock.calls.length).toBe(0);
@@ -349,7 +349,7 @@ describe('Bid class', () => {
       // tslint:disable-next-line:variable-name
       const Bid = (await import('./Bid')).default;
       const bid = new Bid(selfId, bidParams, config);
-      const messagesStream = await bid.messages(MessageParams);
+      const messagesStream = await bid.messages();
       const message = await new Promise<any>((resolve, reject) => {
         messagesStream.subscribe(
           (next) => {

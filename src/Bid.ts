@@ -2,7 +2,7 @@ import { ID, Observable } from './common-types';
 import IConfig from './IConfig';
 import BidParams from './BidParams';
 import MissionParams from './MissionParams';
-import GeneralMessageParams from './GeneralMessageParams';
+import GeneralMessageParams from './MissionPeerIdMessageParams';
 import MessageParams from './MessageParams';
 import Message from './Message';
 import Mission from './Mission';
@@ -16,7 +16,7 @@ import CommitmentRequestParams from './CommitmentRequestParams';
 /**
  * @class Bid class represent a bid for service request.
  */
-export default class Bid<T extends BidParams, U extends MessageParams> {
+export default class Bid<T extends BidParams> {
 
     private _missionId: ID;
     // DON'T USE THIS MEMBER BUT ONLY VIA ITS GETTER!
@@ -48,8 +48,8 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         const commitmentConfirmationParamsStream = kafkaMessageStream.filterType(CommitmentConfirmationParams);
 
         const commitmentConfirmation = await commitmentConfirmationParamsStream.filter(
-            (commitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
-                                          .map((commitmentParams) => {
+            (commitmentConfirmationParams: CommitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
+                                          .map((commitmentParams: CommitmentConfirmationParams) => {
                                               this._params.isCommitted = true;
                                               return new CommitmentConfirmation(commitmentParams);
                                             }).first().toPromise();
@@ -104,11 +104,11 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @param messageParamsType The expected message params object type.
      * @returns Observable for messages subscription.
      */
-    public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
+    public async messages(): Promise<Observable<Message<MessageParams>>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6 or Channel#3
-        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
-        const messageStream = messageParamsStream.map((params: U) =>
-            new Message<U>(this._selfId, params, this._config));
+        const messageParamsStream: Observable<MessageParams> = kafkaMessageStream.filterType(this._params.getProtocolTypes().message);
+        const messageStream = messageParamsStream.map((params: MessageParams) =>
+            new Message<MessageParams>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }
     /**
@@ -116,9 +116,9 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
      * @param missionParamsType The expected mission param object type.
      * @returns Observable for missions subscription.
      */
-    public async missions<V extends MissionParams>(missionParamsType: new (...all: any[]) => V): Promise<Observable<Mission<V>>> {
+    public async missions<V extends MissionParams>(): Promise<Observable<Mission<V>>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
-        const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(missionParamsType);
+        const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(this._params.getProtocolTypes().mission);
         const missionStream = missionParamsStream
         .map(async (params: V) => {
             this._missionId = Kafka.generateTopicId();
@@ -130,7 +130,7 @@ export default class Bid<T extends BidParams, U extends MessageParams> {
         .do((mission) => {
             const message = new GeneralMessageParams({senderId: this._missionId});
             mission.sendMessage(message);
-    });
+        });
         return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 

@@ -404,7 +404,7 @@ describe('Identity class', () => {
       jest.resetModules();
     });
 
-    it('should receive message events', async () => {
+    xit('should receive message events', async () => {
 
       const messageParams1 = new MessageParams({ senderId: 'SOURCE_ID_1' });
       const messageParams2 = new MessageParams({ senderId: 'SOURCE_ID_2' });

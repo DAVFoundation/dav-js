@@ -12,7 +12,7 @@ import { Observable as RxObservable } from 'rxjs';
 /**
  * @class The Need class represent a service request.
  */
-export default class Need<T extends NeedParams, U extends MessageParams> {
+export default class Need<T extends NeedParams> {
 
     get params(): T {
         return this._params;
@@ -27,7 +27,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
      * @param bidParams The bid parameters.
      * @returns The created bid.
      */
-    public async createBid<V extends BidParams>(bidParams: V): Promise<Bid<V, U>> {
+    public async createBid<V extends BidParams>(bidParams: V): Promise<Bid<V>> {
         const neederId = this._params.id; // Channel#3
         const bidderId = Kafka.generateTopicId(); // Channel#6
         bidParams.id = bidderId;
@@ -39,17 +39,16 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
             throw new Error(`Fail to create a topic: ${err}`);
         }
         await Kafka.sendParams(neederId, bidParams, this._config);
-        return new Bid<V, U>(bidderId, bidParams, this._config);
+        return new Bid<V>(bidderId, bidParams, this._config);
     }
     /**
      * @method bids Used to subscribe for bids for the current need.
-     * @param bidParamsType The expected bid param object type.
      * @returns Observable for bids subscription.
      */
-    public async bids<V extends BidParams>(bidParamsType: new (...all: any[]) => V): Promise<Observable<Bid<V, U>>> {
+    public async bids<V extends BidParams>(): Promise<Observable<Bid<V>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // this._selfId - Channel#3
-        const bidParamsStream = kafkaMessageStream.filterType(bidParamsType);
-        const bidStream: RxObservable<Bid<V, U>> = bidParamsStream.map((bidParams) => {
+        const bidParamsStream = kafkaMessageStream.filterType(this._params.getProtocolTypes().bid);
+        const bidStream: RxObservable<Bid<V>> = bidParamsStream.map((bidParams: V) => {
             return new Bid(this._selfId, bidParams, this._config, kafkaMessageStream);
         });
         return Observable.fromObservable(bidStream, this._params.id);
@@ -58,7 +57,7 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
      * @method sendMessage Used to send a message to the service consumer.
      * @param params The message parameters.
      */
-    public async sendMessage(params: U): Promise<void> {
+    public async sendMessage(params: MessageParams): Promise<void> {
         if (this._selfId === this._params.id) {
             throw new Error(`You cannot send message to your own channel`);
         }
@@ -67,14 +66,13 @@ export default class Need<T extends NeedParams, U extends MessageParams> {
     }
     /**
      * @method messages Used to subscribe for messages for the current need.
-     * @param messageParamsType The expected mission param object type.
      * @returns Observable for messages subscription.
      */
-    public async messages(messageParamsType: new (...all: any[]) => U): Promise<Observable<Message<U>>> {
+    public async messages(): Promise<Observable<Message<MessageParams>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config);
-        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(messageParamsType);
-        const messageStream: RxObservable<Message<U>> = messageParamsStream.map((params: U) =>
-            new Message<U>(this._selfId, params, this._config));
+        const messageParamsStream: Observable<MessageParams> = kafkaMessageStream.filterType(this._params.getProtocolTypes().message);
+        const messageStream: RxObservable<Message<MessageParams>> = messageParamsStream.map((params: MessageParams) =>
+            new Message<MessageParams>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }
 }
