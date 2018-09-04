@@ -14,21 +14,13 @@ export default class KafkaMessageStream {
         return objectInstance;
     }
 
-    private static compareType<T extends BasicParams>(classType: any, messageType: string): boolean {
-        if (typeof classType === 'object') {
-            return !!classType[messageType];
-        } else {
-            return (classType.prototype.constructor).getMessageType() === messageType;
-        }
-    }
-
     constructor(private kafkaStream: Observable<IKafkaMessage>) { }
 
-    public filterType<T extends BasicParams>(protocolTypesMap: any): Observable<T> {
+    public filterType<T extends BasicParams>(protocolTypesMap: any, typesFilter: string[]): Observable<T> {
         return Observable.fromObservable<T>(this.kafkaStream
-            .filter((message) => KafkaMessageStream.compareType(protocolTypesMap, message.type))
+            .filter((message) => typesFilter.includes(message.type))
             .map((message) => {
-                const protocol = protocolTypesMap[message.type] || protocolTypesMap;
+                const protocol = protocolTypesMap[message.type];
                 return KafkaMessageStream.fromJson(protocol, message.contents);
             }), this.kafkaStream.topic);
     }

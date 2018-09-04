@@ -1,5 +1,6 @@
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import { Observable } from './common-types';
+import typesMap from './drone-delivery/ProtocolTypes';
 import DroneDeliveryNeedParams from './drone-delivery/NeedParams';
 import DroneDeliveryMissionParams from './drone-delivery/MissionParams';
 
@@ -14,7 +15,7 @@ describe('KafkaMessageStream', () => {
     it('should instantiate filtered stream', () => {
         const kafkaStream = Observable.fromObservable(Observable.from([]), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
-        const stream = messageStream.filterType(DroneDeliveryNeedParams);
+        const stream = messageStream.filterType(typesMap, typesMap.messages);
         expect(stream).toBeDefined();
     });
 
@@ -25,7 +26,7 @@ describe('KafkaMessageStream', () => {
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
-        const stream = messageStream.filterType(DroneDeliveryNeedParams);
+        const stream = messageStream.filterType(typesMap, typesMap.needs);
         stream.subscribe(
             (need) => { expect(need).toBeDefined(); },
             (error) => { fail(error); done(); },
@@ -34,11 +35,11 @@ describe('KafkaMessageStream', () => {
 
     it('should filter message', (done) => {
         const kafkaMessages: IKafkaMessage[] = [
-            { protocol: 'drone_delivery', type: 'not_need', contents: '{}' },
+            { protocol: 'drone_delivery', type: 'need', contents: '{}' },
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
-        const stream = messageStream.filterType(DroneDeliveryNeedParams);
+        const stream = messageStream.filterType(typesMap, typesMap.bids);
         stream.subscribe(
             (need) => { fail('No message should pass'); done(); },
             (error) => { fail(error); done(); },
@@ -55,7 +56,7 @@ describe('KafkaMessageStream', () => {
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
-        const stream = messageStream.filterType(DroneDeliveryNeedParams);
+        const stream = messageStream.filterType(typesMap, typesMap.needs);
         const passedMessages: any[] = [];
         stream.subscribe(
             (need) => {
@@ -80,7 +81,7 @@ describe('KafkaMessageStream', () => {
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
-        const stream = messageStream.filterType(DroneDeliveryNeedParams);
+        const stream = messageStream.filterType(typesMap, typesMap.needs);
         const passedMessages: any[] = [];
         stream.subscribe(
             (need) => {
@@ -109,8 +110,8 @@ describe('KafkaMessageStream', () => {
         ];
         const kafkaStream = Observable.fromObservable(Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream(kafkaStream);
-        const streamNeeds = messageStream.filterType(DroneDeliveryNeedParams);
-        const streamMissions = messageStream.filterType(DroneDeliveryMissionParams);
+        const streamNeeds = messageStream.filterType(typesMap, typesMap.needs);
+        const streamMissions = messageStream.filterType(typesMap, typesMap.missions);
 
         const passedNeeds: any[] = [];
         const passedMissions: any[] = [];
