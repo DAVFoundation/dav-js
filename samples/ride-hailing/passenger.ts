@@ -1,3 +1,5 @@
+// tslint:disable:no-console
+
 import SDKFactory from '../../src/SDKFactory';
 import NeedParams from '../../src/ride-hailing/NeedParams';
 import BidParams from '../../src/ride-hailing/BidParams';
@@ -27,11 +29,11 @@ export default async function runConsumer(config?: IConfig) {
                                        destinationLocation: {lat: 32.050307, long: 34.7644916}});
     const need = await identity.publishNeed(needParams);
     console.log('need was published: ', JSON.stringify(needParams));
-    const bids = await need.bids(BidParams);
+    const bids = await need.bids();
 
     const onMissionCreated = async (mission: Mission<MissionParams>) => {
-        const locationMessageStream = await mission.messages(VehicleLocationMessageParams);
-        const messagesStream = await mission.messages(MessageParams);
+        const locationMessageStream = await mission.messages();
+        const messagesStream = await mission.messages();
         messagesStream.subscribe(
             (message: Message<MessageParams>) => {
                 console.log(message.messageParams.missionStatus);
@@ -55,7 +57,7 @@ export default async function runConsumer(config?: IConfig) {
         );
     };
 
-    const onBid = async (bid: Bid<BidParams, VehicleLocationMessageParams>) => {
+    const onBid = async (bid: Bid<BidParams>) => {
         console.log(`got bid: ${JSON.stringify(bid.params)}`);
         const confirmation = await bid.requestCommitment();
         console.log('bid was confirmed');

@@ -1,3 +1,5 @@
+// tslint:disable:no-console
+
 import SDKFactory from '../../src/SDKFactory';
 import NeedFilterParams from '../../src/ride-hailing/NeedFilterParams';
 import NeedParams from '../../src/ride-hailing/NeedParams';
@@ -25,7 +27,7 @@ export default async function runProvider(config?: IConfig) {
     console.log('bidder identity created');
 
     const needFilterParams = new NeedFilterParams({location: {lat: 32.050307, long: 34.7644916}, radius: 1000 });
-    const needs = await identity.needsForType(needFilterParams, NeedParams);
+    const needs = await identity.needsForType(needFilterParams);
     console.log('need type was sent');
 
     const onVehicleInRiding = async (message: Message<MessageParams>) => {
@@ -40,9 +42,9 @@ export default async function runProvider(config?: IConfig) {
             mission.sendMessage(new MessageParams({missionStatus: RideHailingMissionStatus.VehicleAtPickupLocation}));
         }, 1000);
 
-        const messageStream = await mission.messages(MessageParams);
+        const messageStream = await mission.messages();
         messageStream.subscribe(
-            (message) => {
+            (message: Message<MessageParams>) => {
                 console.log(message.messageParams.missionStatus);
                 if (message.messageParams.missionStatus === RideHailingMissionStatus.PassengerIsComing) {
                     onVehicleInRiding(message);
@@ -54,18 +56,19 @@ export default async function runProvider(config?: IConfig) {
         );
     };
 
-    const onNeed = async (need: Need<NeedParams, MessageParams>) => {
+    const onNeed = async (need: Need<NeedParams>) => {
         console.log(`got need: ${JSON.stringify(need.params)}`);
         const bidParams = new BidParams({price: '0.1', vehicleId: davId, isCommitted: false});
         const bid = await need.createBid(bidParams);
         console.log('bid created');
-        const missions = await bid.missions(MissionParams);
+        const missions = await bid.missions();
         missions.subscribe(onMissionCreated);
         const requestsStream = await bid.commitmentRequests();
         console.log('got commitment request stream');
         const commitmentRequest = await (requestsStream.first().toPromise());
         console.log('got commitment request');
         await commitmentRequest.confirm();
+        console.log('driver commit has been sent');
     };
 
     needs.subscribe(
