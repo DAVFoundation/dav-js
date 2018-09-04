@@ -82,8 +82,8 @@ interface IBidParams extends IBaseBidParams {
  */
 export default class BidParams extends BaseBidParams {
 
-    private static _protocol = 'BoatCharging';
-    private static _type = 'Bid';
+    private static _protocol = 'boat_charging';
+    private static _type = 'bid';
     public locationName: string;
     public locationNameLang: string;
     public locationCity: string;
