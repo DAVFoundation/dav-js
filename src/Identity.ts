@@ -55,15 +55,15 @@ export default class Identity {
    * @returns Observable for needs subscription.
    */
   public async needsForType<T extends NeedParams>(needFilterParams: NeedFilterParams): Promise<Observable<Need<T>>> {
-    const formatedParams = needFilterParams.serialize();
+    const formattedParams = needFilterParams.serialize();
     let needTypeTopic = '';
-    if (this.topics[formatedParams.protocol]) {
-      needTypeTopic = this.topics[formatedParams.protocol];
+    if (this.topics[formattedParams.protocol]) {
+      needTypeTopic = this.topics[formattedParams.protocol];
     } else {
       needTypeTopic = await this.registerNewTopic();
-      this.topics[formatedParams.protocol] = needTypeTopic;
+      this.topics[formattedParams.protocol] = needTypeTopic;
       try {
-        await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/${needTypeTopic}`, formatedParams);
+        await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/${needTypeTopic}`, formattedParams);
       } catch (err) {
         throw new Error(`Needs registration failed: ${err}`);
       }

@@ -39,11 +39,11 @@ export default class BidParams extends BaseBidParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        Object.assign(formatedParams, {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             eta: this.eta,
         });
-        return formatedParams;
+        return formattedParams;
     }
 
     public deserialize(json: any): void {

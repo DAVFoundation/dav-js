@@ -38,7 +38,7 @@ describe('NeedParams class', () => {
         batteryCapacity: 40,
         currentBatteryCharge: 10,
         energySource: 'hydro',
-        amenities: [1],
+        amenities: [5],
     };
 
     describe('serialize method', () => {

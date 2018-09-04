@@ -116,13 +116,13 @@ export default class Provider {
 
     const vesselStatusMessages = await mission.messages(['vessel_status_message']);
     vesselStatusMessages.subscribe((message) => {
-      console.log('Vessel status message received:', message.messageParams);
+      console.log('Vessel status message received:', message.params);
       printLine();
     });
 
     const statusRequestMessages = await mission.messages(['status_request_message']);
     statusRequestMessages.subscribe((message) => {
-      console.log('Status request message received:', message.messageParams);
+      console.log('Status request message received:', message.params);
       printLine();
 
       const providerStatusMessageParams = new ProviderStatusMessageParams({finishEta: Date.now() + 5000});
@@ -133,7 +133,7 @@ export default class Provider {
 
     const chargingArrivalMessages = await mission.messages(['charging_arrival_message']);
     chargingArrivalMessages.subscribe((message) => {
-      console.log('Charging arrival message received:', message.messageParams);
+      console.log('Charging arrival message received:', message.params);
       printLine();
 
       const chargingStartedMessageParams = new ChargingStartedMessageParams({});

@@ -41,8 +41,8 @@ export default class NeedParams extends BaseNeedParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        Object.assign(formatedParams, {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             startAt: this.startAt,
             dimensions: this.dimensions,
             batteryCapacity: this.batteryCapacity,
@@ -50,7 +50,7 @@ export default class NeedParams extends BaseNeedParams {
             energySource: this.energySource,
             amenities: this.amenities,
         });
-        return formatedParams;
+        return formattedParams;
     }
 
     public getProtocolTypes() {

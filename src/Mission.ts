@@ -17,6 +17,14 @@ export default class Mission<T extends MissionParams> {
         return this._params;
     }
 
+    public get id(): ID {
+        return this._selfId;
+    }
+
+    public get peerId(): ID {
+        return this._peerId;
+    }
+
     constructor(private _selfId: ID, private _peerId: ID, private _params: T, private _config: IConfig) {
     }
 

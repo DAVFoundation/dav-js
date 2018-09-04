@@ -16,8 +16,8 @@ export default abstract class MessageParams extends BaseMessageParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        return formatedParams;
+        const formattedParams = super.serialize();
+        return formattedParams;
     }
 
     public getProtocolTypes() {

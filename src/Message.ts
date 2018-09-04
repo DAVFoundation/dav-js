@@ -7,7 +7,11 @@ import Kafka from './Kafka';
  */
 export default class Message<T extends MessageParams> {
 
-    constructor(public selfId: ID, public messageParams: T, private config: IConfig) {
+    public get params(): T {
+        return this._params;
+    }
+
+    constructor(public selfId: ID, private _params: T, private config: IConfig) {
         /* */
     }
 
@@ -17,6 +21,6 @@ export default class Message<T extends MessageParams> {
      */
     public respond(params: MessageParams): Promise<void> {
         params.senderId = this.selfId;
-        return Kafka.sendParams(this.messageParams.senderId, params, this.config);
+        return Kafka.sendParams(this._params.senderId, params, this.config);
     }
 }

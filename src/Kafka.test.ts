@@ -31,6 +31,7 @@ describe('Kafka class', () => {
       const producerMock = {
         on: jest.fn((state: string, cb: any) => cb()),
         createTopics: jest.fn((topics: string[], async: boolean, cb: (error: any, data: any) => any) => cb(null, null)),
+        close: jest.fn(),
       };
       require('kafka-node').Producer.mockImplementation(() => producerMock);
 
@@ -38,6 +39,7 @@ describe('Kafka class', () => {
 
       expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
       expect(producerMock.createTopics).toHaveBeenCalledWith(['topic'], expect.any(Boolean), expect.any(Function));
+      expect(producerMock.close).toHaveBeenCalledTimes(1);
     });
 
     it('should get connection timeout', async () => {
@@ -130,12 +132,14 @@ describe('Kafka class', () => {
       const producerMock = {
         on: jest.fn((state: string, cb: any) => cb()),
         send: jest.fn((payloads: Array<{ 'topic': string, messages: string }>, cb: (error: any, data: any) => any) => cb(null, null)),
+        close: jest.fn(),
       };
       require('kafka-node').Producer.mockImplementation(() => producerMock);
 
       await expect(kafka.sendParams('topic', paramsMock, config)).resolves.toBeUndefined();
       expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
       expect(producerMock.send).toHaveBeenCalledWith([{ topic: 'topic', messages: JSON.stringify(content) }], expect.any(Function));
+      expect(producerMock.close).toHaveBeenCalledTimes(1);
     });
 
     it('should get connection timeout', async () => {

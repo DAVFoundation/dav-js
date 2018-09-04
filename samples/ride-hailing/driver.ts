@@ -35,8 +35,9 @@ export default async function runProvider(config?: IConfig) {
         setTimeout(() => message.respond(new MessageParams({missionStatus: RideHailingMissionStatus.RidingHasFinished})), 3000);
     };
 
-    const onMissionCreated = async (mission: Mission<MissionParams>) => {
-        console.log(`got mission: ${JSON.stringify(mission.params)}`);
+    const onMissionCreated = async (oldMission: Mission<MissionParams>) => {
+        console.log(`got mission: ${JSON.stringify(oldMission.params)}`);
+        const mission = identity.mission(oldMission.id, oldMission.peerId, oldMission.params);
         setTimeout(() => {
             mission.sendMessage(new VehicleLocationMessageParams({vehicleLocation: {lat: 1, long: 2}}));
             mission.sendMessage(new MessageParams({missionStatus: RideHailingMissionStatus.VehicleAtPickupLocation}));
@@ -45,8 +46,8 @@ export default async function runProvider(config?: IConfig) {
         const messageStream = await mission.messages();
         messageStream.subscribe(
             (message: Message<MessageParams>) => {
-                console.log(message.messageParams.missionStatus);
-                if (message.messageParams.missionStatus === RideHailingMissionStatus.PassengerIsComing) {
+                console.log(message.params.missionStatus);
+                if (message.params.missionStatus === RideHailingMissionStatus.PassengerIsComing) {
                     onVehicleInRiding(message);
                 }
             },
@@ -59,11 +60,14 @@ export default async function runProvider(config?: IConfig) {
     const onNeed = async (need: Need<NeedParams>) => {
         console.log(`got need: ${JSON.stringify(need.params)}`);
         const bidParams = new BidParams({price: '0.1', vehicleId: davId, isCommitted: false});
-        const bid = await need.createBid(bidParams);
+        const restoredNeed = identity.need(need.params);
+        const bid = await restoredNeed.createBid(bidParams);
         console.log('bid created');
-        const missions = await bid.missions();
+        let restoredBid = identity.bid(bid.id, bid.params);
+        const missions = await restoredBid.missions();
         missions.subscribe(onMissionCreated);
-        const requestsStream = await bid.commitmentRequests();
+        restoredBid = identity.bid(bid.id, bid.params);
+        const requestsStream = await restoredBid.commitmentRequests();
         console.log('got commitment request stream');
         const commitmentRequest = await (requestsStream.first().toPromise());
         console.log('got commitment request');

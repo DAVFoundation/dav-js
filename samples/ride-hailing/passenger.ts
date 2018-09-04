@@ -11,6 +11,7 @@ import Bid from '../../src/Bid';
 import IConfig from '../../src/IConfig';
 import { RideHailingMissionStatus } from '../../src/common-enums';
 import Message from '../../src/Message';
+import Need from '../../src/Need';
 
 export default async function runConsumer(config?: IConfig) {
     const sdk = SDKFactory({});
@@ -29,15 +30,18 @@ export default async function runConsumer(config?: IConfig) {
                                        destinationLocation: {lat: 32.050307, long: 34.7644916}});
     const need = await identity.publishNeed(needParams);
     console.log('need was published: ', JSON.stringify(needParams));
-    const bids = await need.bids();
+    const restoredNeed = identity.need(need.params);
+    let restoredBid;
+    const bids = await restoredNeed.bids();
 
-    const onMissionCreated = async (mission: Mission<MissionParams>) => {
-        const locationMessageStream = await mission.messages();
-        const messagesStream = await mission.messages();
+    const onMissionCreated = async (oldMission: Mission<MissionParams>) => {
+        const mission = identity.mission(oldMission.id, oldMission.peerId, oldMission.params);
+        const locationMessageStream = await mission.messages(['vehicle_location_message']);
+        const messagesStream = await mission.messages(['message']);
         messagesStream.subscribe(
             (message: Message<MessageParams>) => {
-                console.log(message.messageParams.missionStatus);
-                if (message.messageParams.missionStatus === RideHailingMissionStatus.VehicleAtPickupLocation) {
+                console.log(message.params.missionStatus);
+                if (message.params.missionStatus === RideHailingMissionStatus.VehicleAtPickupLocation) {
                     console.log('vehicle at location message');
                     message.respond(new MessageParams({missionStatus: RideHailingMissionStatus.PassengerIsComing}));
                 }
@@ -49,7 +53,7 @@ export default async function runConsumer(config?: IConfig) {
 
         locationMessageStream.subscribe(
             (message: Message<VehicleLocationMessageParams>) => {
-                console.log(`status: ${message.messageParams.missionStatus}, location: ${JSON.stringify(message.messageParams.vehicleLocation)}`);
+                console.log(`status: ${message.params.missionStatus}, location: ${JSON.stringify(message.params.vehicleLocation)}`);
             },
             (error) => {
                 console.log('passenger location error: ', error);
@@ -59,9 +63,11 @@ export default async function runConsumer(config?: IConfig) {
 
     const onBid = async (bid: Bid<BidParams>) => {
         console.log(`got bid: ${JSON.stringify(bid.params)}`);
-        const confirmation = await bid.requestCommitment();
+        restoredBid = identity.bid(bid.id, bid.params);
+        const confirmation = await restoredBid.requestCommitment();
         console.log('bid was confirmed');
-        const missionParams = new MissionParams({price: bid.params.price, vehicleId: bid.params.vehicleId, neederDavId: davId});
+        const missionParams = new MissionParams({});
+        restoredBid = identity.bid(bid.id, bid.params);
         const mission = await bid.accept(missionParams, walletPrivateKey);
         console.log('bid was accepted');
         onMissionCreated(mission);

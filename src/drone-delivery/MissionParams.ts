@@ -25,8 +25,8 @@ export default class MissionParams extends BaseMissionParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        return formatedParams;
+        const formattedParams = super.serialize();
+        return formattedParams;
     }
 
     public getProtocolTypes() {
