@@ -32,7 +32,7 @@ gulp.task('jest', (done) => {
 });
 
 gulp.task('tslint', (done) => {
-  return gulp.src('src/**/*.ts')
+  return gulp.src(['src/**/*.ts', 'samples/**/*.ts'])
     .on('error', function (err) {
       done(err);
     })
@@ -65,7 +65,7 @@ gulp.task('typedoc', function (done) {
 });
 
 gulp.task('spellcheck', function (done) {
-  return gulp.src('src/**/*.ts')
+  return gulp.src(['src/**/*.ts', 'samples/**/*.ts'])
     .on('error', function (err) {
       done(err);
     })

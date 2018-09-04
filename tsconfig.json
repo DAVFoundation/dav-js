@@ -10,6 +10,7 @@
     "outDir": "build"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "samples/**/*"
   ],
 }
