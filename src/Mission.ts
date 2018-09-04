@@ -17,6 +17,14 @@ export default class Mission<T extends MissionParams> {
         return this._params;
     }
 
+    public get id(): ID {
+        return this._selfId;
+    }
+
+    public get peerId(): ID {
+        return this._peerId;
+    }
+
     constructor(private _selfId: ID, private _peerId: ID, private _params: T, private _config: IConfig) {
     }
 
@@ -24,7 +32,7 @@ export default class Mission<T extends MissionParams> {
         const messages = await this.messages(GeneralMessageParams);
         const peerId = new Promise<ID>((resolve, reject) => {
             messages.take(1).subscribe((message) => {
-                this._peerId = message.messageParams.senderId;
+                this._peerId = message.params.senderId;
                 resolve(this._peerId);
             }, (err) => {
                 reject(err);

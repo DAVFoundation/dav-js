@@ -88,7 +88,7 @@ export default class Consumer {
 
     const startingMessages = await mission.messages(StartingMessageParams);
     startingMessages.subscribe(async (message) => {
-      console.log('Starting message received:', message.messageParams);
+      console.log('Starting message received:', message.params);
       printLine();
 
       const vesselStatusMessageParams = new VesselStatusMessageParams({
@@ -124,13 +124,13 @@ export default class Consumer {
 
     const providerStatusMessages = await mission.messages(ProviderStatusMessageParams);
     providerStatusMessages.subscribe((message) => {
-      console.log('Provider status message received:', message.messageParams);
+      console.log('Provider status message received:', message.params);
       printLine();
     });
 
     const chargingCompleteMessages = await mission.messages(ChargingCompleteMessageParams);
     chargingCompleteMessages.subscribe(async (message) => {
-      console.log('Charging complete message received:', message.messageParams);
+      console.log('Charging complete message received:', message.params);
       printLine();
 
       const finalizeMissionTransactionReceipt = await mission.finalizeMission(this._privateKey);
