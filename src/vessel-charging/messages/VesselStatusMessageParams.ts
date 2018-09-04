@@ -22,11 +22,11 @@ export default class MessageParams extends BaseMessageParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        Object.assign(formatedParams, {
+        const formattedParams = super.serialize();
+        Object.assign(formattedParams, {
             location: this.location,
         });
-        return formatedParams;
+        return formattedParams;
     }
 
     public deserialize(json: any): void {

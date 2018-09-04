@@ -16,8 +16,8 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     }
 
     public serialize() {
-        const formatedParams = super.serialize();
-        return formatedParams;
+        const formattedParams = super.serialize();
+        return formattedParams;
     }
 
     public deserialize(json: any): void {

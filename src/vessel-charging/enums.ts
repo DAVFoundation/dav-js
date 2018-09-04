@@ -9,13 +9,13 @@ export enum EnergySources {
 
 export enum Amenities {
     Lodging = 1,
-    Dining = 1,
-    Restrooms = 1,
-    Docking = 1,
-    Park = 1,
-    WiFi = 1,
-    Shopping = 1,
-    Grocery = 1,
+    Dining = 2,
+    Restrooms = 3,
+    Docking = 4,
+    Park = 5,
+    WiFi = 6,
+    Shopping = 7,
+    Grocery = 8,
 }
 
 export enum PriceTypes {
