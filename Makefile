@@ -12,10 +12,10 @@ tsc: FORCE
 spellcheck: FORCE
 	npm run spellcheck
 
-pre-push: tslint tsc jest
-
 pre-publish: FORCE
 	npm run typedoc
+
+pre-push: tslint tsc jest pre-publish
 
 publish: build-prod
 	npm publish --access public
