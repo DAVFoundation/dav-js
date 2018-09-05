@@ -34,7 +34,7 @@ export default class Identity {
 
   /**
    * @method publishNeed Used to create a new need and publish it to the relevant service providers.
-   * @param params the need parameters.
+   * @param needParams the need parameters.
    * @returns the created need.
    */
   public async publishNeed<T extends NeedParams>(needParams: T): Promise<Need<T>> {
@@ -51,7 +51,7 @@ export default class Identity {
 
   /**
    * @method needsForType Used to subscribe for specific needs (filtered by params).
-   * @param params the filter parameters.
+   * @param needFilterParams the filter parameters.
    * @returns Observable for needs subscription.
    */
   public async needsForType<T extends NeedParams>(needFilterParams: NeedFilterParams): Promise<Observable<Need<T>>> {
@@ -77,7 +77,6 @@ export default class Identity {
   }
   /**
    * @method missions Used to subscribe for missions.
-   * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for missions subscription.
    */
   public async missions<T extends MissionParams, U extends MessageParams>(): Promise<Observable<Mission<T>>> {
@@ -85,20 +84,19 @@ export default class Identity {
   }
   /**
    * @method messages Used to subscribe for messages.
-   * @param channelId Specify channelId only to get an observable for existed subscription.
    * @returns Observable for messages subscription.
    */
-  public async messages<T extends MessageParams>(channelId?: ID): Promise<Observable<Message<T>>> {
+  public async messages<T extends MessageParams>(): Promise<Observable<Message<T>>> {
     throw new Error('Not implemented in this version');
   }
   /**
    * @method need Used to restore an existed need.
+   * @param needSelfId The selfId that used to create the bid.
    * @param params The need parameters.
    * @returns The restored need.
    */
-  public need<T extends NeedParams, U extends MessageParams>(params: T): Need<T> {
-    const selfId = params.id;
-    return new Need(selfId, params, this._config);
+  public need<T extends NeedParams, U extends MessageParams>(needSelfId: ID, params: T): Need<T> {
+    return new Need(needSelfId, params, this._config);
   }
   /**
    * @method bid Used to restore an existed bid.

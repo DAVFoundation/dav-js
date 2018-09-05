@@ -1,7 +1,7 @@
 import BaseMessageParams from './MessageParams';
 
 /**
- * @class The Class MessageParams represent common parameters of MessageParams classes.
+ * @class The Class MissionPeerIdMessageParams represent internal message from provider to consumer to announce his mission selfId.
  */
 export default class MissionPeerIdMessageParams extends BaseMessageParams {
 

@@ -13,6 +13,9 @@ export default abstract class NeedParams extends BasicParams {
      * @property The need's topic id (used to send messages and bids to consumer).
      */
     public davId: DavID;
+    /**
+     * @property The consumer current location.
+     */
     public location: ILocation;
 
     constructor(protocol: string, type: string, values?: Partial<NeedParams>) {

@@ -79,7 +79,7 @@ export default class Mission<T extends MissionParams> {
     }
     /**
      * @method messages Used to subscribe for messages from the service provider.
-     * @param MessageParams The expected message param object type.
+     * @param filterType (optional) array of the expected message params object type.
      * @returns Observable object.
      */
     public async messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<MessageParams>>> {

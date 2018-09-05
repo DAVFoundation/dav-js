@@ -1,10 +1,9 @@
 import BaseBidParams from '../BidParams';
 import IBaseBidParams from '../IBidParams';
-import Price from '../Price';
 import ProtocolTypes from './ProtocolTypes';
 
 /**
- * @interface IVehicleDetails The interface for vehicle details in bid for ride-hailing protocol
+ * @interface IVehicleDetails is represents vehicle details in a bid of ride-hailing protocol
  */
 interface IVehicleDetails {
     /**

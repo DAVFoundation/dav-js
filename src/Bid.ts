@@ -105,7 +105,7 @@ export default class Bid<T extends BidParams> {
     }
     /**
      * @method messages Used to subscribe for messages for the current bid.
-     * @param messageParamsType The expected message params object type.
+     * @param filterType (optional) array of the expected message params object type.
      * @returns Observable for messages subscription.
      */
     public async messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<U>>> {
@@ -118,7 +118,6 @@ export default class Bid<T extends BidParams> {
     }
     /**
      * @method missions Used to subscribe for missions.
-     * @param missionParamsType The expected mission param object type.
      * @returns Observable for missions subscription.
      */
     public async missions<V extends MissionParams>(): Promise<Observable<Mission<V>>> {

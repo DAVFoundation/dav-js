@@ -15,7 +15,7 @@ export default class NeedParams extends BaseNeedParams {
      */
     public pickupLocation: ILocation;
     /**
-     * @property The passenger's desired location (required).
+     * @property The passenger's dropoff location (required).
      */
     public destinationLocation: ILocation;
 

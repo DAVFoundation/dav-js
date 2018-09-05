@@ -7,7 +7,7 @@ import ProtocolTypes from './ProtocolTypes';
  */
 interface IBidParams extends IBaseBidParams {
     /**
-     * @property The drone name.
+     * @property Estimated time from contract signing to delivery in seconds.
      */
     eta: number;
 }
@@ -19,9 +19,9 @@ export default class BidParams extends BaseBidParams {
     private static _type = 'bid';
 
     /**
-     * @property Time from contract signing to delivery in seconds.
+     * @property Estimated time from contract signing to delivery in seconds.
      */
-    public eta?: number; // Time from contract signing to delivery in seconds
+    public eta?: number;
 
     public static getMessageType(): string {
         return BidParams._type;

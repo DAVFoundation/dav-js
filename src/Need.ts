@@ -67,6 +67,7 @@ export default class Need<T extends NeedParams> {
     }
     /**
      * @method messages Used to subscribe for messages for the current need.
+     * @param filterType (optional) array of the expected message params object type.
      * @returns Observable for messages subscription.
      */
     public async messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<U>>> {
