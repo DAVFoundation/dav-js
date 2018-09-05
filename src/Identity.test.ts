@@ -357,8 +357,8 @@ describe('Identity class', () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
-      const need = identity.need(needParams);
-      expect(need).toEqual(new Need(needParams.id, needParams, config));
+      const need = identity.need('needSelfId', needParams);
+      expect(need).toEqual(new Need('needSelfId', needParams, config));
     });
   });
 
