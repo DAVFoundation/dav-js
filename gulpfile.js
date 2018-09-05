@@ -52,7 +52,12 @@ gulp.task('tsc', function (done) {
     })
     .js
     .pipe(sourcemaps.write(''))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('copy-contracts', function () {
+  gulp.src('./src/contracts/*')
+    .pipe(gulp.dest('./dist/contracts/'));
 });
 
 gulp.task('typedoc', function (done) {

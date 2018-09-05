@@ -6,6 +6,9 @@ tslint: FORCE
 jest: FORCE
 	npm run jest
 
+copy-contracts: FORCE
+	npm run copy-contracts
+
 tsc: FORCE
 	npm run tsc
 
@@ -15,15 +18,9 @@ spellcheck: FORCE
 pre-publish: FORCE
 	npm run typedoc
 
-pre-push: tslint tsc jest pre-publish
+build: tslint tsc jest pre-publish copy-contracts
 
-publish: build-prod
+pre-push: spellcheck tslint tsc jest pre-publish
+
+publish: pre-push
 	npm publish --access public
-
-copy-contracts: FORCE
-	-rm -rf ./build
-	mkdir build/
-	mkdir build/contracts/
-	cp ../contracts/build/contracts/DAVToken.json build/contracts/
-	cp ../contracts/build/contracts/BasicMission.json build/contracts/
-	cp ../contracts/build/contracts/Identity.json build/contracts/

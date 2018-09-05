@@ -7,10 +7,9 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "lib": ["es2017", "dom"],
-    "outDir": "build"
+    "outDir": "dist"
   },
   "include": [
     "src/**/*",
-    "samples/**/*"
   ],
 }

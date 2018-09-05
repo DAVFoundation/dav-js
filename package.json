@@ -27,6 +27,7 @@
     "start-testnet": "dav-cli --start",
     "tslint": "gulp tslint",
     "tsc": "gulp tsc",
+    "copy-contracts": "gulp copy-contracts",
     "jest": "gulp jest",
     "typedoc": "gulp typedoc",
     "spellcheck": "gulp spellcheck"
