@@ -20,7 +20,11 @@ pre-publish: FORCE
 
 build: tslint tsc jest pre-publish copy-contracts
 
+<<<<<<< HEAD
 pre-push: spellcheck tslint tsc jest pre-publish
 
 publish: pre-push
+=======
+publish: build-prod
+>>>>>>> 995e98f789317c77b939792aab601e374c4d7b83
 	npm publish --access public
