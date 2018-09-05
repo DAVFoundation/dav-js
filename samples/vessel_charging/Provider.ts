@@ -7,20 +7,14 @@ import NeedFilterParams from '../../src/vessel-charging/NeedFilterParams';
 import NeedParams from '../../src/vessel-charging/NeedParams';
 import BidParams from '../../src/vessel-charging/BidParams';
 import MissionParams from '../../src/vessel-charging/MissionParams';
-import MessageParams from '../../src/vessel-charging/MessageParams';
 import ProviderStatusMessageParams from '../../src/vessel-charging/messages/ProviderStatusMessageParams';
 import StartingMessageParams from '../../src/vessel-charging/messages/StartingMessageParams';
-import StatusRequestMessageParams from '../../src/vessel-charging/messages/StatusRequestMessageParams';
-import VesselStatusMessageParams from '../../src/vessel-charging/messages/VesselStatusMessageParams';
-import ChargingArrivalMessageParams from '../../src/vessel-charging/messages/ChargingArrivalMessageParams';
 import ChargingStartedMessageParams from '../../src/vessel-charging/messages/ChargingStartedMessageParams';
 import ChargingCompleteMessageParams from '../../src/vessel-charging/messages/ChargingCompleteMessageParams';
 import { EnergySources, Amenities } from '../../src/vessel-charging/enums';
 import Need from '../../src/Need';
 import Bid from '../../src/Bid';
-import { Observable } from 'rxjs';
 import Mission from '../../src/Mission';
-import Message from '../../src/Message';
 const printLine = () => console.log('====================================================================================================');
 
 const sdkConfiguration = {
@@ -109,6 +103,7 @@ export default class Provider {
   }
 
   public async simulateMission(mission: Mission<MissionParams>) {
+
     const startingMessageParams = new StartingMessageParams({});
     mission.sendMessage(startingMessageParams);
     console.log('Mission starting message sent!');
