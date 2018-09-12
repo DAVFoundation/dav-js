@@ -30,9 +30,9 @@ export default async function runConsumer(config?: IConfig) {
                                        destinationLocation: {lat: 32.050307, long: 34.7644916}});
     const need = await identity.publishNeed(needParams);
     console.log('need was published: ', JSON.stringify(needParams));
-    const restoredNeed = identity.need(need.params);
+    // const restoredNeed = identity.need(need.params);
     let restoredBid;
-    const bids = await restoredNeed.bids();
+    const bids = await need.bids();
 
     const onMissionCreated = async (oldMission: Mission<MissionParams>) => {
         const mission = identity.mission(oldMission.id, oldMission.peerId, oldMission.params);

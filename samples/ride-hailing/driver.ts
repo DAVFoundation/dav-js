@@ -60,8 +60,8 @@ export default async function runProvider(config?: IConfig) {
     const onNeed = async (need: Need<NeedParams>) => {
         console.log(`got need: ${JSON.stringify(need.params)}`);
         const bidParams = new BidParams({price: '0.1', vehicleId: davId, isCommitted: false});
-        const restoredNeed = identity.need(need.params);
-        const bid = await restoredNeed.createBid(bidParams);
+        // const restoredNeed = identity.need(need.params);
+        const bid = await need.createBid(bidParams);
         console.log('bid created');
         let restoredBid = identity.bid(bid.id, bid.params);
         const missions = await restoredBid.missions();
