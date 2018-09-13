@@ -1,7 +1,6 @@
 import Config from './Config';
 import IConfig from './IConfig';
 import BasicParams from './BasicParams';
-import { TimeoutError } from 'promise-timeout';
 import { Observable } from './common-types';
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import BidParams from './BidParams';
@@ -16,11 +15,6 @@ describe('Kafka class', () => {
     jest.resetModules();
     jest.useFakeTimers();
   });
-
-  afterEach(() => {
-    jest.unmock('promise-timeout');
-  });
-
 
   describe('createTopic method', () => {
 
