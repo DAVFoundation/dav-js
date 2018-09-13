@@ -10,25 +10,23 @@ export default class Kafka extends KafkaBase implements IKafka {
 
     // TODO: Close consumers + observers
 
-    private getKafkaClient(config: IConfig): KafkaClient {
+    private async getKafkaClient(config: IConfig): Promise<KafkaClient> {
         // TODO: make sure what is the correct way to use kafka seed url, and check other constructor options here
-        const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0]});
-        return client;
-    }
-
-    private getProducer(config: IConfig): Promise<Producer> {
-        const client = this.getKafkaClient(config);
-        const producer = new Producer(client);
-        const producerReadyPromise = new Promise<Producer>((resolve, reject) => {
-            producer.on('ready', () => resolve(producer));
-            producer.on('error', () => reject('Producer got error in connection'));
+        const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+        return new Promise<KafkaClient>((resolve, reject) => {
+            client.on('ready', () => resolve(client));
+            client.on('error', (err) => reject(err));
         });
-
-        return producerReadyPromise;
     }
 
-    private getConsumer(topicId: string, config: IConfig): Promise<Consumer> {
-        const client = this.getKafkaClient(config);
+    private async getProducer(config: IConfig): Promise<Producer> {
+        const client = await this.getKafkaClient(config);
+        const producer = new Producer(client);
+        return producer;
+    }
+
+    private async getConsumer(topicId: string, config: IConfig): Promise<Consumer> {
+        const client = await this.getKafkaClient(config);
         const consumer = new Consumer(
             client,
             [
@@ -39,33 +37,26 @@ export default class Kafka extends KafkaBase implements IKafka {
                 autoCommit: true,
             },
         );
-
-        const clientReadyPromise = new Promise<Consumer>((resolve, reject) => {
-            client.on('ready', () => resolve(consumer));
-            client.on('error', () => reject('client got error in connection'));
-        });
-        return clientReadyPromise;
+        return consumer;
     }
 
     public async createTopic(topicId: string, config: IConfig): Promise<void> {
-        const producer = await this.getProducer(config);
-        const createTopicPromise = new Promise<void>((resolve, reject) => {
-            producer.createTopics([topicId], true, (err: any, data: any) => {
+        const client = await this.getKafkaClient(config);
+        await new Promise<void>((resolve, reject) => {
+            (client as any).createTopics([{ topic: topicId, partitions: 1, replicationFactor: 1 }], (err: any, data: any) => {
                 if (err) {
                     reject(err);
                 } else {
-                    producer.close();
                     resolve();
                 }
             });
         });
-        return createTopicPromise;
     }
 
     public async sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void> {
         const producer = await this.getProducer(config);
         const payloads = [
-            { topic: topicId, messages: JSON.stringify(basicParams.serialize())},
+            { topic: topicId, messages: JSON.stringify(basicParams.serialize()) },
         ];
         const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {

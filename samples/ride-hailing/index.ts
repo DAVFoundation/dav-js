@@ -3,7 +3,7 @@ import runConsumer from './passenger';
 import Config from '../../src/Config';
 
 const sdkConfiguration = {
-    apiSeedUrls: ['http://localhost'],
+    apiSeedUrls: ['http://localhost:8080'],
     kafkaSeedUrls: ['localhost:9092'],
   };
 const config = new Config(sdkConfiguration);
