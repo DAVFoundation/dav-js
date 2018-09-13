@@ -42,24 +42,6 @@ describe('Kafka class', () => {
       expect(producerMock.close).toHaveBeenCalledTimes(1);
     });
 
-    it('should get connection timeout', async () => {
-      jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
-
-      const producerMock = {
-        on: jest.fn((state: string, cb: any) => {
-          return;
-        }),
-      };
-      require('kafka-node').Producer.mockImplementation(() => producerMock);
-
-      const promise = kafka.createTopic('topic', config);
-      jest.runAllTimers();
-
-      await expect(promise).rejects.toEqual(new TimeoutError());
-      expect(producerMock.on).toHaveBeenCalled();
-    });
-
     it('should get error from producer while trying to connect to kafka', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
@@ -92,28 +74,6 @@ describe('Kafka class', () => {
       expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
       expect(producerMock.createTopics).toHaveBeenCalledWith(['topic'], expect.any(Boolean), expect.any(Function));
     });
-
-    it('should get timeout in topic creation method', async () => {
-      jest.doMock('kafka-node');
-      const producer = {
-        on: jest.fn((state: string, cb: any) => cb()),
-        createTopics: jest.fn((topics: string[], async: boolean, cb: (error: any, data: any) => any) => {
-          return;
-        }),
-      };
-      const kafkaNode = require('kafka-node');
-      kafkaNode.Producer.mockImplementation(() => producer);
-
-      const timeoutMock = jest.fn().mockResolvedValueOnce(new kafkaNode.Producer()).mockRejectedValue(new TimeoutError());
-      jest.doMock('promise-timeout', () => ({
-        timeout: timeoutMock,
-      }));
-
-      const kafka = (await import('./Kafka')).default;
-
-      await expect(kafka.createTopic('topic', config)).rejects.toEqual(new TimeoutError());
-      expect(timeoutMock).toHaveBeenCalledTimes(2);
-    });
   });
 
   describe('sendParams method', () => {
@@ -140,31 +100,6 @@ describe('Kafka class', () => {
       expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
       expect(producerMock.send).toHaveBeenCalledWith([{ topic: 'topic', messages: JSON.stringify(content) }], expect.any(Function));
       expect(producerMock.close).toHaveBeenCalledTimes(1);
-    });
-
-    it('should get connection timeout', async () => {
-      jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
-      const paramsMockType = jest.fn<BasicParams>(() => ({
-        serialize: () => {
-          return 'basic params mock content';
-        },
-      }));
-      const paramsMock = new paramsMockType();
-
-      const topic = 'topic';
-      const producerMock = {
-        on: jest.fn((state: string, cb: any) => {
-          return;
-        }),
-      };
-      require('kafka-node').Producer.mockImplementation(() => producerMock);
-
-      const promise = kafka.sendParams(topic, paramsMock, config);
-      jest.runAllTimers();
-
-      await expect(promise).rejects.toEqual(new TimeoutError());
-      expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
     });
 
     it('should get error from producer while trying to connect to kafka', async () => {
@@ -211,56 +146,9 @@ describe('Kafka class', () => {
       expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
       expect(producerMock.send).toHaveBeenCalledWith([{topic: 'topic', messages: JSON.stringify(content)}], expect.anything());
     });
-
-    it('should get timeout in send method', async () => {
-      jest.doMock('kafka-node');
-      const paramsMockType = jest.fn<BasicParams>(() => ({
-        serialize: () => {
-          return 'basic params mock content';
-        },
-      }));
-      const paramsMock = new paramsMockType();
-
-      const producerMock = {
-        on: jest.fn((state: string, cb: any) => cb()),
-        send: jest.fn((payloads: Array<{ 'topic': string, messages: string }>, cb: (error: any, data: any) => any) => {
-          return;
-        }),
-      };
-      const kafkaNode = require('kafka-node');
-      kafkaNode.Producer.mockImplementation(() => producerMock);
-
-      const timeoutMock = jest.fn().mockResolvedValueOnce(new kafkaNode.Producer()).mockRejectedValue(new TimeoutError());
-      jest.doMock('promise-timeout', () => ({
-        timeout: timeoutMock,
-      }));
-
-      const kafka = (await import('./Kafka')).default;
-
-      await expect(kafka.sendParams('topic', paramsMock, config)).rejects.toEqual(new TimeoutError());
-      expect(timeoutMock).toHaveBeenCalledTimes(2);
-    });
   });
 
   describe('messages method', () => {
-
-    it('should get connection timeout', async () => {
-      jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
-
-      const kafkaClientMock = {
-        on: jest.fn((state: string, cb: any) => {
-          return;
-        }),
-      };
-      require('kafka-node').KafkaClient.mockImplementation(() => kafkaClientMock);
-
-      const streamPromise = kafka.messages('topic', config);
-      jest.runAllTimers();
-
-      await expect(streamPromise).rejects.toEqual(new TimeoutError());
-      expect(kafkaClientMock.on).toHaveBeenCalledWith('ready', expect.anything());
-    });
 
     it('should get error from kafka client while trying to connect', async () => {
       jest.doMock('kafka-node');
