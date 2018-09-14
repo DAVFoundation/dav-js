@@ -12,5 +12,6 @@ module.exports = {
     'jsx',
     'json',
     'node'
-  ]
+  ],
+  'testURL': 'http://localhost/'
 };
