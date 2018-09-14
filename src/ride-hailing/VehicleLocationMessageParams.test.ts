@@ -1,17 +1,17 @@
 import MessageParams from './VehicleLocationMessageParams';
 
 describe('MessageParams class', () => {
+
   const messageParams = new MessageParams({
     vehicleLocation: {
       lat: 32.050382,
       long: 34.766149,
     },
-    senderId: 'id',
   });
+
   const serializedMessageParams: any = {
     missionStatus: 'on_the_way',
     protocol: 'ride_hailing',
-    senderId: 'id',
     ttl: undefined,
     type: 'vehicle_location_message',
     vehicleLocation: { lat: 32.050382, long: 34.766149 },
