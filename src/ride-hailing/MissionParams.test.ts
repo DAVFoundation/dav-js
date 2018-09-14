@@ -3,11 +3,8 @@ import MissionParams from './MissionParams';
 describe('MissionParams class', () => {
 
   const missionParams = new MissionParams({});
-  missionParams.id = 'TOPIC_ID';
-  missionParams.neederDavId = 'DavId';
+
   const serializedMissionParams: any = {
-    id: 'TOPIC_ID',
-    neederDavId: 'DavId',
     ttl: undefined,
     protocol: 'ride_hailing',
     type: 'mission',
