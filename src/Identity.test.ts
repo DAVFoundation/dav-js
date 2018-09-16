@@ -219,7 +219,6 @@ describe('Identity class', () => {
 
   });
 
-
   xdescribe('missions method', () => {
 
     const missionParams1 = new MissionParams({
@@ -282,7 +281,6 @@ describe('Identity class', () => {
       expect(kafkaMock.generateTopicId).toHaveBeenCalled();
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
     });
-
 
     it('should receive missions with specified topicId and relevant functions', async () => {
 
@@ -432,7 +430,6 @@ describe('Identity class', () => {
       expect(spy.mock.calls[1][0]).toEqual(new Message('selfId', messageParams2, config));
       expect(spy.mock.calls[2][0]).toEqual(new Message('selfId', messageParams3, config));
     });
-
 
     xit('should receive error event', async () => {
       // kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.fromPromise(Promise.reject(kafkaError))));

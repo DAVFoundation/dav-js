@@ -81,7 +81,6 @@ export default class Consumer {
     return mission;
   }
 
-
   public async simulateMission(mission: Mission<MissionParams>) {
 
     const startingMessages = await mission.messages(['starting_message']);
@@ -139,4 +138,3 @@ export default class Consumer {
   }
 
 }
-
