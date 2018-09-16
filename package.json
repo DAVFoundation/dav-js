@@ -20,17 +20,17 @@
   ],
   "main": "./src/index.js",
   "scripts": {
-    "preinstall": "(cp ./.githooks/* .git/hooks) || true",
     "build-browser-dev": "webpack --mode development --config webpack.browser.config.js",
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
-    "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
-    "start-testnet": "dav-cli --start",
-    "tslint": "gulp tslint",
-    "tsc": "gulp tsc",
     "copy-contracts": "gulp copy-contracts",
+    "preinstall": "(cp ./.githooks/* .git/hooks) || true",
+    "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
     "jest": "gulp jest",
-    "typedoc": "gulp typedoc",
-    "spellcheck": "gulp spellcheck"
+    "spellcheck": "gulp spellcheck",
+    "start-testnet": "dav-cli --start",
+    "tsc": "gulp tsc",
+    "tslint": "gulp tslint",
+    "typedoc": "gulp typedoc"
   },
   "dependencies": {
     "@types/geodesy": "^1.2.0",
