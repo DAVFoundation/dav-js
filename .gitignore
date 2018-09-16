@@ -6,3 +6,4 @@ dist
 build
 docs/api
 coverage
+package-lock.json
