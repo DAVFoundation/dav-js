@@ -17,40 +17,40 @@ describe('Kafka class', () => {
   });
 
   describe('createTopic method', () => {
-
     it('should create topic without errors when input is valid and no errors from kafka', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
 
-      const producerMock = {
+      const clientMock = {
         on: jest.fn((state: string, cb: any) => cb()),
-        createTopics: jest.fn((topics: string[], async: boolean, cb: (error: any, data: any) => any) => cb(null, null)),
+        createTopics: jest.fn((topics: string[], cb: (error: any, data: any) => any) => cb(null, null)),
         close: jest.fn(),
       };
-      require('kafka-node').Producer.mockImplementation(() => producerMock);
+      require('kafka-node').KafkaClient.mockImplementation(() => clientMock);
 
       await expect(kafka.createTopic('topic', config)).resolves.toBeUndefined();
 
-      expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
-      expect(producerMock.createTopics).toHaveBeenCalledWith(['topic'], expect.any(Boolean), expect.any(Function));
-      expect(producerMock.close).toHaveBeenCalledTimes(1);
+      expect(clientMock.on).toHaveBeenCalledWith('ready', expect.anything());
+      expect(clientMock.createTopics).toHaveBeenCalledWith(
+        [{ topic: 'topic', partitions: 1, replicationFactor: 1 }], expect.any(Function));
+      expect(clientMock.close).toHaveBeenCalledTimes(1);
     });
 
-    it('should get error from producer while trying to connect to kafka', async () => {
+    it('should get error from client while trying to connect to kafka', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
 
-      const producerMock = {
+      const clientMock = {
         on: jest.fn((state: string, cb: any) => {
           if (state === 'error') {
-            cb();
+            cb('Client got error in connection');
           }
         }),
       };
-      require('kafka-node').Producer.mockImplementation(() => producerMock);
+      require('kafka-node').KafkaClient.mockImplementation(() => clientMock);
 
-      await expect(kafka.createTopic('topic', config)).rejects.toBe('Producer got error in connection');
-      expect(producerMock.on).toHaveBeenCalledWith('error', expect.anything());
+      await expect(kafka.createTopic('topic', config)).rejects.toBe('Client got error in connection');
+      expect(clientMock.on).toHaveBeenCalledWith('error', expect.anything());
     });
 
     it('should get error from kafka in topic creation method', async () => {
@@ -58,15 +58,16 @@ describe('Kafka class', () => {
       const kafka = (await import('./Kafka')).default;
 
       const kafkaError = 'kafka error';
-      const producerMock = {
+      const clientMock = {
         on: jest.fn((state: string, cb: any) => cb()),
-        createTopics: jest.fn((topics: string[], async: boolean, cb: (error: any, data: any) => any) => cb(kafkaError, null)),
+        createTopics: jest.fn((topics: string[], cb: (error: any, data: any) => any) => cb(kafkaError, null)),
       };
-      require('kafka-node').Producer.mockImplementation(() => producerMock);
+      require('kafka-node').KafkaClient.mockImplementation(() => clientMock);
 
       await expect(kafka.createTopic('topic', config)).rejects.toBe(kafkaError);
-      expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
-      expect(producerMock.createTopics).toHaveBeenCalledWith(['topic'], expect.any(Boolean), expect.any(Function));
+      expect(clientMock.on).toHaveBeenCalledWith('ready', expect.anything());
+      expect(clientMock.createTopics).toHaveBeenCalledWith(
+        [{ topic: 'topic', partitions: 1, replicationFactor: 1 }], expect.any(Function));
     });
   });
 
@@ -83,15 +84,19 @@ describe('Kafka class', () => {
       const paramsMockType = jest.fn<BasicParams>(() => (content));
       const paramsMock = new paramsMockType();
 
-      const producerMock = {
+      const clientMock = {
         on: jest.fn((state: string, cb: any) => cb()),
+        close: jest.fn(),
+      };
+      const producerMock = {
         send: jest.fn((payloads: Array<{ 'topic': string, messages: string }>, cb: (error: any, data: any) => any) => cb(null, null)),
         close: jest.fn(),
       };
       require('kafka-node').Producer.mockImplementation(() => producerMock);
+      require('kafka-node').KafkaClient.mockImplementation(() => clientMock);
 
       await expect(kafka.sendParams('topic', paramsMock, config)).resolves.toBeUndefined();
-      expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
+      expect(clientMock.on).toHaveBeenCalledWith('ready', expect.anything());
       expect(producerMock.send).toHaveBeenCalledWith([{ topic: 'topic', messages: JSON.stringify(content) }], expect.any(Function));
       expect(producerMock.close).toHaveBeenCalledTimes(1);
     });
@@ -106,17 +111,17 @@ describe('Kafka class', () => {
       }));
       const paramsMock = new paramsMockType();
 
-      const producerMock = {
+      const clientMock = {
         on: jest.fn((state: string, cb: any) => {
           if (state === 'error') {
-            cb();
+            cb('Client got error in connection');
           }
         }),
       };
-      require('kafka-node').Producer.mockImplementation(() => producerMock);
+      require('kafka-node').KafkaClient.mockImplementation(() => clientMock);
 
-      await expect(kafka.sendParams('topic', paramsMock, config)).rejects.toBe('Producer got error in connection');
-      expect(producerMock.on).toHaveBeenCalledWith('error', expect.anything());
+      await expect(kafka.sendParams('topic', paramsMock, config)).rejects.toBe('Client got error in connection');
+      expect(clientMock.on).toHaveBeenCalledWith('error', expect.anything());
     });
 
     it('should get error from kafka in send method', async () => {
@@ -130,15 +135,18 @@ describe('Kafka class', () => {
       const paramsMockType = jest.fn<BasicParams>(() => (content));
       const paramsMock = new paramsMockType();
 
-      const producerMock = {
+      const clientMock = {
         on: jest.fn((state: string, cb: any) => cb()),
+      };
+      const producerMock = {
         send: jest.fn((payloads: Array<{ topic: string, messages: string }>, cb: (error: any, data: any) => any) => cb('kafka error', null)),
       };
+      require('kafka-node').KafkaClient.mockImplementation(() => clientMock);
       require('kafka-node').Producer.mockImplementation(() => producerMock);
 
       await expect(kafka.sendParams('topic', paramsMock, config)).rejects.toBe('kafka error');
-      expect(producerMock.on).toHaveBeenCalledWith('ready', expect.anything());
-      expect(producerMock.send).toHaveBeenCalledWith([{topic: 'topic', messages: JSON.stringify(content)}], expect.anything());
+      expect(clientMock.on).toHaveBeenCalledWith('ready', expect.anything());
+      expect(producerMock.send).toHaveBeenCalledWith([{ topic: 'topic', messages: JSON.stringify(content) }], expect.anything());
     });
   });
 
@@ -151,7 +159,7 @@ describe('Kafka class', () => {
       const kafkaClientMock = {
         on: jest.fn((state: string, cb: any) => {
           if (state === 'error') {
-            cb();
+            cb('client got error in connection');
           }
         }),
       };
@@ -173,7 +181,7 @@ describe('Kafka class', () => {
       const jsonString = JSON.stringify(jsonObject);
       jest.doMock('./KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation((messageStream: Observable<IKafkaMessage>) => messageStream.subscribe((bid) => {
-          expect(bid).toEqual({type: 'bid', protocol: 'drone-charging', contents: jsonString});
+          expect(bid).toEqual({ type: 'bid', protocol: 'drone-charging', contents: jsonString });
           expect(kafkaClientMock.on).toBeCalledWith('ready', expect.anything());
           expect(consumerMock.on).toHaveBeenCalledWith('message', expect.anything());
           done();
@@ -232,7 +240,7 @@ describe('Kafka class', () => {
 
     beforeAll(() => {
       config = { apiSeedUrls: ['testUrl'] };
-      process.env = {BROWSER: 'true'};
+      process.env = { BROWSER: 'true' };
     });
 
     beforeEach(() => {
@@ -240,10 +248,10 @@ describe('Kafka class', () => {
       jest.resetAllMocks();
     });
 
-    describe ('createTopic method', () => {
+    describe('createTopic method', () => {
 
       it('should create topic without errors when input is valid', async () => {
-        const postMock = jest.fn((url: string) => Promise.resolve({status: 200}));
+        const postMock = jest.fn((url: string) => Promise.resolve({ status: 200 }));
         jest.doMock('axios', () => ({
           default: {
             post: postMock,
@@ -256,7 +264,7 @@ describe('Kafka class', () => {
       });
 
       it('should fail to create topic due to error from api', async () => {
-        const postMock = jest.fn((url: string) => Promise.resolve({status: 500, data: {error: 'kafka error'}}));
+        const postMock = jest.fn((url: string) => Promise.resolve({ status: 500, data: { error: 'kafka error' } }));
         jest.doMock('axios', () => ({
           default: {
             post: postMock,
@@ -282,7 +290,7 @@ describe('Kafka class', () => {
       });
     });
 
-    describe ('sendParams method', () => {
+    describe('sendParams method', () => {
 
       it('should send params without errors when input is valid', async () => {
         const paramsObject: any = {
@@ -293,7 +301,7 @@ describe('Kafka class', () => {
         const paramsMockType = jest.fn<BasicParams>(() => (paramsObject));
         const paramsMock = new paramsMockType();
 
-        const postMock = jest.fn((url: string, content: string, conf: any) => Promise.resolve({status: 200}));
+        const postMock = jest.fn((url: string, content: string, conf: any) => Promise.resolve({ status: 200 }));
         jest.doMock('axios', () => ({
           default: {
             post: postMock,
@@ -314,7 +322,7 @@ describe('Kafka class', () => {
         const paramsMockType = jest.fn<BasicParams>(() => (paramsObject));
         const paramsMock = new paramsMockType();
 
-        const postMock = jest.fn((url: string, conf: any) => Promise.resolve({status: 500, data: {error: 'kafka error'}}));
+        const postMock = jest.fn((url: string, conf: any) => Promise.resolve({ status: 500, data: { error: 'kafka error' } }));
         jest.doMock('axios', () => ({
           default: {
             post: postMock,
@@ -354,7 +362,7 @@ describe('Kafka class', () => {
         const jsonObject = { protocol: 'drone-charging', type: 'bid', price: '3' };
         const jsonString = JSON.stringify(jsonObject);
 
-        const getMock = jest.fn((url: string, conf: any) => Promise.resolve({status: 200, data: [jsonString]}));
+        const getMock = jest.fn((url: string, conf: any) => Promise.resolve({ status: 200, data: [jsonString] }));
         jest.doMock('axios', () => ({
           default: {
             get: getMock,
@@ -363,7 +371,7 @@ describe('Kafka class', () => {
 
         jest.doMock('./KafkaMessageStream', () => ({
           default: jest.fn().mockImplementation((messageStream: Observable<IKafkaMessage>) => messageStream.subscribe((bid) => {
-            expect(bid).toEqual({type: 'bid', protocol: 'drone-charging', contents: jsonString});
+            expect(bid).toEqual({ type: 'bid', protocol: 'drone-charging', contents: jsonString });
             expect(getMock).toHaveBeenCalledTimes(1);
             done();
             return {};
@@ -384,7 +392,7 @@ describe('Kafka class', () => {
         const fromJsonVerifiable = jest.fn((jsonStringParam: string) => secondJsonObject).mockReturnValueOnce(jsonObject);
         require('./drone-charging/BidParams').default.fromJson.mockImplementation(fromJsonVerifiable);
 
-        const getMock = jest.fn((url: string, content: string) => Promise.resolve({status: 200, data: jsonString}));
+        const getMock = jest.fn((url: string, content: string) => Promise.resolve({ status: 200, data: jsonString }));
         jest.doMock('axios', () => ({
           default: {
             get: getMock,
@@ -422,8 +430,8 @@ describe('Kafka class', () => {
         const fromJsonVerifiable = jest.fn((jsonStringParam: string) => secondJsonObject).mockReturnValueOnce(jsonObject);
         require('./drone-charging/BidParams').default.fromJson.mockImplementation(fromJsonVerifiable);
 
-        const getMock = jest.fn((url: string, content: string) => Promise.resolve({status: 200, data: secondJsonString}))
-        .mockReturnValueOnce(Promise.resolve({status: 200, data: jsonString}));
+        const getMock = jest.fn((url: string, content: string) => Promise.resolve({ status: 200, data: secondJsonString }))
+          .mockReturnValueOnce(Promise.resolve({ status: 200, data: jsonString }));
         jest.doMock('axios', () => ({
           default: {
             get: getMock,
@@ -491,7 +499,7 @@ describe('Kafka class', () => {
           )),
         }));
 
-        const getMock = jest.fn((url: string, content: string) => Promise.resolve({status: 500, data: {error: 'internal error'}}));
+        const getMock = jest.fn((url: string, content: string) => Promise.resolve({ status: 500, data: { error: 'internal error' } }));
         jest.doMock('axios', () => ({
           default: {
             get: getMock,

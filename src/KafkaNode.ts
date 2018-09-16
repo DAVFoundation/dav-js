@@ -49,6 +49,7 @@ export default class Kafka extends KafkaBase implements IKafka {
                 } else {
                     resolve();
                 }
+                client.close();
             });
         });
     }
