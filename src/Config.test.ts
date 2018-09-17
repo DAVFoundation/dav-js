@@ -12,9 +12,9 @@ describe('Config class', () => {
     });
   });
 
-  describe('check costume configuration are set', () => {
+  describe('check custom configurations are set', () => {
 
-    it('should contain all costume configuration', async () => {
+    it('should contain all custom configuration', async () => {
       const configurationObject = {
         ethNodeUrl: 'ETH_NODE_URL',
         apiSeedUrls: ['API_SEED_URL_1', 'API_SEED_URL_2'],
