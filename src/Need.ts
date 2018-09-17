@@ -38,8 +38,9 @@ export default class Need<T extends NeedParams> {
             // TODO: move this general message to kafka.createTopic
             throw new Error(`Fail to create a topic: ${err}`);
         }
+        const bid = new Bid<V>(bidderId, bidParams, this._config, await Kafka.messages(bidderId, this._config));
         await Kafka.sendParams(neederId, bidParams, this._config);
-        return new Bid<V>(bidderId, bidParams, this._config);
+        return bid;
     }
     /**
      * @method bids Used to subscribe for bids for the current need.

@@ -43,20 +43,20 @@ export default class Bid<T extends BidParams> {
 
     public async requestCommitment(): Promise<CommitmentConfirmation> {
         if (this._params.isCommitted) {
-            return new CommitmentConfirmation(new CommitmentConfirmationParams({bidId: this._params.id}));
+            return new CommitmentConfirmation(new CommitmentConfirmationParams({ bidId: this._params.id }));
         }
         const bidderId = this._params.id; // Channel#6
-        const commitmentRequestParams = new CommitmentRequestParams({neederId: this._selfId});
-        await Kafka.sendParams(bidderId, commitmentRequestParams, this._config);
+        const commitmentRequestParams = new CommitmentRequestParams({ neederId: this._selfId });
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#3
         const protocolTypesMap = new CommitmentConfirmationParams({}).getProtocolTypes();
         const commitmentConfirmationParamsStream = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.messages);
-        const commitmentConfirmation = await commitmentConfirmationParamsStream.filter(
+        const commitmentConfirmation = commitmentConfirmationParamsStream.filter(
             (commitmentConfirmationParams: CommitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
-                                          .map((commitmentParams: CommitmentConfirmationParams) => {
-                                              this._params.isCommitted = true;
-                                              return new CommitmentConfirmation(commitmentParams);
-                                            }).first().toPromise();
+            .map((commitmentParams: CommitmentConfirmationParams) => {
+                this._params.isCommitted = true;
+                return new CommitmentConfirmation(commitmentParams);
+            }).first().toPromise();
+        await Kafka.sendParams(bidderId, commitmentRequestParams, this._config);
         return commitmentConfirmation;
     }
 
@@ -125,17 +125,17 @@ export default class Bid<T extends BidParams> {
         const protocolTypesMap = this._params.getProtocolTypes();
         const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.missions);
         const missionStream = missionParamsStream
-        .map(async (params: V) => {
-            this._missionId = Kafka.generateTopicId();
-            await Kafka.createTopic(this._missionId, this._config); // Channel #5
-            return new Mission<V>(this._missionId, params.id, params, this._config);
-        })
-        .map((promise) => Observable.fromPromise(promise))
-        .mergeAll()
-        .do((mission) => {
-            const message = new GeneralMessageParams({senderId: this._missionId});
-            mission.sendMessage(message);
-        });
+            .map(async (params: V) => {
+                this._missionId = Kafka.generateTopicId();
+                await Kafka.createTopic(this._missionId, this._config); // Channel #5
+                return new Mission<V>(this._missionId, params.id, params, this._config);
+            })
+            .map((promise) => Observable.fromPromise(promise))
+            .mergeAll()
+            .do((mission) => {
+                const message = new GeneralMessageParams({ senderId: this._missionId });
+                mission.sendMessage(message);
+            });
         return Observable.fromObservable(missionStream, missionParamsStream.topic);
     }
 

@@ -1,22 +1,32 @@
-import { KafkaClient, Producer, Consumer } from 'kafka-node';
+import { KafkaClient, Producer, Consumer, Message } from 'kafka-node';
 import IConfig from './IConfig';
 import { Observable, IKafka } from './common-types';
 import BasicParams from './BasicParams';
-import { Observer } from 'rxjs';
+import { Subject, Observable as RxObservable } from 'rxjs';
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import KafkaBase from './KafkaBase';
+import { ProduceRequest } from 'kafka-node';
 
 export default class Kafka extends KafkaBase implements IKafka {
-
-    // TODO: Close consumers + observers
+    private static client: KafkaClient = null;
+    private static clientConnected: boolean = false;
 
     private async getKafkaClient(config: IConfig): Promise<KafkaClient> {
-        // TODO: make sure what is the correct way to use kafka seed url, and check other constructor options here
-        const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
-        return new Promise<KafkaClient>((resolve, reject) => {
-            client.on('ready', () => resolve(client));
-            client.on('error', (err) => reject(err));
-        });
+        if (Kafka.clientConnected) {
+            return Kafka.client;
+        } else {
+            if (!Kafka.client) {
+                Kafka.client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+                Kafka.client.connect();
+            }
+            return new Promise<KafkaClient>((resolve, reject) => {
+                Kafka.client.on('ready', () => {
+                    Kafka.clientConnected = true;
+                    resolve(Kafka.client);
+                });
+                Kafka.client.on('error', (err) => reject(err));
+            });
+        }
     }
 
     private async getProducer(config: IConfig): Promise<Producer> {
@@ -33,7 +43,7 @@ export default class Kafka extends KafkaBase implements IKafka {
                 { topic: topicId },
             ],
             {
-                groupId: topicId,
+                groupId: 'topicId',
                 autoCommit: true,
             },
         );
@@ -49,22 +59,22 @@ export default class Kafka extends KafkaBase implements IKafka {
                 } else {
                     resolve();
                 }
-                client.close();
             });
         });
     }
 
-    public async sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void> {
+    public sendMessage(topicId: string, message: string, config: IConfig): Promise<void> {
+        return this.sendPayloads([{ topic: topicId, messages: message }], config);
+    }
+
+    public async sendPayloads(payloads: ProduceRequest[], config: IConfig): Promise<void> {
         const producer = await this.getProducer(config);
-        const payloads = [
-            { topic: topicId, messages: JSON.stringify(basicParams.serialize()) },
-        ];
+        console.log(`sending ${JSON.stringify(payloads)}`);
         const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {
                 if (err) {
                     reject(err);
                 } else {
-                    producer.close();
                     resolve();
                 }
             });
@@ -72,24 +82,43 @@ export default class Kafka extends KafkaBase implements IKafka {
         return sendPromise;
     }
 
-    public async messages(topicId: string, config: IConfig): Promise<KafkaMessageStream> {
+    public sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void> {
+        return this.sendMessage(topicId, JSON.stringify(basicParams.serialize()), config);
+    }
+
+    public async rawMessages(topicId: string, config: IConfig): Promise<RxObservable<Message>> {
         const consumer = await this.getConsumer(topicId, config);
-        const kafkaStream: Observable<IKafkaMessage> = Observable.create((observer: Observer<IKafkaMessage>) => {
-            consumer.on('message', (message) => {
-                try {
-                    const messageString = message.value.toString();
-                    const messageObject = JSON.parse(messageString);
-                    observer.next({
-                        type: messageObject.type,
-                        protocol: messageObject.protocol,
-                        contents: messageString,
-                    });
-                } catch (error) {
-                    observer.error(`error while trying to parse message. topic: ${topicId} error: ${error}, message: ${message}`);
-                }
-            });
+        const kafkaStream: Subject<Message> = new Subject<Message>();
+        console.log(`Listening on ${topicId}`);
+        consumer.on('message', (message) => {
+            try {
+                console.log(`Message on ${topicId}: ${JSON.stringify(message)}`);
+                const messageString = message.value.toString();
+                kafkaStream.next(message);
+            } catch (error) {
+                kafkaStream.error(`error while trying to parse message. topic: ${topicId} error: ${error}, message: ${message}`);
+            }
         });
-        return new KafkaMessageStream(kafkaStream);
+        return kafkaStream;
+    }
+
+    public async messages(topicId: string, config: IConfig): Promise<KafkaMessageStream> {
+        const stream = (await this.rawMessages(topicId, config)).map(
+            (message) => {
+                const messageString = message.value.toString();
+                const messageObject = JSON.parse(messageString);
+                return ({
+                    type: messageObject.type,
+                    protocol: messageObject.protocol,
+                    contents: messageString,
+                } as IKafkaMessage);
+            });
+        return new KafkaMessageStream(Observable.fromObservable(stream, topicId));
+    }
+
+    public async isConnected(config: IConfig) {
+        await this.getKafkaClient(config);
+        return true;
     }
 }
 
