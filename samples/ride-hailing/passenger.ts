@@ -77,6 +77,3 @@ export default async function runConsumer(config?: IConfig) {
         onBid,
     );
 }
-
-
-

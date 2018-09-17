@@ -79,6 +79,3 @@ export default async function runProvider(config?: IConfig) {
         onNeed,
     );
 }
-
-
-

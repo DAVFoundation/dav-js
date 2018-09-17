@@ -121,5 +121,3 @@ export default class Kafka extends KafkaBase implements IKafka {
         return true;
     }
 }
-
-

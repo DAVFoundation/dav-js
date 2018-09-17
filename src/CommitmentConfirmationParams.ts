@@ -9,9 +9,7 @@ export default class CommitmentConfirmationParams extends BasicParams {
 
     private static _protocol = 'general';
     private static _type = 'commitment-confirmation';
-
     public bidId: string;
-
 
     public static getMessageType(): string {
         return CommitmentConfirmationParams._type;

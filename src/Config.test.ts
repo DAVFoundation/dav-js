@@ -4,7 +4,6 @@ import { defaultConfiguration } from './Config';
 
 describe('Config class', () => {
 
-
   describe('check default configuration are set', () => {
 
     it('should contain all default configuration', async () => {

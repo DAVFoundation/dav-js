@@ -284,7 +284,6 @@ describe('Bid class', () => {
       expect(spy.mock.calls[1][0]).toEqual(new Mission(TOPIC_ID, missionParams2.id, missionParams2, config));
     });
 
-
     it('should receive missions with specified topicId and relevant functions', async () => {
 
       const kafkaMessageStreamMock = {
