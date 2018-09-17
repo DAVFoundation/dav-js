@@ -23,7 +23,7 @@ describe('Need class', () => {
   const topicId = 'TOPIC_ID';
   const needParams = new NeedParams({});
   const kafkaError = { msg: 'Kafka error' };
-  let bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID'});
+  let bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID' });
   bidParams.id = 'bidSource';
 
   describe('createBid method', () => {
@@ -32,6 +32,7 @@ describe('Need class', () => {
       generateTopicId: jest.fn(() => topicId),
       createTopic: jest.fn(() => Promise.resolve()),
       sendParams: jest.fn(() => Promise.resolve()),
+      messages: jest.fn(() => Promise.resolve({ filterType: jest.fn(() => Observable.from([])) })),
     };
 
     beforeEach(() => {
@@ -44,7 +45,9 @@ describe('Need class', () => {
       // tslint:disable-next-line:variable-name
       const Need = (await import('./Need')).default;
       const need = new Need(selfId, needParams, config);
-      await expect(need.createBid(bidParams)).resolves.toEqual(new Bid(topicId, bidParams, config));
+      const bid = await need.createBid(bidParams);
+      expect(bid.id).toBe(topicId);
+      expect(bid.params).toBe(bidParams);
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(topicId, config);
       expect(kafkaMock.sendParams).toHaveBeenCalledWith(needParams.id, bidParams, config);
     });
@@ -74,7 +77,7 @@ describe('Need class', () => {
     beforeEach(() => {
       jest.resetModules();
       jest.clearAllMocks();
-      bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID'});
+      bidParams = new BidParams({ id: 'BID_ID', price: new Price('3', PriceType.flat), vehicleId: 'DAV_ID' });
     });
 
     it('should create bid observable with one message', async () => {

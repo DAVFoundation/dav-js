@@ -30,7 +30,7 @@ export default class Bid<T extends BidParams> {
         return this._selfId;
     }
 
-    constructor(private _selfId: ID, private _params: T, private _config: IConfig, kafkaMessageStream?: KafkaMessageStream) {
+    constructor(private _selfId: ID, private _params: T, private _config: IConfig, private kafkaMessageStream?: KafkaMessageStream) {
         this._kafkaMessageStream = kafkaMessageStream;
     }
 
