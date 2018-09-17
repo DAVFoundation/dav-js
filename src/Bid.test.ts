@@ -13,6 +13,7 @@ import CommitmentRequestParams from './CommitmentRequestParams';
 import CommitmentRequest from './CommitmentRequest';
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import { Observable } from './common-types';
+import AxiosMock from './mocks/AxiosMock';
 
 describe('Bid class', () => {
   const config = new Config({});
@@ -244,10 +245,6 @@ describe('Bid class', () => {
       price: '100',
     });
 
-    const axiosMock = {
-      post: jest.fn(() => Promise.resolve()),
-    };
-
     const TOPIC_ID = 'TOPIC_ID';
 
     beforeEach(() => {
@@ -255,7 +252,7 @@ describe('Bid class', () => {
       jest.resetAllMocks();
       jest.resetModules();
       jest.doMock('axios', () => ({
-        default: axiosMock,
+        default: AxiosMock,
       }));
     });
 
