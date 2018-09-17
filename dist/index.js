@@ -12,5 +12,7 @@ const Message_1 = require("./Message");
 exports.Message = Message_1.default;
 const Need_1 = require("./Need");
 exports.Need = Need_1.default;
+const KafkaNode_1 = require("./KafkaNode");
+exports.KafkaNode = KafkaNode_1.default;
 
 //# sourceMappingURL=index.js.map

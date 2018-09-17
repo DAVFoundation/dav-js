@@ -15,8 +15,6 @@ tsc: FORCE
 spellcheck: FORCE
 	npm run spellcheck
 
-build: tslint tsc jest pre-publish copy-contracts
-
 pre-push: FORCE
 	npm run prepublish
 
