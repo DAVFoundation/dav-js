@@ -7,6 +7,7 @@ const tslint = require('gulp-tslint');
 const typedoc = require('gulp-typedoc');
 const sourcemaps = require('gulp-sourcemaps');
 const spellcheck = require('gulp-ts-spellcheck').default;
+const merge = require('gulp-merge');
 
 gulp.task('deploy-contracts', (callback) => {
   exec('truffle deploy', function (err, stdout, stderr) {
@@ -44,20 +45,24 @@ gulp.task('tslint', (done) => {
 
 gulp.task('tsc', function (done) {
   var tsProject = ts.createProject('tsconfig.json');
-  return tsProject.src()
+  const tsResults = tsProject.src()
     .pipe(sourcemaps.init())
     .pipe(tsProject())
     .on('error', function (err) {
       done(err);
-    })
-    .js
-    .pipe(sourcemaps.write(''))
-    .pipe(gulp.dest('dist'));
+    });
+
+  return merge([
+    tsResults.dts.pipe(gulp.dest('./build/')),
+    tsResults.js.pipe(sourcemaps.write('')).pipe(gulp.dest('./build'))
+  ]);
 });
 
-gulp.task('copy-contracts', function () {
+gulp.task('create-dist',['tsc'], function () {
   gulp.src('./src/contracts/*')
     .pipe(gulp.dest('./dist/contracts/'));
+  gulp.src('./build/src/*')
+    .pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('typedoc', function (done) {
@@ -82,4 +87,4 @@ gulp.task('spellcheck', function (done) {
 
 gulp.task('compile', ['tslint', 'tsc']);
 gulp.task('test', ['tslint', 'jest']);
-gulp.task('pre-publish', ['tslint', 'jest', 'tsc', 'typedoc']);
+gulp.task('prepublish', ['tslint', 'jest', 'tsc', 'typedoc','spellcheck','create-dist']);

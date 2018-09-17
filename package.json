@@ -13,16 +13,14 @@
   "license": "MIT",
   "author": "DAV Foundation <tal@dav.network>",
   "files": [
-    "index.js",
-    "lib/",
-    "src/",
-    "build/"
+    "dist"
   ],
-  "main": "./src/index.js",
+  "main": "./dist",
+  "types": "./dist",
   "scripts": {
     "build-browser-dev": "webpack --mode development --config webpack.browser.config.js",
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
-    "copy-contracts": "gulp copy-contracts",
+    "create-dist": "gulp create-dist",
     "preinstall": "(cp ./.githooks/* .git/hooks) || true",
     "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
     "jest": "gulp jest",
@@ -30,6 +28,7 @@
     "start-testnet": "dav-cli --start",
     "tsc": "gulp tsc",
     "tslint": "gulp tslint",
+    "prepublish": "gulp prepublish",
     "typedoc": "gulp typedoc"
   },
   "dependencies": {
@@ -59,6 +58,7 @@
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.2",
     "gulp-jest": "^4.0.2",
+    "gulp-merge": "^0.1.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-shell": "^0.6.5",
     "gulp-sourcemaps": "^2.6.4",

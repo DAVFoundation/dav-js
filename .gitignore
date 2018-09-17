@@ -2,8 +2,7 @@ node_modules
 npm-debug.log
 .DS_Store
 .idea
-dist
 build
-docs/api
+docs
 coverage
 package-lock.json
