@@ -69,6 +69,7 @@ export default class Kafka extends KafkaBase implements IKafka {
 
     public async sendPayloads(payloads: ProduceRequest[], config: IConfig): Promise<void> {
         const producer = await this.getProducer(config);
+        // tslint:disable-next-line:no-console
         console.log(`sending ${JSON.stringify(payloads)}`);
         const sendPromise = new Promise<void>((resolve, reject) => {
             producer.send(payloads, (err: any, data: any) => {
@@ -89,9 +90,11 @@ export default class Kafka extends KafkaBase implements IKafka {
     public async rawMessages(topicId: string, config: IConfig): Promise<RxObservable<Message>> {
         const consumer = await this.getConsumer(topicId, config);
         const kafkaStream: Subject<Message> = new Subject<Message>();
+        // tslint:disable-next-line:no-console
         console.log(`Listening on ${topicId}`);
         consumer.on('message', (message) => {
             try {
+                // tslint:disable-next-line:no-console
                 console.log(`Message on ${topicId}: ${JSON.stringify(message)}`);
                 const messageString = message.value.toString();
                 kafkaStream.next(message);
