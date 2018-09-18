@@ -18,5 +18,8 @@ spellcheck: FORCE
 pre-push: FORCE
 	npm run prepublish
 
+prepublish: FORCE
+	npm run prepublish
+
 publish: pre-push
 	npm publish --access public

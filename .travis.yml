@@ -8,12 +8,11 @@ branches:
   - master
   - staging
   - production
-  - FEAT-SDK-V-1-0
 install:
 - npm install
 before_script:
 script:
-- npm run prepush
+- npm run prepublish
 after_success:
 after_failure:
 deploy:
