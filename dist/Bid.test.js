@@ -14,6 +14,7 @@ const CommitmentRequestParams_1 = require("./CommitmentRequestParams");
 const CommitmentRequest_1 = require("./CommitmentRequest");
 const KafkaMessageStream_1 = require("./KafkaMessageStream");
 const common_types_1 = require("./common-types");
+const AxiosMock_1 = require("./mocks/AxiosMock");
 describe('Bid class', () => {
     const config = new Config_1.default({});
     const selfId = 'SELF_ID';
@@ -207,16 +208,13 @@ describe('Bid class', () => {
             vehicleId: 'DAV_ID',
             price: '100',
         });
-        const axiosMock = {
-            post: jest.fn(() => Promise.resolve()),
-        };
         const TOPIC_ID = 'TOPIC_ID';
         beforeEach(() => {
             jest.clearAllMocks();
             jest.resetAllMocks();
             jest.resetModules();
             jest.doMock('axios', () => ({
-                default: axiosMock,
+                default: AxiosMock_1.default,
             }));
         });
         xit('should receive missions and call relevant functions', async () => {
