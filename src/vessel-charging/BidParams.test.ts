@@ -14,11 +14,9 @@ describe('BidParams class', () => {
         // manufactu,rer:
         // model:,
     });
-    
     describe('serialize method', () => {
         it('should return serialized bid params object with the current values', () => {
             // expect(bidParams.serialize()).toEqual();
         });
     });
-
 });
