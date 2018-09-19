@@ -25,8 +25,7 @@ describe('Contracts class', () => {
     });
   };
 
-  beforeAll(() => { /**/ });
-
+  
   describe('isIdentityRegistered method', () => {
 
     const isRegisteredCall = jest.fn(() => true);
