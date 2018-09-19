@@ -338,8 +338,6 @@ describe('Identity class', () => {
   });
 
   describe('need method', () => {
-    beforeAll(() => { /**/ });
-
     it('should success, validate need', async () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
@@ -350,8 +348,6 @@ describe('Identity class', () => {
   });
 
   describe('bid method', () => {
-    beforeAll(() => { /**/ });
-
     it('should success, validate bid', async () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
@@ -362,8 +358,6 @@ describe('Identity class', () => {
   });
 
   describe('mission method', () => {
-    beforeAll(() => { /**/ });
-
     it('should success, validate mission', async () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
