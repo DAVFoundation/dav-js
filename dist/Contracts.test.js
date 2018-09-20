@@ -23,7 +23,6 @@ describe('Contracts class', () => {
             jest.useFakeTimers();
         });
     };
-    beforeAll(() => { });
     describe('isIdentityRegistered method', () => {
         const isRegisteredCall = jest.fn(() => true);
         const isRegistered = jest.fn(() => ({
@@ -224,9 +223,27 @@ describe('Contracts class', () => {
             web3.eth.Contract.getPastEvents = getPastEvents;
         });
         it('should call relevant functions and receive contract events', async () => {
-            const pastEvent1 = [{ transactionHash: 'TRANSACTION_HASH_1', blockNumber: 1, transactionIndex: 1 }];
-            const pastEvent2 = [{ transactionHash: 'TRANSACTION_HASH_2', blockNumber: 2, transactionIndex: 1 }];
-            const pastEvent3 = [{ transactionHash: 'TRANSACTION_HASH_3', blockNumber: 2, transactionIndex: 2 }];
+            const pastEvent1 = [
+                {
+                    transactionHash: 'TRANSACTION_HASH_1',
+                    blockNumber: 1,
+                    transactionIndex: 1,
+                },
+            ];
+            const pastEvent2 = [
+                {
+                    transactionHash: 'TRANSACTION_HASH_2',
+                    blockNumber: 2,
+                    transactionIndex: 1,
+                },
+            ];
+            const pastEvent3 = [
+                {
+                    transactionHash: 'TRANSACTION_HASH_3',
+                    blockNumber: 2,
+                    transactionIndex: 2,
+                },
+            ];
             getPastEvents
                 .mockImplementationOnce(() => Promise.resolve(pastEvent1))
                 .mockImplementationOnce(() => Promise.resolve(pastEvent2))

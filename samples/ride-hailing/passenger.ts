@@ -13,6 +13,7 @@ import { RideHailingMissionStatus } from '../../src/common-enums';
 import Message from '../../src/Message';
 import Need from '../../src/Need';
 import config from './config';
+import { Observable } from 'rxjs';
 
 export default async function runConsumer(configuration?: IConfig) {
     return new Promise(async (resolve, reject) => {
@@ -70,6 +71,7 @@ export default async function runConsumer(configuration?: IConfig) {
             const onBid = async (bid: Bid<BidParams>) => {
                 console.log(`got bid: ${JSON.stringify(bid.params)}`);
                 // restoredBid = identity.bid(bid.id, bid.params);
+                await new Promise((res, rej) => { setTimeout(res, 5000); });
                 const confirmation = await bid.requestCommitment();
                 console.log('bid was confirmed');
                 const missionParams = new MissionParams({});
@@ -87,3 +89,15 @@ export default async function runConsumer(configuration?: IConfig) {
         }
     });
 }
+
+runConsumer(config).then(
+    () => {
+        // tslint:disable-next-line:no-console
+        console.log(`Passenger Done.`);
+        process.exit();
+    },
+    (err) => {
+        // tslint:disable-next-line:no-console
+        console.log(`Passenger Error: ${err}`);
+        process.exit();
+    });

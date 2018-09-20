@@ -7,22 +7,21 @@ const KafkaMessageStream_1 = require("./KafkaMessageStream");
 const KafkaBase_1 = require("./KafkaBase");
 class Kafka extends KafkaBase_1.default {
     async getKafkaClient(config) {
-        if (Kafka.clientConnected) {
-            return Kafka.client;
-        }
-        else {
-            if (!Kafka.client) {
-                Kafka.client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
-                Kafka.client.connect();
-            }
-            return new Promise((resolve, reject) => {
-                Kafka.client.on('ready', () => {
-                    Kafka.clientConnected = true;
-                    resolve(Kafka.client);
-                });
-                Kafka.client.on('error', (err) => reject(err));
+        // if (Kafka.clientConnected) {
+        // return Kafka.client;
+        // } else {
+        // if (!Kafka.client) {
+        const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+        client.connect();
+        // }
+        return new Promise((resolve, reject) => {
+            client.on('ready', () => {
+                // Kafka.clientConnected = true;
+                resolve(client);
             });
-        }
+            client.on('error', (err) => reject(err));
+        });
+        // }
     }
     async getProducer(config) {
         const client = await this.getKafkaClient(config);
@@ -34,7 +33,7 @@ class Kafka extends KafkaBase_1.default {
         const consumer = new kafka_node_1.Consumer(client, [
             { topic: topicId },
         ], {
-            groupId: 'topicId',
+            groupId: topicId,
             autoCommit: true,
         });
         return consumer;
@@ -44,9 +43,13 @@ class Kafka extends KafkaBase_1.default {
         await new Promise((resolve, reject) => {
             client.createTopics([{ topic: topicId, partitions: 1, replicationFactor: 1 }], (err, data) => {
                 if (err) {
+                    // tslint:disable-next-line:no-console
+                    console.log(`Error creating topic ${topicId}`);
                     reject(err);
                 }
                 else {
+                    // tslint:disable-next-line:no-console
+                    console.log(`Topic created ${topicId}`);
                     resolve();
                 }
             });
@@ -58,13 +61,17 @@ class Kafka extends KafkaBase_1.default {
     async sendPayloads(payloads, config) {
         const producer = await this.getProducer(config);
         // tslint:disable-next-line:no-console
-        console.log(`sending ${JSON.stringify(payloads)}`);
+        console.log(`Sending ${JSON.stringify(payloads)}`);
         const sendPromise = new Promise((resolve, reject) => {
             producer.send(payloads, (err, data) => {
                 if (err) {
+                    // tslint:disable-next-line:no-console
+                    console.log(`Error sending ${JSON.stringify(payloads)}`);
                     reject(err);
                 }
                 else {
+                    // tslint:disable-next-line:no-console
+                    console.log(`Sent ${JSON.stringify(payloads)}`);
                     resolve();
                 }
             });
@@ -87,8 +94,13 @@ class Kafka extends KafkaBase_1.default {
                 kafkaStream.next(message);
             }
             catch (error) {
-                kafkaStream.error(`error while trying to parse message. topic: ${topicId} error: ${error}, message: ${message}`);
+                kafkaStream.error(`error while trying to parse message. topic: ${topicId} error: ${JSON.stringify(error)}, message: ${JSON.stringify(message)}`);
             }
+        });
+        consumer.on('error', (err) => {
+            // tslint:disable-next-line:no-console
+            console.log(`Consumer error on ${topicId}: ${JSON.stringify(err)}`);
+            kafkaStream.error(`Consumer error. topic: ${topicId} error: ${JSON.stringify(err)}`);
         });
         return kafkaStream;
     }

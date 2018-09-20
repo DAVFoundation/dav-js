@@ -90,3 +90,15 @@ async function runProvider(configuration?: IConfig) {
         }
     });
 }
+
+runProvider(config).then(
+    () => {
+        // tslint:disable-next-line:no-console
+        console.log(`Driver Done.`);
+        process.exit();
+    },
+    (err) => {
+        // tslint:disable-next-line:no-console
+        console.log(`Driver Error: ${err}`);
+        process.exit();
+    });
