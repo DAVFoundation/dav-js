@@ -33,8 +33,6 @@ describe('Mission class', () => {
     });
   };
 
-  beforeAll(() => { /**/ });
-
   describe('sendMessage method', () => {
 
     beforeEach(() => {

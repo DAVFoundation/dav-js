@@ -32,7 +32,6 @@ describe('Mission class', () => {
             jest.useFakeTimers();
         });
     };
-    beforeAll(() => { });
     describe('sendMessage method', () => {
         beforeEach(() => {
             jest.resetAllMocks();
