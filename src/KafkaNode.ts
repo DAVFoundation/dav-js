@@ -6,27 +6,25 @@ import { Subject, Observable as RxObservable } from 'rxjs';
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import KafkaBase from './KafkaBase';
 import { ProduceRequest } from 'kafka-node';
+import * as retry from 'retry';
 
 export default class Kafka extends KafkaBase implements IKafka {
-    private static client: KafkaClient = null;
-    private static clientConnected: boolean = false;
-
     private async getKafkaClient(config: IConfig): Promise<KafkaClient> {
-        // if (Kafka.clientConnected) {
-        // return Kafka.client;
-        // } else {
-        // if (!Kafka.client) {
-        const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
-        client.connect();
-        // }
         return new Promise<KafkaClient>((resolve, reject) => {
-            client.on('ready', () => {
-                // Kafka.clientConnected = true;
-                resolve(client);
+            const operation = retry.operation({});
+            operation.attempt((currentAttempt) => {
+                const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+                client.connect();
+                client.on('ready', () => {
+                    resolve(client);
+                });
+                client.on('error', (err) => {
+                    if (!operation.retry(err)) {
+                        reject(operation.mainError());
+                    }
+                });
             });
-            client.on('error', (err) => reject(err));
         });
-        // }
     }
 
     private async getProducer(config: IConfig): Promise<Producer> {

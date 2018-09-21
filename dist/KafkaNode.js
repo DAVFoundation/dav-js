@@ -5,23 +5,24 @@ const common_types_1 = require("./common-types");
 const rxjs_1 = require("rxjs");
 const KafkaMessageStream_1 = require("./KafkaMessageStream");
 const KafkaBase_1 = require("./KafkaBase");
+const retry = require("retry");
 class Kafka extends KafkaBase_1.default {
     async getKafkaClient(config) {
-        // if (Kafka.clientConnected) {
-        // return Kafka.client;
-        // } else {
-        // if (!Kafka.client) {
-        const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
-        client.connect();
-        // }
         return new Promise((resolve, reject) => {
-            client.on('ready', () => {
-                // Kafka.clientConnected = true;
-                resolve(client);
+            const operation = retry.operation({});
+            operation.attempt((currentAttempt) => {
+                const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+                client.connect();
+                client.on('ready', () => {
+                    resolve(client);
+                });
+                client.on('error', (err) => {
+                    if (!operation.retry(err)) {
+                        reject(operation.mainError());
+                    }
+                });
             });
-            client.on('error', (err) => reject(err));
         });
-        // }
     }
     async getProducer(config) {
         const client = await this.getKafkaClient(config);
@@ -121,8 +122,6 @@ class Kafka extends KafkaBase_1.default {
         return true;
     }
 }
-Kafka.client = null;
-Kafka.clientConnected = false;
 exports.default = Kafka;
 
 //# sourceMappingURL=KafkaNode.js.map

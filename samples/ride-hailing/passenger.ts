@@ -71,7 +71,6 @@ export default async function runConsumer(configuration?: IConfig) {
             const onBid = async (bid: Bid<BidParams>) => {
                 console.log(`got bid: ${JSON.stringify(bid.params)}`);
                 // restoredBid = identity.bid(bid.id, bid.params);
-                await new Promise((res, rej) => { setTimeout(res, 5000); });
                 const confirmation = await bid.requestCommitment();
                 console.log('bid was confirmed');
                 const missionParams = new MissionParams({});
