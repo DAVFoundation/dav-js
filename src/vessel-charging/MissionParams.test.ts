@@ -29,6 +29,11 @@ describe('MissionParams class', () => {
       const missionParamsObject = new MissionParams();
       missionParamsObject.deserialize(serializedMissionParams);
       expect(missionParamsObject).toBeInstanceOf(MissionParams);
+    });
+
+    it('should return the correct deserialized parameters', () => {
+      const missionParamsObject = new MissionParams();
+      missionParamsObject.deserialize(serializedMissionParams);
       expect(missionParamsObject).toEqual(missionParams);
     });
   });
