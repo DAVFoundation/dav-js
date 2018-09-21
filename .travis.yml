@@ -12,7 +12,7 @@ install:
 - npm install
 before_script:
 script:
-- npm run prepublish
+- npm run pre-publish
 after_success:
 after_failure:
 deploy:

@@ -28,7 +28,7 @@
     "start-testnet": "dav-cli --start",
     "tsc": "gulp tsc",
     "tslint": "gulp tslint",
-    "prepublish": "gulp prepublish",
+    "pre-publish": "gulp pre-publish",
     "typedoc": "gulp typedoc"
   },
   "dependencies": {

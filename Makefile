@@ -16,10 +16,10 @@ spellcheck: FORCE
 	npm run spellcheck
 
 pre-push: FORCE
-	npm run prepublish
+	npm run pre-publish
 
-prepublish: FORCE
-	npm run prepublish
+pre-publish: FORCE
+	npm run pre-publish
 
 publish: pre-push
 	npm publish --access public

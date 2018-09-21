@@ -87,4 +87,4 @@ gulp.task('spellcheck', function (done) {
 
 gulp.task('compile', ['tslint', 'tsc']);
 gulp.task('test', ['tslint', 'jest']);
-gulp.task('prepublish', ['tslint', 'jest', 'tsc', 'typedoc','spellcheck','create-dist']);
+gulp.task('pre-publish', ['tslint', 'jest', 'tsc', 'typedoc','spellcheck','create-dist']);
