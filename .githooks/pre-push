@@ -1,6 +1,6 @@
 #!/bin/sh
 
-npm run prepublish
+npm run pre-publish
 if [ "$?" != "0" ]; then
     exit 1
 fi
