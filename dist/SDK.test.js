@@ -65,7 +65,6 @@ describe('SDK class', () => {
         });
     });
     describe('registerIdentity method', () => {
-        beforeAll(() => { });
         it('should success, validate web3 mock has been called', async () => {
             contractsMock.registerIdentity.mockImplementation(() => Promise.resolve('TRANSACTION_HASH'));
             // tslint:disable-next-line:no-shadowed-variable
