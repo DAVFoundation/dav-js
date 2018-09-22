@@ -13,7 +13,10 @@ import { EnergySources, Amenities } from '../../src/vessel-charging/enums';
 import Mission from '../../src/Mission';
 import Bid from '../../src/Bid';
 
-const printLine = () => console.log('====================================================================================================');
+const printLine = () =>
+  console.log(
+    '====================================================================================================',
+  );
 
 const sdkConfiguration = {
   apiSeedUrls: ['http://localhost'],
@@ -38,10 +41,9 @@ export default class Consumer {
     } else {
       throw new Error('Consumer: Identity is not registered');
     }
-}
+  }
 
   public async start() {
-
     const need = await this.createNeed();
     const bids = await need.bids();
     bids.subscribe(async (bid: Bid<BidParams>) => {
@@ -82,9 +84,8 @@ export default class Consumer {
   }
 
   public async simulateMission(mission: Mission<MissionParams>) {
-
     const startingMessages = await mission.messages(['starting_message']);
-    startingMessages.subscribe(async (message) => {
+    startingMessages.subscribe(async message => {
       console.log('Starting message received:', message.params);
       printLine();
 
@@ -98,8 +99,13 @@ export default class Consumer {
       console.log('Vessel status message sent!');
       printLine();
 
-      const startMissionTransactionReceipt = await mission.signContract(this._privateKey);
-      console.log('Start mission transaction receipt:', startMissionTransactionReceipt);
+      const startMissionTransactionReceipt = await mission.signContract(
+        this._privateKey,
+      );
+      console.log(
+        'Start mission transaction receipt:',
+        startMissionTransactionReceipt,
+      );
       printLine();
 
       const chargingArrivalMessageParams = new ChargingArrivalMessageParams({});
@@ -107,9 +113,14 @@ export default class Consumer {
       console.log('Charging arrival message sent!');
       printLine();
 
-      const chargingStartedMessages = await mission.messages(['charging_started_message']);
-      chargingStartedMessages.subscribe(async (chargingStartedMessage) => {
-        console.log('Charging started message received:', chargingStartedMessage);
+      const chargingStartedMessages = await mission.messages([
+        'charging_started_message',
+      ]);
+      chargingStartedMessages.subscribe(async chargingStartedMessage => {
+        console.log(
+          'Charging started message received:',
+          chargingStartedMessage,
+        );
         printLine();
 
         const statusRequestMessageParams = new StatusRequestMessageParams({});
@@ -119,22 +130,29 @@ export default class Consumer {
       });
     });
 
-    const providerStatusMessages = await mission.messages(['provider_status_message']);
-    providerStatusMessages.subscribe((message) => {
+    const providerStatusMessages = await mission.messages([
+      'provider_status_message',
+    ]);
+    providerStatusMessages.subscribe(message => {
       console.log('Provider status message received:', message.params);
       printLine();
     });
 
-    const chargingCompleteMessages = await mission.messages(['charging_complete_message']);
-    chargingCompleteMessages.subscribe(async (message) => {
+    const chargingCompleteMessages = await mission.messages([
+      'charging_complete_message',
+    ]);
+    chargingCompleteMessages.subscribe(async message => {
       console.log('Charging complete message received:', message.params);
       printLine();
 
-      const finalizeMissionTransactionReceipt = await mission.finalizeMission(this._privateKey);
-      console.log('Finalize mission transaction receipt: ', finalizeMissionTransactionReceipt);
+      const finalizeMissionTransactionReceipt = await mission.finalizeMission(
+        this._privateKey,
+      );
+      console.log(
+        'Finalize mission transaction receipt: ',
+        finalizeMissionTransactionReceipt,
+      );
       printLine();
     });
-
   }
-
 }
