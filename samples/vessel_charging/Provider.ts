@@ -15,7 +15,10 @@ import { EnergySources, Amenities } from '../../src/vessel-charging/enums';
 import Need from '../../src/Need';
 import Bid from '../../src/Bid';
 import Mission from '../../src/Mission';
-const printLine = () => console.log('====================================================================================================');
+const printLine = () =>
+  console.log(
+    '====================================================================================================',
+  );
 
 const sdkConfiguration = {
   apiSeedUrls: ['http://localhost'],
@@ -51,7 +54,7 @@ export default class Provider {
       printLine();
       const bid = await this.createBid(need);
       const missions = await bid.missions();
-      missions.subscribe(async (mission) => {
+      missions.subscribe(async mission => {
         console.log('Mission received: ', mission);
         printLine();
         this.simulateMission(mission);
@@ -103,31 +106,38 @@ export default class Provider {
   }
 
   public async simulateMission(mission: Mission<MissionParams>) {
-
     const startingMessageParams = new StartingMessageParams({});
     mission.sendMessage(startingMessageParams);
     console.log('Mission starting message sent!');
     printLine();
 
-    const vesselStatusMessages = await mission.messages(['vessel_status_message']);
-    vesselStatusMessages.subscribe((message) => {
+    const vesselStatusMessages = await mission.messages([
+      'vessel_status_message',
+    ]);
+    vesselStatusMessages.subscribe(message => {
       console.log('Vessel status message received:', message.params);
       printLine();
     });
 
-    const statusRequestMessages = await mission.messages(['status_request_message']);
-    statusRequestMessages.subscribe((message) => {
+    const statusRequestMessages = await mission.messages([
+      'status_request_message',
+    ]);
+    statusRequestMessages.subscribe(message => {
       console.log('Status request message received:', message.params);
       printLine();
 
-      const providerStatusMessageParams = new ProviderStatusMessageParams({finishEta: Date.now() + 5000});
+      const providerStatusMessageParams = new ProviderStatusMessageParams({
+        finishEta: Date.now() + 5000,
+      });
       mission.sendMessage(providerStatusMessageParams);
       console.log('Provider status message sent!');
       printLine();
     });
 
-    const chargingArrivalMessages = await mission.messages(['charging_arrival_message']);
-    chargingArrivalMessages.subscribe((message) => {
+    const chargingArrivalMessages = await mission.messages([
+      'charging_arrival_message',
+    ]);
+    chargingArrivalMessages.subscribe(message => {
       console.log('Charging arrival message received:', message.params);
       printLine();
 
@@ -137,13 +147,13 @@ export default class Provider {
       printLine();
 
       setTimeout(() => {
-        const chargingCompleteMessageParams = new ChargingCompleteMessageParams({});
+        const chargingCompleteMessageParams = new ChargingCompleteMessageParams(
+          {},
+        );
         mission.sendMessage(chargingCompleteMessageParams);
         console.log('Charging complete message sent!');
         printLine();
       }, 5000);
     });
-
   }
-
 }

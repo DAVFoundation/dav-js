@@ -55,7 +55,9 @@ describe('Bid class', () => {
     describe('requestCommitment method', () => {
         let confirmationParams;
         beforeEach(() => {
-            confirmationParams = new CommitmentConfirmationParams_1.default({ bidId: bidParams.id });
+            confirmationParams = new CommitmentConfirmationParams_1.default({
+                bidId: bidParams.id,
+            });
         });
         it('should return confirmation for already confirmed bid', async () => {
             // tslint:disable-next-line:variable-name
@@ -81,7 +83,9 @@ describe('Bid class', () => {
             expect(kafkaMessageStreamMock.filterType).toHaveBeenCalledTimes(1);
         });
         it('should return confirmation after bidder had confirmed the bid, and another bid confirmation was filtered', async () => {
-            const anotherBidConfirmationParams = new CommitmentConfirmationParams_1.default({ bidId: 'anotherBid' });
+            const anotherBidConfirmationParams = new CommitmentConfirmationParams_1.default({
+                bidId: 'anotherBid',
+            });
             const kafkaMessageStreamMock = {
                 filterType: jest.fn(() => rxjs_1.Observable.from([anotherBidConfirmationParams, confirmationParams])),
             };
@@ -223,7 +227,7 @@ describe('Bid class', () => {
             };
             const kafkaMock = {
                 generateTopicId: jest.fn(() => TOPIC_ID),
-                sendParams: jest.fn((params) => Promise.resolve(true)),
+                sendParams: jest.fn(params => Promise.resolve(true)),
                 createTopic: jest.fn(() => Promise.resolve()),
                 messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
             };
@@ -248,7 +252,7 @@ describe('Bid class', () => {
             };
             const kafkaMock = {
                 generateTopicId: jest.fn(() => TOPIC_ID),
-                sendParams: jest.fn((params) => Promise.resolve(true)),
+                sendParams: jest.fn(params => Promise.resolve(true)),
                 createTopic: jest.fn(() => Promise.resolve()),
                 messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
             };
@@ -302,9 +306,9 @@ describe('Bid class', () => {
             const bid = new Bid(selfId, bidParams, config);
             const messagesStream = await bid.messages();
             const message = await new Promise((resolve, reject) => {
-                messagesStream.subscribe((next) => {
+                messagesStream.subscribe(next => {
                     resolve(next);
-                }, (error) => {
+                }, error => {
                     reject(error);
                 });
             });

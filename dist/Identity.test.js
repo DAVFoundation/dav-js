@@ -17,7 +17,10 @@ describe('Identity class', () => {
     const kafkaError = { msg: 'Kafka error' };
     const davNodeError = { msg: 'Dav node error' };
     const config = new Config_1.default({});
-    const needFilterParams = new NeedFilterParams_1.default({ location: { lat: 10, long: 10 }, radius: 1000 });
+    const needFilterParams = new NeedFilterParams_1.default({
+        location: { lat: 10, long: 10 },
+        radius: 1000,
+    });
     const needParams = new NeedParams_1.default({
         location: {
             lat: 32.050382,

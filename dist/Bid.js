@@ -121,9 +121,9 @@ class Bid {
             await Kafka_1.default.createTopic(this._missionId, this._config); // Channel #5
             return new Mission_1.default(this._missionId, params.id, params, this._config);
         })
-            .map((promise) => common_types_1.Observable.fromPromise(promise))
+            .map(promise => common_types_1.Observable.fromPromise(promise))
             .mergeAll()
-            .do((mission) => {
+            .do(mission => {
             const message = new MissionPeerIdMessageParams_1.default({ senderId: this._missionId });
             mission.sendMessage(message);
         });
@@ -137,7 +137,7 @@ class Bid {
         const kafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
         const typesMap = new CommitmentRequestParams_1.default({}).getProtocolTypes();
         const commitmentRequestParamsStream = kafkaMessageStream.filterType(typesMap, typesMap.messages);
-        const commitmentRequestStream = commitmentRequestParamsStream.map((commitmentRequestParams) => new CommitmentRequest_1.default(this._selfId, commitmentRequestParams, this._config));
+        const commitmentRequestStream = commitmentRequestParamsStream.map(commitmentRequestParams => new CommitmentRequest_1.default(this._selfId, commitmentRequestParams, this._config));
         return common_types_1.Observable.fromObservable(commitmentRequestStream, this._selfId);
     }
 }

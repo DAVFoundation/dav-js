@@ -17,7 +17,7 @@ describe('KafkaMessageStream', () => {
         const stream = messageStream.filterType(ProtocolTypes_1.default, ProtocolTypes_1.default.messages);
         expect(stream).toBeDefined();
     });
-    it('should pass message', (done) => {
+    it('should pass message', done => {
         expect.assertions(1);
         const kafkaMessages = [
             { protocol: 'drone_delivery', type: 'need', contents: '{}' },
@@ -25,64 +25,115 @@ describe('KafkaMessageStream', () => {
         const kafkaStream = common_types_1.Observable.fromObservable(common_types_1.Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream_1.default(kafkaStream);
         const stream = messageStream.filterType(ProtocolTypes_1.default, ProtocolTypes_1.default.needs);
-        stream.subscribe((need) => { expect(need).toBeDefined(); }, (error) => { fail(error); done(); }, () => { done(); });
+        stream.subscribe(need => {
+            expect(need).toBeDefined();
+        }, error => {
+            fail(error);
+            done();
+        }, () => {
+            done();
+        });
     });
-    it('should filter message', (done) => {
+    it('should filter message', done => {
         const kafkaMessages = [
             { protocol: 'drone_delivery', type: 'need', contents: '{}' },
         ];
         const kafkaStream = common_types_1.Observable.fromObservable(common_types_1.Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream_1.default(kafkaStream);
         const stream = messageStream.filterType(ProtocolTypes_1.default, ProtocolTypes_1.default.bids);
-        stream.subscribe((need) => { fail('No message should pass'); done(); }, (error) => { fail(error); done(); }, () => { done(); });
+        stream.subscribe(need => {
+            fail('No message should pass');
+            done();
+        }, error => {
+            fail(error);
+            done();
+        }, () => {
+            done();
+        });
     });
-    it('should filter first message and pass second when first is not correct type and second is', (done) => {
+    it('should filter first message and pass second when first is not correct type and second is', done => {
         expect.assertions(1);
         const kafkaMessages = [
-            { protocol: 'drone_delivery', type: 'not_need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":"3000", "startAt":1}' },
-            { protocol: 'drone_delivery', type: 'need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
+            {
+                protocol: 'drone_delivery',
+                type: 'not_need',
+                contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":"3000", "startAt":1}',
+            },
+            {
+                protocol: 'drone_delivery',
+                type: 'need',
+                contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}',
+            },
         ];
         const kafkaStream = common_types_1.Observable.fromObservable(common_types_1.Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream_1.default(kafkaStream);
         const stream = messageStream.filterType(ProtocolTypes_1.default, ProtocolTypes_1.default.needs);
         const passedMessages = [];
-        stream.subscribe((need) => {
+        stream.subscribe(need => {
             passedMessages.push(need);
-        }, (error) => { fail(error); }, () => {
+        }, error => {
+            fail(error);
+        }, () => {
             const formattedNeedParams = new NeedParams_1.default();
             formattedNeedParams.deserialize(JSON.parse('{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}'));
             expect(passedMessages).toMatchObject([formattedNeedParams]);
             done();
         });
     });
-    it('should pass first message and filter second when first is correct type and second is not', (done) => {
+    it('should pass first message and filter second when first is correct type and second is not', done => {
         // expect.assertions(1);
         const kafkaMessages = [
-            { protocol: 'drone_delivery', type: 'need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}' },
-            { protocol: 'drone_delivery', type: 'not_need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
+            {
+                protocol: 'drone_delivery',
+                type: 'need',
+                contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}',
+            },
+            {
+                protocol: 'drone_delivery',
+                type: 'not_need',
+                contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}',
+            },
         ];
         const kafkaStream = common_types_1.Observable.fromObservable(common_types_1.Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream_1.default(kafkaStream);
         const stream = messageStream.filterType(ProtocolTypes_1.default, ProtocolTypes_1.default.needs);
         const passedMessages = [];
-        stream.subscribe((need) => {
+        stream.subscribe(need => {
             passedMessages.push(need);
-        }, (error) => { fail(error); }, () => {
+        }, error => {
+            fail(error);
+        }, () => {
             const formattedNeedParams = new NeedParams_1.default();
             formattedNeedParams.deserialize(JSON.parse('{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}'));
             expect(passedMessages).toEqual([formattedNeedParams]);
             done();
         });
     });
-    it('should pass each type to correct stream', (done) => {
+    it('should pass each type to correct stream', done => {
         expect.assertions(2);
         const kafkaMessages = [
-            { protocol: 'drone_delivery', type: 'need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}' },
-            { protocol: 'drone_delivery', type: 'mission', contents: '{"id":"1","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
-                    ' "ttl":3000}' },
-            { protocol: 'drone_delivery', type: 'need', contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}' },
-            { protocol: 'drone_delivery', type: 'mission', contents: '{"id":"2","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
-                    ' "ttl":3000}' },
+            {
+                protocol: 'drone_delivery',
+                type: 'need',
+                contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":1}',
+            },
+            {
+                protocol: 'drone_delivery',
+                type: 'mission',
+                contents: '{"id":"1","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
+                    ' "ttl":3000}',
+            },
+            {
+                protocol: 'drone_delivery',
+                type: 'need',
+                contents: '{"id":"123", "protocol":"DroneDelivery", "type":"Bid", "ttl":3000, "startAt":2}',
+            },
+            {
+                protocol: 'drone_delivery',
+                type: 'mission',
+                contents: '{"id":"2","price":{"type":"flat","value":"1000"},"vehicleId":"DAV_ID","neederDavId":"abc","protocol":"DroneDelivery","type":"Mission",' +
+                    ' "ttl":3000}',
+            },
         ];
         const kafkaStream = common_types_1.Observable.fromObservable(common_types_1.Observable.from(kafkaMessages), '');
         const messageStream = new KafkaMessageStream_1.default(kafkaStream);
@@ -98,7 +149,10 @@ describe('KafkaMessageStream', () => {
                 formattedNeedParams1.deserialize(JSON.parse(kafkaMessages[0].contents));
                 const formattedNeedParams2 = new NeedParams_1.default();
                 formattedNeedParams2.deserialize(JSON.parse(kafkaMessages[2].contents));
-                expect(passedNeeds).toEqual([formattedNeedParams1, formattedNeedParams2]);
+                expect(passedNeeds).toEqual([
+                    formattedNeedParams1,
+                    formattedNeedParams2,
+                ]);
                 const expectedMission1 = new MissionParams_1.default();
                 expectedMission1.deserialize(JSON.parse(kafkaMessages[1].contents));
                 const expectedMission2 = new MissionParams_1.default();
@@ -107,15 +161,19 @@ describe('KafkaMessageStream', () => {
                 done();
             }
         };
-        streamNeeds.subscribe((need) => {
+        streamNeeds.subscribe(need => {
             passedNeeds.push(need);
-        }, (error) => { fail(error); }, () => {
+        }, error => {
+            fail(error);
+        }, () => {
             doneNeeds = true;
             test();
         });
-        streamMissions.subscribe((bid) => {
+        streamMissions.subscribe(bid => {
             passedMissions.push(bid);
-        }, (error) => { fail(error); }, () => {
+        }, error => {
+            fail(error);
+        }, () => {
             doneMissions = true;
             test();
         });
