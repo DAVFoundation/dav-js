@@ -19,7 +19,7 @@ describe('SDK class', () => {
 
   describe('getIdentity method', () => {
 
-    it('should success, validates identity', async () => {
+    it('should succeed, validates identity', async () => {
       contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(true));
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
@@ -75,7 +75,7 @@ describe('SDK class', () => {
   });
 
   describe('registerIdentity method', () => {
-    it('should success, validate web3 mock has been called', async () => {
+    it('should succeed, validate web3 mock has been called', async () => {
       contractsMock.registerIdentity.mockImplementation(() => Promise.resolve('TRANSACTION_HASH'));
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;

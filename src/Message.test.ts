@@ -15,7 +15,7 @@ describe('Message class', () => {
       jest.resetModules();
     });
 
-    it('should success, validate kafka mock send message', async () => {
+    it('should succeed, validate kafka mock send message', async () => {
       const kafkaMock = {
         sendParams: () => Promise.resolve(true),
       };
