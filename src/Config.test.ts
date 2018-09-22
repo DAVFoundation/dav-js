@@ -3,9 +3,7 @@ import { BlockchainType } from './common-enums';
 import { defaultConfiguration } from './Config';
 
 describe('Config class', () => {
-
   describe('check default configuration are set', () => {
-
     it('should contain all default configuration', async () => {
       const configuration = new Config({});
       expect(configuration).toEqual(defaultConfiguration);
@@ -13,7 +11,6 @@ describe('Config class', () => {
   });
 
   describe('check custom configurations are set', () => {
-
     it('should contain all custom configuration', async () => {
       const configurationObject = {
         ethNodeUrl: 'ETH_NODE_URL',
@@ -33,5 +30,4 @@ describe('Config class', () => {
       expect(configuration).toEqual(configurationObject);
     });
   });
-
 });

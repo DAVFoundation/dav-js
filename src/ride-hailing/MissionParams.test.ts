@@ -1,7 +1,6 @@
 import MissionParams from './MissionParams';
 
 describe('MissionParams class', () => {
-
   const missionParams = new MissionParams({});
 
   const serializedMissionParams: any = {

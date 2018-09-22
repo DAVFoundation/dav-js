@@ -14,13 +14,14 @@ describe('SDK class', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.resetModules();
-    jest.doMock('./Contracts', () => ({default: contractsMock}));
+    jest.doMock('./Contracts', () => ({ default: contractsMock }));
   });
 
   describe('getIdentity method', () => {
-
     it('should succeed, validates identity', async () => {
-      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(true));
+      contractsMock.isIdentityRegistered.mockImplementation(() =>
+        Promise.resolve(true),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
@@ -29,26 +30,35 @@ describe('SDK class', () => {
     });
 
     it('should throw due to unregistered dav id', async () => {
-      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(false));
+      contractsMock.isIdentityRegistered.mockImplementation(() =>
+        Promise.resolve(false),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
-      await expect(sdk.getIdentity(davId, config)).rejects.toThrow(`${davId} is not a registered identity`);
+      await expect(sdk.getIdentity(davId, config)).rejects.toThrow(
+        `${davId} is not a registered identity`,
+      );
     });
 
     it('should throw due to blockchain exception', async () => {
-      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.reject(contractsError));
+      contractsMock.isIdentityRegistered.mockImplementation(() =>
+        Promise.reject(contractsError),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
-      await expect(sdk.getIdentity(davId, config)).rejects.toEqual(contractsError);
+      await expect(sdk.getIdentity(davId, config)).rejects.toEqual(
+        contractsError,
+      );
     });
   });
 
   describe('isRegistered method', () => {
-
     it('validates registered dav id', async () => {
-      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(true));
+      contractsMock.isIdentityRegistered.mockImplementation(() =>
+        Promise.resolve(true),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
@@ -57,7 +67,9 @@ describe('SDK class', () => {
     });
 
     it('validates unregistered dav id', async () => {
-      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.resolve(false));
+      contractsMock.isIdentityRegistered.mockImplementation(() =>
+        Promise.resolve(false),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
@@ -66,7 +78,9 @@ describe('SDK class', () => {
     });
 
     it('should throw due to blockchain exception', async () => {
-      contractsMock.isIdentityRegistered.mockImplementation(() => Promise.reject(contractsError));
+      contractsMock.isIdentityRegistered.mockImplementation(() =>
+        Promise.reject(contractsError),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
@@ -76,20 +90,37 @@ describe('SDK class', () => {
 
   describe('registerIdentity method', () => {
     it('should succeed, validate web3 mock has been called', async () => {
-      contractsMock.registerIdentity.mockImplementation(() => Promise.resolve('TRANSACTION_HASH'));
+      contractsMock.registerIdentity.mockImplementation(() =>
+        Promise.resolve('TRANSACTION_HASH'),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
-      await expect(sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey')).resolves.toEqual('TRANSACTION_HASH');
+      await expect(
+        sdk.registerIdentity(
+          'davId',
+          'walletAddress',
+          'walletPrivateKey',
+          'identityPrivateKey',
+        ),
+      ).resolves.toEqual('TRANSACTION_HASH');
     });
 
     it('should throw due to blockchain exception', async () => {
-      contractsMock.registerIdentity.mockImplementation(() => Promise.reject(contractsError));
+      contractsMock.registerIdentity.mockImplementation(() =>
+        Promise.reject(contractsError),
+      );
       // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('./SDK')).default;
       const sdk = new SDK(config);
-      await expect(sdk.registerIdentity('davId', 'walletAddress', 'walletPrivateKey', 'identityPrivateKey')).rejects.toEqual(contractsError);
+      await expect(
+        sdk.registerIdentity(
+          'davId',
+          'walletAddress',
+          'walletPrivateKey',
+          'identityPrivateKey',
+        ),
+      ).rejects.toEqual(contractsError);
     });
   });
-
 });
