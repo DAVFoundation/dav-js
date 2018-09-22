@@ -10,13 +10,13 @@ class Kafka extends KafkaBase_1.default {
     async getKafkaClient(config) {
         return new Promise((resolve, reject) => {
             const operation = retry.operation({});
-            operation.attempt((currentAttempt) => {
+            operation.attempt(currentAttempt => {
                 const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
                 client.connect();
                 client.on('ready', () => {
                     resolve(client);
                 });
-                client.on('error', (err) => {
+                client.on('error', err => {
                     if (!operation.retry(err)) {
                         reject(operation.mainError());
                     }
@@ -87,7 +87,7 @@ class Kafka extends KafkaBase_1.default {
         const kafkaStream = new rxjs_1.Subject();
         // tslint:disable-next-line:no-console
         console.log(`Listening on ${topicId}`);
-        consumer.on('message', (message) => {
+        consumer.on('message', message => {
             try {
                 // tslint:disable-next-line:no-console
                 console.log(`Message on ${topicId}: ${JSON.stringify(message)}`);
@@ -98,7 +98,7 @@ class Kafka extends KafkaBase_1.default {
                 kafkaStream.error(`error while trying to parse message. topic: ${topicId} error: ${JSON.stringify(error)}, message: ${JSON.stringify(message)}`);
             }
         });
-        consumer.on('error', (err) => {
+        consumer.on('error', err => {
             // tslint:disable-next-line:no-console
             console.log(`Consumer error on ${topicId}: ${JSON.stringify(err)}`);
             kafkaStream.error(`Consumer error. topic: ${topicId} error: ${JSON.stringify(err)}`);
@@ -106,7 +106,7 @@ class Kafka extends KafkaBase_1.default {
         return kafkaStream;
     }
     async messages(topicId, config) {
-        const stream = (await this.rawMessages(topicId, config)).map((message) => {
+        const stream = (await this.rawMessages(topicId, config)).map(message => {
             const messageString = message.value.toString();
             const messageObject = JSON.parse(messageString);
             return {

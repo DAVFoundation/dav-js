@@ -38,9 +38,7 @@ describe('Mission class', () => {
             jest.resetModules();
         });
         const kafkaMessageStreamMock = {
-            filterType: jest.fn(() => common_types_1.Observable.from([
-                new MessageParams_1.default({ senderId: 'SOURCE_ID_1' }),
-            ])),
+            filterType: jest.fn(() => common_types_1.Observable.from([new MessageParams_1.default({ senderId: 'SOURCE_ID_1' })])),
         };
         it('should succeed, validate kafka mock send message', async () => {
             const kafkaMock = {
@@ -64,7 +62,7 @@ describe('Mission class', () => {
         });
         it('should call to Kafka sendParams', async () => {
             const kafkaMock = {
-                sendParams: jest.fn((params) => Promise.resolve(true)),
+                sendParams: jest.fn(params => Promise.resolve(true)),
             };
             jest.doMock('./Kafka', () => ({ default: kafkaMock }));
             // tslint:disable-next-line:variable-name
@@ -96,9 +94,7 @@ describe('Mission class', () => {
             const messageParams2 = new MessageParams_1.default({ senderId: 'SOURCE_ID_2' });
             const messageParams3 = new MessageParams_1.default({ senderId: 'SOURCE_ID_3' });
             const kafkaMessageStreamMock = {
-                filterType: jest.fn(() => common_types_1.Observable.from([
-                    messageParams1, messageParams2, messageParams3,
-                ])),
+                filterType: jest.fn(() => common_types_1.Observable.from([messageParams1, messageParams2, messageParams3])),
             };
             const kafkaMock = {
                 messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
@@ -120,7 +116,9 @@ describe('Mission class', () => {
         });
         xit('should receive error event', async () => {
             jest.doMock('./Kafka', () => ({
-                default: { paramsStream: async () => common_types_1.Observable.fromPromise(Promise.reject(kafkaError)) },
+                default: {
+                    paramsStream: async () => common_types_1.Observable.fromPromise(Promise.reject(kafkaError)),
+                },
             }));
             // tslint:disable-next-line:variable-name
             const Mission = (await Promise.resolve().then(() => require('./Mission'))).default;

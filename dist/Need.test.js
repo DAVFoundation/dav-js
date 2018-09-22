@@ -21,7 +21,11 @@ describe('Need class', () => {
     const topicId = 'TOPIC_ID';
     const needParams = new NeedParams_1.default({});
     const kafkaError = { msg: 'Kafka error' };
-    let bidParams = new BidParams_1.default({ id: 'BID_ID', price: new Price_1.default('3', common_enums_1.PriceType.flat), vehicleId: 'DAV_ID' });
+    let bidParams = new BidParams_1.default({
+        id: 'BID_ID',
+        price: new Price_1.default('3', common_enums_1.PriceType.flat),
+        vehicleId: 'DAV_ID',
+    });
     bidParams.id = 'bidSource';
     describe('createBid method', () => {
         const kafkaMock = {
@@ -67,7 +71,11 @@ describe('Need class', () => {
         beforeEach(() => {
             jest.resetModules();
             jest.clearAllMocks();
-            bidParams = new BidParams_1.default({ id: 'BID_ID', price: new Price_1.default('3', common_enums_1.PriceType.flat), vehicleId: 'DAV_ID' });
+            bidParams = new BidParams_1.default({
+                id: 'BID_ID',
+                price: new Price_1.default('3', common_enums_1.PriceType.flat),
+                vehicleId: 'DAV_ID',
+            });
         });
         it('should create bid observable with one message', async () => {
             const kafkaMessageStreamMock = {
@@ -85,7 +93,7 @@ describe('Need class', () => {
             const need = new Need(selfId, needParams, config);
             const bids = await need.bids();
             const bid = await new Promise((resolve, reject) => {
-                bids.subscribe((next) => resolve(next), (error) => reject(error));
+                bids.subscribe(next => resolve(next), error => reject(error));
             });
             expect(kafkaMock.messages).toHaveBeenCalledWith(selfId, config);
             expect(bid.params.id).toBe('BID_ID');
@@ -98,7 +106,7 @@ describe('Need class', () => {
             const need = new Need(selfId, needParams, config);
             const bids = await need.bids();
             const bid = new Promise((resolve, reject) => {
-                bids.subscribe((next) => resolve(next), (error) => reject(error));
+                bids.subscribe(next => resolve(next), error => reject(error));
             });
             await expect(bid).rejects.toEqual(kafkaError);
             // expect(kafkaMock.messages).toHaveBeenCalledWith(needParams.id, config);
@@ -131,7 +139,7 @@ describe('Need class', () => {
         });
         it('should call to Kafka sendParams', async () => {
             const kafkaMock = {
-                sendParams: jest.fn((params) => Promise.resolve(true)),
+                sendParams: jest.fn(params => Promise.resolve(true)),
             };
             jest.doMock('./Kafka', () => ({ default: kafkaMock }));
             // tslint:disable-next-line:variable-name
@@ -159,9 +167,7 @@ describe('Need class', () => {
             const messageParams2 = new MessageParams_1.default({ senderId: 'SOURCE_ID_2' });
             const messageParams3 = new MessageParams_1.default({ senderId: 'SOURCE_ID_3' });
             const kafkaMessageStreamMock = {
-                filterType: jest.fn(() => common_types_1.Observable.from([
-                    messageParams1, messageParams2, messageParams3,
-                ])),
+                filterType: jest.fn(() => common_types_1.Observable.from([messageParams1, messageParams2, messageParams3])),
             };
             const kafkaMock = {
                 messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
@@ -183,7 +189,9 @@ describe('Need class', () => {
         });
         xit('should receive error event', async () => {
             jest.doMock('./Kafka', () => ({
-                default: { paramsStream: async () => common_types_1.Observable.fromPromise(Promise.reject(kafkaError)) },
+                default: {
+                    paramsStream: async () => common_types_1.Observable.fromPromise(Promise.reject(kafkaError)),
+                },
             }));
             // tslint:disable-next-line:variable-name
             const Need = (await Promise.resolve().then(() => require('./Need'))).default;

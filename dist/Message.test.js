@@ -46,7 +46,7 @@ describe('Message class', () => {
         });
         it('should call to Kafka sendParams with message params that contain selfId', async () => {
             const kafkaMock = {
-                sendParams: jest.fn((params) => Promise.resolve(true)),
+                sendParams: jest.fn(params => Promise.resolve(true)),
             };
             jest.doMock('./Kafka', () => ({ default: kafkaMock }));
             // tslint:disable-next-line:variable-name
