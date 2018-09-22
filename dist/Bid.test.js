@@ -338,7 +338,7 @@ describe('Bid class', () => {
         beforeAll(() => {
             jest.doMock('./Kafka', () => ({ default: kafkaMock }));
         });
-        it('should success and call relevant function', async () => {
+        it('should succeed and call relevant function', async () => {
             // tslint:disable-next-line:variable-name
             const Bid = (await Promise.resolve().then(() => require('./Bid'))).default;
             const bid = new Bid(selfId, bidParams, config);

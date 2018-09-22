@@ -300,7 +300,7 @@ describe('Identity class', () => {
         });
     });
     describe('need method', () => {
-        it('should success, validate need', async () => {
+        it('should succeed, validate need', async () => {
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('selfId', 'davId', config);
@@ -309,7 +309,7 @@ describe('Identity class', () => {
         });
     });
     describe('bid method', () => {
-        it('should success, validate bid', async () => {
+        it('should succeed, validate bid', async () => {
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('selfId', 'davId', config);
@@ -318,7 +318,7 @@ describe('Identity class', () => {
         });
     });
     describe('mission method', () => {
-        it('should success, validate mission', async () => {
+        it('should succeed, validate mission', async () => {
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('selfId', 'davId', config);
