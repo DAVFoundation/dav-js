@@ -18,8 +18,8 @@ export default class KafkaMessageStream {
 
     public filterType<T extends BasicParams>(protocolTypesMap: any, typesFilter: string[]): Observable<T> {
         return Observable.fromObservable<T>(this.kafkaStream
-            .filter((message) => typesFilter.includes(message.type))
-            .map((message) => {
+            .filter(message => typesFilter.includes(message.type))
+            .map(message => {
                 const protocol = protocolTypesMap[message.type];
                 return KafkaMessageStream.fromJson(protocol, message.contents);
             }), this.kafkaStream.topic);

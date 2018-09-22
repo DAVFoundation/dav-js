@@ -41,8 +41,8 @@ export default class Contracts {
     private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<TransactionReceipt> {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
-            transaction.once('receipt', (receipt) => resolve(receipt));
-            transaction.on('error', (err) => reject(err));
+            transaction.once('receipt', receipt => resolve(receipt));
+            transaction.on('error', err => reject(err));
         });
     }
 
@@ -158,12 +158,12 @@ export default class Contracts {
         let lastTransactionIndex = 0;
         const events = Observable.interval(2000)
             .map(() => Contracts.checkContractPastEvents(contract/* , davId */))
-            .map((promise) => Observable.fromPromise(promise))
-            .map((eventsObservable) => eventsObservable.mergeAll())
-            .map((eventsArray) => Observable.from(eventsArray))
+            .map(promise => Observable.fromPromise(promise))
+            .map(eventsObservable => eventsObservable.mergeAll())
+            .map(eventsArray => Observable.from(eventsArray))
             .mergeAll()
-            .filter((event) => event.blockNumber > lastBlock || (event.blockNumber === lastBlock && event.transactionIndex > lastTransactionIndex))
-            .do((event) => {
+            .filter(event => event.blockNumber > lastBlock || (event.blockNumber === lastBlock && event.transactionIndex > lastTransactionIndex))
+            .do(event => {
                 lastBlock = event.blockNumber;
                 lastTransactionIndex = event.transactionIndex;
             });
