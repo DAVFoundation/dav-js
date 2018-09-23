@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/mocks/AxiosMock.ts"],"names":[],"mappings":";;AAAA,kBAAe;IACb,IAAI,EAAE,IAAI,CAAC,EAAE,CAAC,GAAG,EAAE,CAAC,OAAO,CAAC,OAAO,EAAE,CAAC;CACvC,CAAC","file":"AxiosMock.js","sourcesContent":["export default {\n  post: jest.fn(() => Promise.resolve()),\n};\n"]}

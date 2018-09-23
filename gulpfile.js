@@ -66,7 +66,7 @@ gulp.task('tsc', function(done) {
 
 gulp.task('create-dist', ['tsc'], function() {
   gulp.src('./src/contracts/*').pipe(gulp.dest('./dist/contracts/'));
-  gulp.src('./build/src/**/*.js').pipe(gulp.dest('./dist/'));
+  gulp.src('./build/src/**/*').pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('typedoc', function(done) {
