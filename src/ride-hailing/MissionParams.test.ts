@@ -1,16 +1,20 @@
 import MissionParams from './MissionParams';
 
 describe('MissionParams class', () => {
+  let missionParams: MissionParams;
+  let serializedMissionParams: any;
 
-  const missionParams = new MissionParams({});
+  beforeEach(() => {
+    missionParams = new MissionParams({});
 
-  const serializedMissionParams: any = {
-    ttl: undefined,
-    protocol: 'ride_hailing',
-    type: 'mission',
-    price: undefined,
-    vehicleId: undefined,
-  };
+    serializedMissionParams = {
+      ttl: undefined,
+      protocol: 'ride_hailing',
+      type: 'mission',
+      price: undefined,
+      vehicleId: undefined,
+    };
+  });
 
   describe('serialize method', () => {
     it('should return serialized MissionParams object with the current values', () => {

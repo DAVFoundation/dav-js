@@ -12,8 +12,8 @@ class KafkaMessageStream {
     }
     filterType(protocolTypesMap, typesFilter) {
         return common_types_1.Observable.fromObservable(this.kafkaStream
-            .filter((message) => typesFilter.includes(message.type))
-            .map((message) => {
+            .filter(message => typesFilter.includes(message.type))
+            .map(message => {
             const protocol = protocolTypesMap[message.type];
             return KafkaMessageStream.fromJson(protocol, message.contents);
         }), this.kafkaStream.topic);

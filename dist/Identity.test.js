@@ -11,12 +11,16 @@ const common_types_1 = require("./common-types");
 const Message_1 = require("./Message");
 const Mission_1 = require("./Mission");
 const Bid_1 = require("./Bid");
+const AxiosMock_1 = require("./mocks/AxiosMock");
 describe('Identity class', () => {
     const TOPIC_ID = 'TOPIC_ID';
     const kafkaError = { msg: 'Kafka error' };
     const davNodeError = { msg: 'Dav node error' };
     const config = new Config_1.default({});
-    const needFilterParams = new NeedFilterParams_1.default({ location: { lat: 10, long: 10 }, radius: 1000 });
+    const needFilterParams = new NeedFilterParams_1.default({
+        location: { lat: 10, long: 10 },
+        radius: 1000,
+    });
     const needParams = new NeedParams_1.default({
         location: {
             lat: 32.050382,
@@ -46,15 +50,12 @@ describe('Identity class', () => {
             generateTopicId: jest.fn(() => TOPIC_ID),
             createTopic: jest.fn(() => Promise.resolve()),
         };
-        const axiosMock = {
-            post: jest.fn(() => Promise.resolve()),
-        };
         beforeAll(() => {
             jest.doMock('./Kafka', () => ({
                 default: kafkaMock,
             }));
             jest.doMock('axios', () => ({
-                default: axiosMock,
+                default: AxiosMock_1.default,
             }));
         });
         beforeEach(() => {
@@ -68,11 +69,11 @@ describe('Identity class', () => {
             await expect(identity.publishNeed(needParams)).resolves.toEqual(need);
             expect(kafkaMock.generateTopicId).toHaveBeenCalled();
             expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-            expect(axiosMock.post).toHaveBeenCalled();
-            expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/publishNeed/${TOPIC_ID}`, needParams.serialize());
+            expect(AxiosMock_1.default.post).toHaveBeenCalled();
+            expect(AxiosMock_1.default.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/publishNeed/${TOPIC_ID}`, needParams.serialize());
         });
         it('should fail due to dav node exception', async () => {
-            axiosMock.post.mockImplementation(() => Promise.reject(davNodeError));
+            AxiosMock_1.default.post.mockImplementation(() => Promise.reject(davNodeError));
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('id', 'davId', config);
@@ -84,7 +85,7 @@ describe('Identity class', () => {
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('id', 'davId', config);
             await expect(identity.publishNeed(needParams)).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
-            expect(axiosMock.post).not.toHaveBeenCalled();
+            expect(AxiosMock_1.default.post).not.toHaveBeenCalled();
         });
     });
     describe('needsForType method', () => {
@@ -106,12 +107,9 @@ describe('Identity class', () => {
                 long: 34.766149,
             },
         });
-        const axiosMock = {
-            post: jest.fn(() => Promise.resolve()),
-        };
         beforeAll(() => {
             jest.doMock('axios', () => ({
-                default: axiosMock,
+                default: AxiosMock_1.default,
             }));
         });
         beforeEach(() => {
@@ -143,7 +141,7 @@ describe('Identity class', () => {
             expect(spy.mock.calls[1][0]).toEqual(new Need_1.default(TOPIC_ID, needParams2, config));
             expect(kafkaMock.generateTopicId).toHaveBeenCalled();
             expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-            expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
+            expect(AxiosMock_1.default.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
         });
         // xit('should receive Kafka error event', async () => {
         //   kafkaMock.paramsStream.mockImplementation(() => Observable.fromPromise(Promise.reject(kafkaError)));
@@ -160,7 +158,7 @@ describe('Identity class', () => {
         //   expect(errorSpy.mock.calls[0][0]).toBe(kafkaError);
         //   expect(kafkaMock.generateTopicId).toHaveBeenCalled();
         //   expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-        //   expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
+        //   expect(AxiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
         // });
         it('should fail due to dav node exception', async () => {
             const kafkaMock = {
@@ -168,14 +166,14 @@ describe('Identity class', () => {
                 createTopic: jest.fn(() => Promise.resolve()),
             };
             jest.doMock('./Kafka', () => ({ default: kafkaMock }));
-            axiosMock.post.mockImplementation(() => Promise.reject(davNodeError));
+            AxiosMock_1.default.post.mockImplementation(() => Promise.reject(davNodeError));
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('selfId', 'davId', config);
             await expect(identity.needsForType(needFilterParams, NeedParams_1.default)).rejects.toThrow(`Needs registration failed: ${davNodeError}`);
             expect(kafkaMock.generateTopicId).toHaveBeenCalled();
             expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-            expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
+            expect(AxiosMock_1.default.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
         });
         xit('should fail due to topic creation failure', async () => {
             const kafkaMock = {
@@ -190,7 +188,7 @@ describe('Identity class', () => {
             await expect(identity.needsForType(needFilterParams, NeedParams_1.default)).rejects.toThrow(`Fail to create a topic: ${kafkaError}`);
             expect(kafkaMock.generateTopicId).toHaveBeenCalled();
             expect(kafkaMock.createTopic).toHaveBeenCalledWith(TOPIC_ID, config);
-            expect(axiosMock.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
+            expect(AxiosMock_1.default.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/needsForType/${TOPIC_ID}`, needFilterParams.serialize());
         });
     });
     xdescribe('missions method', () => {
@@ -212,15 +210,12 @@ describe('Identity class', () => {
             vehicleId: 'DAV_ID',
             price: '100',
         });
-        const axiosMock = {
-            post: jest.fn(() => Promise.resolve()),
-        };
         beforeEach(() => {
             jest.clearAllMocks();
             jest.resetAllMocks();
             jest.resetModules();
             jest.doMock('axios', () => ({
-                default: axiosMock,
+                default: AxiosMock_1.default,
             }));
         });
         it('should receive missions and relevant functions', async () => {
@@ -308,8 +303,7 @@ describe('Identity class', () => {
         });
     });
     describe('need method', () => {
-        beforeAll(() => { });
-        it('should success, validate need', async () => {
+        it('should succeed, validate need', async () => {
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('selfId', 'davId', config);
@@ -318,8 +312,7 @@ describe('Identity class', () => {
         });
     });
     describe('bid method', () => {
-        beforeAll(() => { });
-        it('should success, validate bid', async () => {
+        it('should succeed, validate bid', async () => {
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('selfId', 'davId', config);
@@ -328,8 +321,7 @@ describe('Identity class', () => {
         });
     });
     describe('mission method', () => {
-        beforeAll(() => { });
-        it('should success, validate mission', async () => {
+        it('should succeed, validate mission', async () => {
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('selfId', 'davId', config);
@@ -338,12 +330,9 @@ describe('Identity class', () => {
         });
     });
     describe('messages method', () => {
-        const axiosMock = {
-            post: jest.fn(() => Promise.resolve()),
-        };
         beforeAll(() => {
             jest.doMock('axios', () => ({
-                default: axiosMock,
+                default: AxiosMock_1.default,
             }));
         });
         beforeEach(() => {

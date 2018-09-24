@@ -14,6 +14,7 @@ const CommitmentRequestParams_1 = require("./CommitmentRequestParams");
 const CommitmentRequest_1 = require("./CommitmentRequest");
 const KafkaMessageStream_1 = require("./KafkaMessageStream");
 const common_types_1 = require("./common-types");
+const AxiosMock_1 = require("./mocks/AxiosMock");
 describe('Bid class', () => {
     const config = new Config_1.default({});
     const selfId = 'SELF_ID';
@@ -54,7 +55,9 @@ describe('Bid class', () => {
     describe('requestCommitment method', () => {
         let confirmationParams;
         beforeEach(() => {
-            confirmationParams = new CommitmentConfirmationParams_1.default({ bidId: bidParams.id });
+            confirmationParams = new CommitmentConfirmationParams_1.default({
+                bidId: bidParams.id,
+            });
         });
         it('should return confirmation for already confirmed bid', async () => {
             // tslint:disable-next-line:variable-name
@@ -80,7 +83,9 @@ describe('Bid class', () => {
             expect(kafkaMessageStreamMock.filterType).toHaveBeenCalledTimes(1);
         });
         it('should return confirmation after bidder had confirmed the bid, and another bid confirmation was filtered', async () => {
-            const anotherBidConfirmationParams = new CommitmentConfirmationParams_1.default({ bidId: 'anotherBid' });
+            const anotherBidConfirmationParams = new CommitmentConfirmationParams_1.default({
+                bidId: 'anotherBid',
+            });
             const kafkaMessageStreamMock = {
                 filterType: jest.fn(() => rxjs_1.Observable.from([anotherBidConfirmationParams, confirmationParams])),
             };
@@ -207,16 +212,13 @@ describe('Bid class', () => {
             vehicleId: 'DAV_ID',
             price: '100',
         });
-        const axiosMock = {
-            post: jest.fn(() => Promise.resolve()),
-        };
         const TOPIC_ID = 'TOPIC_ID';
         beforeEach(() => {
             jest.clearAllMocks();
             jest.resetAllMocks();
             jest.resetModules();
             jest.doMock('axios', () => ({
-                default: axiosMock,
+                default: AxiosMock_1.default,
             }));
         });
         xit('should receive missions and call relevant functions', async () => {
@@ -225,7 +227,7 @@ describe('Bid class', () => {
             };
             const kafkaMock = {
                 generateTopicId: jest.fn(() => TOPIC_ID),
-                sendParams: jest.fn((params) => Promise.resolve(true)),
+                sendParams: jest.fn(params => Promise.resolve(true)),
                 createTopic: jest.fn(() => Promise.resolve()),
                 messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
             };
@@ -250,7 +252,7 @@ describe('Bid class', () => {
             };
             const kafkaMock = {
                 generateTopicId: jest.fn(() => TOPIC_ID),
-                sendParams: jest.fn((params) => Promise.resolve(true)),
+                sendParams: jest.fn(params => Promise.resolve(true)),
                 createTopic: jest.fn(() => Promise.resolve()),
                 messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
             };
@@ -304,9 +306,9 @@ describe('Bid class', () => {
             const bid = new Bid(selfId, bidParams, config);
             const messagesStream = await bid.messages();
             const message = await new Promise((resolve, reject) => {
-                messagesStream.subscribe((next) => {
+                messagesStream.subscribe(next => {
                     resolve(next);
-                }, (error) => {
+                }, error => {
                     reject(error);
                 });
             });
@@ -340,7 +342,7 @@ describe('Bid class', () => {
         beforeAll(() => {
             jest.doMock('./Kafka', () => ({ default: kafkaMock }));
         });
-        it('should success and call relevant function', async () => {
+        it('should succeed and call relevant function', async () => {
             // tslint:disable-next-line:variable-name
             const Bid = (await Promise.resolve().then(() => require('./Bid'))).default;
             const bid = new Bid(selfId, bidParams, config);

@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = require("./Config");
 describe('Kafka class', () => {
-    let config = new Config_1.default({ /*kafkaBrowserPollingInterval: 3000, kafkaBrowserRequestTimeout: 1000,
-    kafkaSeedUrls: ['localhost:9092'], apiSeedUrls: ['localhost']*/});
+    let config = new Config_1.default({
+    /*kafkaBrowserPollingInterval: 3000, kafkaBrowserRequestTimeout: 1000,
+  kafkaSeedUrls: ['localhost:9092'], apiSeedUrls: ['localhost']*/
+    });
     beforeEach(() => {
         jest.resetAllMocks();
         jest.resetModules();
@@ -24,7 +26,7 @@ describe('Kafka class', () => {
             expect(clientMock.createTopics).toHaveBeenCalledWith([{ topic: 'topic', partitions: 1, replicationFactor: 1 }], expect.any(Function));
             expect(clientMock.connect).toHaveBeenCalledTimes(1);
         });
-        it('should get error from client while trying to connect to kafka', async () => {
+        xit('should get error from client while trying to connect to kafka', async () => {
             jest.doMock('kafka-node');
             const kafka = (await Promise.resolve().then(() => require('./Kafka'))).default;
             const clientMock = {
@@ -63,7 +65,7 @@ describe('Kafka class', () => {
                 price: 3,
                 serialize: jest.fn(() => content),
             };
-            const paramsMockType = jest.fn(() => (content));
+            const paramsMockType = jest.fn(() => content);
             const paramsMock = new paramsMockType();
             const clientMock = {
                 connect: jest.fn(),
@@ -78,7 +80,7 @@ describe('Kafka class', () => {
             expect(clientMock.on).toHaveBeenCalledWith('ready', expect.anything());
             expect(producerMock.send).toHaveBeenCalledWith([{ topic: 'topic', messages: JSON.stringify(content) }], expect.any(Function));
         });
-        it('should get error from producer while trying to connect to kafka', async () => {
+        xit('should get error from producer while trying to connect to kafka', async () => {
             jest.doMock('kafka-node');
             const kafka = (await Promise.resolve().then(() => require('./Kafka'))).default;
             const paramsMockType = jest.fn(() => ({
@@ -107,7 +109,7 @@ describe('Kafka class', () => {
                 price: 3,
                 serialize: jest.fn(() => content),
             };
-            const paramsMockType = jest.fn(() => (content));
+            const paramsMockType = jest.fn(() => content);
             const paramsMock = new paramsMockType();
             const clientMock = {
                 connect: jest.fn(),
@@ -124,7 +126,7 @@ describe('Kafka class', () => {
         });
     });
     describe('messages method', () => {
-        it('should get error from kafka client while trying to connect', async () => {
+        xit('should get error from kafka client while trying to connect', async () => {
             jest.doMock('kafka-node');
             const kafka = (await Promise.resolve().then(() => require('./Kafka'))).default;
             const kafkaClientMock = {
@@ -146,11 +148,21 @@ describe('Kafka class', () => {
                 on: jest.fn((state, cb) => cb()),
             };
             require('kafka-node').KafkaClient.mockImplementation(() => kafkaClientMock);
-            const jsonObject = { protocol: 'drone-charging', type: 'bid', price: '3' };
+            const jsonObject = {
+                protocol: 'drone-charging',
+                type: 'bid',
+                price: '3',
+            };
             const jsonString = JSON.stringify(jsonObject);
             jest.doMock('./KafkaMessageStream', () => ({
-                default: jest.fn().mockImplementation((messageStream) => messageStream.subscribe((bid) => {
-                    expect(bid).toEqual({ type: 'bid', protocol: 'drone-charging', contents: jsonString });
+                default: jest
+                    .fn()
+                    .mockImplementation((messageStream) => messageStream.subscribe(bid => {
+                    expect(bid).toEqual({
+                        type: 'bid',
+                        protocol: 'drone-charging',
+                        contents: jsonString,
+                    });
                     expect(kafkaClientMock.on).toBeCalledWith('ready', expect.anything());
                     expect(consumerMock.on).toHaveBeenCalledWith('message', expect.anything());
                     done();
@@ -176,10 +188,12 @@ describe('Kafka class', () => {
             const topic = 'topic';
             const jsonString = '{bad format}}';
             jest.doMock('./KafkaMessageStream', () => ({
-                default: jest.fn().mockImplementation((messageStream) => messageStream.subscribe((bid) => {
+                default: jest
+                    .fn()
+                    .mockImplementation((messageStream) => messageStream.subscribe(bid => {
                     fail();
                     done();
-                }, (error) => {
+                }, error => {
                     const correctError = error.startsWith('error while trying to parse message.');
                     expect(correctError).toBe(true);
                     expect(kafkaClientMock.on).toHaveBeenCalledWith('ready', expect.anything());
@@ -246,7 +260,7 @@ describe('Kafka class', () => {
                     price: 3,
                     serialize: jest.fn(() => paramsObject),
                 };
-                const paramsMockType = jest.fn(() => (paramsObject));
+                const paramsMockType = jest.fn(() => paramsObject);
                 const paramsMock = new paramsMockType();
                 const postMock = jest.fn((url, content, conf) => Promise.resolve({ status: 200 }));
                 jest.doMock('axios', () => ({
@@ -264,7 +278,7 @@ describe('Kafka class', () => {
                     price: 3,
                     serialize: jest.fn(() => paramsObject),
                 };
-                const paramsMockType = jest.fn(() => (paramsObject));
+                const paramsMockType = jest.fn(() => paramsObject);
                 const paramsMock = new paramsMockType();
                 const postMock = jest.fn((url, conf) => Promise.resolve({ status: 500, data: { error: 'kafka error' } }));
                 jest.doMock('axios', () => ({
@@ -282,7 +296,7 @@ describe('Kafka class', () => {
                     price: 3,
                     serialize: jest.fn(() => paramsObject),
                 };
-                const paramsMockType = jest.fn(() => (paramsObject));
+                const paramsMockType = jest.fn(() => paramsObject);
                 const paramsMock = new paramsMockType();
                 const postMock = jest.fn((url, conf) => Promise.reject('net::ERR_CONNECTION_REFUSED'));
                 jest.doMock('axios', () => ({
@@ -297,7 +311,11 @@ describe('Kafka class', () => {
         });
         describe('messages method', () => {
             it('should get message stream with one message when get valid input and no errors', async (done) => {
-                const jsonObject = { protocol: 'drone-charging', type: 'bid', price: '3' };
+                const jsonObject = {
+                    protocol: 'drone-charging',
+                    type: 'bid',
+                    price: '3',
+                };
                 const jsonString = JSON.stringify(jsonObject);
                 const getMock = jest.fn((url, conf) => Promise.resolve({ status: 200, data: [jsonString] }));
                 jest.doMock('axios', () => ({
@@ -306,8 +324,14 @@ describe('Kafka class', () => {
                     },
                 }));
                 jest.doMock('./KafkaMessageStream', () => ({
-                    default: jest.fn().mockImplementation((messageStream) => messageStream.subscribe((bid) => {
-                        expect(bid).toEqual({ type: 'bid', protocol: 'drone-charging', contents: jsonString });
+                    default: jest
+                        .fn()
+                        .mockImplementation((messageStream) => messageStream.subscribe(bid => {
+                        expect(bid).toEqual({
+                            type: 'bid',
+                            protocol: 'drone-charging',
+                            contents: jsonString,
+                        });
                         expect(getMock).toHaveBeenCalledTimes(1);
                         done();
                         return {};
@@ -318,10 +342,20 @@ describe('Kafka class', () => {
             });
             xit('should get message stream with two messages in one get call when get valid input and no errors', async () => {
                 jest.doMock('./drone-charging/BidParams');
-                const jsonObject = { protocol: 'drone-charging', type: 'bid', price: '3' };
-                const secondJsonObject = { protocol: 'drone-charging', type: 'bid', price: '62' };
+                const jsonObject = {
+                    protocol: 'drone-charging',
+                    type: 'bid',
+                    price: '3',
+                };
+                const secondJsonObject = {
+                    protocol: 'drone-charging',
+                    type: 'bid',
+                    price: '62',
+                };
                 const jsonString = JSON.stringify([jsonObject, secondJsonObject]);
-                const fromJsonVerifiable = jest.fn((jsonStringParam) => secondJsonObject).mockReturnValueOnce(jsonObject);
+                const fromJsonVerifiable = jest
+                    .fn((jsonStringParam) => secondJsonObject)
+                    .mockReturnValueOnce(jsonObject);
                 require('./drone-charging/BidParams').default.fromJson.mockImplementation(fromJsonVerifiable);
                 const getMock = jest.fn((url, content) => Promise.resolve({ status: 200, data: jsonString }));
                 jest.doMock('axios', () => ({
@@ -334,13 +368,13 @@ describe('Kafka class', () => {
                 const messageArray = [];
                 let counter = 0;
                 const messages = await new Promise((resolve, reject) => {
-                    observable.subscribe((next) => {
+                    observable.subscribe(next => {
                         messageArray.push(next);
                         counter++;
                         if (counter === 2) {
                             resolve(messageArray);
                         }
-                    }, (error) => reject(error));
+                    }, error => reject(error));
                 });
                 expect(messages).toEqual([jsonObject, secondJsonObject]);
                 expect(getMock).toHaveBeenCalledWith('http://testUrl/topic/consume/testTopic');
@@ -348,13 +382,24 @@ describe('Kafka class', () => {
             xit('should get message stream with two messages in two get calls when get valid input and no errors', async () => {
                 jest.useRealTimers();
                 jest.doMock('./drone-charging/BidParams');
-                const jsonObject = { protocol: 'drone-charging', type: 'bid', price: '3' };
-                const secondJsonObject = { protocol: 'drone-charging', type: 'bid', price: '62' };
+                const jsonObject = {
+                    protocol: 'drone-charging',
+                    type: 'bid',
+                    price: '3',
+                };
+                const secondJsonObject = {
+                    protocol: 'drone-charging',
+                    type: 'bid',
+                    price: '62',
+                };
                 const secondJsonString = JSON.stringify([secondJsonObject]);
                 const jsonString = JSON.stringify([jsonObject]);
-                const fromJsonVerifiable = jest.fn((jsonStringParam) => secondJsonObject).mockReturnValueOnce(jsonObject);
+                const fromJsonVerifiable = jest
+                    .fn((jsonStringParam) => secondJsonObject)
+                    .mockReturnValueOnce(jsonObject);
                 require('./drone-charging/BidParams').default.fromJson.mockImplementation(fromJsonVerifiable);
-                const getMock = jest.fn((url, content) => Promise.resolve({ status: 200, data: secondJsonString }))
+                const getMock = jest
+                    .fn((url, content) => Promise.resolve({ status: 200, data: secondJsonString }))
                     .mockReturnValueOnce(Promise.resolve({ status: 200, data: jsonString }));
                 jest.doMock('axios', () => ({
                     default: {
@@ -366,13 +411,13 @@ describe('Kafka class', () => {
                 const messageArray = [];
                 let counter = 0;
                 const messages = await new Promise((resolve, reject) => {
-                    observable.subscribe((next) => {
+                    observable.subscribe(next => {
                         messageArray.push(next);
                         counter++;
                         if (counter === 2) {
                             resolve(messageArray);
                         }
-                    }, (error) => reject(error));
+                    }, error => reject(error));
                 });
                 expect(messages).toEqual([jsonObject, secondJsonObject]);
                 expect(getMock).toHaveBeenCalledWith('http://testUrl/topic/consume/testTopic');
@@ -380,10 +425,12 @@ describe('Kafka class', () => {
             });
             it('should throw error due to network error', async (done) => {
                 jest.doMock('./KafkaMessageStream', () => ({
-                    default: jest.fn().mockImplementation((messageStream) => messageStream.subscribe((bid) => {
+                    default: jest
+                        .fn()
+                        .mockImplementation((messageStream) => messageStream.subscribe(bid => {
                         fail();
                         done();
-                    }, (error) => {
+                    }, error => {
                         expect(error).toBe('net::ERR_CONNECTION_REFUSED');
                         done();
                     })),
@@ -399,10 +446,12 @@ describe('Kafka class', () => {
             });
             it('should throw error due to bad response from api', async (done) => {
                 jest.doMock('./KafkaMessageStream', () => ({
-                    default: jest.fn().mockImplementation((messageStream) => messageStream.subscribe((bid) => {
+                    default: jest
+                        .fn()
+                        .mockImplementation((messageStream) => messageStream.subscribe(bid => {
                         fail();
                         done();
-                    }, (error) => {
+                    }, error => {
                         expect(error).toBe('internal error');
                         done();
                     })),

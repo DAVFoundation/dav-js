@@ -1,7 +1,6 @@
 import MessageParams from './VehicleLocationMessageParams';
 
 describe('MessageParams class', () => {
-
   const messageParams = new MessageParams({
     vehicleLocation: {
       lat: 32.050382,
@@ -30,5 +29,4 @@ describe('MessageParams class', () => {
       expect(messageParamsObject).toEqual(messageParams);
     });
   });
-
 });

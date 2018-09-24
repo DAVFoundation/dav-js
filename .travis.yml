@@ -1,22 +1,18 @@
 language: node_js
 node_js:
+- '8'
 - '9'
+- '10'
 branches:
   only:
   - master
   - staging
   - production
-  - FEAT-SDK-V-1-0
 install:
 - npm install
 before_script:
-- npm run tslint
-- npm run jest
-- npm run spellcheck
 script:
-- npm run copy-contracts
-- npm run tsc
-- npm run typedoc
+- npm run pre-publish
 after_success:
 after_failure:
 deploy:

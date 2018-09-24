@@ -130,9 +130,9 @@ export default class Bid<T extends BidParams> {
                 await Kafka.createTopic(this._missionId, this._config); // Channel #5
                 return new Mission<V>(this._missionId, params.id, params, this._config);
             })
-            .map((promise) => Observable.fromPromise(promise))
+            .map(promise => Observable.fromPromise(promise))
             .mergeAll()
-            .do((mission) => {
+            .do(mission => {
                 const message = new GeneralMessageParams({ senderId: this._missionId });
                 mission.sendMessage(message);
             });
@@ -148,7 +148,7 @@ export default class Bid<T extends BidParams> {
         const typesMap = new CommitmentRequestParams({}).getProtocolTypes();
         const commitmentRequestParamsStream: Observable<CommitmentRequestParams> = kafkaMessageStream.filterType(typesMap, typesMap.messages);
         const commitmentRequestStream = commitmentRequestParamsStream.map(
-            (commitmentRequestParams) => new CommitmentRequest(this._selfId, commitmentRequestParams, this._config));
+            commitmentRequestParams => new CommitmentRequest(this._selfId, commitmentRequestParams, this._config));
         return Observable.fromObservable(commitmentRequestStream, this._selfId);
     }
 }

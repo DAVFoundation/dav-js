@@ -7,8 +7,6 @@ import KafkaMessageStream from './KafkaMessageStream';
 import KafkaBase from './KafkaBase';
 import { ProduceRequest } from 'kafka-node';
 export default class Kafka extends KafkaBase implements IKafka {
-    private static client;
-    private static clientConnected;
     private getKafkaClient;
     private getProducer;
     private getConsumer;
