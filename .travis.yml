@@ -13,6 +13,7 @@ install:
 before_script:
 script:
 - npm run pre-publish
+- echo "Finished the build script"
 after_success:
 after_failure:
 deploy:
