@@ -100,5 +100,4 @@ gulp.task('pre-publish', [
   'tsc',
   'typedoc',
   'spellcheck',
-  'create-dist',
-]);
+  'create-dist']);
