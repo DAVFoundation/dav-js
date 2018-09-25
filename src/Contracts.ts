@@ -43,7 +43,7 @@ export default class Contracts {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
             transaction.once('receipt', receipt => {
                 // tslint:disable-next-line:no-console
-                console.log(`Transaction succeeded: ${receipt}`);
+                console.log(`Transaction succeeded: ${JSON.stringify(receipt)}`);
                 resolve(receipt);
             });
             transaction.once('transactionHash', hash => {
@@ -52,7 +52,7 @@ export default class Contracts {
             });
             transaction.on('error', err => {
                 // tslint:disable-next-line:no-console
-                console.log(`Transaction failed: ${err}`);
+                console.log(`Transaction failed: ${JSON.stringify(err)}`);
                 reject(err);
             });
         });

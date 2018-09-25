@@ -123,7 +123,7 @@ export default class Bid<T extends BidParams> {
     public async missions<V extends MissionParams>(): Promise<Observable<Mission<V>>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
         const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(
-            KafkaMessageFactory.instance.getMessageTypes(this._params.protocol, MessageCategories.Message));
+            KafkaMessageFactory.instance.getMessageTypes(this._params.protocol, MessageCategories.Mission));
         const missionStream = missionParamsStream
             .map(async (params: V) => {
                 this._missionId = Kafka.generateTopicId();

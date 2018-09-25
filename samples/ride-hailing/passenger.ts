@@ -51,14 +51,14 @@ export default async function runConsumer(configuration?: IConfig) {
         ]);
         const messagesStream = await mission.messages(['message']);
         messagesStream.subscribe(
-          (message: Message<MessageParams>) => {
+          async (message: Message<MessageParams>) => {
             console.log(message.params.missionStatus);
             if (
               message.params.missionStatus ===
               MissionStatus.VehicleAtPickupLocation
             ) {
               console.log('vehicle at location message');
-              message.respond(
+              await message.respond(
                 new MessageParams({
                   missionStatus: MissionStatus.PassengerIsComing,
                 }),
