@@ -7,12 +7,12 @@ export interface ICommitmentConfirmationParams extends IBasicParams {
 
 export default class CommitmentConfirmationParams extends BasicParams {
 
-    private static _protocol = 'general';
-    private static _type = 'commitment-confirmation';
+    public static _protocol = '';
+    public static _messageType = 'commitment_confirmation';
     public bidId: string;
 
     public static getMessageType(): string {
-        return CommitmentConfirmationParams._type;
+        return CommitmentConfirmationParams._messageType;
     }
 
     public static getMessageProtocol(): string {
@@ -20,7 +20,7 @@ export default class CommitmentConfirmationParams extends BasicParams {
     }
 
     constructor(values?: Partial<ICommitmentConfirmationParams>) {
-        super(CommitmentConfirmationParams._protocol, CommitmentConfirmationParams._type, values);
+        super(CommitmentConfirmationParams._protocol, CommitmentConfirmationParams._messageType, values);
         if (!!values) {
             this.bidId = values.bidId;
         }
@@ -37,8 +37,8 @@ export default class CommitmentConfirmationParams extends BasicParams {
 
     public getProtocolTypes() {
         const typeMap: any = {};
-        typeMap[CommitmentConfirmationParams._type] = CommitmentConfirmationParams;
-        typeMap.messages = [CommitmentConfirmationParams._type];
+        typeMap[CommitmentConfirmationParams._messageType] = CommitmentConfirmationParams;
+        typeMap.messages = [CommitmentConfirmationParams._messageType];
         return typeMap;
     }
 

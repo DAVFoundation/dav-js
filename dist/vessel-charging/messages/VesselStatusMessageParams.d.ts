@@ -4,9 +4,8 @@ import { ILocation } from '../../common-types';
  * @class The Class boat-charging/VesselStatusMessageParams represent the parameters of boat-charging consumer status message.
  */
 export default class MessageParams extends BaseMessageParams {
-    private static _type;
+    static _messageType: string;
     location: ILocation;
-    static getMessageType(): string;
     constructor(values?: Partial<MessageParams>);
     serialize(): {
         ttl: number;

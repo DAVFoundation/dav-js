@@ -29,18 +29,6 @@ export default class BidParams extends BaseBidParams {
     };
     deserialize(json: any): void;
     equals(other: BidParams): boolean;
-    getProtocolTypes(): {
-        need_filter: typeof import("./NeedFilterParams").default;
-        need: typeof import("./NeedParams").default;
-        bid: typeof BidParams;
-        mission: typeof import("./MissionParams").default;
-        message: typeof import("./MessageParams").default;
-        needFilters: string[];
-        needs: string[];
-        bids: string[];
-        missions: string[];
-        messages: string[];
-    };
 }
 export {};
 //# sourceMappingURL=BidParams.d.ts.map

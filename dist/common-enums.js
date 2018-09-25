@@ -25,17 +25,5 @@ var ContractTypes;
     ContractTypes["davToken"] = "DAVToken";
     ContractTypes["basicMission"] = "BasicMission";
 })(ContractTypes = exports.ContractTypes || (exports.ContractTypes = {}));
-/**
- * @enum The enum RideHailingMissionStatus represent the mission statuses after the contract has been signed
- *  - all statuses are sent by the driver except PassengerIsComing.
- */
-var RideHailingMissionStatus;
-(function (RideHailingMissionStatus) {
-    RideHailingMissionStatus["OnTheWay"] = "on_the_way";
-    RideHailingMissionStatus["VehicleAtPickupLocation"] = "vehicle_at_pickup_location";
-    RideHailingMissionStatus["PassengerIsComing"] = "passenger_is_coming";
-    RideHailingMissionStatus["RidingHasStarted"] = "riding_has_started";
-    RideHailingMissionStatus["RidingHasFinished"] = "riding_has_finished";
-})(RideHailingMissionStatus = exports.RideHailingMissionStatus || (exports.RideHailingMissionStatus = {}));
 
 //# sourceMappingURL=common-enums.js.map

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const NeedFilterParams_1 = require("../NeedFilterParams");
-const ProtocolTypes_1 = require("./ProtocolTypes");
 /**
  * @class The Class drone-delivery/NeedFilterParams represent the parameters that used to filter drone-delivery needs.
  */
@@ -19,9 +18,6 @@ class NeedFilterParams extends NeedFilterParams_1.default {
         const formattedParams = super.serialize();
         Object.assign(formattedParams, { dimensions: this.maxDimensions });
         return formattedParams;
-    }
-    getProtocolTypes() {
-        return ProtocolTypes_1.default;
     }
     deserialize(json) {
         super.deserialize(json);

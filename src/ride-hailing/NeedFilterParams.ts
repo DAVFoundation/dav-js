@@ -1,33 +1,20 @@
 import BaseNeedFilterParams from '../NeedFilterParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class ride-hailing/NeedFilterParams represent the parameters that used to filter ride-hailing needs.
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
 
-    private static _protocol = 'ride_hailing';
-    private static _type = 'need_filter';
-
-    public static getMessageType(): string {
-        return NeedFilterParams._type;
-    }
-
-    public static getMessageProtocol(): string {
-        return NeedFilterParams._protocol;
-    }
+    public static _protocol = 'ride_hailing';
+    public static _messageType = 'need_filter';
 
     constructor(values?: Partial<NeedFilterParams>) {
-        super(NeedFilterParams._protocol, NeedFilterParams._type, values);
+        super(NeedFilterParams._protocol, NeedFilterParams._messageType, values);
         if (!!values) {
             if (!values.location || !values.location.lat || !values.location.long || !values.radius) {
                 throw new Error('NeedFilter lack of essential parameters');
             }
         }
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public serialize() {

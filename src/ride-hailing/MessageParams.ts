@@ -1,6 +1,12 @@
 import BaseMessageParams, { IMessageParams as IBaseMessageParams } from '../MessageParams';
-import { RideHailingMissionStatus } from '../common-enums';
-import ProtocolTypes from './ProtocolTypes';
+
+export enum MissionStatus {
+    OnTheWay = 'on_the_way',
+    VehicleAtPickupLocation = 'vehicle_at_pickup_location',
+    PassengerIsComing = 'passenger_is_coming',
+    RidingHasStarted = 'riding_has_started',
+    RidingHasFinished = 'riding_has_finished',
+}
 
 /**
  * @interface IMessageParams extends The base interface IMessageParams for ride hailing protocol for all messages except OnTheWay message.
@@ -9,7 +15,7 @@ interface IMessageParams extends IBaseMessageParams {
     /**
      * @property Last mission status.
      */
-    missionStatus: RideHailingMissionStatus;
+    missionStatus: MissionStatus;
 }
 
 /**
@@ -17,21 +23,13 @@ interface IMessageParams extends IBaseMessageParams {
  */
 export default class MessageParams extends BaseMessageParams {
 
-    private static _protocol = 'ride_hailing';
-    private static _type = 'message';
+    public static _protocol = 'ride_hailing';
+    public static _messageType = 'message';
 
-    public missionStatus: RideHailingMissionStatus;
-
-    public static getMessageType(): string {
-        return MessageParams._type;
-    }
-
-    public static getMessageProtocol(): string {
-        return MessageParams._protocol;
-    }
+    public missionStatus: MissionStatus;
 
     constructor(values?: Partial<IMessageParams>) {
-        super(MessageParams._protocol, MessageParams._type, values);
+        super(MessageParams._protocol, MessageParams._messageType, values);
         if (!!values) {
             this.missionStatus = values.missionStatus;
         }
@@ -43,10 +41,6 @@ export default class MessageParams extends BaseMessageParams {
             missionStatus: this.missionStatus,
         });
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

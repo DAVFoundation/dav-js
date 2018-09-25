@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const BidParams_1 = require("../BidParams");
-const ProtocolTypes_1 = require("./ProtocolTypes");
 /**
  * @class The Class drone-charging/BidParams represent the parameters of drone-charging bid.
  */
@@ -31,9 +30,6 @@ class BidParams extends BidParams_1.default {
     }
     equals(other) {
         return super.equals(other) && this.plugType === other.plugType;
-    }
-    getProtocolTypes() {
-        return ProtocolTypes_1.default;
     }
 }
 BidParams._protocol = 'drone_charging';

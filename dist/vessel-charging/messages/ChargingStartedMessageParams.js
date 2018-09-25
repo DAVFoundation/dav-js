@@ -6,10 +6,7 @@ const MessageParams_1 = require("../MessageParams");
  */
 class MessageParams extends MessageParams_1.default {
     constructor(values) {
-        super(MessageParams._type, values);
-    }
-    static getMessageType() {
-        return MessageParams._type;
+        super(MessageParams._messageType, values);
     }
     serialize() {
         const formattedParams = super.serialize();
@@ -19,7 +16,7 @@ class MessageParams extends MessageParams_1.default {
         const messageParams = super.deserialize(json);
     }
 }
-MessageParams._type = 'charging_started_message';
+MessageParams._messageType = 'charging_started_message';
 exports.default = MessageParams;
 
 //# sourceMappingURL=ChargingStartedMessageParams.js.map

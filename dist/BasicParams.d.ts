@@ -4,20 +4,19 @@ import IBasicParams from './IBasicParams';
  */
 export default abstract class BasicParams {
     private _protocol;
-    private _type;
+    private _messageType;
     /**
      * Hop limit, in seconds, for the inherited class.
      */
     ttl?: number;
-    static getMessageType(): string;
-    static getMessageProtocol(): string;
-    constructor(_protocol: string, _type: string, values?: Partial<IBasicParams>);
+    constructor(_protocol: string, _messageType: string, values?: Partial<IBasicParams>);
     serialize(): {
         ttl: number;
         protocol: string;
         type: string;
     };
-    abstract getProtocolTypes(): any;
+    readonly protocol: string;
+    readonly messageType: string;
     deserialize(json: any): void;
 }
 //# sourceMappingURL=BasicParams.d.ts.map

@@ -1,6 +1,5 @@
 import BaseBidParams from '../BidParams';
 import IBaseBidParams from '../IBidParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IVehicleDetails is represents vehicle details in a bid of ride-hailing protocol
@@ -50,8 +49,8 @@ interface IBidParams extends IBaseBidParams {
  */
 export default class BidParams extends BaseBidParams {
 
-    private static _protocol = 'ride_hailing';
-    private static _type = 'bid';
+    public static _protocol = 'ride_hailing';
+    public static _messageType = 'bid';
 
     /**
      * @property The provider's vehicle current location.
@@ -66,19 +65,11 @@ export default class BidParams extends BaseBidParams {
      */
     public driverName: string;
 
-    public static getMessageType(): string {
-        return BidParams._type;
-    }
-
-    public static getMessageProtocol(): string {
-        return BidParams._protocol;
-    }
-
     constructor(values?: Partial<IBidParams>) {
         if (!values) {
-            super(BidParams._protocol, BidParams._type);
+            super(BidParams._protocol, BidParams._messageType);
         } else {
-            super(BidParams._protocol, BidParams._type, values);
+            super(BidParams._protocol, BidParams._messageType, values);
             // TODO: throw if not enough details
             this.currentVehicleLocation = values.currentVehicleLocation;
             this.vehicle = values.vehicle;
@@ -105,9 +96,5 @@ export default class BidParams extends BaseBidParams {
 
     public equals(other: BidParams): boolean {
         return this.ttl === other.ttl && super.equals(other);
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 }

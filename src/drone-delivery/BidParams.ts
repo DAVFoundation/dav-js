@@ -1,6 +1,5 @@
 import BaseBidParams from '../BidParams';
 import IBaseBidParams from '../IBidParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IBidParams The interface drone-delivery/IBidParams represent a valid argument of drone-delivery/BidParams constructor.
@@ -53,9 +52,5 @@ export default class BidParams extends BaseBidParams {
 
     public equals(other: BidParams): boolean {
         return super.equals(other) && this.eta === other.eta;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 }

@@ -5,6 +5,7 @@ const Message_1 = require("./Message");
 const MissionPeerIdMessageParams_1 = require("./MissionPeerIdMessageParams");
 const Contracts_1 = require("./Contracts");
 const Kafka_1 = require("./Kafka");
+const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
 /**
  * @class Mission class represent an approved mission.
  */
@@ -26,8 +27,7 @@ class Mission {
     }
     async getPeerId() {
         const kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        const typesMap = new MissionPeerIdMessageParams_1.default({}).getProtocolTypes();
-        const messageParamsStream = kafkaMessageStream.filterType(typesMap, typesMap.messages);
+        const messageParamsStream = kafkaMessageStream.filterType(KafkaMessageFactory_1.default.instance.getMessageTypes(MissionPeerIdMessageParams_1.default._protocol, KafkaMessageFactory_1.MessageCategories.Message));
         const messageStream = messageParamsStream.do((messageParams) => {
             this._peerId = messageParams.senderId;
         }).map((messageParams) => messageParams.senderId).first().toPromise();
@@ -80,8 +80,8 @@ class Mission {
      */
     async messages(filterType) {
         const kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const messageParamsStream = kafkaMessageStream.filterType(protocolTypesMap, filterType || protocolTypesMap.messages);
+        const messageParamsStream = kafkaMessageStream.filterType(filterType ||
+            KafkaMessageFactory_1.default.instance.getMessageTypes(this._params.protocol, KafkaMessageFactory_1.MessageCategories.Message));
         const messageStream = messageParamsStream.map((params) => new Message_1.default(this._selfId, params, this._config));
         return common_types_1.Observable.fromObservable(messageStream, messageParamsStream.topic);
     }

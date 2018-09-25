@@ -20,15 +20,4 @@ export declare enum ContractTypes {
     davToken = "DAVToken",
     basicMission = "BasicMission"
 }
-/**
- * @enum The enum RideHailingMissionStatus represent the mission statuses after the contract has been signed
- *  - all statuses are sent by the driver except PassengerIsComing.
- */
-export declare enum RideHailingMissionStatus {
-    OnTheWay = "on_the_way",
-    VehicleAtPickupLocation = "vehicle_at_pickup_location",
-    PassengerIsComing = "passenger_is_coming",
-    RidingHasStarted = "riding_has_started",
-    RidingHasFinished = "riding_has_finished"
-}
 //# sourceMappingURL=common-enums.d.ts.map

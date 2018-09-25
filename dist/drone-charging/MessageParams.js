@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const MessageParams_1 = require("../MessageParams");
-const ProtocolTypes_1 = require("./ProtocolTypes");
 /**
  * @class The Class drone-charging/MessageParams represent the parameters of drone-charging message.
  */
@@ -18,9 +17,6 @@ class MessageParams extends MessageParams_1.default {
     serialize() {
         const formattedParams = super.serialize();
         return formattedParams;
-    }
-    getProtocolTypes() {
-        return ProtocolTypes_1.default;
     }
     deserialize(json) {
         super.deserialize(json);

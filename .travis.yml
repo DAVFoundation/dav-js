@@ -11,12 +11,13 @@ branches:
 install:
 - npm install
 before_script:
+- npm run tslint
+- npm run jest
+- npm run spellcheck
 script:
-- npm run pre-publish
-after_success:
-after_failure:
-deploy:
-after_deploy:
+- npm run tsc
+- npm run typedoc
+- npm run create-dist
 notifications:
   email:
     on_success: change # default: change

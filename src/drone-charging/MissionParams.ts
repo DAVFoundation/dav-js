@@ -1,6 +1,5 @@
 import BaseMissionParams from '../MissionParams';
 import IMissionParams from '../IMissionParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class drone-charging/MissionParams represent the parameters of drone-charging mission.
@@ -25,10 +24,6 @@ export default class MissionParams extends BaseMissionParams {
     public serialize() {
         const formattedParams = super.serialize();
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

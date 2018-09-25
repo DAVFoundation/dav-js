@@ -4,8 +4,8 @@ export interface ICommitmentConfirmationParams extends IBasicParams {
     bidId: string;
 }
 export default class CommitmentConfirmationParams extends BasicParams {
-    private static _protocol;
-    private static _type;
+    static _protocol: string;
+    static _messageType: string;
     bidId: string;
     static getMessageType(): string;
     static getMessageProtocol(): string;
