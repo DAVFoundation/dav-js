@@ -1,14 +1,13 @@
 import BaseNeedParams from '../NeedParams';
 import { IDimensions } from '../common-types';
 import { EnergySources, Amenities } from './enums';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class boat-charging/NeedParams represent the parameters of boat-charging need.
  */
 export default class NeedParams extends BaseNeedParams {
-    private static _protocol = 'boat_charging';
-    private static _type = 'need';
+    public static _protocol = 'boat_charging';
+    public static _messageType = 'need';
     public radius: number;
     public startAt: number;
     public dimensions: IDimensions;
@@ -17,16 +16,8 @@ export default class NeedParams extends BaseNeedParams {
     public energySource: EnergySources;
     public amenities: Amenities[];
 
-    public static getMessageType(): string {
-        return NeedParams._type;
-    }
-
-    public static getMessageProtocol(): string {
-        return NeedParams._protocol;
-    }
-
     constructor(values?: Partial<NeedParams>) {
-        super(NeedParams._protocol, NeedParams._type, values);
+        super(NeedParams._protocol, NeedParams._messageType, values);
         if (!!values) {
             if (!values.location) {
                 throw new Error('location is a required field');
@@ -51,10 +42,6 @@ export default class NeedParams extends BaseNeedParams {
             amenities: this.amenities,
         });
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

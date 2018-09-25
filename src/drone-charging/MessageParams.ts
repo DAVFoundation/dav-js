@@ -1,5 +1,4 @@
 import BaseMessageParams from '../MessageParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class drone-charging/MessageParams represent the parameters of drone-charging message.
@@ -23,10 +22,6 @@ export default class MessageParams extends BaseMessageParams {
     public serialize() {
         const formattedParams = super.serialize();
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

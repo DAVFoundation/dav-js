@@ -12,6 +12,7 @@ import Mission from './Mission';
 import Kafka from './Kafka';
 import axios from 'axios';
 import KafkaMessageStream from './KafkaMessageStream';
+import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
 /**
  * @class The Identity class represent registered DAV identity instance.
  */
@@ -69,8 +70,8 @@ export default class Identity {
       }
     }
     const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(needTypeTopic, this._config); // Channel#2
-    const protocolTypesMap = needFilterParams.getProtocolTypes();
-    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.needs);
+    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(
+      KafkaMessageFactory.instance.getMessageTypes(needFilterParams.protocol, MessageCategories.Need));
     const observable = Observable.fromObservable(needParamsStream.map((needParams: T) =>
       new Need<T>(needTypeTopic, needParams, this._config)), needParamsStream.topic);
     return observable;

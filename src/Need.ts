@@ -8,6 +8,7 @@ import Kafka from './Kafka';
 import Message from './Message';
 import KafkaMessageStream from './KafkaMessageStream';
 import { Observable as RxObservable } from 'rxjs';
+import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
 
 /**
  * @class The Need class represent a service request.
@@ -48,8 +49,8 @@ export default class Need<T extends NeedParams> {
      */
     public async bids<V extends BidParams>(): Promise<Observable<Bid<V>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // this._selfId - Channel#3
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const bidParamsStream = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.bids);
+        const bidParamsStream = kafkaMessageStream.filterType(
+            KafkaMessageFactory.instance.getMessageTypes(this._params.protocol, MessageCategories.Bid));
         const bidStream: RxObservable<Bid<V>> = bidParamsStream.map((bidParams: V) => {
             return new Bid(this._selfId, bidParams, this._config, kafkaMessageStream);
         });
@@ -73,8 +74,8 @@ export default class Need<T extends NeedParams> {
      */
     public async messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<U>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config);
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(protocolTypesMap, filterType || protocolTypesMap.messages);
+        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(
+            filterType || KafkaMessageFactory.instance.getMessageTypes(this._params.protocol, MessageCategories.Message));
         const messageStream: RxObservable<Message<U>> = messageParamsStream.map((params: U) =>
             new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);

@@ -1,18 +1,9 @@
-import { defaultConfiguration } from './../../src/Config';
 // tslint:disable:no-console
-
-import SDKFactory from '../../src/SDKFactory';
-import NeedFilterParams from '../../src/ride-hailing/NeedFilterParams';
-import NeedParams from '../../src/ride-hailing/NeedParams';
-import BidParams from '../../src/ride-hailing/BidParams';
-import MessageParams from '../../src/ride-hailing/MessageParams';
-import VehicleLocationMessageParams from '../../src/ride-hailing/VehicleLocationMessageParams';
-import Need from '../../src/Need';
-import MissionParams from '../../src/ride-hailing/MissionParams';
-import Mission from '../../src/Mission';
-import IConfig from '../../src/IConfig';
-import { RideHailingMissionStatus } from '../../src/common-enums';
-import Message from '../../src/Message';
+import { SDKFactory, Mission, IConfig, Message, Need } from '../../src';
+import {
+  NeedFilterParams, NeedParams, BidParams, MessageParams,
+  VehicleLocationMessageParams, MissionParams, MissionStatus,
+} from '../../src/ride-hailing';
 import config from './config';
 
 async function runProvider(configuration?: IConfig) {
@@ -46,13 +37,13 @@ async function runProvider(configuration?: IConfig) {
       const onVehicleInRiding = async (message: Message<MessageParams>) => {
         message.respond(
           new MessageParams({
-            missionStatus: RideHailingMissionStatus.RidingHasStarted,
+            missionStatus: MissionStatus.RidingHasStarted,
           }),
         );
         setTimeout(() => {
           message.respond(
             new MessageParams({
-              missionStatus: RideHailingMissionStatus.RidingHasFinished,
+              missionStatus: MissionStatus.RidingHasFinished,
             }),
           );
           resolve();
@@ -74,7 +65,7 @@ async function runProvider(configuration?: IConfig) {
           );
           mission.sendMessage(
             new MessageParams({
-              missionStatus: RideHailingMissionStatus.VehicleAtPickupLocation,
+              missionStatus: MissionStatus.VehicleAtPickupLocation,
             }),
           );
         }, 1000);
@@ -85,13 +76,13 @@ async function runProvider(configuration?: IConfig) {
             console.log(message.params.missionStatus);
             if (
               message.params.missionStatus ===
-              RideHailingMissionStatus.PassengerIsComing
+              MissionStatus.PassengerIsComing
             ) {
               onVehicleInRiding(message);
             }
           },
           error => {
-            console.log('driver error: ', error);
+            console.log('driver error 1: ', error);
           },
         );
       };
@@ -108,7 +99,10 @@ async function runProvider(configuration?: IConfig) {
         console.log('bid created');
         // let restoredBid = identity.bid(bid.id, bid.params);
         const missions = await bid.missions();
-        missions.subscribe(onMissionCreated);
+        missions.subscribe(onMissionCreated,
+          error => {
+            console.log('driver error 2: ', error);
+          });
         // restoredBid = identity.bid(bid.id, bid.params);
         const requestsStream = await bid.commitmentRequests();
         console.log('got commitment request stream');
@@ -118,7 +112,10 @@ async function runProvider(configuration?: IConfig) {
         console.log('driver commit has been sent');
       };
 
-      needs.subscribe(onNeed);
+      needs.subscribe(onNeed,
+        error => {
+          console.log('driver error 3: ', error);
+        });
     } catch (err) {
       reject(err);
     }

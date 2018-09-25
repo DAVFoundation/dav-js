@@ -1,7 +1,6 @@
 import BaseMessageParams, { IMessageParams as IBaseMessageParams } from '../MessageParams';
 import { ILocation } from '../common-types';
-import { RideHailingMissionStatus } from '../common-enums';
-import ProtocolTypes from './ProtocolTypes';
+import { MissionStatus } from './MessageParams';
 
 /**
  * @interface IMessageParams extends The base interface IMessageParams for ride hailing protocol for OnTheWay message only.
@@ -18,25 +17,17 @@ interface IMessageParams extends IBaseMessageParams {
  */
 export default class MessageParams extends BaseMessageParams {
 
-    private static _protocol = 'ride_hailing';
-    private static _type = 'vehicle_location_message';
+    public static _protocol = 'ride_hailing';
+    public static _messageType = 'vehicle_location_message';
 
-    public missionStatus: RideHailingMissionStatus;
+    public missionStatus: MissionStatus;
     public vehicleLocation: ILocation;
 
-    public static getMessageType(): string {
-        return MessageParams._type;
-    }
-
-    public static getMessageProtocol(): string {
-        return MessageParams._protocol;
-    }
-
     constructor(values?: Partial<IMessageParams>) {
-        super(MessageParams._protocol, MessageParams._type, values);
+        super(MessageParams._protocol, MessageParams._messageType, values);
         if (!!values) {
             this.vehicleLocation = values.vehicleLocation;
-            this.missionStatus = RideHailingMissionStatus.OnTheWay;
+            this.missionStatus = MissionStatus.OnTheWay;
         }
 
     }
@@ -48,10 +39,6 @@ export default class MessageParams extends BaseMessageParams {
             vehicleLocation: this.vehicleLocation,
         });
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

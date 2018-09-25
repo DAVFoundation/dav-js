@@ -15,18 +15,6 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
         protocol: string;
         type: string;
     };
-    getProtocolTypes(): {
-        need_filter: typeof NeedFilterParams;
-        need: typeof import("./NeedParams").default;
-        bid: typeof import("./BidParams").default;
-        mission: typeof import("./MissionParams").default;
-        message: typeof import("./MessageParams").default;
-        needFilters: string[];
-        needs: string[];
-        bids: string[];
-        missions: string[];
-        messages: string[];
-    };
     deserialize(json: any): void;
 }
 //# sourceMappingURL=NeedFilterParams.d.ts.map

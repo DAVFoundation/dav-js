@@ -37,10 +37,10 @@ export default class Bid<T extends BidParams> {
     sendMessage(messageParams: MessageParams): Promise<void>;
     /**
      * @method messages Used to subscribe for messages for the current bid.
-     * @param filterType (optional) array of the expected message params object type.
+     * @param filterTypes (optional) array of the expected message params object type.
      * @returns Observable for messages subscription.
      */
-    messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<U>>>;
+    messages<U extends MessageParams>(filterTypes?: string[]): Promise<Observable<Message<U>>>;
     /**
      * @method missions Used to subscribe for missions.
      * @returns Observable for missions subscription.

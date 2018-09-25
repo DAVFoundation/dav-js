@@ -6,6 +6,7 @@ const Bid_1 = require("./Bid");
 const Mission_1 = require("./Mission");
 const Kafka_1 = require("./Kafka");
 const axios_1 = require("axios");
+const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
 /**
  * @class The Identity class represent registered DAV identity instance.
  */
@@ -66,8 +67,7 @@ class Identity {
             }
         }
         const kafkaMessageStream = await Kafka_1.default.messages(needTypeTopic, this._config); // Channel#2
-        const protocolTypesMap = needFilterParams.getProtocolTypes();
-        const needParamsStream = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.needs);
+        const needParamsStream = kafkaMessageStream.filterType(KafkaMessageFactory_1.default.instance.getMessageTypes(needFilterParams.protocol, KafkaMessageFactory_1.MessageCategories.Need));
         const observable = common_types_1.Observable.fromObservable(needParamsStream.map((needParams) => new Need_1.default(needTypeTopic, needParams, this._config)), needParamsStream.topic);
         return observable;
     }

@@ -8,6 +8,7 @@ import MissionParams from './MissionParams';
 import Contracts from './Contracts';
 import Kafka from './Kafka';
 import KafkaMessageStream from './KafkaMessageStream';
+import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
 /**
  * @class Mission class represent an approved mission.
  */
@@ -30,8 +31,8 @@ export default class Mission<T extends MissionParams> {
 
     private async getPeerId(): Promise<ID> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        const typesMap = new MissionPeerIdMessageParams({}).getProtocolTypes();
-        const messageParamsStream = kafkaMessageStream.filterType(typesMap, typesMap.messages);
+        const messageParamsStream = kafkaMessageStream.filterType(
+            KafkaMessageFactory.instance.getMessageTypes(MissionPeerIdMessageParams._protocol, MessageCategories.Message));
         const messageStream = messageParamsStream.do((messageParams: MissionPeerIdMessageParams) => {
             this._peerId = messageParams.senderId;
         }).map((messageParams: MissionPeerIdMessageParams) => messageParams.senderId).first().toPromise();
@@ -84,8 +85,8 @@ export default class Mission<T extends MissionParams> {
      */
     public async messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<MessageParams>>> {
         const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(protocolTypesMap, filterType || protocolTypesMap.messages);
+        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(filterType ||
+            KafkaMessageFactory.instance.getMessageTypes(this._params.protocol, MessageCategories.Message));
         const messageStream = messageParamsStream.map((params: U) => new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
     }

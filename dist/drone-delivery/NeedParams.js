@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const NeedParams_1 = require("../NeedParams");
-const ProtocolTypes_1 = require("./ProtocolTypes");
 /**
  * @class The Class drone-delivery/NeedParams represent the parameters of drone-delivery need.
  */
@@ -31,9 +30,6 @@ class NeedParams extends NeedParams_1.default {
             maxAltitude: this.maxAltitude,
         });
         return formattedParams;
-    }
-    getProtocolTypes() {
-        return ProtocolTypes_1.default;
     }
     deserialize(json) {
         super.deserialize(json);

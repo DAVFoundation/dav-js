@@ -3,8 +3,7 @@ import BaseMessageParams from '../MessageParams';
  * @class The Class boat-charging/ChargingArrivalMessageParams represent the parameters of boat-charging arrival message.
  */
 export default class MessageParams extends BaseMessageParams {
-    private static _type;
-    static getMessageType(): string;
+    static _messageType: string;
     constructor(values?: Partial<MessageParams>);
     serialize(): {
         ttl: number;

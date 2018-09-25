@@ -46,8 +46,8 @@ interface IBidParams extends IBaseBidParams {
  * @class The Class ride-hailing/BidParams represent the parameters of ride-hailing bid.
  */
 export default class BidParams extends BaseBidParams {
-    private static _protocol;
-    private static _type;
+    static _protocol: string;
+    static _messageType: string;
     /**
      * @property The provider's vehicle current location.
      */
@@ -60,8 +60,6 @@ export default class BidParams extends BaseBidParams {
      * @property The driver name.
      */
     driverName: string;
-    static getMessageType(): string;
-    static getMessageProtocol(): string;
     constructor(values?: Partial<IBidParams>);
     serialize(): {
         ttl: number;
@@ -70,19 +68,6 @@ export default class BidParams extends BaseBidParams {
     };
     deserialize(json: any): void;
     equals(other: BidParams): boolean;
-    getProtocolTypes(): {
-        need_filter: typeof import("./NeedFilterParams").default;
-        need: typeof import("./NeedParams").default;
-        bid: typeof BidParams;
-        mission: typeof import("./MissionParams").default;
-        message: typeof import("./MessageParams").default;
-        vehicle_location_message: typeof import("./VehicleLocationMessageParams").default;
-        needFilters: string[];
-        needs: string[];
-        bids: string[];
-        missions: string[];
-        messages: string[];
-    };
 }
 export {};
 //# sourceMappingURL=BidParams.d.ts.map

@@ -9,15 +9,7 @@ export default abstract class BasicParams {
      */
     public ttl?: number; // TTL in seconds
 
-    public static getMessageType(): string {
-        throw new Error('Must be implemented by derived class');
-    }
-
-    public static getMessageProtocol(): string {
-        throw new Error('Must be implemented by derived class');
-    }
-
-    public constructor(private _protocol: string, private _type: string, values?: Partial<IBasicParams>) {
+    public constructor(private _protocol: string, private _messageType: string, values?: Partial<IBasicParams>) {
         if (!!values) {
             this.ttl = values.ttl;
         }
@@ -27,11 +19,17 @@ export default abstract class BasicParams {
         return {
             ttl: this.ttl,
             protocol: this._protocol,
-            type: this._type,
+            type: this._messageType,
         };
     }
 
-    public abstract getProtocolTypes(): any;
+    public get protocol(): string {
+        return this._protocol;
+    }
+
+    public get messageType(): string {
+        return this._messageType;
+    }
 
     public deserialize(json: any): void {
         this.ttl = json.ttl;

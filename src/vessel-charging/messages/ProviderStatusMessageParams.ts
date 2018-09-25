@@ -3,15 +3,11 @@ import BaseMessageParams from '../MessageParams';
  * @class The Class boat-charging/MessageParams represent the parameters of boat-charging provider status message.
  */
 export default class MessageParams extends BaseMessageParams {
-    private static _type = 'provider_status_message';
+    public static _messageType = 'provider_status_message';
     public finishEta: number;
 
-    public static getMessageType(): string {
-        return MessageParams._type;
-    }
-
     constructor(values?: Partial<MessageParams>) {
-        super(MessageParams._type, values);
+        super(MessageParams._messageType, values);
         if (!!values) {
             if (!values.finishEta) {
                 throw new Error('finishEta is a required field');

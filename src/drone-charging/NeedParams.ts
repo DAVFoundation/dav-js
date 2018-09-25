@@ -1,5 +1,4 @@
 import BaseNeedParams from '../NeedParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class drone-charging/NeedParams represent the parameters of drone-charging need.
@@ -24,10 +23,6 @@ export default class NeedParams extends BaseNeedParams {
     public serialize() {
         const formattedParams = super.serialize();
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

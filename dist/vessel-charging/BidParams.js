@@ -1,13 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const BidParams_1 = require("../BidParams");
-const ProtocolTypes_1 = require("./ProtocolTypes");
 /**
  * @class The Class boat-charging/BidParams represent the parameters of boat-charging bid.
  */
 class BidParams extends BidParams_1.default {
     constructor(values) {
-        super(BidParams._protocol, BidParams._type, values);
+        super(BidParams._protocol, BidParams._messageType, values);
         if (!!values) {
             if (!values.availableFrom) {
                 throw new Error('availableFrom is a required field');
@@ -24,7 +23,7 @@ class BidParams extends BidParams_1.default {
         }
     }
     static getMessageType() {
-        return BidParams._type;
+        return BidParams._messageType;
     }
     static getMessageProtocol() {
         return BidParams._protocol;
@@ -59,12 +58,9 @@ class BidParams extends BidParams_1.default {
     equals(other) {
         return super.equals(other);
     }
-    getProtocolTypes() {
-        return ProtocolTypes_1.default;
-    }
 }
 BidParams._protocol = 'boat_charging';
-BidParams._type = 'bid';
+BidParams._messageType = 'bid';
 exports.default = BidParams;
 
 //# sourceMappingURL=BidParams.js.map

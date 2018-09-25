@@ -41,8 +41,20 @@ export default class Contracts {
     private static sendSignedTransaction(web3: Web3, rawTransaction: string): Promise<TransactionReceipt> {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
-            transaction.once('receipt', receipt => resolve(receipt));
-            transaction.on('error', err => reject(err));
+            transaction.once('receipt', receipt => {
+                // tslint:disable-next-line:no-console
+                console.log(`Transaction succeeded: ${receipt}`);
+                resolve(receipt);
+            });
+            transaction.once('transactionHash', hash => {
+                // tslint:disable-next-line:no-console
+                console.log(`Transaction sent: ${hash}`);
+            });
+            transaction.on('error', err => {
+                // tslint:disable-next-line:no-console
+                console.log(`Transaction failed: ${err}`);
+                reject(err);
+            });
         });
     }
 

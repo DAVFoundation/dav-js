@@ -1,27 +1,18 @@
 import BasicParams from './BasicParams';
-import IBasicParams from './IBasicParams';
 
 export interface ICommitmentRequestParams extends BasicParams {
     neederId: string;
 }
 
 export default class CommitmentRequestParams extends BasicParams {
-
-    public static _protocol = 'general';
-    public static _type = 'commitment-request';
+    public static _protocol = '';
+    public static _messageType = 'commitment_request';
 
     public neederId: string;
 
-    public static getMessageType(): string {
-        return CommitmentRequestParams._type;
-    }
-
-    public static getMessageProtocol(): string {
-        return CommitmentRequestParams._protocol;
-    }
-
     constructor(values?: Partial<ICommitmentRequestParams>) {
-        super(CommitmentRequestParams._protocol, CommitmentRequestParams._type, values);
+        super(CommitmentRequestParams._protocol, CommitmentRequestParams._messageType, values);
+
         if (!!values) {
             this.neederId = values.neederId;
         }
@@ -33,13 +24,6 @@ export default class CommitmentRequestParams extends BasicParams {
             neederId: this.neederId,
         });
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        const typeMap: any = {};
-        typeMap[CommitmentRequestParams._type] = CommitmentRequestParams;
-        typeMap.messages = [CommitmentRequestParams._type];
-        return typeMap;
     }
 
     public deserialize(json: any): void {

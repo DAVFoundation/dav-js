@@ -1,7 +1,6 @@
 import BaseNeedParams from '../NeedParams';
 import VehicleTypes from './VehicleTypes';
 import { ILocation } from '../common-types';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class drone-delivery/NeedParams represent the parameters of drone-delivery need.
@@ -60,10 +59,6 @@ export default class NeedParams extends BaseNeedParams {
             maxAltitude: this.maxAltitude,
         });
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

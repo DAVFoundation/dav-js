@@ -2,7 +2,6 @@ import BaseBidParams from '../BidParams';
 import { ID, DavID, ILocation } from '../common-types';
 import IBaseBidParams from '../IBidParams';
 import { EnergySources, Amenities } from './enums';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @interface IBidParams The interface boat-charging/IBidParams represent a valid argument of boat-charging/BidParams constructor.
@@ -82,8 +81,8 @@ interface IBidParams extends IBaseBidParams {
  */
 export default class BidParams extends BaseBidParams {
 
-    private static _protocol = 'boat_charging';
-    private static _type = 'bid';
+    public static _protocol = 'boat_charging';
+    public static _messageType = 'bid';
     public locationName: string;
     public locationNameLang: string;
     public locationCity: string;
@@ -102,7 +101,7 @@ export default class BidParams extends BaseBidParams {
     public model: string;
 
     public static getMessageType(): string {
-        return BidParams._type;
+        return BidParams._messageType;
     }
 
     public static getMessageProtocol(): string {
@@ -110,7 +109,7 @@ export default class BidParams extends BaseBidParams {
     }
 
     constructor(values?: Partial<IBidParams>) {
-        super(BidParams._protocol, BidParams._type, values);
+        super(BidParams._protocol, BidParams._messageType, values);
         if (!!values) {
             if (!values.availableFrom) {
                 throw new Error('availableFrom is a required field');
@@ -158,9 +157,5 @@ export default class BidParams extends BaseBidParams {
 
     public equals(other: BidParams): boolean {
         return super.equals(other);
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 }
