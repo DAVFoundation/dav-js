@@ -113,7 +113,7 @@ class Bid {
      */
     async missions() {
         const kafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
-        const missionParamsStream = kafkaMessageStream.filterType(KafkaMessageFactory_1.default.instance.getMessageTypes(this._params.protocol, KafkaMessageFactory_1.MessageCategories.Message));
+        const missionParamsStream = kafkaMessageStream.filterType(KafkaMessageFactory_1.default.instance.getMessageTypes(this._params.protocol, KafkaMessageFactory_1.MessageCategories.Mission));
         const missionStream = missionParamsStream
             .map(async (params) => {
             this._missionId = Kafka_1.default.generateTopicId();
