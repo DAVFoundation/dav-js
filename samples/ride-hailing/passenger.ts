@@ -1,19 +1,12 @@
 // tslint:disable:no-console
 
-import SDKFactory from '../../src/SDKFactory';
-import NeedParams from '../../src/ride-hailing/NeedParams';
-import BidParams from '../../src/ride-hailing/BidParams';
-import MessageParams from '../../src/ride-hailing/MessageParams';
-import MissionParams from '../../src/ride-hailing/MissionParams';
-import VehicleLocationMessageParams from '../../src/ride-hailing/VehicleLocationMessageParams';
-import Mission from '../../src/Mission';
-import Bid from '../../src/Bid';
-import IConfig from '../../src/IConfig';
-import { RideHailingMissionStatus } from '../../src/common-enums';
-import Message from '../../src/Message';
-import Need from '../../src/Need';
+// tslint:disable:no-console
+import { SDKFactory, Mission, IConfig, Message, Bid } from '../../src';
+import {
+  NeedFilterParams, NeedParams, BidParams, MessageParams,
+  VehicleLocationMessageParams, MissionParams, MissionStatus,
+} from '../../src/ride-hailing';
 import config from './config';
-import { Observable } from 'rxjs';
 
 export default async function runConsumer(configuration?: IConfig) {
   return new Promise(async (resolve, reject) => {
@@ -58,16 +51,16 @@ export default async function runConsumer(configuration?: IConfig) {
         ]);
         const messagesStream = await mission.messages(['message']);
         messagesStream.subscribe(
-          (message: Message<MessageParams>) => {
+          async (message: Message<MessageParams>) => {
             console.log(message.params.missionStatus);
             if (
               message.params.missionStatus ===
-              RideHailingMissionStatus.VehicleAtPickupLocation
+              MissionStatus.VehicleAtPickupLocation
             ) {
               console.log('vehicle at location message');
-              message.respond(
+              await message.respond(
                 new MessageParams({
-                  missionStatus: RideHailingMissionStatus.PassengerIsComing,
+                  missionStatus: MissionStatus.PassengerIsComing,
                 }),
               );
               resolve();
@@ -82,7 +75,7 @@ export default async function runConsumer(configuration?: IConfig) {
           (message: Message<VehicleLocationMessageParams>) => {
             console.log(
               `status: ${
-                message.params.missionStatus
+              message.params.missionStatus
               }, location: ${JSON.stringify(message.params.vehicleLocation)}`,
             );
           },

@@ -4,25 +4,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @class The abstract Class BasicParams represent common parameters to all the SDK's Params classes.
  */
 class BasicParams {
-    constructor(_protocol, _type, values) {
+    constructor(_protocol, _messageType, values) {
         this._protocol = _protocol;
-        this._type = _type;
+        this._messageType = _messageType;
         if (!!values) {
             this.ttl = values.ttl;
         }
-    }
-    static getMessageType() {
-        throw new Error('Must be implemented by derived class');
-    }
-    static getMessageProtocol() {
-        throw new Error('Must be implemented by derived class');
     }
     serialize() {
         return {
             ttl: this.ttl,
             protocol: this._protocol,
-            type: this._type,
+            type: this._messageType,
         };
+    }
+    get protocol() {
+        return this._protocol;
+    }
+    get messageType() {
+        return this._messageType;
     }
     deserialize(json) {
         this.ttl = json.ttl;

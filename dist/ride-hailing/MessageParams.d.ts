@@ -1,5 +1,11 @@
 import BaseMessageParams, { IMessageParams as IBaseMessageParams } from '../MessageParams';
-import { RideHailingMissionStatus } from '../common-enums';
+export declare enum MissionStatus {
+    OnTheWay = "on_the_way",
+    VehicleAtPickupLocation = "vehicle_at_pickup_location",
+    PassengerIsComing = "passenger_is_coming",
+    RidingHasStarted = "riding_has_started",
+    RidingHasFinished = "riding_has_finished"
+}
 /**
  * @interface IMessageParams extends The base interface IMessageParams for ride hailing protocol for all messages except OnTheWay message.
  */
@@ -7,37 +13,20 @@ interface IMessageParams extends IBaseMessageParams {
     /**
      * @property Last mission status.
      */
-    missionStatus: RideHailingMissionStatus;
+    missionStatus: MissionStatus;
 }
 /**
  * @class The Class ride-hailing/MessageParams represent the parameters of ride-hailing message for all messages except OnTheWay message.
  */
 export default class MessageParams extends BaseMessageParams {
-    private static _protocol;
-    private static _type;
-    missionStatus: RideHailingMissionStatus;
-    static getMessageType(): string;
-    static getMessageProtocol(): string;
+    static _protocol: string;
+    static _messageType: string;
+    missionStatus: MissionStatus;
     constructor(values?: Partial<IMessageParams>);
     serialize(): {
         ttl: number;
         protocol: string;
         type: string;
-    };
-    getProtocolTypes(): {
-        need_filter: typeof import("./NeedFilterParams").default;
-        need: typeof import("./NeedParams").default;
-        bid: typeof import("./BidParams").default;
-        mission: typeof import("./MissionParams").default;
-        message: typeof MessageParams;
-        vehicle_location_message: typeof import("./VehicleLocationMessageParams").default; /**
-         * @class The Class ride-hailing/MessageParams represent the parameters of ride-hailing message for all messages except OnTheWay message.
-         */
-        needFilters: string[];
-        needs: string[];
-        bids: string[];
-        missions: string[];
-        messages: string[];
     };
     deserialize(json: any): void;
 }

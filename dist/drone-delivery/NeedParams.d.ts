@@ -31,21 +31,11 @@ export default class NeedParams extends BaseNeedParams {
     static getMessageProtocol(): string;
     constructor(values?: Partial<NeedParams>);
     serialize(): {
-        ttl: number;
+        ttl: number; /**
+         * @property The delivery drop off location.
+         */
         protocol: string;
         type: string;
-    };
-    getProtocolTypes(): {
-        need_filter: typeof import("./NeedFilterParams").default;
-        need: typeof NeedParams;
-        bid: typeof import("./BidParams").default;
-        mission: typeof import("./MissionParams").default;
-        message: typeof import("./MessageParams").default;
-        needFilters: string[];
-        needs: string[];
-        bids: string[];
-        missions: string[];
-        messages: string[];
     };
     deserialize(json: any): void;
 }

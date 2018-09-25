@@ -2,7 +2,6 @@
 
 import SDKFactory from '../../src/SDKFactory';
 import Config from '../../src/Config';
-import NeedParams from '../../src/vessel-charging/NeedParams';
 import BidParams from '../../src/vessel-charging/BidParams';
 import MissionParams from '../../src/vessel-charging/MissionParams';
 import StatusRequestMessageParams from '../../src/vessel-charging/messages/StatusRequestMessageParams';
@@ -12,6 +11,7 @@ import Identity from '../../src/Identity';
 import { EnergySources, Amenities } from '../../src/vessel-charging/enums';
 import Mission from '../../src/Mission';
 import Bid from '../../src/Bid';
+import {enums, NeedParams, NeedFilterParams} from '../../src/vessel-charging';
 
 const printLine = () =>
   console.log(
@@ -19,7 +19,7 @@ const printLine = () =>
   );
 
 const sdkConfiguration = {
-  apiSeedUrls: ['http://localhost'],
+  apiSeedUrls: ['http://localhost:8080'],
   kafkaSeedUrls: ['localhost:9092'],
 };
 
@@ -51,7 +51,7 @@ export default class Consumer {
       printLine();
       const mission = await this.createMission(bid);
       this.simulateMission(mission);
-    });
+    }, error => console.log(error));
   }
 
   public async createNeed() {
@@ -127,8 +127,8 @@ export default class Consumer {
         mission.sendMessage(statusRequestMessageParams);
         console.log('Status request message sent!');
         printLine();
-      });
-    });
+      }, error => console.log(error));
+    }, error => console.log(error));
 
     const providerStatusMessages = await mission.messages([
       'provider_status_message',
@@ -136,7 +136,7 @@ export default class Consumer {
     providerStatusMessages.subscribe(message => {
       console.log('Provider status message received:', message.params);
       printLine();
-    });
+    }, error => console.log(error));
 
     const chargingCompleteMessages = await mission.messages([
       'charging_complete_message',
@@ -153,6 +153,17 @@ export default class Consumer {
         finalizeMissionTransactionReceipt,
       );
       printLine();
-    });
+    }, error => console.log(error));
   }
 }
+
+async function main() {
+  const consumer = new Consumer();
+  await consumer.init(
+    '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6',
+    'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6',
+  );
+  await consumer.start();
+}
+
+main().then(() => console.log('Done'), err => console.log(err));

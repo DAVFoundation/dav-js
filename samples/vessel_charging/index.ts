@@ -13,6 +13,7 @@ async function main() {
     'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6',
   );
   await provider.start();
+  await new Promise(res => setTimeout(res, 1000));
   await consumer.start();
 }
 

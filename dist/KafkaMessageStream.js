@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_types_1 = require("./common-types");
+const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
 class KafkaMessageStream {
     constructor(kafkaStream) {
         this.kafkaStream = kafkaStream;
@@ -10,11 +11,11 @@ class KafkaMessageStream {
         objectInstance.deserialize(JSON.parse(json));
         return objectInstance;
     }
-    filterType(protocolTypesMap, typesFilter) {
+    filterType(typesFilter) {
         return common_types_1.Observable.fromObservable(this.kafkaStream
             .filter(message => typesFilter.includes(message.type))
             .map(message => {
-            const protocol = protocolTypesMap[message.type];
+            const protocol = KafkaMessageFactory_1.default.instance.getClassType(message.protocol, message.type);
             return KafkaMessageStream.fromJson(protocol, message.contents);
         }), this.kafkaStream.topic);
     }

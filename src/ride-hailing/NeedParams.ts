@@ -1,14 +1,13 @@
 import BaseNeedParams from '../NeedParams';
 import { ILocation } from '../common-types';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class ride-hailing/NeedParams represent the parameters of ride-hailing need.
  */
 export default class NeedParams extends BaseNeedParams {
 
-    private static _protocol = 'ride_hailing';
-    private static _type = 'need';
+    public static _protocol = 'ride_hailing';
+    public static _messageType = 'need';
 
     /**
      * @property The passenger's pickup location (required).
@@ -19,16 +18,8 @@ export default class NeedParams extends BaseNeedParams {
      */
     public destinationLocation: ILocation;
 
-    public static getMessageType(): string {
-        return NeedParams._type;
-    }
-
-    public static getMessageProtocol(): string {
-        return NeedParams._protocol;
-    }
-
     constructor(values?: Partial<NeedParams>) {
-        super(NeedParams._protocol, NeedParams._type, values);
+        super(NeedParams._protocol, NeedParams._messageType, values);
         if (!!values) {
             if (!values.pickupLocation || !values.destinationLocation) {
                 throw new Error('Need lack of essential details');
@@ -45,10 +36,6 @@ export default class NeedParams extends BaseNeedParams {
             destinationLocation: this.destinationLocation,
         });
         return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
     }
 
     public deserialize(json: any): void {

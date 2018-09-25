@@ -1,5 +1,6 @@
 import { Observable } from './common-types';
 import BasicParams from './BasicParams';
+import KafkaMessageFactory from './KafkaMessageFactory';
 
 export interface IKafkaMessage {
     protocol: string;
@@ -16,11 +17,11 @@ export default class KafkaMessageStream {
 
     constructor(private kafkaStream: Observable<IKafkaMessage>) { }
 
-    public filterType<T extends BasicParams>(protocolTypesMap: any, typesFilter: string[]): Observable<T> {
+    public filterType<T extends BasicParams>(typesFilter: string[]): Observable<T> {
         return Observable.fromObservable<T>(this.kafkaStream
             .filter(message => typesFilter.includes(message.type))
             .map(message => {
-                const protocol = protocolTypesMap[message.type];
+                const protocol = KafkaMessageFactory.instance.getClassType<T>(message.protocol, message.type);
                 return KafkaMessageStream.fromJson(protocol, message.contents);
             }), this.kafkaStream.topic);
     }

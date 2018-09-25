@@ -6,16 +6,13 @@ const MessageParams_1 = require("../MessageParams");
  */
 class MessageParams extends MessageParams_1.default {
     constructor(values) {
-        super(MessageParams._type, values);
+        super(MessageParams._messageType, values);
         if (!!values) {
             if (!values.finishEta) {
                 throw new Error('finishEta is a required field');
             }
             this.finishEta = values.finishEta;
         }
-    }
-    static getMessageType() {
-        return MessageParams._type;
     }
     serialize() {
         const formattedParams = super.serialize();
@@ -29,7 +26,7 @@ class MessageParams extends MessageParams_1.default {
         this.finishEta = json.finishEta;
     }
 }
-MessageParams._type = 'provider_status_message';
+MessageParams._messageType = 'provider_status_message';
 exports.default = MessageParams;
 
 //# sourceMappingURL=ProviderStatusMessageParams.js.map

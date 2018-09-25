@@ -4,17 +4,14 @@ export interface ICommitmentRequestParams extends BasicParams {
 }
 export default class CommitmentRequestParams extends BasicParams {
     static _protocol: string;
-    static _type: string;
+    static _messageType: string;
     neederId: string;
-    static getMessageType(): string;
-    static getMessageProtocol(): string;
     constructor(values?: Partial<ICommitmentRequestParams>);
     serialize(): {
         ttl: number;
         protocol: string;
         type: string;
     };
-    getProtocolTypes(): any;
     deserialize(json: any): void;
 }
 //# sourceMappingURL=CommitmentRequestParams.d.ts.map

@@ -1,24 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const MessageParams_1 = require("../MessageParams");
-const common_enums_1 = require("../common-enums");
-const ProtocolTypes_1 = require("./ProtocolTypes");
+const MessageParams_2 = require("./MessageParams");
 /**
  * @class The Class ride-hailing/MessageParams represent the parameters of ride-hailing message for OnTheWay message only.
  */
 class MessageParams extends MessageParams_1.default {
     constructor(values) {
-        super(MessageParams._protocol, MessageParams._type, values);
+        super(MessageParams._protocol, MessageParams._messageType, values);
         if (!!values) {
             this.vehicleLocation = values.vehicleLocation;
-            this.missionStatus = common_enums_1.RideHailingMissionStatus.OnTheWay;
+            this.missionStatus = MessageParams_2.MissionStatus.OnTheWay;
         }
-    }
-    static getMessageType() {
-        return MessageParams._type;
-    }
-    static getMessageProtocol() {
-        return MessageParams._protocol;
     }
     serialize() {
         const formattedParams = super.serialize();
@@ -28,9 +21,6 @@ class MessageParams extends MessageParams_1.default {
         });
         return formattedParams;
     }
-    getProtocolTypes() {
-        return ProtocolTypes_1.default;
-    }
     deserialize(json) {
         super.deserialize(json);
         this.missionStatus = json.missionStatus;
@@ -38,7 +28,7 @@ class MessageParams extends MessageParams_1.default {
     }
 }
 MessageParams._protocol = 'ride_hailing';
-MessageParams._type = 'vehicle_location_message';
+MessageParams._messageType = 'vehicle_location_message';
 exports.default = MessageParams;
 
 //# sourceMappingURL=VehicleLocationMessageParams.js.map

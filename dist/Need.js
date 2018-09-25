@@ -4,6 +4,7 @@ const common_types_1 = require("./common-types");
 const Bid_1 = require("./Bid");
 const Kafka_1 = require("./Kafka");
 const Message_1 = require("./Message");
+const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
 /**
  * @class The Need class represent a service request.
  */
@@ -44,8 +45,7 @@ class Need {
      */
     async bids() {
         const kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config); // this._selfId - Channel#3
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const bidParamsStream = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.bids);
+        const bidParamsStream = kafkaMessageStream.filterType(KafkaMessageFactory_1.default.instance.getMessageTypes(this._params.protocol, KafkaMessageFactory_1.MessageCategories.Bid));
         const bidStream = bidParamsStream.map((bidParams) => {
             return new Bid_1.default(this._selfId, bidParams, this._config, kafkaMessageStream);
         });
@@ -69,8 +69,7 @@ class Need {
      */
     async messages(filterType) {
         const kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config);
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const messageParamsStream = kafkaMessageStream.filterType(protocolTypesMap, filterType || protocolTypesMap.messages);
+        const messageParamsStream = kafkaMessageStream.filterType(filterType || KafkaMessageFactory_1.default.instance.getMessageTypes(this._params.protocol, KafkaMessageFactory_1.MessageCategories.Message));
         const messageStream = messageParamsStream.map((params) => new Message_1.default(this._selfId, params, this._config));
         return common_types_1.Observable.fromObservable(messageStream, messageParamsStream.topic);
     }

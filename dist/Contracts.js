@@ -26,8 +26,20 @@ class Contracts {
     static sendSignedTransaction(web3, rawTransaction) {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
-            transaction.once('receipt', receipt => resolve(receipt));
-            transaction.on('error', err => reject(err));
+            transaction.once('receipt', receipt => {
+                // tslint:disable-next-line:no-console
+                console.log(`Transaction succeeded: ${JSON.stringify(receipt)}`);
+                resolve(receipt);
+            });
+            transaction.once('transactionHash', hash => {
+                // tslint:disable-next-line:no-console
+                console.log(`Transaction sent: ${hash}`);
+            });
+            transaction.on('error', err => {
+                // tslint:disable-next-line:no-console
+                console.log(`Transaction failed: ${JSON.stringify(err)}`);
+                reject(err);
+            });
         });
     }
     static async checkContractPastEvents(contract /* , filterParam: string */) {

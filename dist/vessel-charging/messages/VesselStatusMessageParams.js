@@ -6,16 +6,13 @@ const MessageParams_1 = require("../MessageParams");
  */
 class MessageParams extends MessageParams_1.default {
     constructor(values) {
-        super(MessageParams._type, values);
+        super(MessageParams._messageType, values);
         if (!!values) {
             if (!values.location) {
                 throw new Error('location is a required field');
             }
             this.location = values.location;
         }
-    }
-    static getMessageType() {
-        return MessageParams._type;
     }
     serialize() {
         const formattedParams = super.serialize();
@@ -29,7 +26,7 @@ class MessageParams extends MessageParams_1.default {
         this.location = json.location;
     }
 }
-MessageParams._type = 'vessel_status_message';
+MessageParams._messageType = 'vessel_status_message';
 exports.default = MessageParams;
 
 //# sourceMappingURL=VesselStatusMessageParams.js.map

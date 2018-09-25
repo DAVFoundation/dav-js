@@ -13,6 +13,7 @@ import CommitmentConfirmationParams from './CommitmentConfirmationParams';
 import CommitmentRequest from './CommitmentRequest';
 import CommitmentConfirmation from './CommitmentConfirmation';
 import CommitmentRequestParams from './CommitmentRequestParams';
+import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
 /**
  * @class Bid class represent a bid for service request.
  */
@@ -48,8 +49,7 @@ export default class Bid<T extends BidParams> {
         const bidderId = this._params.id; // Channel#6
         const commitmentRequestParams = new CommitmentRequestParams({ neederId: this._selfId });
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#3
-        const protocolTypesMap = new CommitmentConfirmationParams({}).getProtocolTypes();
-        const commitmentConfirmationParamsStream = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.messages);
+        const commitmentConfirmationParamsStream = kafkaMessageStream.filterType([CommitmentConfirmationParams._messageType]);
         const commitmentConfirmation = commitmentConfirmationParamsStream.filter(
             (commitmentConfirmationParams: CommitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
             .map((commitmentParams: CommitmentConfirmationParams) => {
@@ -105,13 +105,13 @@ export default class Bid<T extends BidParams> {
     }
     /**
      * @method messages Used to subscribe for messages for the current bid.
-     * @param filterType (optional) array of the expected message params object type.
+     * @param filterTypes (optional) array of the expected message params object type.
      * @returns Observable for messages subscription.
      */
-    public async messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<U>>> {
+    public async messages<U extends MessageParams>(filterTypes?: string[]): Promise<Observable<Message<U>>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6 or Channel#3
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(protocolTypesMap, filterType || protocolTypesMap.messages);
+        const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(filterTypes ||
+            KafkaMessageFactory.instance.getMessageTypes(this._params.protocol, MessageCategories.Message));
         const messageStream = messageParamsStream.map((params: U) =>
             new Message<U>(this._selfId, params, this._config));
         return Observable.fromObservable(messageStream, messageParamsStream.topic);
@@ -122,8 +122,8 @@ export default class Bid<T extends BidParams> {
      */
     public async missions<V extends MissionParams>(): Promise<Observable<Mission<V>>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
-        const protocolTypesMap = this._params.getProtocolTypes();
-        const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.missions);
+        const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(
+            KafkaMessageFactory.instance.getMessageTypes(this._params.protocol, MessageCategories.Mission));
         const missionStream = missionParamsStream
             .map(async (params: V) => {
                 this._missionId = Kafka.generateTopicId();
@@ -145,8 +145,8 @@ export default class Bid<T extends BidParams> {
      */
     public async commitmentRequests(): Promise<Observable<CommitmentRequest>> {
         const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
-        const typesMap = new CommitmentRequestParams({}).getProtocolTypes();
-        const commitmentRequestParamsStream: Observable<CommitmentRequestParams> = kafkaMessageStream.filterType(typesMap, typesMap.messages);
+        const commitmentRequestParamsStream: Observable<CommitmentRequestParams> =
+            kafkaMessageStream.filterType([CommitmentRequestParams._messageType]);
         const commitmentRequestStream = commitmentRequestParamsStream.map(
             commitmentRequestParams => new CommitmentRequest(this._selfId, commitmentRequestParams, this._config));
         return Observable.fromObservable(commitmentRequestStream, this._selfId);

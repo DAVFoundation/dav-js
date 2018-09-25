@@ -4,15 +4,11 @@ import { ILocation } from '../../common-types';
  * @class The Class boat-charging/VesselStatusMessageParams represent the parameters of boat-charging consumer status message.
  */
 export default class MessageParams extends BaseMessageParams {
-    private static _type = 'vessel_status_message';
+    public static _messageType = 'vessel_status_message';
     public location: ILocation;
 
-    public static getMessageType(): string {
-        return MessageParams._type;
-    }
-
     constructor(values?: Partial<MessageParams>) {
-        super(MessageParams._type, values);
+        super(MessageParams._messageType, values);
         if (!!values) {
             if (!values.location) {
                 throw new Error('location is a required field');
