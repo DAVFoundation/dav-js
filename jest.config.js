@@ -1,6 +1,7 @@
 module.exports = {
   'verbose': true,
-  'roots':['<rootDir>/src'],
+  'testEnvironment': 'node',
+  'roots': ['<rootDir>/src'],
   'transform': {
     '\\.tsx?$': 'ts-jest'
   },
@@ -13,5 +14,4 @@ module.exports = {
     'json',
     'node'
   ],
-  'testURL': 'http://localhost/'
 };
