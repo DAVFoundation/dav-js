@@ -22,12 +22,16 @@ describe('KafkaMessageStream', () => {
         expect.assertions(1);
         // tslint:disable-next-line:max-classes-per-file
         class MessageMock {
-            deserialize() { return ''; }
+            deserialize() {
+                return '';
+            }
         }
         KafkaMessageFactory_1.default.instance.registerMessageClasses([
             {
-                protocol: 'drone_delivery', messageType: 'need',
-                messageCategory: KafkaMessageFactory_1.MessageCategories.Need, classType: MessageMock,
+                protocol: 'drone_delivery',
+                messageType: 'need',
+                messageCategory: KafkaMessageFactory_1.MessageCategories.Need,
+                classType: MessageMock,
             },
         ]);
         const kafkaMessages = [
@@ -66,16 +70,22 @@ describe('KafkaMessageStream', () => {
         expect.assertions(1);
         // tslint:disable-next-line:max-classes-per-file
         class MessageMock {
-            deserialize() { return ''; }
+            deserialize() {
+                return '';
+            }
         }
         KafkaMessageFactory_1.default.instance.registerMessageClasses([
             {
-                protocol: 'drone_delivery', messageType: 'need',
-                messageCategory: KafkaMessageFactory_1.MessageCategories.Need, classType: MessageMock,
+                protocol: 'drone_delivery',
+                messageType: 'need',
+                messageCategory: KafkaMessageFactory_1.MessageCategories.Need,
+                classType: MessageMock,
             },
             {
-                protocol: 'drone_delivery', messageType: 'not_need',
-                messageCategory: KafkaMessageFactory_1.MessageCategories.Need, classType: MessageMock,
+                protocol: 'drone_delivery',
+                messageType: 'not_need',
+                messageCategory: KafkaMessageFactory_1.MessageCategories.Need,
+                classType: MessageMock,
             },
         ]);
         const kafkaMessages = [

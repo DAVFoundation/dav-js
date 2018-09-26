@@ -110,7 +110,11 @@ class Contracts {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress, value: fullPrice })),
+            gas: Contracts.toSafeGasLimit(await estimateGas({
+                from: davId,
+                to: contractAddress,
+                value: fullPrice,
+            })),
             value: fullPrice,
             gasPrice: await web3.eth.getGasPrice(),
         };
@@ -144,7 +148,9 @@ class Contracts {
             .map(eventsObservable => eventsObservable.mergeAll())
             .map(eventsArray => rxjs_1.Observable.from(eventsArray))
             .mergeAll()
-            .filter(event => event.blockNumber > lastBlock || (event.blockNumber === lastBlock && event.transactionIndex > lastTransactionIndex))
+            .filter(event => event.blockNumber > lastBlock ||
+            (event.blockNumber === lastBlock &&
+                event.transactionIndex > lastTransactionIndex))
             .do(event => {
             lastBlock = event.blockNumber;
             lastTransactionIndex = event.transactionIndex;

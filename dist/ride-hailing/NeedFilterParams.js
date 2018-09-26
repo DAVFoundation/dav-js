@@ -8,7 +8,10 @@ class NeedFilterParams extends NeedFilterParams_1.default {
     constructor(values) {
         super(NeedFilterParams._protocol, NeedFilterParams._messageType, values);
         if (!!values) {
-            if (!values.location || !values.location.lat || !values.location.long || !values.radius) {
+            if (!values.location ||
+                !values.location.lat ||
+                !values.location.long ||
+                !values.radius) {
                 throw new Error('NeedFilter lack of essential parameters');
             }
         }

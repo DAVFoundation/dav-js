@@ -31,9 +31,7 @@ class Kafka extends KafkaBase_1.default {
     }
     async getConsumer(topicId, config) {
         const client = await this.getKafkaClient(config);
-        const consumer = new kafka_node_1.Consumer(client, [
-            { topic: topicId },
-        ], {
+        const consumer = new kafka_node_1.Consumer(client, [{ topic: topicId }], {
             groupId: topicId,
             autoCommit: true,
         });

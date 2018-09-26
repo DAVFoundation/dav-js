@@ -16,11 +16,12 @@ class MissionParams extends BasicParams_1.default {
             this.neederDavId = values.neederDavId;
             let priceObject = values.price;
             if (priceObject) {
-                priceObject = values.price instanceof Array ? values.price : [values.price];
+                priceObject =
+                    values.price instanceof Array ? values.price : [values.price];
                 priceObject.map((price) => {
-                    return typeof price === 'string' ?
-                        new Price_1.default(price, common_enums_1.PriceType.flat) :
-                        new Price_1.default(price.value, price.type, price.description);
+                    return typeof price === 'string'
+                        ? new Price_1.default(price, common_enums_1.PriceType.flat)
+                        : new Price_1.default(price.value, price.type, price.description);
                 });
                 this.price = priceObject;
             }
