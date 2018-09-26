@@ -25,11 +25,15 @@ export {
 
 KafkaMessageFactory.instance.registerMessageClasses([
   {
-    protocol: CommitmentRequestParams._protocol, messageType: CommitmentRequestParams._messageType,
-    messageCategory: MessageCategories.Message, classType: CommitmentRequestParams,
+    protocol: CommitmentRequestParams._protocol,
+    messageType: CommitmentRequestParams._messageType,
+    messageCategory: MessageCategories.Message,
+    classType: CommitmentRequestParams,
   },
   {
-    protocol: CommitmentConfirmationParams._protocol, messageType: CommitmentConfirmationParams._messageType,
-    messageCategory: MessageCategories.Message, classType: CommitmentConfirmationParams,
+    protocol: CommitmentConfirmationParams._protocol,
+    messageType: CommitmentConfirmationParams._messageType,
+    messageCategory: MessageCategories.Message,
+    classType: CommitmentConfirmationParams,
   },
 ]);

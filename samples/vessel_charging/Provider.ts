@@ -49,17 +49,23 @@ export default class Provider {
 
   public async start() {
     const needs = await this.getNeeds();
-    needs.subscribe(async (need: Need<NeedParams>) => {
-      console.log('Need received: ', need);
-      printLine();
-      const bid = await this.createBid(need);
-      const missions = await bid.missions();
-      missions.subscribe(async mission => {
-        console.log('Mission received: ', mission);
+    needs.subscribe(
+      async (need: Need<NeedParams>) => {
+        console.log('Need received: ', need);
         printLine();
-        this.simulateMission(mission);
-      }, error => console.log(error));
-    }, error => console.log(error));
+        const bid = await this.createBid(need);
+        const missions = await bid.missions();
+        missions.subscribe(
+          async mission => {
+            console.log('Mission received: ', mission);
+            printLine();
+            this.simulateMission(mission);
+          },
+          error => console.log(error),
+        );
+      },
+      error => console.log(error),
+    );
   }
 
   public async getNeeds() {
@@ -114,47 +120,58 @@ export default class Provider {
     const vesselStatusMessages = await mission.messages([
       'vessel_status_message',
     ]);
-    vesselStatusMessages.subscribe(message => {
-      console.log('Vessel status message received:', message.params);
-      printLine();
-    }, error => console.log(error));
+    vesselStatusMessages.subscribe(
+      message => {
+        console.log('Vessel status message received:', message.params);
+        printLine();
+      },
+      error => console.log(error),
+    );
 
     const statusRequestMessages = await mission.messages([
       'status_request_message',
     ]);
-    statusRequestMessages.subscribe(message => {
-      console.log('Status request message received:', message.params);
-      printLine();
+    statusRequestMessages.subscribe(
+      message => {
+        console.log('Status request message received:', message.params);
+        printLine();
 
-      const providerStatusMessageParams = new ProviderStatusMessageParams({
-        finishEta: Date.now() + 5000,
-      });
-      mission.sendMessage(providerStatusMessageParams);
-      console.log('Provider status message sent!');
-      printLine();
-    }, error => console.log(error));
+        const providerStatusMessageParams = new ProviderStatusMessageParams({
+          finishEta: Date.now() + 5000,
+        });
+        mission.sendMessage(providerStatusMessageParams);
+        console.log('Provider status message sent!');
+        printLine();
+      },
+      error => console.log(error),
+    );
 
     const chargingArrivalMessages = await mission.messages([
       'charging_arrival_message',
     ]);
-    chargingArrivalMessages.subscribe(message => {
-      console.log('Charging arrival message received:', message.params);
-      printLine();
+    chargingArrivalMessages.subscribe(
+      message => {
+        console.log('Charging arrival message received:', message.params);
+        printLine();
 
-      const chargingStartedMessageParams = new ChargingStartedMessageParams({});
-      mission.sendMessage(chargingStartedMessageParams);
-      console.log('Charging started message sent!');
-      printLine();
-
-      setTimeout(() => {
-        const chargingCompleteMessageParams = new ChargingCompleteMessageParams(
+        const chargingStartedMessageParams = new ChargingStartedMessageParams(
           {},
         );
-        mission.sendMessage(chargingCompleteMessageParams);
-        console.log('Charging complete message sent!');
+        mission.sendMessage(chargingStartedMessageParams);
+        console.log('Charging started message sent!');
         printLine();
-      }, 5000);
-    }, error => console.log(error));
+
+        setTimeout(() => {
+          const chargingCompleteMessageParams = new ChargingCompleteMessageParams(
+            {},
+          );
+          mission.sendMessage(chargingCompleteMessageParams);
+          console.log('Charging complete message sent!');
+          printLine();
+        }, 5000);
+      },
+      error => console.log(error),
+    );
   }
 }
 

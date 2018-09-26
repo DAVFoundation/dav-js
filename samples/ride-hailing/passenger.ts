@@ -3,8 +3,13 @@
 // tslint:disable:no-console
 import { SDKFactory, Mission, IConfig, Message, Bid } from '../../src';
 import {
-  NeedFilterParams, NeedParams, BidParams, MessageParams,
-  VehicleLocationMessageParams, MissionParams, MissionStatus,
+  NeedFilterParams,
+  NeedParams,
+  BidParams,
+  MessageParams,
+  VehicleLocationMessageParams,
+  MissionParams,
+  MissionStatus,
 } from '../../src/ride-hailing';
 import config from './config';
 
@@ -75,7 +80,7 @@ export default async function runConsumer(configuration?: IConfig) {
           (message: Message<VehicleLocationMessageParams>) => {
             console.log(
               `status: ${
-              message.params.missionStatus
+                message.params.missionStatus
               }, location: ${JSON.stringify(message.params.vehicleLocation)}`,
             );
           },

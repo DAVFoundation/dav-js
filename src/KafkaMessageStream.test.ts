@@ -23,11 +23,17 @@ describe('KafkaMessageStream', () => {
     expect.assertions(1);
 
     // tslint:disable-next-line:max-classes-per-file
-    class MessageMock { public deserialize() { return ''; } }
+    class MessageMock {
+      public deserialize() {
+        return '';
+      }
+    }
     KafkaMessageFactory.instance.registerMessageClasses([
       {
-        protocol: 'drone_delivery', messageType: 'need',
-        messageCategory: MessageCategories.Need, classType: MessageMock,
+        protocol: 'drone_delivery',
+        messageType: 'need',
+        messageCategory: MessageCategories.Need,
+        classType: MessageMock,
       },
     ]);
 
@@ -83,15 +89,23 @@ describe('KafkaMessageStream', () => {
     expect.assertions(1);
 
     // tslint:disable-next-line:max-classes-per-file
-    class MessageMock { public deserialize() { return ''; } }
+    class MessageMock {
+      public deserialize() {
+        return '';
+      }
+    }
     KafkaMessageFactory.instance.registerMessageClasses([
       {
-        protocol: 'drone_delivery', messageType: 'need',
-        messageCategory: MessageCategories.Need, classType: MessageMock,
+        protocol: 'drone_delivery',
+        messageType: 'need',
+        messageCategory: MessageCategories.Need,
+        classType: MessageMock,
       },
       {
-        protocol: 'drone_delivery', messageType: 'not_need',
-        messageCategory: MessageCategories.Need, classType: MessageMock,
+        protocol: 'drone_delivery',
+        messageType: 'not_need',
+        messageCategory: MessageCategories.Need,
+        classType: MessageMock,
       },
     ]);
 
@@ -215,9 +229,7 @@ describe('KafkaMessageStream', () => {
     );
     const messageStream = new KafkaMessageStream(kafkaStream);
     const streamNeeds = messageStream.filterType(typesMap.needs);
-    const streamMissions = messageStream.filterType(
-      typesMap.missions,
-    );
+    const streamMissions = messageStream.filterType(typesMap.missions);
 
     const passedNeeds: any[] = [];
     const passedMissions: any[] = [];

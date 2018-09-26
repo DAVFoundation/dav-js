@@ -8,6 +8,6 @@ import KafkaMessageFactory from './KafkaMessageFactory';
  * @returns DavSDK instance with the specified configuration object.
  */
 export default function SDKFactory(config: IConfig): SDK {
-    const configuration = new Config(config);
-    return new SDK(configuration);
+  const configuration = new Config(config);
+  return new SDK(configuration);
 }
