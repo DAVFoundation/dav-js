@@ -17,16 +17,16 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
-      }
-    ]
+          loader: 'babel-loader',
+        },
+      },
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env':{
-        'BROWSER': true
-      }
+      'process.env': {
+        BROWSER: true,
+      },
     }),
-  ] 
+  ],
 };

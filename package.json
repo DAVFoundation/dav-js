@@ -18,6 +18,7 @@
   "main": "./dist",
   "types": "./dist",
   "scripts": {
+    "pre-publish": "gulp pre-publish",
     "build-browser-dev": "webpack --mode development --config webpack.browser.config.js",
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
     "create-dist": "gulp create-dist",
@@ -28,7 +29,6 @@
     "start-testnet": "dav-cli --start",
     "tsc": "gulp tsc",
     "tslint": "gulp tslint",
-    "pre-publish": "gulp pre-publish",
     "typedoc": "gulp typedoc"
   },
   "dependencies": {

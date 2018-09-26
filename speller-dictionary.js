@@ -23,5 +23,5 @@ module.exports = [
   'lon',
   'deserialize',
   'lang',
-  'dropoff'
+  'dropoff',
 ];
