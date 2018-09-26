@@ -2,7 +2,7 @@ import BaseMissionParams from '../MissionParams';
 import BaseIMissionParams from '../IMissionParams';
 import { ID } from '../common-types';
 /**
- * @interface IMissionParams The interface boat-charging/IMissionParams represent a valid argument of boat-charging/MissionParams constructor.
+ * @interface IMissionParams The interface vessel-charging/IMissionParams represent a valid argument of vessel-charging/MissionParams constructor.
  */
 interface IMissionParams extends BaseIMissionParams {
     /**
@@ -11,7 +11,7 @@ interface IMissionParams extends BaseIMissionParams {
     id: ID;
 }
 /**
- * @class The Class boat-charging/MissionParams represent the parameters of boat-charging mission.
+ * @class The Class vessel-charging/MissionParams represent the parameters of vessel-charging mission.
  */
 export default class MissionParams extends BaseMissionParams {
     static _protocol: string;

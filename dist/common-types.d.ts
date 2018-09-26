@@ -22,7 +22,7 @@ export declare type ContractsArtifacts = {
     [T in ContractTypes]: any;
 };
 /**
- * @type The Dimensions interface represents dimensions for service, (package dimensions, drone dimensions, boat dimensions, etc.).
+ * @type The Dimensions interface represents dimensions for service, (package dimensions, drone dimensions, vessel dimensions, etc.).
  */
 export interface IDimensions {
     length: number;

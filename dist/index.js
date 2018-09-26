@@ -17,6 +17,8 @@ exports.KafkaNode = KafkaNode_1.default;
 const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
 const CommitmentRequestParams_1 = require("./CommitmentRequestParams");
 const CommitmentConfirmationParams_1 = require("./CommitmentConfirmationParams");
+const retryPromise_1 = require("./retryPromise");
+exports.retryPromise = retryPromise_1.retryPromise;
 KafkaMessageFactory_1.default.instance.registerMessageClasses([
     {
         protocol: CommitmentRequestParams_1.default._protocol, messageType: CommitmentRequestParams_1.default._messageType,

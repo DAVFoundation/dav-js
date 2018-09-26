@@ -12,6 +12,6 @@
   },
   "include": [
     "src/**/*",
-    "samples/**/*", "../missioncontrol/src/provider/VesselChargingProvider.test.ts", "../missioncontrol/src/provider/VesselChargingProvider.ts",
+    "samples/**/*",
   ],
 }

@@ -8,7 +8,7 @@ describe('MissionParams class', () => {
         missionParams = new MissionParams_1.default({});
         serializedMissionParams = {
             ttl: undefined,
-            protocol: 'boat_charging',
+            protocol: 'vessel_charging',
             type: 'mission',
             id: undefined,
             neederDavId: undefined,

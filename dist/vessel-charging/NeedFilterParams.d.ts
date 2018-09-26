@@ -1,7 +1,7 @@
 import BaseNeedFilterParams from '../NeedFilterParams';
 import { IDimensions } from '../common-types';
 /**
- * @class The Class boat-charging/NeedFilterParams represent the parameters that used to filter boat-charging needs.
+ * @class The Class vessel-charging/NeedFilterParams represent the parameters that used to filter vessel-charging needs.
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
     static _protocol: string;

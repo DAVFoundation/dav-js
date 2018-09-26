@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const BidParams_1 = require("../BidParams");
 /**
- * @class The Class boat-charging/BidParams represent the parameters of boat-charging bid.
+ * @class The Class vessel-charging/BidParams represent the parameters of vessel-charging bid.
  */
 class BidParams extends BidParams_1.default {
     constructor(values) {
@@ -59,7 +59,7 @@ class BidParams extends BidParams_1.default {
         return super.equals(other);
     }
 }
-BidParams._protocol = 'boat_charging';
+BidParams._protocol = 'vessel_charging';
 BidParams._messageType = 'bid';
 exports.default = BidParams;
 

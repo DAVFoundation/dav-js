@@ -9,6 +9,7 @@ import KafkaNode from './KafkaNode';
 import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
 import CommitmentRequestParams from './CommitmentRequestParams';
 import CommitmentConfirmationParams from './CommitmentConfirmationParams';
+import { retryPromise } from './retryPromise';
 
 export {
   SDKFactory,
@@ -19,6 +20,7 @@ export {
   Message,
   Need,
   KafkaNode,
+  retryPromise,
 };
 
 KafkaMessageFactory.instance.registerMessageClasses([

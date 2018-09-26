@@ -24,7 +24,7 @@ describe('NeedParams class', () => {
     needParams.davId = 'davId';
     const serializedNeedParams = {
         ttl: undefined,
-        protocol: 'boat_charging',
+        protocol: 'vessel_charging',
         type: 'need',
         id: 'TOPIC_ID',
         location: { latitude: 32.050382, longitude: 34.766149 },
