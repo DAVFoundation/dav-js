@@ -4,7 +4,7 @@ import IBaseBidParams from '../IBidParams';
 import { EnergySources, Amenities } from './enums';
 
 /**
- * @interface IBidParams The interface boat-charging/IBidParams represent a valid argument of boat-charging/BidParams constructor.
+ * @interface IBidParams The interface vessel-charging/IBidParams represent a valid argument of vessel-charging/BidParams constructor.
  */
 
 interface IBidParams extends IBaseBidParams {
@@ -77,11 +77,11 @@ interface IBidParams extends IBaseBidParams {
 }
 
 /**
- * @class The Class boat-charging/BidParams represent the parameters of boat-charging bid.
+ * @class The Class vessel-charging/BidParams represent the parameters of vessel-charging bid.
  */
 export default class BidParams extends BaseBidParams {
 
-    public static _protocol = 'boat_charging';
+    public static _protocol = 'vessel_charging';
     public static _messageType = 'bid';
     public locationName: string;
     public locationNameLang: string;

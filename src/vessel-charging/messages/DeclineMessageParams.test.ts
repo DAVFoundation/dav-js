@@ -8,7 +8,7 @@ describe('DeclineMessageParams class', () => {
     declineMessageParams = new MessageParams({});
     serializedMessageParams = {
       ttl: undefined,
-      protocol: 'boat_charging',
+      protocol: 'vessel_charging',
       type: 'decline_message',
       senderId: undefined,
     };

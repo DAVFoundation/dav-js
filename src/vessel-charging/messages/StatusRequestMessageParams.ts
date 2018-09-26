@@ -1,6 +1,6 @@
 import BaseMessageParams from '../MessageParams';
 /**
- * @class The Class boat-charging/StatusRequestMessageParams represent the parameters of boat-charging status request message.
+ * @class The Class vessel-charging/StatusRequestMessageParams represent the parameters of vessel-charging status request message.
  */
 export default class MessageParams extends BaseMessageParams {
     public static _messageType = 'status_request_message';

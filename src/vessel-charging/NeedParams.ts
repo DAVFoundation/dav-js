@@ -3,10 +3,10 @@ import { IDimensions } from '../common-types';
 import { EnergySources, Amenities } from './enums';
 
 /**
- * @class The Class boat-charging/NeedParams represent the parameters of boat-charging need.
+ * @class The Class vessel-charging/NeedParams represent the parameters of vessel-charging need.
  */
 export default class NeedParams extends BaseNeedParams {
-    public static _protocol = 'boat_charging';
+    public static _protocol = 'vessel_charging';
     public static _messageType = 'need';
     public radius: number;
     public startAt: number;
