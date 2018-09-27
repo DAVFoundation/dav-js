@@ -6,25 +6,20 @@ import { Subject, Observable as RxObservable } from 'rxjs';
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import KafkaBase from './KafkaBase';
 import { ProduceRequest } from 'kafka-node';
-import * as retry from 'retry';
+import { retryPromise } from '.';
 
 export default class Kafka extends KafkaBase implements IKafka {
   private async getKafkaClient(config: IConfig): Promise<KafkaClient> {
-    return new Promise<KafkaClient>((resolve, reject) => {
-      const operation = retry.operation({});
-      operation.attempt(currentAttempt => {
-        const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
-        client.connect();
-        client.on('ready', () => {
-          resolve(client);
-        });
-        client.on('error', err => {
-          if (!operation.retry(err)) {
-            reject(operation.mainError());
-          }
-        });
+    return retryPromise(new Promise<KafkaClient>((resolve, reject) => {
+      const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+      client.connect();
+      client.on('ready', () => {
+        resolve(client);
       });
-    });
+      client.on('error', err => {
+        reject(err);
+      });
+    }));
   }
 
   private async getProducer(config: IConfig): Promise<Producer> {
@@ -47,7 +42,7 @@ export default class Kafka extends KafkaBase implements IKafka {
 
   public async createTopic(topicId: string, config: IConfig): Promise<void> {
     const client = await this.getKafkaClient(config);
-    await new Promise<void>((resolve, reject) => {
+    return retryPromise(new Promise<void>((resolve, reject) => {
       (client as any).createTopics(
         [{ topic: topicId, partitions: 1, replicationFactor: 1 }],
         (err: any, data: any) => {
@@ -62,7 +57,7 @@ export default class Kafka extends KafkaBase implements IKafka {
           }
         },
       );
-    });
+    }));
   }
 
   public sendMessage(
@@ -80,7 +75,7 @@ export default class Kafka extends KafkaBase implements IKafka {
     const producer = await this.getProducer(config);
     // tslint:disable-next-line:no-console
     console.log(`Sending ${JSON.stringify(payloads)}`);
-    const sendPromise = new Promise<void>((resolve, reject) => {
+    return retryPromise(new Promise<void>((resolve, reject) => {
       producer.send(payloads, (err: any, data: any) => {
         if (err) {
           // tslint:disable-next-line:no-console
@@ -92,8 +87,7 @@ export default class Kafka extends KafkaBase implements IKafka {
           resolve();
         }
       });
-    });
-    return sendPromise;
+    }));
   }
 
   public sendParams(
