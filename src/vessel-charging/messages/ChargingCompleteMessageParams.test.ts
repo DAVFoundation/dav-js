@@ -1,5 +1,4 @@
 import MessageParams from './ChargingCompleteMessageParams';
-import { ID, BigInteger } from '../../common-types';
 
 describe('MessageParams class', () => {
   const messageParams = new MessageParams({
