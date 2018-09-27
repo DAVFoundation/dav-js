@@ -5,24 +5,19 @@ const common_types_1 = require("./common-types");
 const rxjs_1 = require("rxjs");
 const KafkaMessageStream_1 = require("./KafkaMessageStream");
 const KafkaBase_1 = require("./KafkaBase");
-const retry = require("retry");
+const _1 = require(".");
 class Kafka extends KafkaBase_1.default {
     async getKafkaClient(config) {
-        return new Promise((resolve, reject) => {
-            const operation = retry.operation({});
-            operation.attempt(currentAttempt => {
-                const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
-                client.connect();
-                client.on('ready', () => {
-                    resolve(client);
-                });
-                client.on('error', err => {
-                    if (!operation.retry(err)) {
-                        reject(operation.mainError());
-                    }
-                });
+        return _1.retryPromise(new Promise((resolve, reject) => {
+            const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+            client.connect();
+            client.on('ready', () => {
+                resolve(client);
             });
-        });
+            client.on('error', err => {
+                reject(err);
+            });
+        }));
     }
     async getProducer(config) {
         const client = await this.getKafkaClient(config);
@@ -39,7 +34,7 @@ class Kafka extends KafkaBase_1.default {
     }
     async createTopic(topicId, config) {
         const client = await this.getKafkaClient(config);
-        await new Promise((resolve, reject) => {
+        return _1.retryPromise(new Promise((resolve, reject) => {
             client.createTopics([{ topic: topicId, partitions: 1, replicationFactor: 1 }], (err, data) => {
                 if (err) {
                     // tslint:disable-next-line:no-console
@@ -52,7 +47,7 @@ class Kafka extends KafkaBase_1.default {
                     resolve();
                 }
             });
-        });
+        }));
     }
     sendMessage(topicId, message, config) {
         return this.sendPayloads([{ topic: topicId, messages: message }], config);
@@ -61,7 +56,7 @@ class Kafka extends KafkaBase_1.default {
         const producer = await this.getProducer(config);
         // tslint:disable-next-line:no-console
         console.log(`Sending ${JSON.stringify(payloads)}`);
-        const sendPromise = new Promise((resolve, reject) => {
+        return _1.retryPromise(new Promise((resolve, reject) => {
             producer.send(payloads, (err, data) => {
                 if (err) {
                     // tslint:disable-next-line:no-console
@@ -74,8 +69,7 @@ class Kafka extends KafkaBase_1.default {
                     resolve();
                 }
             });
-        });
-        return sendPromise;
+        }));
     }
     sendParams(topicId, basicParams, config) {
         return this.sendMessage(topicId, JSON.stringify(basicParams.serialize()), config);

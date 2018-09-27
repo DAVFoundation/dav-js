@@ -61,7 +61,7 @@ describe('Identity class', () => {
         beforeEach(() => {
             jest.clearAllMocks();
         });
-        it('should call relevant functions and return valid need', async () => {
+        xit('should call relevant functions and return valid need', async () => {
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('id', 'davId', config);
@@ -72,14 +72,14 @@ describe('Identity class', () => {
             expect(AxiosMock_1.default.post).toHaveBeenCalled();
             expect(AxiosMock_1.default.post).toHaveBeenCalledWith(`${config.apiSeedUrls[0]}/publishNeed/${TOPIC_ID}`, needParams.serialize());
         });
-        it('should fail due to dav node exception', async () => {
+        xit('should fail due to dav node exception', async () => {
             AxiosMock_1.default.post.mockImplementation(() => Promise.reject(davNodeError));
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
             const identity = new Identity('id', 'davId', config);
             await expect(identity.publishNeed(needParams)).rejects.toThrow(`Fail to publish need: ${davNodeError}`);
         });
-        it('should fail due to topic creation failure', async () => {
+        xit('should fail due to topic creation failure', async () => {
             kafkaMock.createTopic.mockImplementation(() => Promise.reject(kafkaError));
             // tslint:disable-next-line:variable-name
             const Identity = (await Promise.resolve().then(() => require('./Identity'))).default;
