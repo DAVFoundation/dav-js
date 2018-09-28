@@ -9,13 +9,16 @@ const _1 = require(".");
 const sdkLogger_1 = require("./sdkLogger");
 class Kafka extends KafkaBase_1.default {
     async getKafkaClient(config) {
-        return _1.retryPromise(new Promise((resolve, reject) => {
+        return _1.retryPromise(currentAttempt => new Promise((resolve, reject) => {
             const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+            sdkLogger_1.default(`Kafka connecting... ${currentAttempt > 1 ? `${currentAttempt} try` : ''}`);
             client.connect();
             client.on('ready', () => {
+                sdkLogger_1.default(`Kafka connected`);
                 resolve(client);
             });
             client.on('error', err => {
+                sdkLogger_1.default(`Kafka connection error ${err}`);
                 reject(err);
             });
         }));
@@ -34,15 +37,16 @@ class Kafka extends KafkaBase_1.default {
         return consumer;
     }
     async createTopic(topicId, config) {
-        const client = await this.getKafkaClient(config);
-        return _1.retryPromise(new Promise((resolve, reject) => {
+        return _1.retryPromise(currentAttempt => new Promise(async (resolve, reject) => {
+            const client = await this.getKafkaClient(config);
+            sdkLogger_1.default(`Kafka creating topic ${topicId}... ${currentAttempt > 1 ? `${currentAttempt} try` : ''}`);
             client.createTopics([{ topic: topicId, partitions: 1, replicationFactor: 1 }], (err, data) => {
                 if (err) {
-                    sdkLogger_1.default(`Error creating topic ${topicId}`);
+                    sdkLogger_1.default(`Kafka error creating topic ${topicId}`);
                     reject(err);
                 }
                 else {
-                    sdkLogger_1.default(`Topic created ${topicId}`);
+                    sdkLogger_1.default(`Kafka topic created ${topicId}`);
                     resolve();
                 }
             });
@@ -52,16 +56,16 @@ class Kafka extends KafkaBase_1.default {
         return this.sendPayloads([{ topic: topicId, messages: message }], config);
     }
     async sendPayloads(payloads, config) {
-        const producer = await this.getProducer(config);
-        sdkLogger_1.default(`Sending ${JSON.stringify(payloads)}`);
-        return _1.retryPromise(new Promise((resolve, reject) => {
+        return _1.retryPromise(currentAttempt => new Promise(async (resolve, reject) => {
+            const producer = await this.getProducer(config);
+            sdkLogger_1.default(`Kafka sending ${JSON.stringify(payloads)}... ${currentAttempt > 1 ? `${currentAttempt} try` : ''}`);
             producer.send(payloads, (err, data) => {
                 if (err) {
-                    sdkLogger_1.default(`Error sending ${JSON.stringify(payloads)}`);
+                    sdkLogger_1.default(`Kafka error sending ${JSON.stringify(payloads)}`);
                     reject(err);
                 }
                 else {
-                    sdkLogger_1.default(`Sent ${JSON.stringify(payloads)}`);
+                    sdkLogger_1.default(`Kafka sent ${JSON.stringify(payloads)}`);
                     resolve();
                 }
             });
@@ -73,10 +77,10 @@ class Kafka extends KafkaBase_1.default {
     async rawMessages(topicId, config) {
         const consumer = await this.getConsumer(topicId, config);
         const kafkaStream = new rxjs_1.Subject();
-        sdkLogger_1.default(`Listening on ${topicId}`);
+        sdkLogger_1.default(`Kafka listening on ${topicId}`);
         consumer.on('message', message => {
             try {
-                sdkLogger_1.default(`Message on ${topicId}: ${JSON.stringify(message)}`);
+                sdkLogger_1.default(`Kafka message on ${topicId}: ${JSON.stringify(message)}`);
                 const messageString = message.value.toString();
                 kafkaStream.next(message);
             }
@@ -85,7 +89,7 @@ class Kafka extends KafkaBase_1.default {
             }
         });
         consumer.on('error', err => {
-            sdkLogger_1.default(`Consumer error on ${topicId}: ${JSON.stringify(err)}`);
+            sdkLogger_1.default(`Kafka consumer error on ${topicId}: ${JSON.stringify(err)}`);
             kafkaStream.error(`Consumer error. topic: ${topicId} error: ${JSON.stringify(err)}`);
         });
         return kafkaStream;

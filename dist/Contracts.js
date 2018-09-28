@@ -28,14 +28,14 @@ class Contracts {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
             transaction.once('receipt', receipt => {
-                sdkLogger_1.default(`Transaction succeeded: ${JSON.stringify(receipt)}`);
+                sdkLogger_1.default(`Web3 transaction succeeded: ${JSON.stringify(receipt)}`);
                 resolve(receipt);
             });
             transaction.once('transactionHash', hash => {
-                sdkLogger_1.default(`Transaction sent: ${hash}`);
+                sdkLogger_1.default(`Web3 transaction sent: ${hash}`);
             });
             transaction.on('error', err => {
-                sdkLogger_1.default(`Transaction failed: ${JSON.stringify(err)}`);
+                sdkLogger_1.default(`Web3 transaction failed: ${JSON.stringify(err)}`);
                 reject(err);
             });
         });
