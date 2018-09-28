@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Web3 = require("web3");
 const common_enums_1 = require("./common-enums");
 const rxjs_1 = require("rxjs");
+const sdkLogger_1 = require("./sdkLogger");
 let contracts = {
     Identity: require('./contracts/Identity'),
     DAVToken: require('./contracts/DAVToken'),
@@ -27,17 +28,14 @@ class Contracts {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
             transaction.once('receipt', receipt => {
-                // tslint:disable-next-line:no-console
-                console.log(`Transaction succeeded: ${JSON.stringify(receipt)}`);
+                sdkLogger_1.default(`Transaction succeeded: ${JSON.stringify(receipt)}`);
                 resolve(receipt);
             });
             transaction.once('transactionHash', hash => {
-                // tslint:disable-next-line:no-console
-                console.log(`Transaction sent: ${hash}`);
+                sdkLogger_1.default(`Transaction sent: ${hash}`);
             });
             transaction.on('error', err => {
-                // tslint:disable-next-line:no-console
-                console.log(`Transaction failed: ${JSON.stringify(err)}`);
+                sdkLogger_1.default(`Transaction failed: ${JSON.stringify(err)}`);
                 reject(err);
             });
         });

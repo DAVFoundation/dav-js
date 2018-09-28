@@ -7,6 +7,7 @@ import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import KafkaBase from './KafkaBase';
 import { ProduceRequest } from 'kafka-node';
 import { retryPromise } from '.';
+import sdkLogger from './sdkLogger';
 
 export default class Kafka extends KafkaBase implements IKafka {
   private async getKafkaClient(config: IConfig): Promise<KafkaClient> {
@@ -47,12 +48,10 @@ export default class Kafka extends KafkaBase implements IKafka {
         [{ topic: topicId, partitions: 1, replicationFactor: 1 }],
         (err: any, data: any) => {
           if (err) {
-            // tslint:disable-next-line:no-console
-            console.log(`Error creating topic ${topicId}`);
+            sdkLogger(`Error creating topic ${topicId}`);
             reject(err);
           } else {
-            // tslint:disable-next-line:no-console
-            console.log(`Topic created ${topicId}`);
+            sdkLogger(`Topic created ${topicId}`);
             resolve();
           }
         },
@@ -73,17 +72,14 @@ export default class Kafka extends KafkaBase implements IKafka {
     config: IConfig,
   ): Promise<void> {
     const producer = await this.getProducer(config);
-    // tslint:disable-next-line:no-console
-    console.log(`Sending ${JSON.stringify(payloads)}`);
+    sdkLogger(`Sending ${JSON.stringify(payloads)}`);
     return retryPromise(new Promise<void>((resolve, reject) => {
       producer.send(payloads, (err: any, data: any) => {
         if (err) {
-          // tslint:disable-next-line:no-console
-          console.log(`Error sending ${JSON.stringify(payloads)}`);
+          sdkLogger(`Error sending ${JSON.stringify(payloads)}`);
           reject(err);
         } else {
-          // tslint:disable-next-line:no-console
-          console.log(`Sent ${JSON.stringify(payloads)}`);
+          sdkLogger(`Sent ${JSON.stringify(payloads)}`);
           resolve();
         }
       });
@@ -108,12 +104,10 @@ export default class Kafka extends KafkaBase implements IKafka {
   ): Promise<RxObservable<Message>> {
     const consumer = await this.getConsumer(topicId, config);
     const kafkaStream: Subject<Message> = new Subject<Message>();
-    // tslint:disable-next-line:no-console
-    console.log(`Listening on ${topicId}`);
+    sdkLogger(`Listening on ${topicId}`);
     consumer.on('message', message => {
       try {
-        // tslint:disable-next-line:no-console
-        console.log(`Message on ${topicId}: ${JSON.stringify(message)}`);
+        sdkLogger(`Message on ${topicId}: ${JSON.stringify(message)}`);
         const messageString = message.value.toString();
         kafkaStream.next(message);
       } catch (error) {
@@ -125,8 +119,7 @@ export default class Kafka extends KafkaBase implements IKafka {
       }
     });
     consumer.on('error', err => {
-      // tslint:disable-next-line:no-console
-      console.log(`Consumer error on ${topicId}: ${JSON.stringify(err)}`);
+      sdkLogger(`Consumer error on ${topicId}: ${JSON.stringify(err)}`);
       kafkaStream.error(
         `Consumer error. topic: ${topicId} error: ${JSON.stringify(err)}`,
       );

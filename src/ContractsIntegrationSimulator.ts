@@ -8,6 +8,7 @@ import Contracts from './Contracts';
 import Config from './Config';
 import { ContractTypes, PriceType } from './common-enums';
 import Price from './Price';
+import sdkLogger from './sdkLogger';
 const configuration = new Config({});
 
 // params start
@@ -26,23 +27,23 @@ const VEHICLE_ID = '0x3e54f4d0A7C93516f962e5cfcB402dB6C2700C30';
 
 async function main(): Promise<void> {
   const printLine = () =>
-    console.log(
+    sdkLogger(
       '====================================================================================================',
     );
 
   const isRegistered = async () => {
-    console.log('Checking if is registered...');
+    sdkLogger('Checking if is registered...');
     try {
       const res = await Contracts.isIdentityRegistered(DAV_ID, configuration);
-      console.log(res);
+      sdkLogger(res);
       printLine();
     } catch (err) {
-      console.log(err);
+      sdkLogger(err);
     }
   };
 
   const registerIdentity = async () => {
-    console.log('Registering identity...');
+    sdkLogger('Registering identity...');
     try {
       const receipt = await Contracts.registerIdentity(
         DAV_ID,
@@ -51,30 +52,30 @@ async function main(): Promise<void> {
         WALLET_PRIVATE_KEY,
         configuration,
       );
-      console.log(receipt);
+      sdkLogger(receipt);
       printLine();
     } catch (err) {
-      console.log(err);
+      sdkLogger(err);
     }
   };
 
   const approveMission = async () => {
-    console.log('Approving mission...');
+    sdkLogger('Approving mission...');
     try {
       const receipt = await Contracts.approveMission(
         DAV_ID,
         WALLET_PRIVATE_KEY,
         configuration,
       );
-      console.log(receipt);
+      sdkLogger(receipt);
       printLine();
     } catch (err) {
-      console.log(err);
+      sdkLogger(err);
     }
   };
 
   const startMission = async () => {
-    console.log('Starting mission...');
+    sdkLogger('Starting mission...');
     try {
       const receipt = await Contracts.startMission(
         MISSION_ID,
@@ -84,15 +85,15 @@ async function main(): Promise<void> {
         MISSION_PRICE,
         configuration,
       );
-      console.log(receipt);
+      sdkLogger(receipt);
       printLine();
     } catch (err) {
-      console.log(err);
+      sdkLogger(err);
     }
   };
 
   const finalizeMission = async () => {
-    console.log('Finalizing mission...');
+    sdkLogger('Finalizing mission...');
     try {
       const receipt = await Contracts.finalizeMission(
         MISSION_ID,
@@ -100,15 +101,15 @@ async function main(): Promise<void> {
         WALLET_PRIVATE_KEY,
         configuration,
       );
-      console.log(receipt);
+      sdkLogger(receipt);
       printLine();
     } catch (err) {
-      console.log(err);
+      sdkLogger(err);
     }
   };
 
   const watchMission = () => {
-    console.log('Getting events...');
+    sdkLogger('Getting events...');
     try {
       const observable = Contracts.watchContract(
         MISSION_ID,
@@ -117,19 +118,19 @@ async function main(): Promise<void> {
       );
       observable.subscribe(
         (event: any) => {
-          console.log('New event:');
-          console.log(event);
+          sdkLogger('New event:');
+          sdkLogger(event);
           printLine();
         },
         (err: any) => {
-          console.log('Error:');
-          console.log(err);
+          sdkLogger('Error:');
+          sdkLogger(err);
           printLine();
         },
       );
       printLine();
     } catch (err) {
-      console.log(err);
+      sdkLogger(err);
     }
   };
 

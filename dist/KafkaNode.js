@@ -6,6 +6,7 @@ const rxjs_1 = require("rxjs");
 const KafkaMessageStream_1 = require("./KafkaMessageStream");
 const KafkaBase_1 = require("./KafkaBase");
 const _1 = require(".");
+const sdkLogger_1 = require("./sdkLogger");
 class Kafka extends KafkaBase_1.default {
     async getKafkaClient(config) {
         return _1.retryPromise(new Promise((resolve, reject) => {
@@ -37,13 +38,11 @@ class Kafka extends KafkaBase_1.default {
         return _1.retryPromise(new Promise((resolve, reject) => {
             client.createTopics([{ topic: topicId, partitions: 1, replicationFactor: 1 }], (err, data) => {
                 if (err) {
-                    // tslint:disable-next-line:no-console
-                    console.log(`Error creating topic ${topicId}`);
+                    sdkLogger_1.default(`Error creating topic ${topicId}`);
                     reject(err);
                 }
                 else {
-                    // tslint:disable-next-line:no-console
-                    console.log(`Topic created ${topicId}`);
+                    sdkLogger_1.default(`Topic created ${topicId}`);
                     resolve();
                 }
             });
@@ -54,18 +53,15 @@ class Kafka extends KafkaBase_1.default {
     }
     async sendPayloads(payloads, config) {
         const producer = await this.getProducer(config);
-        // tslint:disable-next-line:no-console
-        console.log(`Sending ${JSON.stringify(payloads)}`);
+        sdkLogger_1.default(`Sending ${JSON.stringify(payloads)}`);
         return _1.retryPromise(new Promise((resolve, reject) => {
             producer.send(payloads, (err, data) => {
                 if (err) {
-                    // tslint:disable-next-line:no-console
-                    console.log(`Error sending ${JSON.stringify(payloads)}`);
+                    sdkLogger_1.default(`Error sending ${JSON.stringify(payloads)}`);
                     reject(err);
                 }
                 else {
-                    // tslint:disable-next-line:no-console
-                    console.log(`Sent ${JSON.stringify(payloads)}`);
+                    sdkLogger_1.default(`Sent ${JSON.stringify(payloads)}`);
                     resolve();
                 }
             });
@@ -77,12 +73,10 @@ class Kafka extends KafkaBase_1.default {
     async rawMessages(topicId, config) {
         const consumer = await this.getConsumer(topicId, config);
         const kafkaStream = new rxjs_1.Subject();
-        // tslint:disable-next-line:no-console
-        console.log(`Listening on ${topicId}`);
+        sdkLogger_1.default(`Listening on ${topicId}`);
         consumer.on('message', message => {
             try {
-                // tslint:disable-next-line:no-console
-                console.log(`Message on ${topicId}: ${JSON.stringify(message)}`);
+                sdkLogger_1.default(`Message on ${topicId}: ${JSON.stringify(message)}`);
                 const messageString = message.value.toString();
                 kafkaStream.next(message);
             }
@@ -91,8 +85,7 @@ class Kafka extends KafkaBase_1.default {
             }
         });
         consumer.on('error', err => {
-            // tslint:disable-next-line:no-console
-            console.log(`Consumer error on ${topicId}: ${JSON.stringify(err)}`);
+            sdkLogger_1.default(`Consumer error on ${topicId}: ${JSON.stringify(err)}`);
             kafkaStream.error(`Consumer error. topic: ${topicId} error: ${JSON.stringify(err)}`);
         });
         return kafkaStream;
