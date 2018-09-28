@@ -1,7 +1,6 @@
 import IConfig from './IConfig';
 import Config from './Config';
 import SDK from './SDK';
-import KafkaMessageFactory from './KafkaMessageFactory';
 /**
  * @function SDKFactory create an instance of DAV SDK.
  * @param config DAV configuration object.
