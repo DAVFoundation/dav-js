@@ -18,7 +18,7 @@ describe('NeedFilterParams class', () => {
     needFilterParams.davId = 'davId';
     const serializedNeedFilterParams = {
         ttl: undefined,
-        protocol: 'boat_charging',
+        protocol: 'vessel_charging',
         type: 'need_filter',
         area: {
             max: {

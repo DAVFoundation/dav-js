@@ -1,6 +1,6 @@
 import BaseMessageParams from '../MessageParams';
 /**
- * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.
+ * @class The Class vessel-charging/MessageParams represent the parameters of vessel-charging message.
  */
 export default abstract class MessageParams extends BaseMessageParams {
     static _protocol: string;

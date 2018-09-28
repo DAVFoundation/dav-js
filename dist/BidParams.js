@@ -25,9 +25,9 @@ class BidParams extends BasicParams_1.default {
             this.isCommitted = values.isCommitted === false ? false : true;
             const priceObject = values.price instanceof Array ? values.price : [values.price];
             priceObject.map((price) => {
-                return typeof price === 'string' ?
-                    new Price_1.default(price, common_enums_1.PriceType.flat) :
-                    new Price_1.default(price.value, price.type, price.description);
+                return typeof price === 'string'
+                    ? new Price_1.default(price, common_enums_1.PriceType.flat)
+                    : new Price_1.default(price.value, price.type, price.description);
             });
             this.price = priceObject;
         }
@@ -52,11 +52,13 @@ class BidParams extends BasicParams_1.default {
         this.isCommitted = json.isCommitted;
     }
     equals(other) {
-        const isPriceEqual = this.price.map((price, index) => other.price[index] && price.equals(other.price[index]))
+        const isPriceEqual = this.price
+            .map((price, index) => other.price[index] && price.equals(other.price[index]))
             .find((x) => !x) === undefined;
-        return this.ttl === other.ttl && isPriceEqual
-            && this.vehicleId === other.vehicleId
-            && this.neederDavId === other.neederDavId;
+        return (this.ttl === other.ttl &&
+            isPriceEqual &&
+            this.vehicleId === other.vehicleId &&
+            this.neederDavId === other.neederDavId);
     }
 }
 exports.default = BidParams;

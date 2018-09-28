@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const MessageParams_1 = require("../MessageParams");
 /**
- * @class The Class boat-charging/VesselStatusMessageParams represent the parameters of boat-charging consumer status message.
+ * @class The Class vessel-charging/VesselStatusMessageParams represent the parameters of vessel-charging consumer status message.
  */
 class MessageParams extends MessageParams_1.default {
     constructor(values) {

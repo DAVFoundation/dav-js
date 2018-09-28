@@ -9,8 +9,14 @@ class NeedParams extends NeedParams_1.default {
         super(NeedParams._protocol, NeedParams._type, values);
         if (!!values) {
             this.startAt = values.startAt;
-            this.startLocation = { lat: values.startLocation.lat, long: values.startLocation.lat };
-            this.endLocation = { lat: values.endLocation.lat, long: values.endLocation.lat };
+            this.startLocation = {
+                lat: values.startLocation.lat,
+                long: values.startLocation.lat,
+            };
+            this.endLocation = {
+                lat: values.endLocation.lat,
+                long: values.endLocation.lat,
+            };
             this.vehicleType = values.vehicleType;
             this.maxAltitude = values.maxAltitude;
         }

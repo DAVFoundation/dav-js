@@ -11,7 +11,7 @@ class NeedFilterParams extends BasicParams_1.default {
         if (!!values) {
             this.location = values.location;
             this.davId = values.davId;
-            this.radius = parseFloat((values.radius).toFixed(1));
+            this.radius = parseFloat(values.radius.toFixed(1));
         }
     }
     serialize() {
@@ -22,12 +22,12 @@ class NeedFilterParams extends BasicParams_1.default {
             const bottomRight = center.destinationPoint(-distance, 45);
             return {
                 max: {
-                    latitude: parseFloat((topLeft.lat).toFixed(6)),
-                    longitude: parseFloat((topLeft.lon).toFixed(6)),
+                    latitude: parseFloat(topLeft.lat.toFixed(6)),
+                    longitude: parseFloat(topLeft.lon.toFixed(6)),
                 },
                 min: {
-                    latitude: parseFloat((bottomRight.lat).toFixed(6)),
-                    longitude: parseFloat((bottomRight.lon).toFixed(6)),
+                    latitude: parseFloat(bottomRight.lat.toFixed(6)),
+                    longitude: parseFloat(bottomRight.lon.toFixed(6)),
                 },
             };
         };
@@ -46,9 +46,9 @@ class NeedFilterParams extends BasicParams_1.default {
             const distance = topLeft.distanceTo(bottomRight);
             const center = topLeft.intermediatePointTo(bottomRight, 0.5);
             return {
-                lat: parseFloat((center.lat).toFixed(6)),
-                long: parseFloat((center.lon).toFixed(6)),
-                radius: parseFloat(((distance / 2) / Math.sqrt(2)).toFixed(1)),
+                lat: parseFloat(center.lat.toFixed(6)),
+                long: parseFloat(center.lon.toFixed(6)),
+                radius: parseFloat((distance / 2 / Math.sqrt(2)).toFixed(1)),
             };
         };
         const formattedArea = formatArea(json.area);

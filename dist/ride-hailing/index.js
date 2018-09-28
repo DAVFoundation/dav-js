@@ -17,28 +17,40 @@ const VehicleLocationMessageParams_1 = require("./VehicleLocationMessageParams")
 exports.VehicleLocationMessageParams = VehicleLocationMessageParams_1.default;
 KafkaMessageFactory_2.default.instance.registerMessageClasses([
     {
-        protocol: NeedFilterParams_1.default._protocol, messageType: NeedFilterParams_1.default._messageType,
-        messageCategory: KafkaMessageFactory_1.MessageCategories.NeedFilter, classType: NeedFilterParams_1.default,
+        protocol: NeedFilterParams_1.default._protocol,
+        messageType: NeedFilterParams_1.default._messageType,
+        messageCategory: KafkaMessageFactory_1.MessageCategories.NeedFilter,
+        classType: NeedFilterParams_1.default,
     },
     {
-        protocol: NeedParams_1.default._protocol, messageType: NeedParams_1.default._messageType,
-        messageCategory: KafkaMessageFactory_1.MessageCategories.Need, classType: NeedParams_1.default,
+        protocol: NeedParams_1.default._protocol,
+        messageType: NeedParams_1.default._messageType,
+        messageCategory: KafkaMessageFactory_1.MessageCategories.Need,
+        classType: NeedParams_1.default,
     },
     {
-        protocol: BidParams_1.default._protocol, messageType: BidParams_1.default._messageType,
-        messageCategory: KafkaMessageFactory_1.MessageCategories.Bid, classType: BidParams_1.default,
+        protocol: BidParams_1.default._protocol,
+        messageType: BidParams_1.default._messageType,
+        messageCategory: KafkaMessageFactory_1.MessageCategories.Bid,
+        classType: BidParams_1.default,
     },
     {
-        protocol: MissionParams_1.default._protocol, messageType: MissionParams_1.default._messageType,
-        messageCategory: KafkaMessageFactory_1.MessageCategories.Mission, classType: MissionParams_1.default,
+        protocol: MissionParams_1.default._protocol,
+        messageType: MissionParams_1.default._messageType,
+        messageCategory: KafkaMessageFactory_1.MessageCategories.Mission,
+        classType: MissionParams_1.default,
     },
     {
-        protocol: MessageParams_1.default._protocol, messageType: MessageParams_1.default._messageType,
-        messageCategory: KafkaMessageFactory_1.MessageCategories.Message, classType: MessageParams_1.default,
+        protocol: MessageParams_1.default._protocol,
+        messageType: MessageParams_1.default._messageType,
+        messageCategory: KafkaMessageFactory_1.MessageCategories.Message,
+        classType: MessageParams_1.default,
     },
     {
-        protocol: VehicleLocationMessageParams_1.default._protocol, messageType: VehicleLocationMessageParams_1.default._messageType,
-        messageCategory: KafkaMessageFactory_1.MessageCategories.Message, classType: VehicleLocationMessageParams_1.default,
+        protocol: VehicleLocationMessageParams_1.default._protocol,
+        messageType: VehicleLocationMessageParams_1.default._messageType,
+        messageCategory: KafkaMessageFactory_1.MessageCategories.Message,
+        classType: VehicleLocationMessageParams_1.default,
     },
 ]);
 

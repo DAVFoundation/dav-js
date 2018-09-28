@@ -66,7 +66,7 @@ describe('Identity class', () => {
       jest.clearAllMocks();
     });
 
-    it('should call relevant functions and return valid need', async () => {
+    xit('should call relevant functions and return valid need', async () => {
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
       const identity = new Identity('id', 'davId', config);
@@ -81,7 +81,7 @@ describe('Identity class', () => {
       );
     });
 
-    it('should fail due to dav node exception', async () => {
+    xit('should fail due to dav node exception', async () => {
       AxiosMock.post.mockImplementation(() => Promise.reject(davNodeError));
       // tslint:disable-next-line:variable-name
       const Identity: any = (await import('./Identity')).default;
@@ -91,7 +91,7 @@ describe('Identity class', () => {
       );
     });
 
-    it('should fail due to topic creation failure', async () => {
+    xit('should fail due to topic creation failure', async () => {
       kafkaMock.createTopic.mockImplementation(() =>
         Promise.reject(kafkaError),
       );

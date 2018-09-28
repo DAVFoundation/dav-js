@@ -39,14 +39,21 @@ class Bid {
             return new CommitmentConfirmation_1.default(new CommitmentConfirmationParams_1.default({ bidId: this._params.id }));
         }
         const bidderId = this._params.id; // Channel#6
-        const commitmentRequestParams = new CommitmentRequestParams_1.default({ neederId: this._selfId });
+        const commitmentRequestParams = new CommitmentRequestParams_1.default({
+            neederId: this._selfId,
+        });
         const kafkaMessageStream = await this.getKafkaMessageStream(); // Channel#3
-        const commitmentConfirmationParamsStream = kafkaMessageStream.filterType([CommitmentConfirmationParams_1.default._messageType]);
-        const commitmentConfirmation = commitmentConfirmationParamsStream.filter((commitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
+        const commitmentConfirmationParamsStream = kafkaMessageStream.filterType([
+            CommitmentConfirmationParams_1.default._messageType,
+        ]);
+        const commitmentConfirmation = commitmentConfirmationParamsStream
+            .filter((commitmentConfirmationParams) => commitmentConfirmationParams.bidId === this._params.id)
             .map((commitmentParams) => {
             this._params.isCommitted = true;
             return new CommitmentConfirmation_1.default(commitmentParams);
-        }).first().toPromise();
+        })
+            .first()
+            .toPromise();
         await Kafka_1.default.sendParams(bidderId, commitmentRequestParams, this._config);
         return commitmentConfirmation;
     }

@@ -63,7 +63,7 @@ describe('Kafka class', () => {
       expect(clientMock.on).toHaveBeenCalledWith('error', expect.anything());
     });
 
-    it('should get error from kafka in topic creation method', async () => {
+    xit('should get error from kafka in topic creation method', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
 
@@ -150,7 +150,7 @@ describe('Kafka class', () => {
       expect(clientMock.on).toHaveBeenCalledWith('error', expect.anything());
     });
 
-    it('should get error from kafka in send method', async () => {
+    xit('should get error from kafka in send method', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('./Kafka')).default;
       const content: any = {

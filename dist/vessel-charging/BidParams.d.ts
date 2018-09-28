@@ -3,7 +3,7 @@ import { ILocation } from '../common-types';
 import IBaseBidParams from '../IBidParams';
 import { EnergySources, Amenities } from './enums';
 /**
- * @interface IBidParams The interface boat-charging/IBidParams represent a valid argument of boat-charging/BidParams constructor.
+ * @interface IBidParams The interface vessel-charging/IBidParams represent a valid argument of vessel-charging/BidParams constructor.
  */
 interface IBidParams extends IBaseBidParams {
     /**
@@ -74,7 +74,7 @@ interface IBidParams extends IBaseBidParams {
     model: string;
 }
 /**
- * @class The Class boat-charging/BidParams represent the parameters of boat-charging bid.
+ * @class The Class vessel-charging/BidParams represent the parameters of vessel-charging bid.
  */
 export default class BidParams extends BaseBidParams {
     static _protocol: string;

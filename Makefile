@@ -16,7 +16,12 @@ spellcheck: FORCE
 	npm run spellcheck
 
 pre-push: FORCE
-	npm run pre-publish
+	npm run tslint
+	npm run jest
+	npm run spellcheck
+	npm run tsc
+	npm run typedoc
+	npm run create-dist
 
 pre-publish: FORCE
 	npm run pre-publish

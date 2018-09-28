@@ -6,8 +6,9 @@ import Contracts from './Contracts';
  * @class The DavSDK class instance.
  */
 export default class SDK {
-
-  constructor(private _config: IConfig) { /**/ }
+  constructor(private _config: IConfig) {
+    /**/
+  }
   /**
    * @method getIdentity Used to create an instance DAV Identity class.
    * @param davId the unique DAV identity string.
@@ -38,7 +39,18 @@ export default class SDK {
    * @param identityPrivateKey Ethereum private key to sign the registration.
    * @returns Ethereum transaction receipt object.
    */
-  public async registerIdentity(davId: DavID, walletAddress: string, walletPrivateKey: string, identityPrivateKey: string): Promise<string> {
-    return await Contracts.registerIdentity(davId, identityPrivateKey, walletAddress, walletPrivateKey, this._config);
+  public async registerIdentity(
+    davId: DavID,
+    walletAddress: string,
+    walletPrivateKey: string,
+    identityPrivateKey: string,
+  ): Promise<string> {
+    return await Contracts.registerIdentity(
+      davId,
+      identityPrivateKey,
+      walletAddress,
+      walletPrivateKey,
+      this._config,
+    );
   }
 }

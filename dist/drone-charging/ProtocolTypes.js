@@ -11,21 +11,11 @@ exports.default = {
     bid: BidParams_1.default,
     mission: MissionParams_1.default,
     message: MessageParams_1.default,
-    needFilters: [
-        'need_filter',
-    ],
-    needs: [
-        'need',
-    ],
-    bids: [
-        'bid',
-    ],
-    missions: [
-        'mission',
-    ],
-    messages: [
-        'message',
-    ],
+    needFilters: ['need_filter'],
+    needs: ['need'],
+    bids: ['bid'],
+    missions: ['mission'],
+    messages: ['message'],
 };
 
 //# sourceMappingURL=ProtocolTypes.js.map

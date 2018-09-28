@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const NeedParams_1 = require("../NeedParams");
 /**
- * @class The Class boat-charging/NeedParams represent the parameters of boat-charging need.
+ * @class The Class vessel-charging/NeedParams represent the parameters of vessel-charging need.
  */
 class NeedParams extends NeedParams_1.default {
     constructor(values) {
@@ -41,7 +41,7 @@ class NeedParams extends NeedParams_1.default {
         this.amenities = json.amenities;
     }
 }
-NeedParams._protocol = 'boat_charging';
+NeedParams._protocol = 'vessel_charging';
 NeedParams._messageType = 'need';
 exports.default = NeedParams;
 

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const NeedFilterParams_1 = require("../NeedFilterParams");
 /**
- * @class The Class boat-charging/NeedFilterParams represent the parameters that used to filter boat-charging needs.
+ * @class The Class vessel-charging/NeedFilterParams represent the parameters that used to filter vessel-charging needs.
  */
 class NeedFilterParams extends NeedFilterParams_1.default {
     constructor(values) {
@@ -21,7 +21,7 @@ class NeedFilterParams extends NeedFilterParams_1.default {
         this.maxDimensions = json.dimensions;
     }
 }
-NeedFilterParams._protocol = 'boat_charging';
+NeedFilterParams._protocol = 'vessel_charging';
 NeedFilterParams._messageType = 'need_filter';
 exports.default = NeedFilterParams;
 

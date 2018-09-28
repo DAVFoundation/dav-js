@@ -13,22 +13,11 @@ exports.default = {
     mission: MissionParams_1.default,
     message: MessageParams_1.default,
     vehicle_location_message: VehicleLocationMessageParams_1.default,
-    needFilters: [
-        'need_filter',
-    ],
-    needs: [
-        'need',
-    ],
-    bids: [
-        'bid',
-    ],
-    missions: [
-        'mission',
-    ],
-    messages: [
-        'vehicle_location_message',
-        'message',
-    ],
+    needFilters: ['need_filter'],
+    needs: ['need'],
+    bids: ['bid'],
+    missions: ['mission'],
+    messages: ['vehicle_location_message', 'message'],
 };
 
 //# sourceMappingURL=ProtocolTypes.js.map

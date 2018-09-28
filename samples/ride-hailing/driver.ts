@@ -1,8 +1,13 @@
 // tslint:disable:no-console
 import { SDKFactory, Mission, IConfig, Message, Need } from '../../src';
 import {
-  NeedFilterParams, NeedParams, BidParams, MessageParams,
-  VehicleLocationMessageParams, MissionParams, MissionStatus,
+  NeedFilterParams,
+  NeedParams,
+  BidParams,
+  MessageParams,
+  VehicleLocationMessageParams,
+  MissionParams,
+  MissionStatus,
 } from '../../src/ride-hailing';
 import config from './config';
 
@@ -75,8 +80,7 @@ async function runProvider(configuration?: IConfig) {
           (message: Message<MessageParams>) => {
             console.log(message.params.missionStatus);
             if (
-              message.params.missionStatus ===
-              MissionStatus.PassengerIsComing
+              message.params.missionStatus === MissionStatus.PassengerIsComing
             ) {
               onVehicleInRiding(message);
             }
@@ -99,10 +103,9 @@ async function runProvider(configuration?: IConfig) {
         console.log('bid created');
         // let restoredBid = identity.bid(bid.id, bid.params);
         const missions = await bid.missions();
-        missions.subscribe(onMissionCreated,
-          error => {
-            console.log('driver error 2: ', error);
-          });
+        missions.subscribe(onMissionCreated, error => {
+          console.log('driver error 2: ', error);
+        });
         // restoredBid = identity.bid(bid.id, bid.params);
         const requestsStream = await bid.commitmentRequests();
         console.log('got commitment request stream');
@@ -112,10 +115,9 @@ async function runProvider(configuration?: IConfig) {
         console.log('driver commit has been sent');
       };
 
-      needs.subscribe(onNeed,
-        error => {
-          console.log('driver error 3: ', error);
-        });
+      needs.subscribe(onNeed, error => {
+        console.log('driver error 3: ', error);
+      });
     } catch (err) {
       reject(err);
     }

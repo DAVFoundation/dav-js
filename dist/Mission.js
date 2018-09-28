@@ -28,9 +28,13 @@ class Mission {
     async getPeerId() {
         const kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config); // Channel#4 or Channel#6
         const messageParamsStream = kafkaMessageStream.filterType(KafkaMessageFactory_1.default.instance.getMessageTypes(MissionPeerIdMessageParams_1.default._protocol, KafkaMessageFactory_1.MessageCategories.Message));
-        const messageStream = messageParamsStream.do((messageParams) => {
+        const messageStream = messageParamsStream
+            .do((messageParams) => {
             this._peerId = messageParams.senderId;
-        }).map((messageParams) => messageParams.senderId).first().toPromise();
+        })
+            .map((messageParams) => messageParams.senderId)
+            .first()
+            .toPromise();
         return messageStream;
     }
     /**

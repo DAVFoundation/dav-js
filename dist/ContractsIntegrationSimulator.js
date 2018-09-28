@@ -9,6 +9,7 @@ const Contracts_1 = require("./Contracts");
 const Config_1 = require("./Config");
 const common_enums_1 = require("./common-enums");
 const Price_1 = require("./Price");
+const sdkLogger_1 = require("./sdkLogger");
 const configuration = new Config_1.default({});
 // params start
 const MISSION_ID = '0xf3229680B0166F0812e0ECEAd69B1dd144334229';
@@ -21,79 +22,79 @@ const VEHICLE_ID = '0x3e54f4d0A7C93516f962e5cfcB402dB6C2700C30';
 // params end
 // identityPrivateKey: string, walletAddress
 async function main() {
-    const printLine = () => console.log('====================================================================================================');
+    const printLine = () => sdkLogger_1.default('====================================================================================================');
     const isRegistered = async () => {
-        console.log('Checking if is registered...');
+        sdkLogger_1.default('Checking if is registered...');
         try {
             const res = await Contracts_1.default.isIdentityRegistered(DAV_ID, configuration);
-            console.log(res);
+            sdkLogger_1.default(res);
             printLine();
         }
         catch (err) {
-            console.log(err);
+            sdkLogger_1.default(err);
         }
     };
     const registerIdentity = async () => {
-        console.log('Registering identity...');
+        sdkLogger_1.default('Registering identity...');
         try {
             const receipt = await Contracts_1.default.registerIdentity(DAV_ID, IDENTITY_PRIVATE_KEY, WALLET_ADDRESS, WALLET_PRIVATE_KEY, configuration);
-            console.log(receipt);
+            sdkLogger_1.default(receipt);
             printLine();
         }
         catch (err) {
-            console.log(err);
+            sdkLogger_1.default(err);
         }
     };
     const approveMission = async () => {
-        console.log('Approving mission...');
+        sdkLogger_1.default('Approving mission...');
         try {
             const receipt = await Contracts_1.default.approveMission(DAV_ID, WALLET_PRIVATE_KEY, configuration);
-            console.log(receipt);
+            sdkLogger_1.default(receipt);
             printLine();
         }
         catch (err) {
-            console.log(err);
+            sdkLogger_1.default(err);
         }
     };
     const startMission = async () => {
-        console.log('Starting mission...');
+        sdkLogger_1.default('Starting mission...');
         try {
             const receipt = await Contracts_1.default.startMission(MISSION_ID, DAV_ID, WALLET_PRIVATE_KEY, VEHICLE_ID, MISSION_PRICE, configuration);
-            console.log(receipt);
+            sdkLogger_1.default(receipt);
             printLine();
         }
         catch (err) {
-            console.log(err);
+            sdkLogger_1.default(err);
         }
     };
     const finalizeMission = async () => {
-        console.log('Finalizing mission...');
+        sdkLogger_1.default('Finalizing mission...');
         try {
             const receipt = await Contracts_1.default.finalizeMission(MISSION_ID, DAV_ID, WALLET_PRIVATE_KEY, configuration);
-            console.log(receipt);
+            sdkLogger_1.default(receipt);
             printLine();
         }
         catch (err) {
-            console.log(err);
+            sdkLogger_1.default(err);
         }
     };
     const watchMission = () => {
-        console.log('Getting events...');
+        sdkLogger_1.default('Getting events...');
         try {
             const observable = Contracts_1.default.watchContract(MISSION_ID, common_enums_1.ContractTypes.basicMission, configuration);
             observable.subscribe((event) => {
-                console.log('New event:');
-                console.log(event);
+                sdkLogger_1.default('New event:');
+                sdkLogger_1.default(event);
                 printLine();
             }, (err) => {
-                console.log('Error:');
-                console.log(err);
+                sdkLogger_1.default('Error:');
+                sdkLogger_1.default(err);
                 printLine();
             });
             printLine();
         }
         catch (err) {
-            console.log(err);
+            sdkLogger_1.default(err);
         }
     };
     const waitASecond = () => {

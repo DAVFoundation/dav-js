@@ -5,10 +5,10 @@ const runningOnBrowser = process.env.BROWSER || false;
 let Kafka;
 const loadKafka = () => {
     if (runningOnBrowser) {
-        Kafka = new (require('./KafkaApi').default)();
+        Kafka = new (require('./KafkaApi')).default();
     }
     else {
-        Kafka = new (require('./KafkaNode').default)();
+        Kafka = new (require('./KafkaNode')).default();
     }
 };
 loadKafka();

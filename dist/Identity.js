@@ -16,6 +16,7 @@ class Identity {
         this.davId = davId;
         this._config = _config;
         this.topics = {};
+        /**/
     }
     async registerNewTopic() {
         const topic = Kafka_1.default.generateTopicId();

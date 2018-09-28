@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Web3 = require("web3");
 const common_enums_1 = require("./common-enums");
 const rxjs_1 = require("rxjs");
+const sdkLogger_1 = require("./sdkLogger");
 let contracts = {
     Identity: require('./contracts/Identity'),
     DAVToken: require('./contracts/DAVToken'),
@@ -27,17 +28,14 @@ class Contracts {
         return new Promise((resolve, reject) => {
             const transaction = web3.eth.sendSignedTransaction(rawTransaction);
             transaction.once('receipt', receipt => {
-                // tslint:disable-next-line:no-console
-                console.log(`Transaction succeeded: ${JSON.stringify(receipt)}`);
+                sdkLogger_1.default(`Web3 transaction succeeded: ${JSON.stringify(receipt)}`);
                 resolve(receipt);
             });
             transaction.once('transactionHash', hash => {
-                // tslint:disable-next-line:no-console
-                console.log(`Transaction sent: ${hash}`);
+                sdkLogger_1.default(`Web3 transaction sent: ${hash}`);
             });
             transaction.on('error', err => {
-                // tslint:disable-next-line:no-console
-                console.log(`Transaction failed: ${JSON.stringify(err)}`);
+                sdkLogger_1.default(`Web3 transaction failed: ${JSON.stringify(err)}`);
                 reject(err);
             });
         });
@@ -110,7 +108,11 @@ class Contracts {
             data: encodeABI(),
             to: contractAddress,
             from: davId,
-            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress, value: fullPrice })),
+            gas: Contracts.toSafeGasLimit(await estimateGas({
+                from: davId,
+                to: contractAddress,
+                value: fullPrice,
+            })),
             value: fullPrice,
             gasPrice: await web3.eth.getGasPrice(),
         };
@@ -144,7 +146,9 @@ class Contracts {
             .map(eventsObservable => eventsObservable.mergeAll())
             .map(eventsArray => rxjs_1.Observable.from(eventsArray))
             .mergeAll()
-            .filter(event => event.blockNumber > lastBlock || (event.blockNumber === lastBlock && event.transactionIndex > lastTransactionIndex))
+            .filter(event => event.blockNumber > lastBlock ||
+            (event.blockNumber === lastBlock &&
+                event.transactionIndex > lastTransactionIndex))
             .do(event => {
             lastBlock = event.blockNumber;
             lastTransactionIndex = event.transactionIndex;

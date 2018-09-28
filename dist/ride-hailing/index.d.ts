@@ -8,5 +8,5 @@ import VehicleLocationMessageParams from './VehicleLocationMessageParams';
  * @enum The enum RideHailingMissionStatus represent the mission statuses after the contract has been signed
  *  - all statuses are sent by the driver except PassengerIsComing.
  */
-export { NeedFilterParams, NeedParams, BidParams, MissionParams, MessageParams, VehicleLocationMessageParams, MissionStatus };
+export { NeedFilterParams, NeedParams, BidParams, MissionParams, MessageParams, VehicleLocationMessageParams, MissionStatus, };
 //# sourceMappingURL=index.d.ts.map

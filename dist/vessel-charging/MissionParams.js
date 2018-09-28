@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const MissionParams_1 = require("../MissionParams");
 /**
- * @class The Class boat-charging/MissionParams represent the parameters of boat-charging mission.
+ * @class The Class vessel-charging/MissionParams represent the parameters of vessel-charging mission.
  */
 class MissionParams extends MissionParams_1.default {
     constructor(values) {
@@ -22,7 +22,7 @@ class MissionParams extends MissionParams_1.default {
         super.deserialize(json);
     }
 }
-MissionParams._protocol = 'boat_charging';
+MissionParams._protocol = 'vessel_charging';
 MissionParams._messageType = 'mission';
 exports.default = MissionParams;
 

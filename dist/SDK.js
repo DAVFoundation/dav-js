@@ -8,6 +8,7 @@ const Contracts_1 = require("./Contracts");
 class SDK {
     constructor(_config) {
         this._config = _config;
+        /**/
     }
     /**
      * @method getIdentity Used to create an instance DAV Identity class.

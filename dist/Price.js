@@ -15,7 +15,9 @@ class Price {
      * @param other another price object to compare to current.
      */
     equals(other) {
-        return this.value === other.value && this.type === other.type && this.description === other.description;
+        return (this.value === other.value &&
+            this.type === other.type &&
+            this.description === other.description);
     }
 }
 exports.default = Price;

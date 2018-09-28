@@ -6,5 +6,6 @@ import Config from './Config';
 import Message from './Message';
 import Need from './Need';
 import KafkaNode from './KafkaNode';
-export { SDKFactory, Mission, Bid, IConfig, Config, Message, Need, KafkaNode, };
+import { retryPromise } from './retryPromise';
+export { SDKFactory, Mission, Bid, IConfig, Config, Message, Need, KafkaNode, retryPromise, };
 //# sourceMappingURL=index.d.ts.map
