@@ -43,16 +43,23 @@ describe('BidParams class', () => {
         availableUntil: 1535441623658,
         energySource: 'hydro',
         amenities: [5],
-        provider: [5],
+        provider: "N3m0",
         isCommitted: true,
-        manufacturer: [5],
-        model: [5],
+        manufacturer: 'manufacturer_name',
+        model: 'model_name',
         neederDavId: 'davId',
       };
 
     describe('serialize method', () => {
         it('should return serialized bid params object with the current values', () => {
             expect(bidParams.serialize()).toEqual(serializedBidParams);
+        });
+    });
+    describe('deserialize method', () => {
+        it('should return BidParams instance with the current parameters', () => {
+            const bidParamsObject = new BidParams();
+            bidParamsObject.deserialize(serializedBidParams);
+            expect(bidParamsObject).toEqual(bidParams);
         });
     });
 });
