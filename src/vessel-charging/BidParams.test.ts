@@ -22,10 +22,8 @@ describe('BidParams class', () => {
         manufacturer: 'manufacturer_name',
         model: 'model_name',
       });
-
       bidParams.id = 'bidSource';
       bidParams.neederDavId = 'davId';
-
       const serializedBidParams: any = {
         ttl: undefined,
         protocol: 'boat_charging',
