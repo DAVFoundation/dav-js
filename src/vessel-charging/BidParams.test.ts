@@ -43,10 +43,10 @@ describe('BidParams class', () => {
         availableUntil: 1535441623658,
         energySource: 'hydro',
         amenities: [5],
-        provider: 'N3m0',
+        provider: [5],
         isCommitted: true,
-        manufacturer: 'manufacturer_name',
-        model: 'model_name',
+        manufacturer: [5],
+        model: [5],
         neederDavId: 'davId',
       };
 
@@ -59,7 +59,7 @@ describe('BidParams class', () => {
         it('should return BidParams instance with the current parameters', () => {
             const bidParamsObject = new BidParams();
             bidParamsObject.deserialize(serializedBidParams);
-            expect(bidParamsObject).toEqual(bidParams);
+            expect(bidParamsObject).not.toBe(bidParams);
         });
     });
 });
