@@ -43,7 +43,7 @@ describe('BidParams class', () => {
         availableUntil: 1535441623658,
         energySource: 'hydro',
         amenities: [5],
-        provider: "N3m0",
+        provider: 'N3m0',
         isCommitted: true,
         manufacturer: 'manufacturer_name',
         model: 'model_name',
