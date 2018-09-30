@@ -11,19 +11,28 @@ import sdkLogger from './sdkLogger';
 
 export default class Kafka extends KafkaBase implements IKafka {
   private async getKafkaClient(config: IConfig): Promise<KafkaClient> {
-    return retryPromise(currentAttempt => new Promise<KafkaClient>((resolve, reject) => {
-      const client = new KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
-      sdkLogger(`Kafka connecting... ${currentAttempt > 1 ? `${currentAttempt} try` : ''}`);
-      client.connect();
-      client.on('ready', () => {
-        sdkLogger(`Kafka connected`);
-        resolve(client);
-      });
-      client.on('error', err => {
-        sdkLogger(`Kafka connection error ${err}`);
-        reject(err);
-      });
-    }));
+    return retryPromise(
+      currentAttempt =>
+        new Promise<KafkaClient>((resolve, reject) => {
+          const client = new KafkaClient({
+            kafkaHost: config.kafkaSeedUrls[0],
+          });
+          sdkLogger(
+            `Kafka connecting... ${
+              currentAttempt > 1 ? `${currentAttempt} try` : ''
+            }`,
+          );
+          client.connect();
+          client.on('ready', () => {
+            sdkLogger(`Kafka connected`);
+            resolve(client);
+          });
+          client.on('error', err => {
+            sdkLogger(`Kafka connection error ${err}`);
+            reject(err);
+          });
+        }),
+    );
   }
 
   private async getProducer(config: IConfig): Promise<Producer> {
@@ -45,22 +54,29 @@ export default class Kafka extends KafkaBase implements IKafka {
   }
 
   public async createTopic(topicId: string, config: IConfig): Promise<void> {
-    return retryPromise(currentAttempt => new Promise<void>(async (resolve, reject) => {
-      const client = await this.getKafkaClient(config);
-      sdkLogger(`Kafka creating topic ${topicId}... ${currentAttempt > 1 ? `${currentAttempt} try` : ''}`);
-      (client as any).createTopics(
-        [{ topic: topicId, partitions: 1, replicationFactor: 1 }],
-        (err: any, data: any) => {
-          if (err) {
-            sdkLogger(`Kafka error creating topic ${topicId}`);
-            reject(err);
-          } else {
-            sdkLogger(`Kafka topic created ${topicId}`);
-            resolve();
-          }
-        },
-      );
-    }));
+    return retryPromise(
+      currentAttempt =>
+        new Promise<void>(async (resolve, reject) => {
+          const client = await this.getKafkaClient(config);
+          sdkLogger(
+            `Kafka creating topic ${topicId}... ${
+              currentAttempt > 1 ? `${currentAttempt} try` : ''
+            }`,
+          );
+          (client as any).createTopics(
+            [{ topic: topicId, partitions: 1, replicationFactor: 1 }],
+            (err: any, data: any) => {
+              if (err) {
+                sdkLogger(`Kafka error creating topic ${topicId}`);
+                reject(err);
+              } else {
+                sdkLogger(`Kafka topic created ${topicId}`);
+                resolve();
+              }
+            },
+          );
+        }),
+    );
   }
 
   public sendMessage(
@@ -75,19 +91,26 @@ export default class Kafka extends KafkaBase implements IKafka {
     payloads: ProduceRequest[],
     config: IConfig,
   ): Promise<void> {
-    return retryPromise(currentAttempt => new Promise<void>(async (resolve, reject) => {
-      const producer = await this.getProducer(config);
-      sdkLogger(`Kafka sending ${JSON.stringify(payloads)}... ${currentAttempt > 1 ? `${currentAttempt} try` : ''}`);
-      producer.send(payloads, (err: any, data: any) => {
-        if (err) {
-          sdkLogger(`Kafka error sending ${JSON.stringify(payloads)}`);
-          reject(err);
-        } else {
-          sdkLogger(`Kafka sent ${JSON.stringify(payloads)}`);
-          resolve();
-        }
-      });
-    }));
+    return retryPromise(
+      currentAttempt =>
+        new Promise<void>(async (resolve, reject) => {
+          const producer = await this.getProducer(config);
+          sdkLogger(
+            `Kafka sending ${JSON.stringify(payloads)}... ${
+              currentAttempt > 1 ? `${currentAttempt} try` : ''
+            }`,
+          );
+          producer.send(payloads, (err: any, data: any) => {
+            if (err) {
+              sdkLogger(`Kafka error sending ${JSON.stringify(payloads)}`);
+              reject(err);
+            } else {
+              sdkLogger(`Kafka sent ${JSON.stringify(payloads)}`);
+              resolve();
+            }
+          });
+        }),
+    );
   }
 
   public sendParams(

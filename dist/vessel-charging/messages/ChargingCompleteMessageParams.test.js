@@ -17,7 +17,12 @@ describe('MessageParams class', () => {
         });
     });
     describe('deserialize method', () => {
-        it('should return MessageParams instance with the current parameters', () => {
+        it('should return a MessageParams instance', () => {
+            const messageParamsObject = new ChargingCompleteMessageParams_1.default();
+            messageParamsObject.deserialize(serializedMessageParams);
+            expect(messageParamsObject).toBeInstanceOf(ChargingCompleteMessageParams_1.default);
+        });
+        it('should return the correct deserialized parameters', () => {
             const messageParamsObject = new ChargingCompleteMessageParams_1.default();
             messageParamsObject.deserialize(serializedMessageParams);
             expect(messageParamsObject).toEqual(messageParams);

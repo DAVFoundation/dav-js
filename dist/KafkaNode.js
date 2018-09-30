@@ -10,7 +10,9 @@ const sdkLogger_1 = require("./sdkLogger");
 class Kafka extends KafkaBase_1.default {
     async getKafkaClient(config) {
         return _1.retryPromise(currentAttempt => new Promise((resolve, reject) => {
-            const client = new kafka_node_1.KafkaClient({ kafkaHost: config.kafkaSeedUrls[0] });
+            const client = new kafka_node_1.KafkaClient({
+                kafkaHost: config.kafkaSeedUrls[0],
+            });
             sdkLogger_1.default(`Kafka connecting... ${currentAttempt > 1 ? `${currentAttempt} try` : ''}`);
             client.connect();
             client.on('ready', () => {

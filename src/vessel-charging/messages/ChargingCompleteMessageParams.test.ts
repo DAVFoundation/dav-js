@@ -19,7 +19,13 @@ describe('MessageParams class', () => {
   });
 
   describe('deserialize method', () => {
-    it('should return MessageParams instance with the current parameters', () => {
+    it('should return a MessageParams instance', () => {
+      const messageParamsObject = new MessageParams();
+      messageParamsObject.deserialize(serializedMessageParams);
+      expect(messageParamsObject).toBeInstanceOf(MessageParams);
+    });
+
+    it('should return the correct deserialized parameters', () => {
       const messageParamsObject = new MessageParams();
       messageParamsObject.deserialize(serializedMessageParams);
       expect(messageParamsObject).toEqual(messageParams);
