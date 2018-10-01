@@ -14,7 +14,21 @@ import StartingMessageParams from './messages/StartingMessageParams';
 import StatusRequestMessageParams from './messages/StatusRequestMessageParams';
 import VesselStatusMessageParams from './messages/VesselStatusMessageParams';
 
-export { enums, NeedParams, NeedFilterParams, BidParams, MissionParams };
+export {
+  enums,
+  NeedParams,
+  NeedFilterParams,
+  BidParams,
+  MissionParams,
+  ChargingArrivalMessageParams,
+  ChargingCompleteMessageParams,
+  ChargingStartedMessageParams,
+  DeclineMessageParams,
+  ProviderStatusMessageParams,
+  StartingMessageParams,
+  StatusRequestMessageParams,
+  VesselStatusMessageParams,
+};
 
 KafkaMessageFactory.instance.registerMessageClasses([
   {
