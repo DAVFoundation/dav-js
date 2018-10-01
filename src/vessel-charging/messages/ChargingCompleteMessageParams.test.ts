@@ -12,7 +12,7 @@ describe('MessageParams class', () => {
       protocol: 'vessel_charging',
       type: 'charging_complete_message',
       senderId: 'TOPIC_ID',
-    }
+    };
   }
 
   describe('serialize method', () => {
