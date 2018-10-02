@@ -46,6 +46,7 @@ export default class Bid<T extends BidParams> {
         this._config,
       );
     }
+    const test = 1234;
     return this._kafkaMessageStream;
   }
 
@@ -148,10 +149,10 @@ export default class Bid<T extends BidParams> {
     const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6 or Channel#3
     const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(
       filterTypes ||
-        KafkaMessageFactory.instance.getMessageTypes(
-          this._params.protocol,
-          MessageCategories.Message,
-        ),
+      KafkaMessageFactory.instance.getMessageTypes(
+        this._params.protocol,
+        MessageCategories.Message,
+      ),
     );
     const messageStream = messageParamsStream.map(
       (params: U) => new Message<U>(this._selfId, params, this._config),
@@ -164,7 +165,7 @@ export default class Bid<T extends BidParams> {
    */
   public async missions<V extends MissionParams>(): Promise<
     Observable<Mission<V>>
-  > {
+    > {
     const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
     const missionParamsStream: Observable<V> = kafkaMessageStream.filterType(
       KafkaMessageFactory.instance.getMessageTypes(
@@ -195,7 +196,7 @@ export default class Bid<T extends BidParams> {
     const kafkaMessageStream: KafkaMessageStream = await this.getKafkaMessageStream(); // Channel#6
     const commitmentRequestParamsStream: Observable<
       CommitmentRequestParams
-    > = kafkaMessageStream.filterType([CommitmentRequestParams._messageType]);
+      > = kafkaMessageStream.filterType([CommitmentRequestParams._messageType]);
     const commitmentRequestStream = commitmentRequestParamsStream.map(
       commitmentRequestParams =>
         new CommitmentRequest(

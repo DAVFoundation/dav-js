@@ -13,13 +13,21 @@ exports.BidParams = BidParams_1.default;
 const MissionParams_1 = require("./MissionParams");
 exports.MissionParams = MissionParams_1.default;
 const ChargingArrivalMessageParams_1 = require("./messages/ChargingArrivalMessageParams");
+exports.ChargingArrivalMessageParams = ChargingArrivalMessageParams_1.default;
 const ChargingCompleteMessageParams_1 = require("./messages/ChargingCompleteMessageParams");
+exports.ChargingCompleteMessageParams = ChargingCompleteMessageParams_1.default;
 const ChargingStartedMessageParams_1 = require("./messages/ChargingStartedMessageParams");
+exports.ChargingStartedMessageParams = ChargingStartedMessageParams_1.default;
 const DeclineMessageParams_1 = require("./messages/DeclineMessageParams");
+exports.DeclineMessageParams = DeclineMessageParams_1.default;
 const ProviderStatusMessageParams_1 = require("./messages/ProviderStatusMessageParams");
+exports.ProviderStatusMessageParams = ProviderStatusMessageParams_1.default;
 const StartingMessageParams_1 = require("./messages/StartingMessageParams");
+exports.StartingMessageParams = StartingMessageParams_1.default;
 const StatusRequestMessageParams_1 = require("./messages/StatusRequestMessageParams");
+exports.StatusRequestMessageParams = StatusRequestMessageParams_1.default;
 const VesselStatusMessageParams_1 = require("./messages/VesselStatusMessageParams");
+exports.VesselStatusMessageParams = VesselStatusMessageParams_1.default;
 KafkaMessageFactory_2.default.instance.registerMessageClasses([
     {
         protocol: NeedFilterParams_1.default._protocol,
