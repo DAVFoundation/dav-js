@@ -21,7 +21,7 @@
     "pre-publish": "gulp pre-publish",
     "build-browser-dev": "webpack --mode development --config webpack.browser.config.js",
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
-    "create-dist": "gulp create-dist",
+    "create-dist": "gulp create-dist && git add dist/. && git commit -m \"chore: update dist files\"",
     "preinstall": "(cp ./.githooks/* .git/hooks) || true",
     "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
     "jest": "gulp jest",
