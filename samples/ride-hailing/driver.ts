@@ -55,13 +55,8 @@ async function runProvider(configuration?: IConfig) {
         }, 3000);
       };
 
-      const onMissionCreated = async (oldMission: Mission<MissionParams>) => {
-        console.log(`got mission: ${JSON.stringify(oldMission.params)}`);
-        const mission = identity.mission(
-          oldMission.id,
-          oldMission.peerId,
-          oldMission.params,
-        );
+      const onMissionCreated = async (mission: Mission<MissionParams>) => {
+        console.log(`got mission: ${JSON.stringify(mission.params)}`);
         setTimeout(() => {
           mission.sendMessage(
             new VehicleLocationMessageParams({
