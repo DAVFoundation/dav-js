@@ -32,6 +32,7 @@ class Bid {
         if (!this._kafkaMessageStream) {
             this._kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config);
         }
+        const test = 1234;
         return this._kafkaMessageStream;
     }
     async requestCommitment() {

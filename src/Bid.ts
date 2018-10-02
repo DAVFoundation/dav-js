@@ -46,7 +46,6 @@ export default class Bid<T extends BidParams> {
         this._config,
       );
     }
-    const test = 1234;
     return this._kafkaMessageStream;
   }
 
