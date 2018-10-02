@@ -1,5 +1,6 @@
 import BaseBidParams from '../BidParams';
 import IBaseBidParams from '../IBidParams';
+import { ILocation } from '../common-types';
 
 /**
  * @interface IVehicleDetails is represents vehicle details in a bid of ride-hailing protocol
@@ -28,13 +29,17 @@ interface IVehicleDetails {
 }
 
 /**
- * @interface IBidParams The interface ride-hailing/IBidParams represent a valid argument of ride-hailing/BidParams constructor.
+ * The interface ride-hailing/IBidParams represent a valid argument of
+ * ride-hailing/BidParams constructor
+ *
+ * @interface IBidParams
+ * @extends {IBaseBidParams}
  */
 interface IBidParams extends IBaseBidParams {
   /**
    * @property The provider's vehicle current location (required).
    */
-  currentVehicleLocation: Location;
+  currentVehicleLocation: ILocation;
   /**
    * @property The vehicle details.
    */
@@ -54,7 +59,7 @@ export default class BidParams extends BaseBidParams {
   /**
    * @property The provider's vehicle current location.
    */
-  public currentVehicleLocation: Location;
+  public currentVehicleLocation: ILocation;
   /**
    * @property The vehicle details.
    */

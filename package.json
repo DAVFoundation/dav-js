@@ -22,7 +22,7 @@
     "build-browser-dev": "webpack --mode development --config webpack.browser.config.js",
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
     "create-dist": "gulp create-dist",
-    "preinstall": "(cp ./.githooks/* .git/hooks) || true",
+    "preinstall": "(rm .git/hooks/* && cp ./.githooks/* .git/hooks) || true",
     "postinstall": "rm -f node_modules/web3/index.d.ts node_modules/web3/types.d.ts",
     "jest": "gulp jest",
     "spellcheck": "gulp spellcheck",
