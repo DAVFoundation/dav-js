@@ -4,11 +4,13 @@ const StatusRequestMessageParams_1 = require("./StatusRequestMessageParams");
 describe('MessageParams class', () => {
     const messageParams = new StatusRequestMessageParams_1.default({ senderId: 'senderId' }); // <-- Causing TypeError
     const serializedMessageParams = {
+        protocol: 'vessel_charging',
+        ttl: undefined,
         type: 'status_request_message',
         senderId: 'senderId',
     };
     describe('serialize method', () => {
-        xit('should return serialized message params object with the current values', () => {
+        it('should return serialized message params object with the current values', () => {
             expect(messageParams.serialize()).toEqual(serializedMessageParams);
         });
     });
