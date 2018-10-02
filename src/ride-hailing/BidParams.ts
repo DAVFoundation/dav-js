@@ -29,7 +29,11 @@ interface IVehicleDetails {
 }
 
 /**
- * @interface IBidParams The interface ride-hailing/IBidParams represent a valid argument of ride-hailing/BidParams constructor.
+ * The interface ride-hailing/IBidParams represent a valid argument of
+ * ride-hailing/BidParams constructor
+ *
+ * @interface IBidParams
+ * @extends {IBaseBidParams}
  */
 interface IBidParams extends IBaseBidParams {
   /**
