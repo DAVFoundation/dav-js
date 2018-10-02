@@ -5,4 +5,4 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 git add dist/.
-(git commit -m "chore: update dist files") || true
+git commit -m "chore: update dist files"
