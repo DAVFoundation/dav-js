@@ -62,11 +62,16 @@ describe('NeedFilterParams class', () => {
       console.log('serialized object', needFilterParamsTest.serialize());
       console.log('test serialized object', serializedNeedFilterParamsTest);
       // test object equal check
-      console.log('triple equal: ', needFilterParamsTest.serialize() === serializedNeedFilterParamsTest);
-      console.log('expect toEqual: ', expect(needFilterParamsTest.serialize()).toEqual(serializedNeedFilterParamsTest));
+      console.log('triple equal: ',
+        needFilterParamsTest.serialize() === serializedNeedFilterParamsTest);
+      console.log('expect toEqual: ',
+        expect(needFilterParamsTest.serialize()).toEqual(serializedNeedFilterParamsTest));
       // non test object equal check
-      console.log('non-tester triple equal: ', needFilterParams.serialize() === serializedNeedFilterParams);
-      console.log('non-tester expect toEqual: ', expect(needFilterParams.serialize()).toEqual(serializedNeedFilterParams));
+      console.log('non-tester triple equal: ',
+        needFilterParams.serialize() === serializedNeedFilterParams);
+      console.log('non-tester expect toEqual: ',
+        expect(needFilterParams.serialize()).toEqual(serializedNeedFilterParams));
+
       expect(needFilterParams.serialize()).toEqual(serializedNeedFilterParams);
     });
   });
