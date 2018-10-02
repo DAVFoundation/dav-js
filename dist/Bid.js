@@ -32,6 +32,8 @@ class Bid {
         if (!this._kafkaMessageStream) {
             this._kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config);
         }
+        // tslint:disable-next-line:no-console
+        console.log('nothing');
         return this._kafkaMessageStream;
     }
     async requestCommitment() {
