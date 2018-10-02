@@ -59,16 +59,22 @@ describe('NeedFilterParams class', () => {
   describe('serialize method', () => {
     it('should return serialized object', () => {
       // test objects
+      // tslint:disable-next-line:no-console
       console.log('serialized object', needFilterParamsTest.serialize());
+      // tslint:disable-next-line:no-console
       console.log('test serialized object', serializedNeedFilterParamsTest);
       // test object equal check
+      // tslint:disable-next-line:no-console
       console.log('triple equal: ',
         needFilterParamsTest.serialize() === serializedNeedFilterParamsTest);
+      // tslint:disable-next-line:no-console
       console.log('expect toEqual: ',
         expect(needFilterParamsTest.serialize()).toEqual(serializedNeedFilterParamsTest));
       // non test object equal check
+      // tslint:disable-next-line:no-console
       console.log('non-tester triple equal: ',
         needFilterParams.serialize() === serializedNeedFilterParams);
+      // tslint:disable-next-line:no-console
       console.log('non-tester expect toEqual: ',
         expect(needFilterParams.serialize()).toEqual(serializedNeedFilterParams));
 
