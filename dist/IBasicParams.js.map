@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/IBasicParams.ts"],"names":[],"mappings":"","file":"IBasicParams.js","sourcesContent":["export default interface IBasicParams {\n  /**\n   * Hop limit, in seconds, for the inherited class.\n   */\n  ttl: number; // TTL in seconds\n}\n"]}

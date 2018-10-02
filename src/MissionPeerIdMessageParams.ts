@@ -4,35 +4,23 @@ import BaseMessageParams from './MessageParams';
  * @class The Class MissionPeerIdMessageParams represent internal message from provider to consumer to announce his mission selfId.
  */
 export default class MissionPeerIdMessageParams extends BaseMessageParams {
+  public static _protocol = '';
+  public static _messageType = 'mission_peer_id_message';
 
-    private static _protocol = 'general';
-    private static _type = 'mission_peer_id_message';
+  constructor(values?: Partial<MissionPeerIdMessageParams>) {
+    super(
+      MissionPeerIdMessageParams._protocol,
+      MissionPeerIdMessageParams._messageType,
+      values,
+    );
+  }
 
-    public static getMessageType(): string {
-        return MissionPeerIdMessageParams._type;
-    }
+  public serialize() {
+    const formattedParams = super.serialize();
+    return formattedParams;
+  }
 
-    public static getMessageProtocol(): string {
-        return MissionPeerIdMessageParams._protocol;
-    }
-
-    constructor(values?: Partial<MissionPeerIdMessageParams>) {
-        super(MissionPeerIdMessageParams._protocol, MissionPeerIdMessageParams._type, values);
-    }
-
-    public serialize() {
-        const formattedParams = super.serialize();
-        return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        const typeMap: any = {};
-        typeMap[MissionPeerIdMessageParams._type] = MissionPeerIdMessageParams;
-        typeMap.messages = [MissionPeerIdMessageParams._type];
-        return typeMap;
-    }
-
-    public  deserialize(json: any): void {
-        super.deserialize(json);
-    }
+  public deserialize(json: any): void {
+    super.deserialize(json);
+  }
 }

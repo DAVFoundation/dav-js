@@ -1,24 +1,20 @@
 import BaseMessageParams from '../MessageParams';
 /**
- * @class The Class boat-charging/ChargingStartedMessageParams represent the parameters of provider notifying that charging has begun.
+ * @class The Class vessel-charging/ChargingStartedMessageParams represent the parameters of provider notifying that charging has begun.
  */
 export default class MessageParams extends BaseMessageParams {
-    private static _type = 'charging_started_message';
+  public static _messageType = 'charging_started_message';
 
-    public static getMessageType(): string {
-        return MessageParams._type;
-    }
+  constructor(values?: Partial<MessageParams>) {
+    super(MessageParams._messageType, values);
+  }
 
-    constructor(values?: Partial<MessageParams>) {
-        super(MessageParams._type, values);
-    }
+  public serialize() {
+    const formattedParams = super.serialize();
+    return formattedParams;
+  }
 
-    public serialize() {
-        const formattedParams = super.serialize();
-        return formattedParams;
-    }
-
-    public deserialize(json: any): void {
-        const messageParams = super.deserialize(json);
-    }
+  public deserialize(json: any): void {
+    const messageParams = super.deserialize(json);
+  }
 }

@@ -1,30 +1,21 @@
 import BaseMessageParams from '../MessageParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
- * @class The Class boat-charging/MessageParams represent the parameters of boat-charging message.
+ * @class The Class vessel-charging/MessageParams represent the parameters of vessel-charging message.
  */
 export default abstract class MessageParams extends BaseMessageParams {
-    protected static _protocol = 'boat_charging';
+  public static _protocol = 'vessel_charging';
 
-    public static getMessageProtocol(): string {
-        return MessageParams._protocol;
-    }
+  constructor(messageType: string, values?: Partial<MessageParams>) {
+    super(MessageParams._protocol, messageType, values);
+  }
 
-    constructor(messageType: string, values?: Partial<MessageParams>) {
-        super(MessageParams._protocol, messageType, values);
-    }
+  public serialize() {
+    const formattedParams = super.serialize();
+    return formattedParams;
+  }
 
-    public serialize() {
-        const formattedParams = super.serialize();
-        return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
-    }
-
-    public deserialize(json: any): void {
-        super.deserialize(json);
-    }
+  public deserialize(json: any): void {
+    super.deserialize(json);
+  }
 }

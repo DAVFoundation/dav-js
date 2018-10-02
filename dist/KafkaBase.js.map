@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/KafkaBase.ts"],"names":[],"mappings":";;AAAA,+BAAoC;AAEpC;IACS,eAAe;QACpB,OAAO,SAAM,EAAE,CAAC;IAClB,CAAC;CACF;AAJD,4BAIC","file":"KafkaBase.js","sourcesContent":["import { v4 as uuidV4 } from 'uuid';\n\nexport default abstract class KafkaBase {\n  public generateTopicId(): string {\n    return uuidV4();\n  }\n}\n"]}

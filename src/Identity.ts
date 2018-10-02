@@ -12,14 +12,16 @@ import Mission from './Mission';
 import Kafka from './Kafka';
 import axios from 'axios';
 import KafkaMessageStream from './KafkaMessageStream';
+import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
 /**
  * @class The Identity class represent registered DAV identity instance.
  */
 export default class Identity {
-
   private topics: any = {};
 
-  constructor(public id: ID, public davId: DavID, private _config: IConfig) { /**/ }
+  constructor(public id: ID, public davId: DavID, private _config: IConfig) {
+    /**/
+  }
 
   private async registerNewTopic() {
     const topic = Kafka.generateTopicId();
@@ -37,12 +39,17 @@ export default class Identity {
    * @param needParams the need parameters.
    * @returns the created need.
    */
-  public async publishNeed<T extends NeedParams>(needParams: T): Promise<Need<T>> {
+  public async publishNeed<T extends NeedParams>(
+    needParams: T,
+  ): Promise<Need<T>> {
     const bidsChannelName = await this.registerNewTopic(); // Channel#3
     needParams.id = bidsChannelName;
     needParams.davId = this.davId || needParams.davId;
     try {
-      await axios.post(`${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`, needParams.serialize());
+      await axios.post(
+        `${this._config.apiSeedUrls[0]}/publishNeed/${bidsChannelName}`,
+        needParams.serialize(),
+      );
     } catch (err) {
       throw new Error(`Fail to publish need: ${err}`);
     }
@@ -54,7 +61,9 @@ export default class Identity {
    * @param needFilterParams the filter parameters.
    * @returns Observable for needs subscription.
    */
-  public async needsForType<T extends NeedParams>(needFilterParams: NeedFilterParams): Promise<Observable<Need<T>>> {
+  public async needsForType<T extends NeedParams>(
+    needFilterParams: NeedFilterParams,
+  ): Promise<Observable<Need<T>>> {
     const formattedParams = needFilterParams.serialize();
     let needTypeTopic = '';
     if (this.topics[formattedParams.protocol]) {
@@ -63,30 +72,49 @@ export default class Identity {
       needTypeTopic = await this.registerNewTopic();
       this.topics[formattedParams.protocol] = needTypeTopic;
       try {
-        await axios.post(`${this._config.apiSeedUrls[0]}/needsForType/${needTypeTopic}`, formattedParams);
+        await axios.post(
+          `${this._config.apiSeedUrls[0]}/needsForType/${needTypeTopic}`,
+          formattedParams,
+        );
       } catch (err) {
         throw new Error(`Needs registration failed: ${err}`);
       }
     }
-    const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(needTypeTopic, this._config); // Channel#2
-    const protocolTypesMap = needFilterParams.getProtocolTypes();
-    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(protocolTypesMap, protocolTypesMap.needs);
-    const observable = Observable.fromObservable(needParamsStream.map((needParams: T) =>
-      new Need<T>(needTypeTopic, needParams, this._config)), needParamsStream.topic);
+    const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(
+      needTypeTopic,
+      this._config,
+    ); // Channel#2
+    const needParamsStream: Observable<T> = kafkaMessageStream.filterType(
+      KafkaMessageFactory.instance.getMessageTypes(
+        needFilterParams.protocol,
+        MessageCategories.Need,
+      ),
+    );
+    const observable = Observable.fromObservable(
+      needParamsStream.map(
+        (needParams: T) => new Need<T>(needTypeTopic, needParams, this._config),
+      ),
+      needParamsStream.topic,
+    );
     return observable;
   }
   /**
    * @method missions Used to subscribe for missions.
    * @returns Observable for missions subscription.
    */
-  public async missions<T extends MissionParams, U extends MessageParams>(): Promise<Observable<Mission<T>>> {
+  public async missions<
+    T extends MissionParams,
+    U extends MessageParams
+  >(): Promise<Observable<Mission<T>>> {
     throw new Error('Not implemented in this version');
   }
   /**
    * @method messages Used to subscribe for messages.
    * @returns Observable for messages subscription.
    */
-  public async messages<T extends MessageParams>(): Promise<Observable<Message<T>>> {
+  public async messages<T extends MessageParams>(): Promise<
+    Observable<Message<T>>
+  > {
     throw new Error('Not implemented in this version');
   }
   /**
@@ -95,7 +123,10 @@ export default class Identity {
    * @param params The need parameters.
    * @returns The restored need.
    */
-  public need<T extends NeedParams, U extends MessageParams>(needSelfId: ID, params: T): Need<T> {
+  public need<T extends NeedParams, U extends MessageParams>(
+    needSelfId: ID,
+    params: T,
+  ): Need<T> {
     return new Need(needSelfId, params, this._config);
   }
   /**
@@ -104,7 +135,10 @@ export default class Identity {
    * @param params The bid parameters.
    * @returns The restored bid.
    */
-  public bid<T extends BidParams, U extends MessageParams>(bidSelfId: ID, params: T): Bid<T> {
+  public bid<T extends BidParams, U extends MessageParams>(
+    bidSelfId: ID,
+    params: T,
+  ): Bid<T> {
     return new Bid(bidSelfId, params, this._config);
   }
   /**
@@ -114,7 +148,11 @@ export default class Identity {
    * @param params The mission parameters.
    * @returns The restored mission.
    */
-  public mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, missionPeerId: ID, params: T): Mission<T> {
+  public mission<T extends MissionParams, U extends MessageParams>(
+    missionSelfId: ID,
+    missionPeerId: ID,
+    params: T,
+  ): Mission<T> {
     return new Mission(missionSelfId, missionPeerId, params, this._config);
   }
 }

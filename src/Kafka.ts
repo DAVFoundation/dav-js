@@ -6,11 +6,11 @@ const runningOnBrowser = process.env.BROWSER || false;
 let Kafka: IKafka;
 
 const loadKafka = () => {
-    if (runningOnBrowser) {
-        Kafka = new (require('./KafkaApi').default)();
-    } else {
-        Kafka = new (require('./KafkaNode').default)();
-    }
+  if (runningOnBrowser) {
+    Kafka = new (require('./KafkaApi')).default();
+  } else {
+    Kafka = new (require('./KafkaNode')).default();
+  }
 };
 loadKafka();
 export default Kafka;

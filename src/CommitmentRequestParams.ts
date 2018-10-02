@@ -1,49 +1,37 @@
 import BasicParams from './BasicParams';
-import IBasicParams from './IBasicParams';
 
 export interface ICommitmentRequestParams extends BasicParams {
-    neederId: string;
+  neederId: string;
 }
 
 export default class CommitmentRequestParams extends BasicParams {
+  public static _protocol = '';
+  public static _messageType = 'commitment_request';
 
-    public static _protocol = 'general';
-    public static _type = 'commitment-request';
+  public neederId: string;
 
-    public neederId: string;
+  constructor(values?: Partial<ICommitmentRequestParams>) {
+    super(
+      CommitmentRequestParams._protocol,
+      CommitmentRequestParams._messageType,
+      values,
+    );
 
-    public static getMessageType(): string {
-        return CommitmentRequestParams._type;
+    if (!!values) {
+      this.neederId = values.neederId;
     }
+  }
 
-    public static getMessageProtocol(): string {
-        return CommitmentRequestParams._protocol;
-    }
+  public serialize() {
+    const formattedParams = super.serialize();
+    Object.assign(formattedParams, {
+      neederId: this.neederId,
+    });
+    return formattedParams;
+  }
 
-    constructor(values?: Partial<ICommitmentRequestParams>) {
-        super(CommitmentRequestParams._protocol, CommitmentRequestParams._type, values);
-        if (!!values) {
-            this.neederId = values.neederId;
-        }
-    }
-
-    public serialize() {
-        const formattedParams = super.serialize();
-        Object.assign(formattedParams, {
-            neederId: this.neederId,
-        });
-        return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        const typeMap: any = {};
-        typeMap[CommitmentRequestParams._type] = CommitmentRequestParams;
-        typeMap.messages = [CommitmentRequestParams._type];
-        return typeMap;
-    }
-
-    public deserialize(json: any): void {
-        super.deserialize(json);
-        this.neederId = json.neederId;
-    }
+  public deserialize(json: any): void {
+    super.deserialize(json);
+    this.neederId = json.neederId;
+  }
 }

@@ -6,8 +6,8 @@ tslint: FORCE
 jest: FORCE
 	npm run jest
 
-copy-contracts: FORCE
-	npm run copy-contracts
+create-dist: FORCE
+	npm run create-dist
 
 tsc: FORCE
 	npm run tsc
@@ -15,12 +15,16 @@ tsc: FORCE
 spellcheck: FORCE
 	npm run spellcheck
 
-pre-publish: FORCE
+pre-push: FORCE
+	npm run tslint
+	npm run jest
+	npm run spellcheck
+	npm run tsc
 	npm run typedoc
+	npm run create-dist
 
-build: tslint tsc jest pre-publish copy-contracts
-
-pre-push: spellcheck tslint tsc jest pre-publish
+pre-publish: FORCE
+	npm run pre-publish
 
 publish: pre-push
 	npm publish --access public

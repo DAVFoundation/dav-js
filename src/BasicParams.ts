@@ -4,36 +4,38 @@ import IBasicParams from './IBasicParams';
  * @class The abstract Class BasicParams represent common parameters to all the SDK's Params classes.
  */
 export default abstract class BasicParams {
-    /**
-     * Hop limit, in seconds, for the inherited class.
-     */
-    public ttl?: number; // TTL in seconds
+  /**
+   * Hop limit, in seconds, for the inherited class.
+   */
+  public ttl?: number; // TTL in seconds
 
-    public static getMessageType(): string {
-        throw new Error('Must be implemented by derived class');
+  public constructor(
+    private _protocol: string,
+    private _messageType: string,
+    values?: Partial<IBasicParams>,
+  ) {
+    if (!!values) {
+      this.ttl = values.ttl;
     }
+  }
 
-    public static getMessageProtocol(): string {
-        throw new Error('Must be implemented by derived class');
-    }
+  public serialize() {
+    return {
+      ttl: this.ttl,
+      protocol: this._protocol,
+      type: this._messageType,
+    };
+  }
 
-    public constructor(private _protocol: string, private _type: string, values?: Partial<IBasicParams>) {
-        if (!!values) {
-            this.ttl = values.ttl;
-        }
-    }
+  public get protocol(): string {
+    return this._protocol;
+  }
 
-    public serialize() {
-        return {
-            ttl: this.ttl,
-            protocol: this._protocol,
-            type: this._type,
-        };
-    }
+  public get messageType(): string {
+    return this._messageType;
+  }
 
-    public abstract getProtocolTypes(): any;
-
-    public deserialize(json: any): void {
-        this.ttl = json.ttl;
-    }
+  public deserialize(json: any): void {
+    this.ttl = json.ttl;
+  }
 }

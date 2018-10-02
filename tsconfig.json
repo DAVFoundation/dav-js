@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "target": "es2018",
     "module": "commonjs",
     "noImplicitAny": true,
@@ -7,9 +8,10 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "lib": ["es2017", "dom"],
-    "outDir": "dist"
+    "outDir": "build"
   },
   "include": [
     "src/**/*",
-  ],
+    "samples/**/*"
+  ]
 }

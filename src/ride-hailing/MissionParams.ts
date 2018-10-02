@@ -1,37 +1,23 @@
 import BaseMissionParams from '../MissionParams';
 import IBaseMissionParams from '../IMissionParams';
-import ProtocolTypes from './ProtocolTypes';
 
 /**
  * @class The Class ride-hailing/MissionParams represent the parameters of ride-hailing mission.
  */
 export default class MissionParams extends BaseMissionParams {
+  public static _protocol = 'ride_hailing';
+  public static _messageType = 'mission';
 
-    private static _protocol = 'ride_hailing';
-    private static _type = 'mission';
+  constructor(values?: Partial<IBaseMissionParams>) {
+    super(MissionParams._protocol, MissionParams._messageType, values);
+  }
 
-    public static getMessageType(): string {
-        return MissionParams._type;
-    }
+  public serialize() {
+    const formattedParams = super.serialize();
+    return formattedParams;
+  }
 
-    public static getMessageProtocol(): string {
-        return MissionParams._protocol;
-    }
-
-    constructor(values?: Partial<IBaseMissionParams>) {
-        super(MissionParams._protocol, MissionParams._type, values);
-    }
-
-    public serialize() {
-        const formattedParams = super.serialize();
-        return formattedParams;
-    }
-
-    public getProtocolTypes() {
-        return ProtocolTypes;
-    }
-
-    public deserialize(json: any): void {
-        super.deserialize(json);
-    }
+  public deserialize(json: any): void {
+    super.deserialize(json);
+  }
 }

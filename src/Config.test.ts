@@ -3,19 +3,15 @@ import { BlockchainType } from './common-enums';
 import { defaultConfiguration } from './Config';
 
 describe('Config class', () => {
-
-
   describe('check default configuration are set', () => {
-
     it('should contain all default configuration', async () => {
       const configuration = new Config({});
       expect(configuration).toEqual(defaultConfiguration);
     });
   });
 
-  describe('check costume configuration are set', () => {
-
-    it('should contain all costume configuration', async () => {
+  describe('check custom configurations are set', () => {
+    it('should contain all custom configuration', async () => {
       const configurationObject = {
         ethNodeUrl: 'ETH_NODE_URL',
         apiSeedUrls: ['API_SEED_URL_1', 'API_SEED_URL_2'],
@@ -34,5 +30,4 @@ describe('Config class', () => {
       expect(configuration).toEqual(configurationObject);
     });
   });
-
 });
