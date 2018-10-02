@@ -6,6 +6,7 @@ import Contract from 'web3/eth/contract';
 import { EventLog, TransactionReceipt } from 'web3/types';
 import { Observable } from 'rxjs';
 import IPrice from './IPrice';
+import sdkLogger from './sdkLogger';
 
 let contracts: ContractsArtifacts = {
   Identity: require('./contracts/Identity'),
@@ -51,17 +52,14 @@ export default class Contracts {
     return new Promise((resolve, reject) => {
       const transaction = web3.eth.sendSignedTransaction(rawTransaction);
       transaction.once('receipt', receipt => {
-        // tslint:disable-next-line:no-console
-        console.log(`Transaction succeeded: ${JSON.stringify(receipt)}`);
+        sdkLogger(`Web3 transaction succeeded: ${JSON.stringify(receipt)}`);
         resolve(receipt);
       });
       transaction.once('transactionHash', hash => {
-        // tslint:disable-next-line:no-console
-        console.log(`Transaction sent: ${hash}`);
+        sdkLogger(`Web3 transaction sent: ${hash}`);
       });
       transaction.on('error', err => {
-        // tslint:disable-next-line:no-console
-        console.log(`Transaction failed: ${JSON.stringify(err)}`);
+        sdkLogger(`Web3 transaction failed: ${JSON.stringify(err)}`);
         reject(err);
       });
     });
