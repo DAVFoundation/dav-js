@@ -1,7 +1,7 @@
 module.exports = {
   verbose: true,
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src/ride-hailing'],
   transform: {
     '\\.tsx?$': 'ts-jest',
   },
