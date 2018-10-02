@@ -18,7 +18,7 @@ script:
 - npm run tsc
 - npm run typedoc
 - npm run create-dist
-- echo "if this fails your code didn't update the dist files properly" && bash -c 'exit $([ -z "$(git status -s)" ])'
+- echo "if this fails your commit/s didn't update the dist files properly" && bash -c 'exit $([ -z "$(git status -s)" ])'
 notifications:
   email:
     on_success: change # default: change
