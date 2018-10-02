@@ -19,12 +19,12 @@ describe('NeedFilterParams class', () => {
       type: 'need_filter',
       area: {
         max: {
-        latitude: parseFloat((32.06836666390769).toFixed(6)),
-        longitude: parseFloat((34.78737405278662).toFixed(6)),
+          latitude: parseFloat((32.06836666390769).toFixed(6)),
+          longitude: parseFloat((34.78737405278662).toFixed(6)),
         },
         min: {
-        latitude: parseFloat((32.03239380095659).toFixed(6)),
-        longitude: parseFloat((34.74493228891106).toFixed(6)),
+          latitude: parseFloat((32.03239380095659).toFixed(6)),
+          longitude: parseFloat((34.74493228891106).toFixed(6)),
         },
       },
     };
