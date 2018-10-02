@@ -18,6 +18,7 @@ script:
 - npm run tsc
 - npm run typedoc
 - npm run create-dist
+- bash -c '[ -z "$(git status -s)" ] && { kill "$PPID"; exit 0; }'
 notifications:
   email:
     on_success: change # default: change
