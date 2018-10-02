@@ -46,8 +46,6 @@ export default class Bid<T extends BidParams> {
         this._config,
       );
     }
-    // tslint:disable-next-line:no-console
-    console.log('nothing');
     return this._kafkaMessageStream;
   }
 
