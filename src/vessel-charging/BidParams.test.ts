@@ -1,5 +1,5 @@
 import BidParams from './BidParams';
-import { EnergySources, Amenities } from './enums';
+import { EnergySources } from './enums';
 
 describe('BidParams class', () => {
   const bidParams = new BidParams({
@@ -21,8 +21,12 @@ describe('BidParams class', () => {
     neederDavId: 'davId',
   });
   const serializedBidParams: any = {
+    amenities: undefined,
+    provider: undefined,
+    model: undefined,
+    manufacturer: undefined,
     ttl: undefined,
-    protocol: 'boat_charging',
+    protocol: 'vessel_charging',
     type: 'bid',
     id: 'BID_TOPIC_ID',
     price: ['100000000000000000'],
