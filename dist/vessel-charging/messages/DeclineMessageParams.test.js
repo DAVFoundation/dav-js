@@ -19,7 +19,12 @@ describe('DeclineMessageParams class', () => {
         });
     });
     describe('deserialize method', () => {
-        it('should return deserialized message params with the current parameters', () => {
+        it('should return a MessageParams instance', () => {
+            const declineMessageObj = new DeclineMessageParams_1.default();
+            declineMessageObj.deserialize(serializedMessageParams);
+            expect(declineMessageObj).toBeInstanceOf(DeclineMessageParams_1.default);
+        });
+        it('should return a correct MessageParams object', () => {
             const declineMessageObj = new DeclineMessageParams_1.default({});
             declineMessageObj.deserialize(serializedMessageParams);
             expect(declineMessageObj).toEqual(declineMessageParams);
