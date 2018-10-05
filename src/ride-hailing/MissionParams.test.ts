@@ -28,7 +28,7 @@ describe('MissionParams class', () => {
       missionParamsObject.deserialize(serializedMissionParams);
       expect(missionParamsObject).toBeInstanceOf(MissionParams);
     });
-
+sdfsd
 	it('should return serialized MissionParams object', () => {
       const missionParamsObject = new MissionParams();
       missionParamsObject.deserialize(serializedMissionParams);
