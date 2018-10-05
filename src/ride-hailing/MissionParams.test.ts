@@ -23,13 +23,13 @@ describe('MissionParams class', () => {
   });
 
   describe('deserialize method', () => {
-  	//testing for instance
+  	// testing for instance
     it('should return serialized MissionParams instance with the current parameters', () => {
       const missionParamsObject = new MissionParams();
       missionParamsObject.deserialize(serializedMissionParams);
       expect(missionParamsObject).toBeInstanceOf(MissionParams);
     });
-    //testing for object content
+    // testing for object content
     it('should return serialized MissionParams object with the current parameters', () => {
       const missionParamsObject = new MissionParams();
       missionParamsObject.deserialize(serializedMissionParams);
