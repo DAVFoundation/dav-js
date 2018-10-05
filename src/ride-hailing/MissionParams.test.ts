@@ -28,11 +28,11 @@ describe('MissionParams class', () => {
       missionParamsObject.deserialize(serializedMissionParams);
       expect(missionParamsObject).toBeInstanceOf(MissionParams);
     });
-sdfsd
-	it('should return serialized MissionParams object', () => {
+
+	it('should return serialized MissionParams instance', () => {
       const missionParamsObject = new MissionParams();
       missionParamsObject.deserialize(serializedMissionParams);
       expect(missionParamsObject).toEqual(missionParams);
-    });
+    });	
   });
 });
