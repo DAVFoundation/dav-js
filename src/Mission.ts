@@ -32,29 +32,6 @@ export default class Mission<T extends MissionParams> {
     private _config: IConfig,
   ) {}
 
-  private async getPeerId(): Promise<ID> {
-    const kafkaMessageStream: KafkaMessageStream = await Kafka.messages(
-      this._selfId,
-      this._config,
-    ); // Channel#4 or Channel#6
-    const messageParamsStream = kafkaMessageStream.filterType(
-      KafkaMessageFactory.instance.getMessageTypes(
-        MissionPeerIdMessageParams._protocol,
-        MessageCategories.Message,
-      ),
-    );
-    const messageStream = messageParamsStream
-      .do((messageParams: MissionPeerIdMessageParams) => {
-        this._peerId = messageParams.senderId;
-      })
-      .map(
-        (messageParams: MissionPeerIdMessageParams) => messageParams.senderId,
-      )
-      .first()
-      .toPromise();
-    return messageStream;
-  }
-
   /**
    * @method signContract Used to transfer tokens to the basicMission contract in order to start the mission.
    * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
@@ -103,9 +80,6 @@ export default class Mission<T extends MissionParams> {
    * @param params message parameters.
    */
   public async sendMessage(params: MessageParams): Promise<void> {
-    if (!this._peerId) {
-      await this.getPeerId();
-    }
     params.senderId = this._selfId;
     return await Kafka.sendParams(this._peerId, params, this._config); // Channel#4
   }

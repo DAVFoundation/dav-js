@@ -14,6 +14,7 @@ import CommitmentRequest from './CommitmentRequest';
 import CommitmentConfirmation from './CommitmentConfirmation';
 import CommitmentRequestParams from './CommitmentRequestParams';
 import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
+import MissionPeerIdMessageParams from './MissionPeerIdMessageParams';
 /**
  * @class Bid class represent a bid for service request.
  */
@@ -117,10 +118,19 @@ export default class Bid<T extends BidParams> {
       // TODO: move this general message to kafka.createTopic
       throw new Error(`Fail to create a topic: ${err}`);
     }
+    const msgStream = await Kafka.messages(missionParams.id, this._config);
+    const peerIdPromise = new Promise<string>((resolve, reject) => {
+      msgStream.filterType([MissionPeerIdMessageParams._messageType])
+        .take(1)
+        .subscribe((m: MissionPeerIdMessageParams) => {
+          resolve(m.senderId);
+        }, reject);
+    });
     await Kafka.sendParams(bidderId, missionParams, this._config);
+    const peerId = await peerIdPromise;
     const mission = new Mission<V>(
       this._missionId,
-      null,
+      peerId,
       missionParams,
       this._config,
     );

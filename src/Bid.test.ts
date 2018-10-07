@@ -14,6 +14,7 @@ import CommitmentRequest from './CommitmentRequest';
 import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
 import { Observable } from './common-types';
 import AxiosMock from './mocks/AxiosMock';
+import MissionPeerIdMessageParams from './MissionPeerIdMessageParams';
 
 describe('Bid class', () => {
   const config = new Config({});
@@ -195,6 +196,11 @@ describe('Bid class', () => {
 
   describe('accept method', () => {
     it('should not throw any errors when get valid input and no errors', async () => {
+      const kafkaMessageStreamMock = {
+        filterType: jest.fn(() =>
+          RxObservable.from([new MissionPeerIdMessageParams({ senderId: null })]),
+        ),
+      };
       const kafkaMock = {
         createTopic: jest.fn((topicId: string, configParam: IConfig) =>
           Promise.resolve(),
@@ -203,6 +209,7 @@ describe('Bid class', () => {
           (needId: string, mParams: MessageParams, configParam: IConfig) =>
             Promise.resolve(),
         ),
+        messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
       const contractsMock = {
         approveMission: jest.fn(() => Promise.resolve()),
