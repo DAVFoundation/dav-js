@@ -12,7 +12,7 @@ import DeclineMessageParams from './messages/DeclineMessageParams';
 import ProviderStatusMessageParams from './messages/ProviderStatusMessageParams';
 import StartingMessageParams from './messages/StartingMessageParams';
 import StatusRequestMessageParams from './messages/StatusRequestMessageParams';
-import VesselStatusMessageParams from './messages/VesselStatusMessageParams';
+import StatusMessageParams from './messages/StatusMessageParams';
 
 export {
   enums,
@@ -27,7 +27,7 @@ export {
   ProviderStatusMessageParams,
   StartingMessageParams,
   StatusRequestMessageParams,
-  VesselStatusMessageParams,
+  StatusMessageParams,
 };
 
 KafkaMessageFactory.instance.registerMessageClasses([
@@ -98,9 +98,9 @@ KafkaMessageFactory.instance.registerMessageClasses([
     classType: StatusRequestMessageParams,
   },
   {
-    protocol: VesselStatusMessageParams._protocol,
-    messageType: VesselStatusMessageParams._messageType,
+    protocol: StatusMessageParams._protocol,
+    messageType: StatusMessageParams._messageType,
     messageCategory: MessageCategories.Message,
-    classType: VesselStatusMessageParams,
+    classType: StatusMessageParams,
   },
 ]);

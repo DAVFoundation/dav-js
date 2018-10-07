@@ -5,7 +5,7 @@ import Config from '../../src/Config';
 import BidParams from '../../src/vessel-charging/BidParams';
 import MissionParams from '../../src/vessel-charging/MissionParams';
 import StatusRequestMessageParams from '../../src/vessel-charging/messages/StatusRequestMessageParams';
-import VesselStatusMessageParams from '../../src/vessel-charging/messages/VesselStatusMessageParams';
+import StatusMessageParams from '../../src/vessel-charging/messages/StatusMessageParams';
 import ChargingArrivalMessageParams from '../../src/vessel-charging/messages/ChargingArrivalMessageParams';
 import Identity from '../../src/Identity';
 import { EnergySources, Amenities } from '../../src/vessel-charging/enums';
@@ -93,13 +93,13 @@ export default class Consumer {
         console.log('Starting message received:', message.params);
         printLine();
 
-        const vesselStatusMessageParams = new VesselStatusMessageParams({
+        const statusMessageParams = new StatusMessageParams({
           location: {
             lat: 32.050382,
             long: 34.766149,
           },
         });
-        mission.sendMessage(vesselStatusMessageParams);
+        mission.sendMessage(statusMessageParams);
         console.log('Vessel status message sent!');
         printLine();
 
