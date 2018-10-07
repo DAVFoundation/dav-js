@@ -11,6 +11,7 @@ const CommitmentRequest_1 = require("./CommitmentRequest");
 const CommitmentConfirmation_1 = require("./CommitmentConfirmation");
 const CommitmentRequestParams_1 = require("./CommitmentRequestParams");
 const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
+const MissionPeerIdMessageParams_2 = require("./MissionPeerIdMessageParams");
 /**
  * @class Bid class represent a bid for service request.
  */
@@ -87,8 +88,17 @@ class Bid {
             // TODO: move this general message to kafka.createTopic
             throw new Error(`Fail to create a topic: ${err}`);
         }
+        const msgStream = await Kafka_1.default.messages(missionParams.id, this._config);
+        const peerIdPromise = new Promise((resolve, reject) => {
+            msgStream.filterType([MissionPeerIdMessageParams_2.default._messageType])
+                .take(1)
+                .subscribe((m) => {
+                resolve(m.senderId);
+            }, reject);
+        });
         await Kafka_1.default.sendParams(bidderId, missionParams, this._config);
-        const mission = new Mission_1.default(this._missionId, null, missionParams, this._config);
+        const peerId = await peerIdPromise;
+        const mission = new Mission_1.default(this._missionId, peerId, missionParams, this._config);
         return mission;
     }
     /**

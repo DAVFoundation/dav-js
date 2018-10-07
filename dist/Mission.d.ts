@@ -16,7 +16,6 @@ export default class Mission<T extends MissionParams> {
     readonly id: ID;
     readonly peerId: ID;
     constructor(_selfId: ID, _peerId: ID, _params: T, _config: IConfig);
-    private getPeerId;
     /**
      * @method signContract Used to transfer tokens to the basicMission contract in order to start the mission.
      * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
