@@ -118,9 +118,9 @@ export default class Bid<T extends BidParams> {
       // TODO: move this general message to kafka.createTopic
       throw new Error(`Fail to create a topic: ${err}`);
     }
-    const msgStream = await Kafka.messages(missionParams.id, this._config);
+    const messageStream = await Kafka.messages(missionParams.id, this._config);
     const peerIdPromise = new Promise<string>((resolve, reject) => {
-      msgStream.filterType([MissionPeerIdMessageParams._messageType])
+      messageStream.filterType([MissionPeerIdMessageParams._messageType])
         .take(1)
         .subscribe((m: MissionPeerIdMessageParams) => {
           resolve(m.senderId);
