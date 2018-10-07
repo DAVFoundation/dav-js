@@ -90,7 +90,8 @@ class Bid {
         }
         const messageStream = await Kafka_1.default.messages(missionParams.id, this._config);
         const peerIdPromise = new Promise((resolve, reject) => {
-            messageStream.filterType([MissionPeerIdMessageParams_2.default._messageType])
+            messageStream
+                .filterType([MissionPeerIdMessageParams_2.default._messageType])
                 .take(1)
                 .subscribe((m) => {
                 resolve(m.senderId);

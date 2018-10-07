@@ -132,7 +132,9 @@ describe('Bid class', () => {
     describe('accept method', () => {
         it('should not throw any errors when get valid input and no errors', async () => {
             const kafkaMessageStreamMock = {
-                filterType: jest.fn(() => rxjs_1.Observable.from([new MissionPeerIdMessageParams_1.default({ senderId: null })])),
+                filterType: jest.fn(() => rxjs_1.Observable.from([
+                    new MissionPeerIdMessageParams_1.default({ senderId: null }),
+                ])),
             };
             const kafkaMock = {
                 createTopic: jest.fn((topicId, configParam) => Promise.resolve()),
