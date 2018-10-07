@@ -1,6 +1,7 @@
 import { Observable } from './common-types';
 import BasicParams from './BasicParams';
 import KafkaMessageFactory from './KafkaMessageFactory';
+import sdkLogger from './sdkLogger';
 
 export interface IKafkaMessage {
   protocol: string;
@@ -27,11 +28,16 @@ export default class KafkaMessageStream {
       this.kafkaStream
         .filter(message => typesFilter.includes(message.type))
         .map(message => {
-          const protocol = KafkaMessageFactory.instance.getClassType<T>(
+          const classType = KafkaMessageFactory.instance.getClassType<T>(
             message.protocol,
             message.type,
           );
-          return KafkaMessageStream.fromJson(protocol, message.contents);
+          sdkLogger(
+            `KafkaMessageStream message on ${
+              this.kafkaStream.topic
+            } with class type ${classType.name}`,
+          );
+          return KafkaMessageStream.fromJson(classType, message.contents);
         }),
       this.kafkaStream.topic,
     );

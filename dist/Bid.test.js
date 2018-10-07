@@ -15,6 +15,7 @@ const CommitmentRequest_1 = require("./CommitmentRequest");
 const KafkaMessageStream_1 = require("./KafkaMessageStream");
 const common_types_1 = require("./common-types");
 const AxiosMock_1 = require("./mocks/AxiosMock");
+const MissionPeerIdMessageParams_1 = require("./MissionPeerIdMessageParams");
 describe('Bid class', () => {
     const config = new Config_1.default({});
     const selfId = 'SELF_ID';
@@ -130,9 +131,15 @@ describe('Bid class', () => {
     });
     describe('accept method', () => {
         it('should not throw any errors when get valid input and no errors', async () => {
+            const kafkaMessageStreamMock = {
+                filterType: jest.fn(() => rxjs_1.Observable.from([
+                    new MissionPeerIdMessageParams_1.default({ senderId: null }),
+                ])),
+            };
             const kafkaMock = {
                 createTopic: jest.fn((topicId, configParam) => Promise.resolve()),
                 sendParams: jest.fn((needId, mParams, configParam) => Promise.resolve()),
+                messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
             };
             const contractsMock = {
                 approveMission: jest.fn(() => Promise.resolve()),

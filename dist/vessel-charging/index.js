@@ -26,8 +26,8 @@ const StartingMessageParams_1 = require("./messages/StartingMessageParams");
 exports.StartingMessageParams = StartingMessageParams_1.default;
 const StatusRequestMessageParams_1 = require("./messages/StatusRequestMessageParams");
 exports.StatusRequestMessageParams = StatusRequestMessageParams_1.default;
-const VesselStatusMessageParams_1 = require("./messages/VesselStatusMessageParams");
-exports.VesselStatusMessageParams = VesselStatusMessageParams_1.default;
+const StatusMessageParams_1 = require("./messages/StatusMessageParams");
+exports.StatusMessageParams = StatusMessageParams_1.default;
 KafkaMessageFactory_2.default.instance.registerMessageClasses([
     {
         protocol: NeedFilterParams_1.default._protocol,
@@ -96,10 +96,10 @@ KafkaMessageFactory_2.default.instance.registerMessageClasses([
         classType: StatusRequestMessageParams_1.default,
     },
     {
-        protocol: VesselStatusMessageParams_1.default._protocol,
-        messageType: VesselStatusMessageParams_1.default._messageType,
+        protocol: StatusMessageParams_1.default._protocol,
+        messageType: StatusMessageParams_1.default._messageType,
         messageCategory: KafkaMessageFactory_1.MessageCategories.Message,
-        classType: VesselStatusMessageParams_1.default,
+        classType: StatusMessageParams_1.default,
     },
 ]);
 

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_types_1 = require("./common-types");
 const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
+const sdkLogger_1 = require("./sdkLogger");
 class KafkaMessageStream {
     constructor(kafkaStream) {
         this.kafkaStream = kafkaStream;
@@ -15,8 +16,9 @@ class KafkaMessageStream {
         return common_types_1.Observable.fromObservable(this.kafkaStream
             .filter(message => typesFilter.includes(message.type))
             .map(message => {
-            const protocol = KafkaMessageFactory_1.default.instance.getClassType(message.protocol, message.type);
-            return KafkaMessageStream.fromJson(protocol, message.contents);
+            const classType = KafkaMessageFactory_1.default.instance.getClassType(message.protocol, message.type);
+            sdkLogger_1.default(`KafkaMessageStream message on ${this.kafkaStream.topic} with class type ${classType.name}`);
+            return KafkaMessageStream.fromJson(classType, message.contents);
         }), this.kafkaStream.topic);
     }
 }

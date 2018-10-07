@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_types_1 = require("./common-types");
 const Message_1 = require("./Message");
-const MissionPeerIdMessageParams_1 = require("./MissionPeerIdMessageParams");
 const Contracts_1 = require("./Contracts");
 const Kafka_1 = require("./Kafka");
 const KafkaMessageFactory_1 = require("./KafkaMessageFactory");
@@ -24,18 +23,6 @@ class Mission {
     }
     get peerId() {
         return this._peerId;
-    }
-    async getPeerId() {
-        const kafkaMessageStream = await Kafka_1.default.messages(this._selfId, this._config); // Channel#4 or Channel#6
-        const messageParamsStream = kafkaMessageStream.filterType(KafkaMessageFactory_1.default.instance.getMessageTypes(MissionPeerIdMessageParams_1.default._protocol, KafkaMessageFactory_1.MessageCategories.Message));
-        const messageStream = messageParamsStream
-            .do((messageParams) => {
-            this._peerId = messageParams.senderId;
-        })
-            .map((messageParams) => messageParams.senderId)
-            .first()
-            .toPromise();
-        return messageStream;
     }
     /**
      * @method signContract Used to transfer tokens to the basicMission contract in order to start the mission.
@@ -71,9 +58,6 @@ class Mission {
      * @param params message parameters.
      */
     async sendMessage(params) {
-        if (!this._peerId) {
-            await this.getPeerId();
-        }
         params.senderId = this._selfId;
         return await Kafka_1.default.sendParams(this._peerId, params, this._config); // Channel#4
     }

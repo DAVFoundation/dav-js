@@ -10,6 +10,7 @@ import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
 import CommitmentRequestParams from './CommitmentRequestParams';
 import CommitmentConfirmationParams from './CommitmentConfirmationParams';
 import { retryPromise } from './retryPromise';
+import MissionPeerIdMessageParams from './MissionPeerIdMessageParams';
 
 export {
   SDKFactory,
@@ -35,5 +36,11 @@ KafkaMessageFactory.instance.registerMessageClasses([
     messageType: CommitmentConfirmationParams._messageType,
     messageCategory: MessageCategories.Message,
     classType: CommitmentConfirmationParams,
+  },
+  {
+    protocol: MissionPeerIdMessageParams._protocol,
+    messageType: MissionPeerIdMessageParams._messageType,
+    messageCategory: MessageCategories.Message,
+    classType: MissionPeerIdMessageParams,
   },
 ]);

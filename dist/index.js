@@ -19,6 +19,7 @@ const CommitmentRequestParams_1 = require("./CommitmentRequestParams");
 const CommitmentConfirmationParams_1 = require("./CommitmentConfirmationParams");
 const retryPromise_1 = require("./retryPromise");
 exports.retryPromise = retryPromise_1.retryPromise;
+const MissionPeerIdMessageParams_1 = require("./MissionPeerIdMessageParams");
 KafkaMessageFactory_1.default.instance.registerMessageClasses([
     {
         protocol: CommitmentRequestParams_1.default._protocol,
@@ -31,6 +32,12 @@ KafkaMessageFactory_1.default.instance.registerMessageClasses([
         messageType: CommitmentConfirmationParams_1.default._messageType,
         messageCategory: KafkaMessageFactory_1.MessageCategories.Message,
         classType: CommitmentConfirmationParams_1.default,
+    },
+    {
+        protocol: MissionPeerIdMessageParams_1.default._protocol,
+        messageType: MissionPeerIdMessageParams_1.default._messageType,
+        messageCategory: KafkaMessageFactory_1.MessageCategories.Message,
+        classType: MissionPeerIdMessageParams_1.default,
     },
 ]);
 

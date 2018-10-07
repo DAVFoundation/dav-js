@@ -12,7 +12,9 @@ describe('ChargingArrivalMessageParams class', () => {
 
   describe('serialize method', () => {
     it('should return serialized message params object with the current values', () => {
-      expect(chargingArrivalMessageParams.serialize()).toEqual(serializedMessageParams);
+      expect(chargingArrivalMessageParams.serialize()).toEqual(
+        serializedMessageParams,
+      );
     });
   });
 
