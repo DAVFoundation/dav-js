@@ -19,7 +19,7 @@ export default class KafkaMessageStream {
     return objectInstance;
   }
 
-  constructor(private kafkaStream: Observable<IKafkaMessage>) { }
+  constructor(private kafkaStream: Observable<IKafkaMessage>) {}
 
   public filterType<T extends BasicParams>(
     typesFilter: string[],
@@ -32,7 +32,11 @@ export default class KafkaMessageStream {
             message.protocol,
             message.type,
           );
-          sdkLogger(`KafkaMessageStream message on ${this.kafkaStream.topic} with class type ${classType.name}`);
+          sdkLogger(
+            `KafkaMessageStream message on ${
+              this.kafkaStream.topic
+            } with class type ${classType.name}`,
+          );
           return KafkaMessageStream.fromJson(classType, message.contents);
         }),
       this.kafkaStream.topic,

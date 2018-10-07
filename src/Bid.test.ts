@@ -198,7 +198,9 @@ describe('Bid class', () => {
     it('should not throw any errors when get valid input and no errors', async () => {
       const kafkaMessageStreamMock = {
         filterType: jest.fn(() =>
-          RxObservable.from([new MissionPeerIdMessageParams({ senderId: null })]),
+          RxObservable.from([
+            new MissionPeerIdMessageParams({ senderId: null }),
+          ]),
         ),
       };
       const kafkaMock = {
