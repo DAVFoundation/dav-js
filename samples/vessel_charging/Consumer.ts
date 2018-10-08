@@ -73,7 +73,7 @@ export default class Consumer {
       },
       batteryCapacity: 40,
       currentBatteryCharge: 10,
-      energySource: EnergySources.hydro,
+      energySource: EnergySources.Hydro,
       amenities: [Amenities.Park],
     });
     const need = await this.identity.publishNeed(needParams);

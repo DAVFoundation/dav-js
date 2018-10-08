@@ -1,10 +1,10 @@
 export declare enum EnergySources {
-    grid = "grid",
-    renewable = "renewable",
-    solar = "solar",
-    wind = "wind",
-    hydro = "hydro",
-    geothermal = "geothermal"
+    Grid = "grid",
+    Renewable = "renewable",
+    Solar = "solar",
+    Wind = "wind",
+    Hydro = "hydro",
+    Geothermal = "geothermal"
 }
 export declare enum Amenities {
     Lodging = 1,

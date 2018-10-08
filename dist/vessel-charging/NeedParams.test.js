@@ -17,7 +17,7 @@ describe('NeedParams class', () => {
         },
         batteryCapacity: 40,
         currentBatteryCharge: 10,
-        energySource: enums_1.EnergySources.hydro,
+        energySource: enums_1.EnergySources.Hydro,
         amenities: [enums_1.Amenities.Park],
     });
     needParams.id = 'TOPIC_ID';

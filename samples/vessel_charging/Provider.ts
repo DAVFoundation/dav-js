@@ -101,7 +101,7 @@ export default class Provider {
       },
       availableFrom: 1535441613658,
       availableUntil: 1535441623658,
-      energySource: EnergySources.hydro,
+      energySource: EnergySources.Hydro,
       amenities: [Amenities.Park],
       provider: 'N3m0',
       manufacturer: 'manufacturer_name',
