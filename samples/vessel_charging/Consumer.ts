@@ -5,7 +5,7 @@ import Config from '../../src/Config';
 import BidParams from '../../src/vessel-charging/BidParams';
 import MissionParams from '../../src/vessel-charging/MissionParams';
 import StatusRequestMessageParams from '../../src/vessel-charging/messages/StatusRequestMessageParams';
-import StatusMessageParams from '../../src/vessel-charging/messages/StatusMessageParams';
+import VesselStatusMessageParams from '../../src/vessel-charging/messages/VesselStatusMessageParams';
 import ChargingArrivalMessageParams from '../../src/vessel-charging/messages/ChargingArrivalMessageParams';
 import Identity from '../../src/Identity';
 import { EnergySources, Amenities } from '../../src/vessel-charging/enums';
@@ -93,13 +93,13 @@ export default class Consumer {
         console.log('Starting message received:', message.params);
         printLine();
 
-        const statusMessageParams = new StatusMessageParams({
+        const vesselStatusMessage = new VesselStatusMessageParams({
           location: {
             lat: 32.050382,
             long: 34.766149,
           },
         });
-        mission.sendMessage(statusMessageParams);
+        mission.sendMessage(vesselStatusMessage);
         console.log('Vessel status message sent!');
         printLine();
 
@@ -112,10 +112,8 @@ export default class Consumer {
         );
         printLine();
 
-        const chargingArrivalMessageParams = new ChargingArrivalMessageParams(
-          {},
-        );
-        mission.sendMessage(chargingArrivalMessageParams);
+        const chargingArrivalMessage = new ChargingArrivalMessageParams({});
+        mission.sendMessage(chargingArrivalMessage);
         console.log('Charging arrival message sent!');
         printLine();
 
@@ -130,10 +128,8 @@ export default class Consumer {
             );
             printLine();
 
-            const statusRequestMessageParams = new StatusRequestMessageParams(
-              {},
-            );
-            mission.sendMessage(statusRequestMessageParams);
+            const statusRequestMessage = new StatusRequestMessageParams({});
+            mission.sendMessage(statusRequestMessage);
             console.log('Status request message sent!');
             printLine();
           },
