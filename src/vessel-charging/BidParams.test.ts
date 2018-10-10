@@ -16,7 +16,7 @@ describe('BidParams class', () => {
     },
     availableFrom: 1535441613658,
     availableUntil: 1535441623658,
-    energySource: EnergySources.hydro,
+    energySource: EnergySources.Hydro,
     isCommitted: true,
     neederDavId: 'davId',
   });

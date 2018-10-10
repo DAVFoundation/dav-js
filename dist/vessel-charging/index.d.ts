@@ -10,6 +10,6 @@ import DeclineMessageParams from './messages/DeclineMessageParams';
 import ProviderStatusMessageParams from './messages/ProviderStatusMessageParams';
 import StartingMessageParams from './messages/StartingMessageParams';
 import StatusRequestMessageParams from './messages/StatusRequestMessageParams';
-import StatusMessageParams from './messages/StatusMessageParams';
-export { enums, NeedParams, NeedFilterParams, BidParams, MissionParams, ChargingArrivalMessageParams, ChargingCompleteMessageParams, ChargingStartedMessageParams, DeclineMessageParams, ProviderStatusMessageParams, StartingMessageParams, StatusRequestMessageParams, StatusMessageParams, };
+import VesselStatusMessageParams from './messages/VesselStatusMessageParams';
+export { enums, NeedParams, NeedFilterParams, BidParams, MissionParams, ChargingArrivalMessageParams, ChargingCompleteMessageParams, ChargingStartedMessageParams, DeclineMessageParams, ProviderStatusMessageParams, StartingMessageParams, StatusRequestMessageParams, VesselStatusMessageParams, };
 //# sourceMappingURL=index.d.ts.map

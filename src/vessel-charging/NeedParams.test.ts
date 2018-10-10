@@ -16,7 +16,7 @@ describe('NeedParams class', () => {
     },
     batteryCapacity: 40,
     currentBatteryCharge: 10,
-    energySource: EnergySources.hydro,
+    energySource: EnergySources.Hydro,
     amenities: [Amenities.Park],
   });
   needParams.id = 'TOPIC_ID';

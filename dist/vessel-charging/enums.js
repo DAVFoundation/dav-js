@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var EnergySources;
 (function (EnergySources) {
-    EnergySources["grid"] = "grid";
-    EnergySources["renewable"] = "renewable";
-    EnergySources["solar"] = "solar";
-    EnergySources["wind"] = "wind";
-    EnergySources["hydro"] = "hydro";
-    EnergySources["geothermal"] = "geothermal";
+    EnergySources["Grid"] = "grid";
+    EnergySources["Renewable"] = "renewable";
+    EnergySources["Solar"] = "solar";
+    EnergySources["Wind"] = "wind";
+    EnergySources["Hydro"] = "hydro";
+    EnergySources["Geothermal"] = "geothermal";
 })(EnergySources = exports.EnergySources || (exports.EnergySources = {}));
 var Amenities;
 (function (Amenities) {
