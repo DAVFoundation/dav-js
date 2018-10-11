@@ -23,7 +23,7 @@
     "build-browser-dev": "webpack --mode development --config webpack.browser.config.js",
     "build-browser-prod": "webpack --mode production --config webpack.browser.config.js",
     "create-dist": "gulp create-dist",
-    "postinstall": "gulp post-install",
+    "post-install": "gulp post-install",
     "jest": "gulp jest",
     "spellcheck": "gulp spellcheck",
     "start-testnet": "dav-cli --start",
