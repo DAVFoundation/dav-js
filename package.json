@@ -13,7 +13,8 @@
   "license": "MIT",
   "author": "DAV Foundation <tal@dav.network>",
   "files": [
-    "dist"
+    "dist",
+    "gulpfile.js"
   ],
   "main": "./dist",
   "types": "./dist",
