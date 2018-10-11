@@ -5,5 +5,7 @@ const filesToRemove = [
 ];
 
 filesToRemove.forEach(function (filePath) {
-  fs.unlinkSync(filePath);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
 });
