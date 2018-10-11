@@ -22,8 +22,7 @@ function deleteDirectoryFiles(err, files) {
     });
   }
 
-  // remove dest and copy from src
-  //fs.rmdir(destDir, addGitHooks);
+  //copy from src
   addGitHooks();
 }
 
