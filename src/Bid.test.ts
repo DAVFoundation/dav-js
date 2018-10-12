@@ -20,9 +20,7 @@ describe('Bid class', () => {
   const selfId = 'SELF_ID';
   jest.doMock('./ride-hailing/BidParams');
   let bidParams: BidParams;
-  let messageParams = new MessageParams({
-    senderId: 'sender',
-  });
+  let messageParams = MessageParams;
   const missionParams = new MissionParams({
     id: 'MISSION_ID',
     neederDavId: 'DAV_ID',
