@@ -21,9 +21,7 @@ describe('Bid class', () => {
     const selfId = 'SELF_ID';
     jest.doMock('./ride-hailing/BidParams');
     let bidParams;
-    let messageParams = new MessageParams_1.default({
-        senderId: 'sender',
-    });
+    let messageParams;
     const missionParams = new MissionParams_1.default({
         id: 'MISSION_ID',
         neederDavId: 'DAV_ID',
