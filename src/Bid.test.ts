@@ -16,6 +16,7 @@ import { Observable } from './common-types';
 import AxiosMock from './mocks/AxiosMock';
 import MissionPeerIdMessageParams from './MissionPeerIdMessageParams';
 
+
 describe('Bid class', () => {
   const config = new Config({});
   const selfId = 'SELF_ID';
