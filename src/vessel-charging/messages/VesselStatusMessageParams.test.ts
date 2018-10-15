@@ -1,7 +1,7 @@
 import MessageParams from './VesselStatusMessageParams';
 
 describe('MessageParams class', () => {
-  const VSmessageParams = new MessageParams({
+  const messageParams = new MessageParams({
     location: {
       lat: 32.050382,
       long: 34.766149,
@@ -18,15 +18,15 @@ describe('MessageParams class', () => {
 
   describe('serialize method', () => {
     it('should return serialized need params object with the current values', () => {
-      expect(VSmessageParams.serialize()).toEqual(serializedMessageParams);
+      expect(messageParams.serialize()).toEqual(serializedMessageParams);
     });
   });
 
   describe('deserialize method', () => {
     it('should return NeedParams instance with the current parameters', () => {
-      const VSmessageParamsObject = new MessageParams();
-      VSmessageParamsObject.deserialize(serializedMessageParams);
-      expect(VSmessageParamsObject).toEqual(VSmessageParams);
+      const messageParamsObject = new MessageParams();
+      messageParamsObject.deserialize(serializedMessageParams);
+      expect(messageParamsObject).toEqual(messageParams);
     });
   });
 });
