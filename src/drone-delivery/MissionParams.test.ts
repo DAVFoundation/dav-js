@@ -1,4 +1,4 @@
-import MissionParams from './MissionParams'
+import MissionParams from './MissionParams';
 
 describe('MissionParams class', () => {
   let missionParams: MissionParams;
@@ -9,7 +9,7 @@ describe('MissionParams class', () => {
       id: 'TOPIC_ID',
       price: ['66666666'],
       vehicleId: 'PROVIDER_DAV_ID',
-      neederDavId: 'CONSUMER_DAV_ID'
+      neederDavId: 'CONSUMER_DAV_ID',
     });
 
     serializedMissionParams = {
@@ -19,7 +19,7 @@ describe('MissionParams class', () => {
       price: ['66666666'],
       vehicleId: 'PROVIDER_DAV_ID',
       neederDavId: 'CONSUMER_DAV_ID',
-      ttl: undefined
+      ttl: undefined,
     };
   });
 

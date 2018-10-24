@@ -9,7 +9,7 @@ describe('MissionParams class', () => {
             id: 'TOPIC_ID',
             price: ['66666666'],
             vehicleId: 'PROVIDER_DAV_ID',
-            neederDavId: 'CONSUMER_DAV_ID'
+            neederDavId: 'CONSUMER_DAV_ID',
         });
         serializedMissionParams = {
             protocol: 'drone_delivery',
@@ -18,7 +18,7 @@ describe('MissionParams class', () => {
             price: ['66666666'],
             vehicleId: 'PROVIDER_DAV_ID',
             neederDavId: 'CONSUMER_DAV_ID',
-            ttl: undefined
+            ttl: undefined,
         };
     });
     describe('serialize method', () => {
