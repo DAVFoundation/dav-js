@@ -16,7 +16,9 @@ describe('StartingMessageParams class', () => {
 
   describe('serialize method', () => {
     it('should return serialized message params object with the current values', () => {
-      expect(startingMessageParams.serialize()).toEqual(serializedMessageParams);
+      expect(startingMessageParams.serialize()).toEqual(
+        serializedMessageParams,
+      );
     });
   });
 
