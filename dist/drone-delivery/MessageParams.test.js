@@ -6,13 +6,13 @@ describe('MessageParams class', () => {
     let serializedMessageParams;
     beforeEach(() => {
         messageParams = new MessageParams_1.default({
-            senderId: 'SENDER_ID'
+            senderId: 'SENDER_ID',
         });
         serializedMessageParams = {
             protocol: 'drone_delivery',
             type: 'message',
             senderId: 'SENDER_ID',
-            ttl: undefined
+            ttl: undefined,
         };
     });
     describe('serialize method', () => {
