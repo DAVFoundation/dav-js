@@ -6,14 +6,14 @@ describe('MessageParams class', () => {
 
   beforeEach(() => {
     messageParams = new MessageParams({
-      senderId: 'SENDER_ID'
+      senderId: 'SENDER_ID',
     });
 
     serializedMessageParams = {
       protocol: 'drone_delivery',
       type: 'message',
       senderId: 'SENDER_ID',
-      ttl: undefined
+      ttl: undefined,
     };
   });
 
