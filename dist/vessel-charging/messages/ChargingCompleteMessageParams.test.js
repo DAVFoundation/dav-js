@@ -2,15 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ChargingCompleteMessageParams_1 = require("./ChargingCompleteMessageParams");
 describe('MessageParams class', () => {
-    const messageParams = new ChargingCompleteMessageParams_1.default({
-        senderId: 'TOPIC_ID',
+    let messageParams;
+    let serializedMessageParams;
+    beforeEach(() => {
+        messageParams = new ChargingCompleteMessageParams_1.default({
+            senderId: 'TOPIC_ID',
+        });
+        serializedMessageParams = {
+            ttl: undefined,
+            protocol: 'vessel_charging',
+            type: 'charging_complete_message',
+            senderId: 'TOPIC_ID',
+        };
     });
-    const serializedMessageParams = {
-        ttl: undefined,
-        protocol: 'vessel_charging',
-        type: 'charging_complete_message',
-        senderId: 'TOPIC_ID',
-    };
     describe('serialize method', () => {
         it('should return serialized message params object with the current values', () => {
             expect(messageParams.serialize()).toEqual(serializedMessageParams);
