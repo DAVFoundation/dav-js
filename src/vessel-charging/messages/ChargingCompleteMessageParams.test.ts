@@ -1,16 +1,22 @@
 import MessageParams from './ChargingCompleteMessageParams';
 
 describe('MessageParams class', () => {
-  const messageParams = new MessageParams({
-    senderId: 'TOPIC_ID',
-  });
 
-  const serializedMessageParams: any = {
-    ttl: undefined,
-    protocol: 'vessel_charging',
-    type: 'charging_complete_message',
-    senderId: 'TOPIC_ID',
-  };
+  let messageParams: MessageParams;
+  let serializedMessageParams: any;
+
+  beforeEach(() => {
+    messageParams = new MessageParams({
+      senderId: 'TOPIC_ID',
+    });
+
+    serializedMessageParams = {
+      ttl: undefined,
+      protocol: 'vessel_charging',
+      type: 'charging_complete_message',
+      senderId: 'TOPIC_ID',
+    };
+  });
 
   describe('serialize method', () => {
     it('should return serialized message params object with the current values', () => {
