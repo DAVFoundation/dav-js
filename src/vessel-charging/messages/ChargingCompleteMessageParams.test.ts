@@ -1,7 +1,6 @@
 import MessageParams from './ChargingCompleteMessageParams';
 
 describe('MessageParams class', () => {
-
   let messageParams: MessageParams;
   let serializedMessageParams: any;
 
