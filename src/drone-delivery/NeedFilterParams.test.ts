@@ -1,9 +1,9 @@
-import NeedFilterParams from './NeedFilterParams'
+import NeedFilterParams from './NeedFilterParams';
 
 describe('NeedFilterParams class', () => {
     let needFilterParams: NeedFilterParams;
     let serializedNeedFilterParams: any;
-  
+
     beforeEach(() => {
       needFilterParams = new NeedFilterParams({
         location: {
@@ -12,7 +12,7 @@ describe('NeedFilterParams class', () => {
         },
         radius: 2000,
       });
-  
+
       serializedNeedFilterParams = {
         area: {
           max: {
@@ -37,14 +37,14 @@ describe('NeedFilterParams class', () => {
           expect(needFilterParams.serialize()).toEqual(serializedNeedFilterParams);
         });
       });
-    
-      describe('deserialize method', () => {
+
+    describe('deserialize method', () => {
         it('should return a NeedFilterParams instance', () => {
           const needFilterParamsObject = new NeedFilterParams();
           needFilterParamsObject.deserialize(serializedNeedFilterParams);
           expect(needFilterParamsObject).toBeInstanceOf(NeedFilterParams);
         });
-    
+
         it('should return deserialize NeedFilterParams instance with current parameters', () => {
           const needFilterParamsObject = new NeedFilterParams();
           needFilterParamsObject.deserialize(serializedNeedFilterParams);
@@ -52,6 +52,3 @@ describe('NeedFilterParams class', () => {
         });
       });
     });
-
-
-
