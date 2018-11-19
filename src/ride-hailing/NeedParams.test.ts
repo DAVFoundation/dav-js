@@ -13,7 +13,7 @@ describe('NeedParams class', () => {
         destinationLocation: {
             lat: 32.050782,
             long: 34.768149,
-        }
+        },
     });
     needParams.id = 'TOPIC_ID';
     needParams.davId = 'davId';
