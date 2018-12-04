@@ -10,9 +10,8 @@ const spellcheck = require('gulp-ts-spellcheck').default;
 const merge = require('gulp-merge');
 const clean = require('gulp-clean');
 
-
 gulp.task('deploy-contracts', callback => {
-  exec('truffle deploy', function (err, stdout, stderr) {
+  exec('truffle deploy', function(err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     callback(err);
@@ -30,7 +29,7 @@ gulp.task('lint', () => {
 gulp.task('jest', done => {
   return gulp
     .src('')
-    .on('error', function (err) {
+    .on('error', function(err) {
       done(err);
     })
     .pipe(jest({}));
@@ -39,7 +38,7 @@ gulp.task('jest', done => {
 gulp.task('tslint', done => {
   return gulp
     .src(['src/**/*.ts', 'samples/**/*.ts'])
-    .on('error', function (err) {
+    .on('error', function(err) {
       done(err);
     })
     .pipe(
@@ -50,13 +49,13 @@ gulp.task('tslint', done => {
     .pipe(tslint.report());
 });
 
-gulp.task('tsc', function (done) {
+gulp.task('tsc', function(done) {
   var tsProject = ts.createProject('tsconfig.json');
   const tsResults = tsProject
     .src()
     .pipe(sourcemaps.init())
     .pipe(tsProject())
-    .on('error', function (err) {
+    .on('error', function(err) {
       done(err);
     });
 
@@ -66,24 +65,24 @@ gulp.task('tsc', function (done) {
   ]);
 });
 
-gulp.task('create-dist', ['tsc'], function () {
+gulp.task('create-dist', ['tsc'], function() {
   gulp.src('./src/contracts/*').pipe(gulp.dest('./dist/contracts/'));
   gulp.src('./build/src/**/*').pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('typedoc', function (done) {
+gulp.task('typedoc', function(done) {
   return gulp
     .src(['src/**/*.ts'])
-    .on('error', function (err) {
+    .on('error', function(err) {
       done(err);
     })
     .pipe(typedoc(require('./typedoc.js')));
 });
 
-gulp.task('spellcheck', function (done) {
+gulp.task('spellcheck', function(done) {
   return gulp
     .src(['src/**/*.ts', 'samples/**/*.ts'])
-    .on('error', function (err) {
+    .on('error', function(err) {
       done(err);
     })
     .pipe(
@@ -105,15 +104,20 @@ gulp.task('pre-publish', [
   'create-dist',
 ]);
 
-gulp.task('post-install', function () {
+gulp.task('post-install', function() {
   return merge([
-    gulp.src([
-      '.git/hooks/*',
-      'node_modules/web3/index.d.ts',
-      'node_modules/web3/types.d.ts'
-    ], {
-      read: false
-    }).pipe(clean()),
+    gulp
+      .src(
+        [
+          '.git/hooks/*',
+          'node_modules/web3/index.d.ts',
+          'node_modules/web3/types.d.ts',
+        ],
+        {
+          read: false,
+        },
+      )
+      .pipe(clean()),
     gulp.src('./.githooks/*').pipe(gulp.dest('.git/hooks')),
   ]);
 });
