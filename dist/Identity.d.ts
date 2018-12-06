@@ -64,4 +64,3 @@ export default class Identity {
      */
     mission<T extends MissionParams, U extends MessageParams>(missionSelfId: ID, missionPeerId: ID, params: T): Mission<T>;
 }
-//# sourceMappingURL=Identity.d.ts.map
