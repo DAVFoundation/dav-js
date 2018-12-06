@@ -8,4 +8,3 @@ import Need from './Need';
 import KafkaNode from './KafkaNode';
 import { retryPromise } from './retryPromise';
 export { SDKFactory, Mission, Bid, IConfig, Config, Message, Need, KafkaNode, retryPromise, };
-//# sourceMappingURL=index.d.ts.map

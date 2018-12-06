@@ -19,4 +19,3 @@ export default class Contracts {
     static finalizeMission(missionId: ID, davId: DavID, walletPrivateKey: string, config: IConfig): Promise<TransactionReceipt>;
     static watchContract(davId: string, contractType: ContractTypes, config: IConfig): Observable<EventLog>;
 }
-//# sourceMappingURL=Contracts.d.ts.map

@@ -22,4 +22,3 @@ export default interface IMissionParams extends IBasicParams {
      */
     neederDavId: DavID;
 }
-//# sourceMappingURL=IMissionParams.d.ts.map
