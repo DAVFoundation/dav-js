@@ -4,4 +4,3 @@ export default class CommitmentConfirmation {
     readonly BidId: string;
     constructor(_commitmentParams: CommitmentConfirmationParams);
 }
-//# sourceMappingURL=CommitmentConfirmation.d.ts.map

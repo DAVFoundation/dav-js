@@ -18,4 +18,3 @@ export default class Kafka extends KafkaBase implements IKafka {
     messages(topicId: string, config: IConfig): Promise<KafkaMessageStream>;
     isConnected(config: IConfig): Promise<boolean>;
 }
-//# sourceMappingURL=KafkaNode.d.ts.map
