@@ -32,7 +32,7 @@ A lot of our code comes from pull requests sent by the developer community. Here
 
 ### Reporting Bugs
 
-Bugs are tracked as [GitHub issues](https://github.com/DAVfoundation/dav-js/issues). If you found a bug with xplore, the quickest way to get help would be to look through existing open and closed [GitHub issues](https://github.com/DAVfoundation/dav-js/issues?q=is%3Aissue). If the issue is already being discussed and hasn't been resolved yet, you can join the discussion and provide details about the problem you are having. If this is a new bug, please open a [new issue](https://github.com/DAVfoundation/dav-js/issues/new).
+Bugs are tracked as [GitHub issues](https://github.com/DAVfoundation/dav-js/issues). If you found a bug with `dav-js`, the quickest way to get help would be to look through existing open and closed [GitHub issues](https://github.com/DAVfoundation/dav-js/issues?q=is%3Aissue). If the issue is already being discussed and hasn't been resolved yet, you can join the discussion and provide details about the problem you are having. If this is a new bug, please open a [new issue](https://github.com/DAVfoundation/dav-js/issues/new).
 
 When you are creating a bug report, please include as much detail as possible.
 
