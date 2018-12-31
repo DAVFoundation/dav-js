@@ -19,10 +19,10 @@
   "main": "./dist",
   "types": "./dist",
   "scripts": {
-    "pre-publish": "gulp pre-publish",
     "create-dist": "gulp create-dist",
-    "post-install": "gulp post-install",
     "jest": "gulp jest",
+    "post-install": "gulp post-install",
+    "pre-publish": "gulp pre-publish",
     "spellcheck": "gulp spellcheck",
     "start-testnet": "dav-cli --start",
     "tsc": "gulp tsc",
