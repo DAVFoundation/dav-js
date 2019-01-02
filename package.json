@@ -29,8 +29,7 @@
     "start-testnet": "dav-cli --start",
     "tsc": "gulp tsc",
     "tslint": "gulp tslint",
-    y"typedoc": "gulp typedoc",
-    "test": "jest"
+    "typedoc": "gulp typedoc"
 }
   },
   "dependencies": {
