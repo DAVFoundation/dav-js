@@ -1,12 +1,4 @@
-module.exports = {
- "jest": {
-    "verbose": true,
-    "testURL": "http://localhost/"
- },
-  "scripts": {
-    "jest": "jest --env=node --colors --coverage test",
-    "test": "npm run jest"
-  },
+
   "roots": [
     "<rootDir>/src"
   ],
