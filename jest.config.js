@@ -1,25 +1,10 @@
 module.exports = {
- "jest": {
-    "verbose": true,
-    "testURL": "http://localhost/"
- },
-  "scripts": {
-    "jest": "jest --env=node --colors --coverage test",
-    "test": "npm run jest"
+  verbose: true,
+  testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
+  transform: {
+    '\\.tsx?$': 'ts-jest',
   },
-  "roots": [
-    "<rootDir>/src"
-  ],
-  "transform": {
-    "^.+\\.tsx?$": "ts-jest"
-  },
-  "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
-  "moduleFileExtensions": [
-    "ts",
-    "tsx",
-    "js",
-    "jsx",
-    "json",
-    "node"
-  ],
-}
+  testRegex: '(\\.(test|spec))\\.(jsx?|tsx?)$',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+};
