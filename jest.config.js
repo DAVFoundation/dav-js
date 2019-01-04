@@ -1,4 +1,4 @@
-module.exports = {
+ module.exports = {
   verbose: true,
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
