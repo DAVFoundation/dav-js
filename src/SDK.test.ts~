@@ -1,4 +1,4 @@
-import {Config} from './Config';
+import {Confi}g from './Config';
 import Identity from '/src/Identity';
 import IConfig from '/src/IConfig';
 
