@@ -1,5 +1,5 @@
-import SDKFactory from './SDKFactory';
-import Configuration from './Config';
+import SDKFactory from '../SDKFactory';
+import Configuration from '../Config';
 
 describe('SDKFactory method', () => {
   it('should create SDK instance', () => {

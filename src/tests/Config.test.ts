@@ -1,6 +1,6 @@
-import Config from './Config';
-import { BlockchainType } from './common-enums';
-import { defaultConfiguration } from './Config';
+import Config from '../Config';
+import { BlockchainType } from '../common-enums';
+import { defaultConfiguration } from '../Config';
 
 describe('Config class', () => {
   describe('check default configuration are set', () => {
