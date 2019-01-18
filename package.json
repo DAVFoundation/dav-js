@@ -55,7 +55,7 @@
     "web3": "^1.0.0-beta.36"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.11",
+    "@types/jest": "^23.3.12",
     "@types/node": "^10.9.4",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
