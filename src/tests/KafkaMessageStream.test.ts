@@ -1,9 +1,9 @@
-import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
-import { Observable } from './common-types';
-import typesMap from './drone-delivery/ProtocolTypes';
-import DroneDeliveryNeedParams from './drone-delivery/NeedParams';
-import DroneDeliveryMissionParams from './drone-delivery/MissionParams';
-import KafkaMessageFactory, { MessageCategories } from './KafkaMessageFactory';
+import KafkaMessageStream, { IKafkaMessage } from '../KafkaMessageStream';
+import { Observable } from '../common-types';
+import typesMap from '../drone-delivery/ProtocolTypes';
+import DroneDeliveryNeedParams from '../drone-delivery/NeedParams';
+import DroneDeliveryMissionParams from '../drone-delivery/MissionParams';
+import KafkaMessageFactory, { MessageCategories } from '../KafkaMessageFactory';
 
 describe('KafkaMessageStream', () => {
   it('should instantiate', () => {

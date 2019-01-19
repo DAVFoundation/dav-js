@@ -1,12 +1,12 @@
-import Config from './Config';
-import MessageParams from './drone-charging/MessageParams';
-import Bid from './Bid';
-import BidParams from './drone-charging/BidParams';
-import MissionParams from './drone-charging/MissionParams';
-import { PriceType } from './common-enums';
-import Price from './Price';
-import { Observable, DavID, ID } from './common-types';
-import Message from './Message';
+import Config from '../Config';
+import MessageParams from '../drone-charging/MessageParams';
+import Bid from '../Bid';
+import BidParams from '../drone-charging/BidParams';
+import MissionParams from '../drone-charging/MissionParams';
+import { PriceType } from '../common-enums';
+import Price from '../Price';
+import { Observable, DavID, ID } from '../common-types';
+import Message from '../Message';
 
 describe('Mission class', () => {
   const configuration = new Config({});
@@ -48,9 +48,9 @@ describe('Mission class', () => {
       const kafkaMock = {
         sendParams: () => Promise.resolve(true),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         selfId,
         missionParams.id,
@@ -66,9 +66,9 @@ describe('Mission class', () => {
       const kafkaMock = {
         sendParams: () => Promise.reject(kafkaError),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         selfId,
         missionParams.id,
@@ -84,9 +84,9 @@ describe('Mission class', () => {
       const kafkaMock = {
         sendParams: jest.fn(params => Promise.resolve(true)),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         selfId,
         missionParams.id,
@@ -108,7 +108,7 @@ describe('Mission class', () => {
         sendParams: () => Promise.resolve(true),
       };
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         missionParams.id,
         null,
@@ -138,12 +138,12 @@ describe('Mission class', () => {
       const kafkaMock = {
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
       }));
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(selfId, null, missionParams, configuration);
       const spy = jest.fn();
       const messages = await mission.messages();
@@ -161,7 +161,7 @@ describe('Mission class', () => {
     });
 
     xit('should receive error event', async () => {
-      jest.doMock('./Kafka', () => ({
+      jest.doMock('../Kafka', () => ({
         default: {
           paramsStream: async () =>
             Observable.fromPromise(Promise.reject(kafkaError)),
@@ -169,7 +169,7 @@ describe('Mission class', () => {
       }));
 
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         missionParams.id,
         missionParams,
@@ -207,12 +207,12 @@ describe('Mission class', () => {
     beforeAll(() => {
       jest.resetAllMocks();
       jest.resetModules();
-      jest.doMock('./Contracts', () => ({ default: contractsMock }));
+      jest.doMock('../Contracts', () => ({ default: contractsMock }));
     });
 
     it('should not throw any errors when get valid input and no errors', async () => {
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         missionParams.id,
         null,
@@ -235,9 +235,9 @@ describe('Mission class', () => {
       contractsMock.startMission.mockImplementation(() =>
         Promise.reject(web3Error),
       );
-      jest.doMock('./Contracts', () => ({ default: contractsMock }));
+      jest.doMock('../Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         missionParams.id,
         null,
@@ -263,9 +263,9 @@ describe('Mission class', () => {
       const contractsMock = {
         finalizeMission: () => Promise.resolve(transactionReceipt),
       };
-      jest.doMock('./Contracts', () => ({ default: contractsMock }));
+      jest.doMock('../Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         missionParams.id,
         null,
@@ -282,9 +282,9 @@ describe('Mission class', () => {
       const contractsMock = {
         finalizeMission: () => Promise.reject(web3Error),
       };
-      jest.doMock('./Contracts', () => ({ default: contractsMock }));
+      jest.doMock('../Contracts', () => ({ default: contractsMock }));
       // tslint:disable-next-line:variable-name
-      const Mission: any = (await import('./Mission')).default;
+      const Mission: any = (await import('../Mission')).default;
       const mission = new Mission(
         missionParams.id,
         null,

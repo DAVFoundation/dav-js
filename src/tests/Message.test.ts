@@ -1,5 +1,5 @@
-import Config from './Config';
-import MessageParams from './drone-charging/MessageParams';
+import Config from '../Config';
+import MessageParams from '../drone-charging/MessageParams';
 
 describe('Message class', () => {
   const configuration = new Config({});
@@ -18,9 +18,9 @@ describe('Message class', () => {
       const kafkaMock = {
         sendParams: () => Promise.resolve(true),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Message = (await import('./Message')).default;
+      const Message = (await import('../Message')).default;
       const message = new Message(selfId, messageContent, configuration);
       await expect(
         message.respond(new MessageParams({ senderId: selfId })),
@@ -31,9 +31,9 @@ describe('Message class', () => {
       const kafkaMock = {
         sendParams: () => Promise.reject(kafkaError),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Message = (await import('./Message')).default;
+      const Message = (await import('../Message')).default;
       const message = new Message(selfId, messageContent, configuration);
       await expect(
         message.respond(new MessageParams({ senderId: selfId })),
@@ -44,9 +44,9 @@ describe('Message class', () => {
       const kafkaMock = {
         sendParams: jest.fn(() => Promise.resolve(true)),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Message = (await import('./Message')).default;
+      const Message = (await import('../Message')).default;
       const message = new Message(selfId, messageContent, configuration);
       const messageParams = new MessageParams({});
       await message.respond(messageParams);
@@ -61,9 +61,9 @@ describe('Message class', () => {
       const kafkaMock = {
         sendParams: jest.fn(params => Promise.resolve(true)),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Message = (await import('./Message')).default;
+      const Message = (await import('../Message')).default;
       const message = new Message(selfId, messageContent, configuration);
       const messageParams = new MessageParams({});
       await message.respond(messageParams);
