@@ -70,7 +70,7 @@ describe('SDK class', () => {
       contractsMock.isIdentityRegistered.mockImplementation(() =>
         Promise.resolve(false),
       );
-      //y tslint:disable-next-line:no-shadowed-variable
+      // tslint:disable-next-line:no-shadowed-variable
       const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       const isRegistered = await sdk.isRegistered('unregistered dav id');
