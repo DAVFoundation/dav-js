@@ -18,4 +18,3 @@ declare const _default: {
     messages: string[];
 };
 export default _default;
-//# sourceMappingURL=ProtocolTypes.d.ts.map

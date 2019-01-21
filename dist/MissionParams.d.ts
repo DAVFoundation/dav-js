@@ -18,4 +18,3 @@ export default abstract class MissionParams extends BasicParams {
     };
     deserialize(json: any): void;
 }
-//# sourceMappingURL=MissionParams.d.ts.map

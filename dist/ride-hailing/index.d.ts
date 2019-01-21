@@ -9,4 +9,3 @@ import VehicleLocationMessageParams from './VehicleLocationMessageParams';
  *  - all statuses are sent by the driver except PassengerIsComing.
  */
 export { NeedFilterParams, NeedParams, BidParams, MissionParams, MessageParams, VehicleLocationMessageParams, MissionStatus, };
-//# sourceMappingURL=index.d.ts.map

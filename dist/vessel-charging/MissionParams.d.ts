@@ -27,4 +27,3 @@ export default class MissionParams extends BaseMissionParams {
     deserialize(json: any): void;
 }
 export {};
-//# sourceMappingURL=MissionParams.d.ts.map

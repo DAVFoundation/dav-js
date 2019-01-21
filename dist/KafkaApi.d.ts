@@ -8,4 +8,3 @@ export default class Kafka extends KafkaBase implements IKafka {
     sendParams(topicId: string, basicParams: BasicParams, config: IConfig): Promise<void>;
     messages(topicId: string, config: IConfig): Promise<KafkaMessageStream>;
 }
-//# sourceMappingURL=KafkaApi.d.ts.map

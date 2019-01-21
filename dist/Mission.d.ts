@@ -41,4 +41,3 @@ export default class Mission<T extends MissionParams> {
      */
     messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<MessageParams>>>;
 }
-//# sourceMappingURL=Mission.d.ts.map
