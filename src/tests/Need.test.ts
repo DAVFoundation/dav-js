@@ -1,12 +1,12 @@
-import Config from './Config';
-import BidParams from './drone-charging/BidParams';
-import NeedParams from './drone-charging/NeedParams';
-import Price from './Price';
-import { PriceType } from './common-enums';
-import Message from './Message';
-import { Observable } from './common-types';
-import MessageParams from './drone-charging/MessageParams';
-import Bid from './Bid';
+import Config from '../Config';
+import BidParams from '../drone-charging/BidParams';
+import NeedParams from '../drone-charging/NeedParams';
+import Price from '../Price';
+import { PriceType } from '../common-enums';
+import Message from '../Message';
+import { Observable } from '../common-types';
+import MessageParams from '../drone-charging/MessageParams';
+import Bid from '../Bid';
 
 const forContextSwitch = () => {
   return new Promise((resolve, reject) => {
@@ -42,12 +42,12 @@ describe('Need class', () => {
     beforeEach(() => {
       jest.resetModules();
       jest.clearAllMocks();
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
     });
 
     it('should create correct bid when input is valid', async () => {
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       const bid = await need.createBid(bidParams);
       expect(bid.id).toBe(topicId);
@@ -63,7 +63,7 @@ describe('Need class', () => {
     it('should throw exception when sendParams throws error', async () => {
       kafkaMock.sendParams.mockImplementation(() => Promise.reject(kafkaError));
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       await expect(need.createBid(bidParams)).rejects.toEqual(kafkaError);
       expect(kafkaMock.createTopic).toHaveBeenCalledWith(topicId, config);
@@ -74,7 +74,7 @@ describe('Need class', () => {
         Promise.reject(kafkaError),
       );
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       await expect(need.createBid(bidParams)).rejects.toThrow(
         `Fail to create a topic: ${kafkaError}`,
@@ -102,12 +102,12 @@ describe('Need class', () => {
       const kafkaMock = {
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
       }));
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       const bids = await need.bids();
       const bid = await new Promise<any>((resolve, reject) => {
@@ -121,7 +121,7 @@ describe('Need class', () => {
     xit('should throw error when paramsStream throws error', async () => {
       // kafkaMock.messages.mockImplementation(() => Observable.fromPromise(Promise.reject(kafkaError)));
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       const bids = await need.bids();
       const bid = new Promise<any>((resolve, reject) => {
@@ -142,9 +142,9 @@ describe('Need class', () => {
       const kafkaMock = {
         sendParams: () => Promise.resolve(true),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       await expect(
         need.sendMessage(new MessageParams({})),
@@ -155,9 +155,9 @@ describe('Need class', () => {
       const kafkaMock = {
         sendParams: () => Promise.reject(kafkaError),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       await expect(need.sendMessage(new MessageParams({}))).rejects.toBe(
         kafkaError,
@@ -168,9 +168,9 @@ describe('Need class', () => {
       const kafkaMock = {
         sendParams: jest.fn(params => Promise.resolve(true)),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       const messageParams = new MessageParams({});
       await need.sendMessage(messageParams);
@@ -183,7 +183,7 @@ describe('Need class', () => {
 
     it('should throw because topic id == selfId', async () => {
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(needParams.id, needParams, config);
       const messageParams = new MessageParams({});
       await expect(need.sendMessage(messageParams)).rejects.toThrow(
@@ -211,13 +211,13 @@ describe('Need class', () => {
       const kafkaMock = {
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
       }));
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       const spy = jest.fn();
       const messages = await need.messages();
@@ -235,7 +235,7 @@ describe('Need class', () => {
     });
 
     xit('should receive error event', async () => {
-      jest.doMock('./Kafka', () => ({
+      jest.doMock('../Kafka', () => ({
         default: {
           paramsStream: async () =>
             Observable.fromPromise(Promise.reject(kafkaError)),
@@ -243,7 +243,7 @@ describe('Need class', () => {
       }));
 
       // tslint:disable-next-line:variable-name
-      const Need = (await import('./Need')).default;
+      const Need = (await import('../Need')).default;
       const need = new Need(selfId, needParams, config);
       const successSpy = jest.fn();
       const errorSpy = jest.fn();

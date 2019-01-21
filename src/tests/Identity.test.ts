@@ -1,16 +1,16 @@
-import Config from './Config';
-import IConfig from './IConfig';
-import Need from './Need';
-import NeedFilterParams from './vessel-charging/NeedFilterParams';
-import NeedParams from './vessel-charging/NeedParams';
-import MissionParams from './vessel-charging/MissionParams';
-import MessageParams from './vessel-charging/messages/StatusRequestMessageParams';
-import BidParams from './vessel-charging/BidParams';
-import { Observable, ID } from './common-types';
-import Message from './Message';
-import Mission from './Mission';
-import Bid from './Bid';
-import AxiosMock from './mocks/AxiosMock';
+import Config from '../Config';
+import IConfig from '../IConfig';
+import Need from '../Need';
+import NeedFilterParams from '../vessel-charging/NeedFilterParams';
+import NeedParams from '../vessel-charging/NeedParams';
+import MissionParams from '../vessel-charging/MissionParams';
+import MessageParams from '../vessel-charging/messages/StatusRequestMessageParams';
+import BidParams from '../vessel-charging/BidParams';
+import { Observable, ID } from '../common-types';
+import Message from '../Message';
+import Mission from '../Mission';
+import Bid from '../Bid';
+import AxiosMock from '../mocks/AxiosMock';
 
 describe('Identity class', () => {
   const TOPIC_ID = 'TOPIC_ID';
@@ -54,7 +54,7 @@ describe('Identity class', () => {
     };
 
     beforeAll(() => {
-      jest.doMock('./Kafka', () => ({
+      jest.doMock('../Kafka', () => ({
         default: kafkaMock,
       }));
       jest.doMock('axios', () => ({
@@ -68,7 +68,7 @@ describe('Identity class', () => {
 
     xit('should call relevant functions and return valid need', async () => {
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('id', 'davId', config);
       const need = new Need(TOPIC_ID, needParams, config);
       await expect(identity.publishNeed(needParams)).resolves.toEqual(need);
@@ -84,7 +84,7 @@ describe('Identity class', () => {
     xit('should fail due to dav node exception', async () => {
       AxiosMock.post.mockImplementation(() => Promise.reject(davNodeError));
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('id', 'davId', config);
       await expect(identity.publishNeed(needParams)).rejects.toThrow(
         `Fail to publish need: ${davNodeError}`,
@@ -96,7 +96,7 @@ describe('Identity class', () => {
         Promise.reject(kafkaError),
       );
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('id', 'davId', config);
       await expect(identity.publishNeed(needParams)).rejects.toThrow(
         `Fail to create a topic: ${kafkaError}`,
@@ -148,13 +148,13 @@ describe('Identity class', () => {
         createTopic: jest.fn(() => Promise.resolve()),
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
       }));
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const spy = jest.fn();
       const needs = await identity.needsForType(needFilterParams, NeedParams);
@@ -197,11 +197,11 @@ describe('Identity class', () => {
         generateTopicId: jest.fn(() => TOPIC_ID),
         createTopic: jest.fn(() => Promise.resolve()),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
 
       AxiosMock.post.mockImplementation(() => Promise.reject(davNodeError));
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       await expect(
         identity.needsForType(needFilterParams, NeedParams),
@@ -219,13 +219,13 @@ describe('Identity class', () => {
         generateTopicId: jest.fn(() => TOPIC_ID),
         createTopic: jest.fn(() => Promise.resolve()),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
 
       kafkaMock.createTopic.mockImplementation(() =>
         Promise.reject(kafkaError),
       );
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       await expect(
         identity.needsForType(needFilterParams, NeedParams),
@@ -279,13 +279,13 @@ describe('Identity class', () => {
         createTopic: jest.fn(() => Promise.resolve()),
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
       }));
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const spy = jest.fn();
       const missions = await identity.missions(MissionParams);
@@ -313,14 +313,14 @@ describe('Identity class', () => {
         createTopic: jest.fn(() => Promise.resolve()),
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
       }));
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
 
       const anotherTopic = 'anotherTopic';
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const spy = jest.fn();
       const missions = await identity.missions(MissionParams, anotherTopic);
@@ -340,7 +340,7 @@ describe('Identity class', () => {
     xit('should receive Kafka error event', async () => {
       // kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.fromPromise(Promise.reject(kafkaError))));
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const successSpy = jest.fn();
       const errorSpy = jest.fn();
@@ -358,10 +358,10 @@ describe('Identity class', () => {
         createTopic: jest.fn(() => Promise.reject(kafkaError)),
         messages: jest.fn(),
       };
-      jest.doMock('./Kafka', () => ({ default: kafkaMock }));
+      jest.doMock('../Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       await forContextSwitch();
       await expect(identity.missions()).rejects.toThrow(
@@ -376,7 +376,7 @@ describe('Identity class', () => {
   describe('need method', () => {
     it('should succeed, validate need', async () => {
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const need = identity.need('needSelfId', needParams);
       expect(need).toEqual(new Need('needSelfId', needParams, config));
@@ -386,7 +386,7 @@ describe('Identity class', () => {
   describe('bid method', () => {
     it('should succeed, validate bid', async () => {
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const bid = identity.bid('bidId', bidParams);
       expect(bid).toEqual(new Bid('bidId', bidParams, config));
@@ -396,7 +396,7 @@ describe('Identity class', () => {
   describe('mission method', () => {
     it('should succeed, validate mission', async () => {
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const mission = identity.mission(
         'missionSelfId',
@@ -435,13 +435,13 @@ describe('Identity class', () => {
       const kafkaMock = {
         messages: jest.fn(() => Promise.resolve(kafkaMessageStreamMock)),
       };
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest.fn().mockImplementation(() => kafkaMessageStreamMock),
       }));
       jest.doMock('./Kafka', () => ({ default: kafkaMock }));
 
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const spy = jest.fn();
       const messages = await identity.messages(MessageParams);
@@ -461,7 +461,7 @@ describe('Identity class', () => {
     xit('should receive error event', async () => {
       // kafkaMock.paramsStream.mockImplementation(() => Promise.resolve(Observable.fromPromise(Promise.reject(kafkaError))));
       // tslint:disable-next-line:variable-name
-      const Identity: any = (await import('./Identity')).default;
+      const Identity: any = (await import('../Identity')).default;
       const identity = new Identity('selfId', 'davId', config);
       const successSpy = jest.fn();
       const errorSpy = jest.fn();

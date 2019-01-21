@@ -1,10 +1,10 @@
-import Config from './Config';
-import IConfig from './IConfig';
-import BasicParams from './BasicParams';
-import { Observable } from './common-types';
-import KafkaMessageStream, { IKafkaMessage } from './KafkaMessageStream';
-import BidParams from './BidParams';
-import DroneChargingBidParams from './drone-charging/BidParams';
+import Config from '../Config';
+import IConfig from '../IConfig';
+import BasicParams from '../BasicParams';
+import { Observable } from '../common-types';
+import KafkaMessageStream, { IKafkaMessage } from '../KafkaMessageStream';
+import BidParams from '../BidParams';
+import DroneChargingBidParams from '../drone-charging/BidParams';
 
 describe('Kafka class', () => {
   let config: IConfig = new Config({
@@ -21,7 +21,7 @@ describe('Kafka class', () => {
   describe('createTopic method', () => {
     it('should create topic without errors when input is valid and no errors from kafka', async () => {
       jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
 
       const clientMock = {
         on: jest.fn((state: string, cb: any) => cb()),
@@ -45,7 +45,7 @@ describe('Kafka class', () => {
 
     xit('should get error from client while trying to connect to kafka', async () => {
       jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
 
       const clientMock = {
         connect: jest.fn(),
@@ -65,7 +65,7 @@ describe('Kafka class', () => {
 
     xit('should get error from kafka in topic creation method', async () => {
       jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
 
       const kafkaError = 'kafka error';
       const clientMock = {
@@ -90,7 +90,7 @@ describe('Kafka class', () => {
   describe('sendParams method', () => {
     it('should send message to kafka without errors when input is valid and no errors from kafka', async () => {
       jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
       const content: any = {
         id: 1,
         price: 3,
@@ -126,7 +126,7 @@ describe('Kafka class', () => {
 
     xit('should get error from producer while trying to connect to kafka', async () => {
       jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
       const paramsMockType = jest.fn<BasicParams>(() => ({
         serialize: () => {
           return 'basic params mock content';
@@ -152,7 +152,7 @@ describe('Kafka class', () => {
 
     xit('should get error from kafka in send method', async () => {
       jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
       const content: any = {
         id: 1,
         price: 3,
@@ -190,7 +190,7 @@ describe('Kafka class', () => {
   describe('messages method', () => {
     xit('should get error from kafka client while trying to connect', async () => {
       jest.doMock('kafka-node');
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
 
       const kafkaClientMock = {
         connect: jest.fn(),
@@ -230,7 +230,7 @@ describe('Kafka class', () => {
         price: '3',
       };
       const jsonString = JSON.stringify(jsonObject);
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest
           .fn()
           .mockImplementation((messageStream: Observable<IKafkaMessage>) =>
@@ -260,7 +260,7 @@ describe('Kafka class', () => {
         }),
       };
       require('kafka-node').Consumer.mockImplementation(() => consumerMock);
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
 
       await kafka.messages('topic', config);
     });
@@ -278,7 +278,7 @@ describe('Kafka class', () => {
 
       const topic = 'topic';
       const jsonString = '{bad format}}';
-      jest.doMock('./KafkaMessageStream', () => ({
+      jest.doMock('../KafkaMessageStream', () => ({
         default: jest
           .fn()
           .mockImplementation((messageStream: Observable<IKafkaMessage>) =>
@@ -312,7 +312,7 @@ describe('Kafka class', () => {
         ),
       };
       require('kafka-node').Consumer.mockImplementation(() => consumerMock);
-      const kafka = (await import('./Kafka')).default;
+      const kafka = (await import('../Kafka')).default;
 
       await kafka.messages(topic, config);
     });
@@ -339,7 +339,7 @@ describe('Kafka class', () => {
             post: postMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await expect(
           kafka.createTopic('testTopic', config),
@@ -358,7 +358,7 @@ describe('Kafka class', () => {
             post: postMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await expect(kafka.createTopic('testTopic', config)).rejects.toEqual(
           'kafka error',
@@ -377,7 +377,7 @@ describe('Kafka class', () => {
             post: postMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await expect(kafka.createTopic('testTopic', config)).rejects.toEqual(
           'net::ERR_CONNECTION_REFUSED',
@@ -406,7 +406,7 @@ describe('Kafka class', () => {
             post: postMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await expect(
           kafka.sendParams('testTopic', paramsMock, config),
@@ -435,7 +435,7 @@ describe('Kafka class', () => {
             post: postMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await expect(
           kafka.sendParams('testTopic', paramsMock, config),
@@ -464,7 +464,7 @@ describe('Kafka class', () => {
             post: postMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await expect(
           kafka.sendParams('testTopic', paramsMock, config),
@@ -495,7 +495,7 @@ describe('Kafka class', () => {
           },
         }));
 
-        jest.doMock('./KafkaMessageStream', () => ({
+        jest.doMock('../KafkaMessageStream', () => ({
           default: jest
             .fn()
             .mockImplementation((messageStream: Observable<IKafkaMessage>) =>
@@ -512,13 +512,13 @@ describe('Kafka class', () => {
             ),
         }));
 
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await kafka.messages('testTopic', config);
       });
 
       xit('should get message stream with two messages in one get call when get valid input and no errors', async () => {
-        jest.doMock('./drone-charging/BidParams');
+        jest.doMock('../drone-charging/BidParams');
         const jsonObject = {
           protocol: 'drone-charging',
           type: 'bid',
@@ -534,7 +534,7 @@ describe('Kafka class', () => {
         const fromJsonVerifiable = jest
           .fn((jsonStringParam: string) => secondJsonObject)
           .mockReturnValueOnce(jsonObject);
-        require('./drone-charging/BidParams').default.fromJson.mockImplementation(
+        require('../drone-charging/BidParams').default.fromJson.mockImplementation(
           fromJsonVerifiable,
         );
 
@@ -546,7 +546,7 @@ describe('Kafka class', () => {
             get: getMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         const observable: Observable<BasicParams> = null; // await kafka.messages('testTopic', config);
         const messageArray: any[] = [];
@@ -571,7 +571,7 @@ describe('Kafka class', () => {
 
       xit('should get message stream with two messages in two get calls when get valid input and no errors', async () => {
         jest.useRealTimers();
-        jest.doMock('./drone-charging/BidParams');
+        jest.doMock('../drone-charging/BidParams');
         const jsonObject = {
           protocol: 'drone-charging',
           type: 'bid',
@@ -588,7 +588,7 @@ describe('Kafka class', () => {
         const fromJsonVerifiable = jest
           .fn((jsonStringParam: string) => secondJsonObject)
           .mockReturnValueOnce(jsonObject);
-        require('./drone-charging/BidParams').default.fromJson.mockImplementation(
+        require('../drone-charging/BidParams').default.fromJson.mockImplementation(
           fromJsonVerifiable,
         );
 
@@ -604,7 +604,7 @@ describe('Kafka class', () => {
             get: getMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         const observable: Observable<BasicParams> = null; // await kafka.paramsStream('testTopic', config);
         const messageArray: any[] = [];
@@ -629,7 +629,7 @@ describe('Kafka class', () => {
       });
 
       it('should throw error due to network error', async done => {
-        jest.doMock('./KafkaMessageStream', () => ({
+        jest.doMock('../KafkaMessageStream', () => ({
           default: jest
             .fn()
             .mockImplementation((messageStream: Observable<IKafkaMessage>) =>
@@ -654,13 +654,13 @@ describe('Kafka class', () => {
             get: getMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await kafka.messages('testTopic', config);
       });
 
       it('should throw error due to bad response from api', async done => {
-        jest.doMock('./KafkaMessageStream', () => ({
+        jest.doMock('../KafkaMessageStream', () => ({
           default: jest
             .fn()
             .mockImplementation((messageStream: Observable<IKafkaMessage>) =>
@@ -685,7 +685,7 @@ describe('Kafka class', () => {
             get: getMock,
           },
         }));
-        const kafka = (await import('./Kafka')).default;
+        const kafka = (await import('../Kafka')).default;
 
         await kafka.messages('testTopic', config);
       });
