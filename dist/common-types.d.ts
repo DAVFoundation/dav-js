@@ -51,3 +51,4 @@ export declare class Observable<T> extends RxObservable<T> {
     static fromObservable<T>(observableRx: RxObservable<T>, topic: ID): Observable<T>;
     private constructor();
 }
+//# sourceMappingURL=common-types.d.ts.map

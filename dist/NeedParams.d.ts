@@ -24,3 +24,4 @@ export default abstract class NeedParams extends BasicParams {
     };
     deserialize(json: any): void;
 }
+//# sourceMappingURL=NeedParams.d.ts.map

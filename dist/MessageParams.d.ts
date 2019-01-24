@@ -22,3 +22,4 @@ export default abstract class MessageParams extends BasicParams {
     };
     deserialize(json: any): void;
 }
+//# sourceMappingURL=MessageParams.d.ts.map

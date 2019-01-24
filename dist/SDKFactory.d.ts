@@ -6,3 +6,4 @@ import SDK from './SDK';
  * @returns DavSDK instance with the specified configuration object.
  */
 export default function SDKFactory(config: IConfig): SDK;
+//# sourceMappingURL=SDKFactory.d.ts.map

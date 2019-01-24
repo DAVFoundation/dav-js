@@ -27,3 +27,4 @@ export default class Web3Mock {
     };
 }
 export {};
+//# sourceMappingURL=Web3Mock.d.ts.map

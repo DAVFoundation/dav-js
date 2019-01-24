@@ -18,3 +18,4 @@ export default class CommitmentConfirmationParams extends BasicParams {
     getProtocolTypes(): any;
     deserialize(json: any): void;
 }
+//# sourceMappingURL=CommitmentConfirmationParams.d.ts.map

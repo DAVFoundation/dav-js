@@ -20,3 +20,4 @@ export default class Message<T extends MessageParams> {
      */
     getMessageType(): string;
 }
+//# sourceMappingURL=Message.d.ts.map

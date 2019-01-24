@@ -11,3 +11,4 @@ export default class KafkaMessageStream {
     constructor(kafkaStream: Observable<IKafkaMessage>);
     filterType<T extends BasicParams>(typesFilter: string[]): Observable<T>;
 }
+//# sourceMappingURL=KafkaMessageStream.d.ts.map

@@ -25,3 +25,4 @@ export declare enum PriceTypes {
     week = "week",
     flat = "flat"
 }
+//# sourceMappingURL=enums.d.ts.map

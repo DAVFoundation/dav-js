@@ -31,3 +31,4 @@ export default class MessageParams extends BaseMessageParams {
     deserialize(json: any): void;
 }
 export {};
+//# sourceMappingURL=MessageParams.d.ts.map

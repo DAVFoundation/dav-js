@@ -14,3 +14,4 @@ export default class CommitmentRequestParams extends BasicParams {
     };
     deserialize(json: any): void;
 }
+//# sourceMappingURL=CommitmentRequestParams.d.ts.map

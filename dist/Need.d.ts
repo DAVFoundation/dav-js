@@ -37,3 +37,4 @@ export default class Need<T extends NeedParams> {
      */
     messages<U extends MessageParams>(filterType?: string[]): Promise<Observable<Message<U>>>;
 }
+//# sourceMappingURL=Need.d.ts.map
