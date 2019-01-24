@@ -44,11 +44,11 @@ export default class NeedParams extends BaseNeedParams {
       this.startAt = values.startAt;
       this.startLocation = {
         lat: values.startLocation.lat,
-        long: values.startLocation.lat,
+        long: values.startLocation.long,
       };
       this.endLocation = {
         lat: values.endLocation.lat,
-        long: values.endLocation.lat,
+        long: values.endLocation.long,
       };
       this.vehicleType = values.vehicleType;
       this.maxAltitude = values.maxAltitude;

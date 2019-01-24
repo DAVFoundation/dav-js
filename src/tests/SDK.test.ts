@@ -1,6 +1,6 @@
-import Config from './Config';
-import Identity from './Identity';
-import IConfig from './IConfig';
+import Config from '../Config';
+import Identity from '../Identity';
+import IConfig from '../IConfig';
 
 describe('SDK class', () => {
   const config = new Config({}) as IConfig;
@@ -14,7 +14,7 @@ describe('SDK class', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.resetModules();
-    jest.doMock('./Contracts', () => ({ default: contractsMock }));
+    jest.doMock('../Contracts', () => ({ default: contractsMock }));
   });
 
   describe('getIdentity method', () => {
@@ -23,7 +23,7 @@ describe('SDK class', () => {
         Promise.resolve(true),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       const identity = new Identity('NO_TOPIC', davId, config);
       await expect(sdk.getIdentity(davId, config)).resolves.toEqual(identity);
@@ -34,7 +34,7 @@ describe('SDK class', () => {
         Promise.resolve(false),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       await expect(sdk.getIdentity(davId, config)).rejects.toThrow(
         `${davId} is not a registered identity`,
@@ -46,7 +46,7 @@ describe('SDK class', () => {
         Promise.reject(contractsError),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       await expect(sdk.getIdentity(davId, config)).rejects.toEqual(
         contractsError,
@@ -60,7 +60,7 @@ describe('SDK class', () => {
         Promise.resolve(true),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       const isRegistered = await sdk.isRegistered('registered dav id');
       expect(isRegistered).toBe(true);
@@ -71,7 +71,7 @@ describe('SDK class', () => {
         Promise.resolve(false),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       const isRegistered = await sdk.isRegistered('unregistered dav id');
       expect(isRegistered).toBe(false);
@@ -82,7 +82,7 @@ describe('SDK class', () => {
         Promise.reject(contractsError),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       await expect(sdk.isRegistered(davId)).rejects.toEqual(contractsError);
     });
@@ -94,7 +94,7 @@ describe('SDK class', () => {
         Promise.resolve('TRANSACTION_HASH'),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       await expect(
         sdk.registerIdentity(
@@ -111,7 +111,7 @@ describe('SDK class', () => {
         Promise.reject(contractsError),
       );
       // tslint:disable-next-line:no-shadowed-variable
-      const SDK: any = (await import('./SDK')).default;
+      const SDK: any = (await import('../SDK')).default;
       const sdk = new SDK(config);
       await expect(
         sdk.registerIdentity(
