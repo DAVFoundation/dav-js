@@ -4,4 +4,3 @@ export default interface IBasicParams {
      */
     ttl: number;
 }
-//# sourceMappingURL=IBasicParams.d.ts.map

@@ -7,4 +7,3 @@ export default class CommitmentRequest {
     constructor(_bidId: string, _commitmentRequestParams: CommitmentRequestParams, _config: IConfig);
     confirm(): Promise<void>;
 }
-//# sourceMappingURL=CommitmentRequest.d.ts.map

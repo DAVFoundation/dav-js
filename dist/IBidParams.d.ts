@@ -26,4 +26,3 @@ export default interface IBidParams extends IBasicParams {
      */
     isCommitted: boolean;
 }
-//# sourceMappingURL=IBidParams.d.ts.map
