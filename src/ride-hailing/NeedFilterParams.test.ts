@@ -30,9 +30,8 @@ describe('NeedFilterParams class', () => {
     };
   });
 
-
   describe('serialize method', () => {
-    it('should return serialized NeedFilterParams object with the current values', () => {
+    it('should return serialized NeedFilterParams object with the correct values', () => {
       expect(needFilterParams.serialize()).toEqual(serializedNeedFilterParams);
     });
   });
