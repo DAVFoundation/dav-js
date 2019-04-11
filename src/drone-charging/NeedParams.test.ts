@@ -8,26 +8,21 @@ describe('NeedParams class', () => {
     needParams = new NeedParams({
       davId: undefined,
       location: {
-        lat: 32.050382,
-        long: 34.766149,
+        lat: undefined,
+        long:undefined
       }
     });
 
     serializedNeedParams = {
-      area: {
-        max: {
-          latitude: parseFloat((32.06836666390769).toFixed(6)),
-          longitude: parseFloat((34.78737405278662).toFixed(6)),
-        },
-        min: {
-          latitude: parseFloat((32.03239380095659).toFixed(6)),
-          longitude: parseFloat((34.74493228891106).toFixed(6)),
-        },
+        ttl: undefined,
+      protocol: 'drone_charging',
+      type: 'need',
+      location: {
+        lat: undefined,
+        long:undefined
       },
       davId: undefined,
-      protocol: 'drone_charging',
-      ttl: undefined,
-      type: 'need_filter',
+      id: undefined
     };
   });
 
