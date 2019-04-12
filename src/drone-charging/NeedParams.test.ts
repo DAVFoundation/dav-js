@@ -9,20 +9,20 @@ describe('NeedParams class', () => {
       davId: undefined,
       location: {
         lat: undefined,
-        long:undefined
-      }
+        long: undefined,
+      },
     });
 
     serializedNeedParams = {
-        ttl: undefined,
+      ttl: undefined,
       protocol: 'drone_charging',
       type: 'need',
       location: {
         lat: undefined,
-        long:undefined
+        long: undefined,
       },
       davId: undefined,
-      id: undefined
+      id: undefined,
     };
   });
 
