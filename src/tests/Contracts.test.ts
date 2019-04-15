@@ -125,7 +125,11 @@ describe('Contracts class', () => {
 
     it('should call relevant functions and throw web3 error', async () => {
       isRegisteredCall.mockImplementation(() => false);
-      sendSignedTransactionSuccess.mockImplementation(() => false);
+      const web3 = require('web3');
+      web3.eth.sendSignedTransaction = jest.fn(() => ({
+        once: jest.fn(() => false),
+        on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+      }));
       const contracts: any = (await import('../Contracts')).default;
       await expect(
         contracts.registerIdentity(
@@ -182,7 +186,11 @@ describe('Contracts class', () => {
     });
 
     it('should call relevant functions and throw web3 error', async () => {
-      sendSignedTransactionSuccess.mockImplementation(() => false);
+      const web3 = require('web3');
+      web3.eth.sendSignedTransaction = jest.fn(() => ({
+        once: jest.fn(() => false),
+        on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+      }));
       const contracts: any = (await import('../Contracts')).default;
       await expect(
         contracts.approveMission(
@@ -193,7 +201,7 @@ describe('Contracts class', () => {
       ).rejects.toBe(web3Error);
       expect(approve).toHaveBeenCalled();
       expect(signTransaction).toHaveBeenCalled();
-      expect(sendSignedTransaction).toHaveBeenCalled();
+      expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();
     });
   });
 
@@ -241,7 +249,11 @@ describe('Contracts class', () => {
     });
 
     it('should call relevant functions and throw web3 error', async () => {
-      sendSignedTransactionSuccess.mockImplementation(() => false);
+      const web3 = require('web3');
+      web3.eth.sendSignedTransaction = jest.fn(() => ({
+        once: jest.fn(() => false),
+        on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+      }));
       const contracts: any = (await import('../Contracts')).default;
       await expect(
         contracts.startMission(
@@ -255,7 +267,7 @@ describe('Contracts class', () => {
       ).rejects.toBe(web3Error);
       expect(create).toHaveBeenCalled();
       expect(signTransaction).toHaveBeenCalled();
-      expect(sendSignedTransaction).toHaveBeenCalled();
+      expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();
     });
   });
 
@@ -301,7 +313,11 @@ describe('Contracts class', () => {
     });
 
     it('should call relevant functions and throw web3 error', async () => {
-      sendSignedTransactionSuccess.mockImplementation(() => false);
+      const web3 = require('web3');
+      web3.eth.sendSignedTransaction = jest.fn(() => ({
+        once: jest.fn(() => false),
+        on: (type: string, cb: any) => jest.fn(cb(web3Error)),
+      }));
       const contracts: any = (await import('../Contracts')).default;
       await expect(
         contracts.finalizeMission(
@@ -313,7 +329,7 @@ describe('Contracts class', () => {
       ).rejects.toBe(web3Error);
       expect(fulfilled).toHaveBeenCalled();
       expect(signTransaction).toHaveBeenCalled();
-      expect(sendSignedTransaction).toHaveBeenCalled();
+      expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();
     });
   });
 
