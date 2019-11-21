@@ -28,6 +28,11 @@ describe('NeedFilterParams class', () => {
             },
         };
     });
+    describe('serialize method', () => {
+        it('should return serialized NeedFilterParams object with the correct values', () => {
+            expect(needFilterParams.serialize()).toEqual(serializedNeedFilterParams);
+        });
+    });
     describe('deserialize method', () => {
         it('should return NeedParams instance with the current parameters', () => {
             const needParamsObject = new NeedFilterParams_1.default();

@@ -50,3 +50,4 @@ export default interface IConfig {
      */
     contracts?: ContractsArtifacts;
 }
+//# sourceMappingURL=IConfig.d.ts.map

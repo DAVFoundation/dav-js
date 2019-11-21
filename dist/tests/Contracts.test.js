@@ -92,7 +92,11 @@ describe('Contracts class', () => {
         });
         it('should call relevant functions and throw web3 error', async () => {
             isRegisteredCall.mockImplementation(() => false);
-            sendSignedTransactionSuccess.mockImplementation(() => false);
+            const web3 = require('web3');
+            web3.eth.sendSignedTransaction = jest.fn(() => ({
+                once: jest.fn(() => false),
+                on: (type, cb) => jest.fn(cb(web3Error)),
+            }));
             const contracts = (await Promise.resolve().then(() => require('../Contracts'))).default;
             await expect(contracts.registerIdentity(UNREGISTERED_IDENTITY, IDENTITY_PRIVATE_KEY, WALLET_ADDRESS, WALLET_PRIVATE_KEY, configuration)).rejects.toBe(web3Error);
             expect(signTransaction).toHaveBeenCalled();
@@ -128,12 +132,16 @@ describe('Contracts class', () => {
             expect(sendSignedTransaction).toHaveBeenCalled();
         });
         it('should call relevant functions and throw web3 error', async () => {
-            sendSignedTransactionSuccess.mockImplementation(() => false);
+            const web3 = require('web3');
+            web3.eth.sendSignedTransaction = jest.fn(() => ({
+                once: jest.fn(() => false),
+                on: (type, cb) => jest.fn(cb(web3Error)),
+            }));
             const contracts = (await Promise.resolve().then(() => require('../Contracts'))).default;
             await expect(contracts.approveMission(REGISTERED_IDENTITY, WALLET_PRIVATE_KEY, configuration)).rejects.toBe(web3Error);
             expect(approve).toHaveBeenCalled();
             expect(signTransaction).toHaveBeenCalled();
-            expect(sendSignedTransaction).toHaveBeenCalled();
+            expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();
         });
     });
     describe('startMission method', () => {
@@ -165,12 +173,16 @@ describe('Contracts class', () => {
             expect(sendSignedTransaction).toHaveBeenCalled();
         });
         it('should call relevant functions and throw web3 error', async () => {
-            sendSignedTransactionSuccess.mockImplementation(() => false);
+            const web3 = require('web3');
+            web3.eth.sendSignedTransaction = jest.fn(() => ({
+                once: jest.fn(() => false),
+                on: (type, cb) => jest.fn(cb(web3Error)),
+            }));
             const contracts = (await Promise.resolve().then(() => require('../Contracts'))).default;
             await expect(contracts.startMission(MISSION_ID, REGISTERED_IDENTITY, WALLET_PRIVATE_KEY, VEHICLE_ID, MISSION_PRICE, configuration)).rejects.toBe(web3Error);
             expect(create).toHaveBeenCalled();
             expect(signTransaction).toHaveBeenCalled();
-            expect(sendSignedTransaction).toHaveBeenCalled();
+            expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();
         });
     });
     describe('finalizeMission method', () => {
@@ -202,12 +214,16 @@ describe('Contracts class', () => {
             expect(sendSignedTransaction).toHaveBeenCalled();
         });
         it('should call relevant functions and throw web3 error', async () => {
-            sendSignedTransactionSuccess.mockImplementation(() => false);
+            const web3 = require('web3');
+            web3.eth.sendSignedTransaction = jest.fn(() => ({
+                once: jest.fn(() => false),
+                on: (type, cb) => jest.fn(cb(web3Error)),
+            }));
             const contracts = (await Promise.resolve().then(() => require('../Contracts'))).default;
             await expect(contracts.finalizeMission(MISSION_ID, REGISTERED_IDENTITY, WALLET_PRIVATE_KEY, configuration)).rejects.toBe(web3Error);
             expect(fulfilled).toHaveBeenCalled();
             expect(signTransaction).toHaveBeenCalled();
-            expect(sendSignedTransaction).toHaveBeenCalled();
+            expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();
         });
     });
     describe('watchContract method', () => {

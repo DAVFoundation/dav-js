@@ -30,3 +30,4 @@ export default class SDK {
      */
     registerIdentity(davId: DavID, walletAddress: string, walletPrivateKey: string, identityPrivateKey: string): Promise<string>;
 }
+//# sourceMappingURL=SDK.d.ts.map

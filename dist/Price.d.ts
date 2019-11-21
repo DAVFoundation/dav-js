@@ -15,3 +15,4 @@ export default class Price implements IPrice {
      */
     equals(other: Price): boolean;
 }
+//# sourceMappingURL=Price.d.ts.map

@@ -23,3 +23,4 @@ export declare const defaultConfiguration: {
     kafkaBrowserRequestTimeout: number;
     blockchainType: BlockchainType;
 };
+//# sourceMappingURL=Config.d.ts.map

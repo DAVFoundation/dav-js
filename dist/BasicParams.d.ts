@@ -19,3 +19,4 @@ export default abstract class BasicParams {
     readonly messageType: string;
     deserialize(json: any): void;
 }
+//# sourceMappingURL=BasicParams.d.ts.map

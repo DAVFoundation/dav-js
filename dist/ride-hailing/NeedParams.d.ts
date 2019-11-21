@@ -22,3 +22,4 @@ export default class NeedParams extends BaseNeedParams {
     };
     deserialize(json: any): void;
 }
+//# sourceMappingURL=NeedParams.d.ts.map

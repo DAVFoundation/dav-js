@@ -21,3 +21,4 @@ export default interface IPrice {
      */
     equals(other: IPrice): boolean;
 }
+//# sourceMappingURL=IPrice.d.ts.map

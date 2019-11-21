@@ -15,3 +15,4 @@ export default class NeedFilterParams extends BaseNeedFilterParams {
     };
     deserialize(json: any): void;
 }
+//# sourceMappingURL=NeedFilterParams.d.ts.map
