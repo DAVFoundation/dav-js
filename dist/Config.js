@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_enums_1 = require("./common-enums");
 const defaultValues = {
-    ethNodeUrl: 'https://ropsten.infura.io/wUiZtmeZ1KwjFrcC8zRO',
+    ethNodeUrl: '',
     apiSeedUrls: [''],
     kafkaSeedUrls: [''],
     identityTtl: 10000,

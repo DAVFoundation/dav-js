@@ -22,7 +22,7 @@
   "main": "./dist",
   "types": "./dist",
   "scripts": {
-    "preinstall": "find node_modules/ -name .git -type d -exec rm -rf {} +",
+    "preinstall": "find node_modules/ -name .git -type d -exec rm -rf {} + || exit 0",
     "create-dist": "gulp create-dist",
     "jest": "gulp jest",
     "post-install": "gulp post-install",
