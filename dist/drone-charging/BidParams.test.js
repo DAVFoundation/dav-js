@@ -1,37 +1,58 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const BidParams_1 = require("./BidParams");
+const enums_1 = require("./enums");
 describe('BidParams class', () => {
-    let bidParams;
-    let serializedBidParams;
-    beforeEach(() => {
-        bidParams = new BidParams_1.default({
-            id: 'TOPIC_ID',
-            price: ['66666666'],
-            vehicleId: 'VEHICLE_DAV_ID',
-            neederDavId: 'CONSUMER_DAV_ID',
-            isCommitted: true,
-            plugType: undefined,
-        });
-        serializedBidParams = {
-            ttl: undefined,
-            protocol: 'drone_charging',
-            type: 'bid',
-            id: 'TOPIC_ID',
-            price: ['66666666'],
-            vehicleId: 'VEHICLE_DAV_ID',
-            neederDavId: 'CONSUMER_DAV_ID',
-            isCommitted: true,
-            plugType: undefined,
-        };
+    const bidParams = new BidParams_1.default({
+        id: 'BID_TOPIC_ID',
+        price: '100000000000000000',
+        vehicleId: 'DAV_ID',
+        entranceLocation: {
+            lat: 32.050382,
+            long: 34.766149,
+        },
+        exitLocation: {
+            lat: 32.050382,
+            long: 34.766149,
+        },
+        availableFrom: 1535441613658,
+        availableUntil: 1535441623658,
+        energySource: enums_1.EnergySources.Hydro,
+        isCommitted: true,
+        neederDavId: 'davId',
     });
+    const serializedBidParams = {
+        amenities: undefined,
+        provider: undefined,
+        model: undefined,
+        manufacturer: undefined,
+        ttl: undefined,
+        protocol: 'drone_charging',
+        type: 'bid',
+        id: 'BID_TOPIC_ID',
+        price: ['100000000000000000'],
+        vehicleId: 'DAV_ID',
+        entranceLocation: {
+            lat: 32.050382,
+            long: 34.766149,
+        },
+        exitLocation: {
+            lat: 32.050382,
+            long: 34.766149,
+        },
+        availableFrom: 1535441613658,
+        availableUntil: 1535441623658,
+        energySource: 'hydro',
+        isCommitted: true,
+        neederDavId: 'davId',
+    };
     describe('serialize method', () => {
-        it('should return serialized BidParams object with the current values', () => {
+        it('should return serialized bid params object with the current values', () => {
             expect(bidParams.serialize()).toEqual(serializedBidParams);
         });
     });
     describe('deserialize method', () => {
-        it('should return deserialize BidParams instance with the current parameters', () => {
+        it('should return BidParams instance with the current parameters', () => {
             const bidParamsObject = new BidParams_1.default();
             bidParamsObject.deserialize(serializedBidParams);
             expect(bidParamsObject).toEqual(bidParams);

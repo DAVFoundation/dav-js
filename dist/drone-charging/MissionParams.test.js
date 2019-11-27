@@ -5,23 +5,19 @@ describe('MissionParams class', () => {
     let missionParams;
     let serializedMissionParams;
     beforeEach(() => {
-        missionParams = new MissionParams_1.default({
-            id: 'TOPIC_ID',
-            price: ['11111111'],
-            vehicleId: 'PROVIDER_DAV_ID',
-            neederDavId: 'CONSUMER_DAV_ID',
-        });
+        missionParams = new MissionParams_1.default({});
         serializedMissionParams = {
+            ttl: undefined,
             protocol: 'drone_charging',
             type: 'mission',
-            id: 'TOPIC_ID',
-            price: ['11111111'],
-            vehicleId: 'PROVIDER_DAV_ID',
-            neederDavId: 'CONSUMER_DAV_ID',
+            id: undefined,
+            neederDavId: undefined,
+            price: undefined,
+            vehicleId: undefined,
         };
     });
     describe('serialize method', () => {
-        it('should return serialized MissionParams object with the current values', () => {
+        it('should return a serialized mission params object', () => {
             expect(missionParams.serialize()).toEqual(serializedMissionParams);
         });
     });
@@ -31,8 +27,8 @@ describe('MissionParams class', () => {
             missionParamsObject.deserialize(serializedMissionParams);
             expect(missionParamsObject).toBeInstanceOf(MissionParams_1.default);
         });
-        it('should return a correct MissionParams object', () => {
-            const missionParamsObject = new MissionParams_1.default({});
+        it('should return the correct deserialized parameters', () => {
+            const missionParamsObject = new MissionParams_1.default();
             missionParamsObject.deserialize(serializedMissionParams);
             expect(missionParamsObject).toEqual(missionParams);
         });

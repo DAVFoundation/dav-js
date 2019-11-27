@@ -3,20 +3,11 @@ import BaseMessageParams from '../MessageParams';
 /**
  * @class The Class drone-charging/MessageParams represent the parameters of drone-charging message.
  */
-export default class MessageParams extends BaseMessageParams {
-  private static _protocol = 'drone_charging';
-  private static _type = 'message';
+export default abstract class MessageParams extends BaseMessageParams {
+  public static _protocol = 'drone_charging';
 
-  public static getMessageType(): string {
-    return MessageParams._type;
-  }
-
-  public static getMessageProtocol(): string {
-    return MessageParams._protocol;
-  }
-
-  constructor(values?: Partial<MessageParams>) {
-    super(MessageParams._protocol, MessageParams._type, values);
+  constructor(messageType: string, values?: Partial<MessageParams>) {
+    super(MessageParams._protocol, messageType, values);
   }
 
   public serialize() {

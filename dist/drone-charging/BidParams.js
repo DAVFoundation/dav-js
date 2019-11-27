@@ -6,13 +6,24 @@ const BidParams_1 = require("../BidParams");
  */
 class BidParams extends BidParams_1.default {
     constructor(values) {
-        super(BidParams._protocol, BidParams._type, values);
+        super(BidParams._protocol, BidParams._messageType, values);
         if (!!values) {
-            this.plugType = values.plugType;
+            if (!values.availableFrom) {
+                throw new Error('availableFrom is a required field');
+            }
+            this.entranceLocation = values.entranceLocation;
+            this.exitLocation = values.exitLocation;
+            this.availableFrom = values.availableFrom;
+            this.availableUntil = values.availableUntil;
+            this.energySource = values.energySource;
+            this.amenities = values.amenities;
+            this.provider = values.provider;
+            this.manufacturer = values.manufacturer;
+            this.model = values.model;
         }
     }
     static getMessageType() {
-        return BidParams._type;
+        return BidParams._messageType;
     }
     static getMessageProtocol() {
         return BidParams._protocol;
@@ -20,20 +31,36 @@ class BidParams extends BidParams_1.default {
     serialize() {
         const formattedParams = super.serialize();
         Object.assign(formattedParams, {
-            plugType: this.plugType,
+            entranceLocation: this.entranceLocation,
+            exitLocation: this.exitLocation,
+            availableFrom: this.availableFrom,
+            availableUntil: this.availableUntil,
+            energySource: this.energySource,
+            amenities: this.amenities,
+            provider: this.amenities,
+            manufacturer: this.amenities,
+            model: this.amenities,
         });
         return formattedParams;
     }
     deserialize(json) {
         super.deserialize(json);
-        this.plugType = json.plugType;
+        this.entranceLocation = json.entranceLocation;
+        this.exitLocation = json.exitLocation;
+        this.availableFrom = json.availableFrom;
+        this.availableUntil = json.availableUntil;
+        this.energySource = json.energySource;
+        this.amenities = json.amenities;
+        this.provider = json.provider;
+        this.manufacturer = json.manufacturer;
+        this.model = json.model;
     }
     equals(other) {
-        return super.equals(other) && this.plugType === other.plugType;
+        return super.equals(other);
     }
 }
 BidParams._protocol = 'drone_charging';
-BidParams._type = 'bid';
+BidParams._messageType = 'bid';
 exports.default = BidParams;
 
 //# sourceMappingURL=BidParams.js.map

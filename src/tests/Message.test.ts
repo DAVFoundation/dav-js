@@ -1,5 +1,5 @@
 import Config from '../Config';
-import MessageParams from '../drone-charging/MessageParams';
+import MessageParams from '../ride-hailing/MessageParams';
 
 describe('Message class', () => {
   const configuration = new Config({});

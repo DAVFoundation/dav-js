@@ -6,10 +6,10 @@ const MissionParams_1 = require("../MissionParams");
  */
 class MissionParams extends MissionParams_1.default {
     constructor(values) {
-        super(MissionParams._protocol, MissionParams._type, values);
+        super(MissionParams._protocol, MissionParams._messageType, values);
     }
     static getMessageType() {
-        return MissionParams._type;
+        return MissionParams._messageType;
     }
     static getMessageProtocol() {
         return MissionParams._protocol;
@@ -23,7 +23,7 @@ class MissionParams extends MissionParams_1.default {
     }
 }
 MissionParams._protocol = 'drone_charging';
-MissionParams._type = 'mission';
+MissionParams._messageType = 'mission';
 exports.default = MissionParams;
 
 //# sourceMappingURL=MissionParams.js.map

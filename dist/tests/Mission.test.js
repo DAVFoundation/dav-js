@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = require("../Config");
-const MessageParams_1 = require("../drone-charging/MessageParams");
+const MessageParams_1 = require("../ride-hailing/MessageParams");
 const Bid_1 = require("../Bid");
-const BidParams_1 = require("../drone-charging/BidParams");
-const MissionParams_1 = require("../drone-charging/MissionParams");
+const BidParams_1 = require("../ride-hailing/BidParams");
+const MissionParams_1 = require("../ride-hailing/MissionParams");
 const common_enums_1 = require("../common-enums");
 const Price_1 = require("../Price");
 const common_types_1 = require("../common-types");

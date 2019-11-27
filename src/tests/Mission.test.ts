@@ -1,8 +1,8 @@
 import Config from '../Config';
-import MessageParams from '../drone-charging/MessageParams';
+import MessageParams from '../ride-hailing/MessageParams';
 import Bid from '../Bid';
-import BidParams from '../drone-charging/BidParams';
-import MissionParams from '../drone-charging/MissionParams';
+import BidParams from '../ride-hailing/BidParams';
+import MissionParams from '../ride-hailing/MissionParams';
 import { PriceType } from '../common-enums';
 import Price from '../Price';
 import { Observable, DavID, ID } from '../common-types';

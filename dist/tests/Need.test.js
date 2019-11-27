@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = require("../Config");
-const BidParams_1 = require("../drone-charging/BidParams");
-const NeedParams_1 = require("../drone-charging/NeedParams");
+const BidParams_1 = require("../ride-hailing/BidParams");
+const NeedParams_1 = require("../ride-hailing/NeedParams");
 const Price_1 = require("../Price");
 const common_enums_1 = require("../common-enums");
 const Message_1 = require("../Message");
 const common_types_1 = require("../common-types");
-const MessageParams_1 = require("../drone-charging/MessageParams");
+const MessageParams_1 = require("../ride-hailing/MessageParams");
 const forContextSwitch = () => {
     return new Promise((resolve, reject) => {
         jest.useRealTimers();
@@ -19,7 +19,7 @@ describe('Need class', () => {
     const config = new Config_1.default({});
     const selfId = 'SELF_ID';
     const topicId = 'TOPIC_ID';
-    const needParams = new NeedParams_1.default({});
+    const needParams = new NeedParams_1.default({ pickupLocation: { lat: 0, long: 0 }, destinationLocation: { lat: 0, long: 0 } });
     const kafkaError = { msg: 'Kafka error' };
     let bidParams = new BidParams_1.default({
         id: 'BID_ID',

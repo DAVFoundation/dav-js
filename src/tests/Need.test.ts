@@ -1,11 +1,11 @@
 import Config from '../Config';
-import BidParams from '../drone-charging/BidParams';
-import NeedParams from '../drone-charging/NeedParams';
+import BidParams from '../ride-hailing/BidParams';
+import NeedParams from '../ride-hailing/NeedParams';
 import Price from '../Price';
 import { PriceType } from '../common-enums';
 import Message from '../Message';
 import { Observable } from '../common-types';
-import MessageParams from '../drone-charging/MessageParams';
+import MessageParams from '../ride-hailing/MessageParams';
 import Bid from '../Bid';
 
 const forContextSwitch = () => {
@@ -20,7 +20,7 @@ describe('Need class', () => {
   const config = new Config({});
   const selfId = 'SELF_ID';
   const topicId = 'TOPIC_ID';
-  const needParams = new NeedParams({});
+  const needParams = new NeedParams({ pickupLocation: { lat: 0, long: 0 }, destinationLocation: { lat: 0, long: 0 } });
   const kafkaError = { msg: 'Kafka error' };
   let bidParams = new BidParams({
     id: 'BID_ID',

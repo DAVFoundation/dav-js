@@ -1,30 +1,30 @@
 import BaseNeedFilterParams from '../NeedFilterParams';
+import { IDimensions } from '../common-types';
 
 /**
  * @class The Class drone-charging/NeedFilterParams represent the parameters that used to filter drone-charging needs.
  */
 export default class NeedFilterParams extends BaseNeedFilterParams {
-  private static _protocol = 'drone_charging';
-  private static _type = 'need_filter';
+  public static _protocol = 'drone_charging';
+  public static _messageType = 'need_filter';
 
-  public static getMessageType(): string {
-    return NeedFilterParams._type;
-  }
-
-  public static getMessageProtocol(): string {
-    return NeedFilterParams._protocol;
-  }
+  public maxDimensions: IDimensions;
 
   constructor(values?: Partial<NeedFilterParams>) {
-    super(NeedFilterParams._protocol, NeedFilterParams._type, values);
+    super(NeedFilterParams._protocol, NeedFilterParams._messageType, values);
+    if (!!values) {
+      this.maxDimensions = values.maxDimensions;
+    }
   }
 
   public serialize() {
     const formattedParams = super.serialize();
+    Object.assign(formattedParams, { dimensions: this.maxDimensions });
     return formattedParams;
   }
 
   public deserialize(json: any): void {
     super.deserialize(json);
+    this.maxDimensions = json.dimensions;
   }
 }

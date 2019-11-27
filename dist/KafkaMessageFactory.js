@@ -46,12 +46,12 @@ class KafkaMessageFactory {
         const messageTypesMap = this.getProtocol(protocol).messageTypesMap;
         return messageTypesMap[category];
     }
-    registerMessageClass(protocol, messageType, messageCategory, classType) {
+    registerMessageClassAndCategory(protocol, messageType, messageCategory, classType) {
         this.registerClassType(protocol, messageType, classType);
         this.registerMessageCategory(protocol, messageType, messageCategory);
     }
     registerMessageClasses(messageClasses) {
-        messageClasses.forEach(messageClass => this.registerMessageClass(messageClass.protocol, messageClass.messageType, messageClass.messageCategory, messageClass.classType));
+        messageClasses.forEach(messageClass => this.registerMessageClassAndCategory(messageClass.protocol, messageClass.messageType, messageClass.messageCategory, messageClass.classType));
     }
 }
 exports.default = KafkaMessageFactory;

@@ -1,8 +1,8 @@
 import Config from '../Config';
 import BidParams from '../ride-hailing/BidParams';
 import Price from '../Price';
-import MessageParams from '../drone-charging/MessageParams';
-import MissionParams from '../drone-charging/MissionParams';
+import MessageParams from '../ride-hailing/MessageParams';
+import MissionParams from '../ride-hailing/MissionParams';
 import IConfig from '../IConfig';
 import { Observable as RxObservable } from 'rxjs';
 import Mission from '../Mission';

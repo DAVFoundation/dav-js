@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = require("../Config");
-const MessageParams_1 = require("../drone-charging/MessageParams");
+const MessageParams_1 = require("../ride-hailing/MessageParams");
 describe('Message class', () => {
     const configuration = new Config_1.default({});
     const messageContent = new MessageParams_1.default({ senderId: 'peerId' });

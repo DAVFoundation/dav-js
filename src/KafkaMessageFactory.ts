@@ -32,7 +32,7 @@ export default class KafkaMessageFactory {
     return KafkaMessageFactory._instance;
   }
 
-  private constructor() {}
+  private constructor() { }
 
   private getProtocol(protocol: string): IProtocolMapEntry {
     if (!this.protocolMap[protocol]) {
@@ -81,7 +81,7 @@ export default class KafkaMessageFactory {
     return messageTypesMap[category];
   }
 
-  public registerMessageClass<T>(
+  public registerMessageClassAndCategory<T>(
     protocol: string,
     messageType: string,
     messageCategory: MessageCategories,
@@ -100,7 +100,7 @@ export default class KafkaMessageFactory {
     }>,
   ): void {
     messageClasses.forEach(messageClass =>
-      this.registerMessageClass(
+      this.registerMessageClassAndCategory(
         messageClass.protocol,
         messageClass.messageType,
         messageClass.messageCategory,

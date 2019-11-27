@@ -15,7 +15,7 @@ export default class KafkaMessageFactory {
     private registerMessageCategory;
     getClassType<T>(protocol: string, messageType: string): new (...all: any[]) => T;
     getMessageTypes(protocol: string, category: MessageCategories): string[];
-    registerMessageClass<T>(protocol: string, messageType: string, messageCategory: MessageCategories, classType: new (...all: any[]) => T): void;
+    registerMessageClassAndCategory<T>(protocol: string, messageType: string, messageCategory: MessageCategories, classType: new (...all: any[]) => T): void;
     registerMessageClasses(messageClasses: Array<{
         protocol: string;
         messageType: string;

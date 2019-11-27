@@ -6,24 +6,23 @@ const NeedFilterParams_1 = require("../NeedFilterParams");
  */
 class NeedFilterParams extends NeedFilterParams_1.default {
     constructor(values) {
-        super(NeedFilterParams._protocol, NeedFilterParams._type, values);
-    }
-    static getMessageType() {
-        return NeedFilterParams._type;
-    }
-    static getMessageProtocol() {
-        return NeedFilterParams._protocol;
+        super(NeedFilterParams._protocol, NeedFilterParams._messageType, values);
+        if (!!values) {
+            this.maxDimensions = values.maxDimensions;
+        }
     }
     serialize() {
         const formattedParams = super.serialize();
+        Object.assign(formattedParams, { dimensions: this.maxDimensions });
         return formattedParams;
     }
     deserialize(json) {
         super.deserialize(json);
+        this.maxDimensions = json.dimensions;
     }
 }
 NeedFilterParams._protocol = 'drone_charging';
-NeedFilterParams._type = 'need_filter';
+NeedFilterParams._messageType = 'need_filter';
 exports.default = NeedFilterParams;
 
 //# sourceMappingURL=NeedFilterParams.js.map
