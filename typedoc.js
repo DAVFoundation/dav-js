@@ -6,4 +6,5 @@ module.exports = {
   exclude:
     '**/*+(test|ContractsIntegrationSimulator|Kafka|Contracts|KafkaMessageStream|KafkaApi|KafkaBase|KafkaNode).ts',
   excludeExternals: true,
+  ignoreCompilerErrors: true
 };

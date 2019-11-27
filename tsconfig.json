@@ -7,11 +7,18 @@
     "removeComments": false,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "outDir": "build"
   },
   "include": [
     "src/**/*",
     "samples/**/*"
-  ]
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }

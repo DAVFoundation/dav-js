@@ -20,4 +20,3 @@ export default abstract class BidParams extends BasicParams {
     deserialize(json: any): void;
     equals(other: BidParams): boolean;
 }
-//# sourceMappingURL=BidParams.d.ts.map

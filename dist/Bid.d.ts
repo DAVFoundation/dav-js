@@ -52,4 +52,3 @@ export default class Bid<T extends BidParams> {
      */
     commitmentRequests(): Promise<Observable<CommitmentRequest>>;
 }
-//# sourceMappingURL=Bid.d.ts.map

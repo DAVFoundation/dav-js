@@ -14,4 +14,3 @@ export default class MessageParams extends BaseMessageParams {
     };
     deserialize(json: any): void;
 }
-//# sourceMappingURL=DroneStatusMessageParams.d.ts.map

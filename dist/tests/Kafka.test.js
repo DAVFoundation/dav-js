@@ -84,9 +84,11 @@ describe('Kafka class', () => {
             jest.doMock('kafka-node');
             const kafka = (await Promise.resolve().then(() => require('../Kafka'))).default;
             const paramsMockType = jest.fn(() => ({
-                serialize: () => {
-                    return 'basic params mock content';
-                },
+                serialize: () => ({
+                    ttl: 0,
+                    protocol: '',
+                    type: '',
+                }),
             }));
             const paramsMock = new paramsMockType();
             const clientMock = {

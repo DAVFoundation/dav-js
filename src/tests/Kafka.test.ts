@@ -96,7 +96,7 @@ describe('Kafka class', () => {
         price: 3,
         serialize: jest.fn(() => content),
       };
-      const paramsMockType = jest.fn<BasicParams>(() => content);
+      const paramsMockType = jest.fn<BasicParams, [string, string]>(() => content);
       const paramsMock = new paramsMockType();
 
       const clientMock = {
@@ -127,11 +127,14 @@ describe('Kafka class', () => {
     xit('should get error from producer while trying to connect to kafka', async () => {
       jest.doMock('kafka-node');
       const kafka = (await import('../Kafka')).default;
-      const paramsMockType = jest.fn<BasicParams>(() => ({
-        serialize: () => {
-          return 'basic params mock content';
-        },
-      }));
+      const paramsMockType = jest.fn<BasicParams, [string, string]>(() => ({
+        serialize: () =>
+          ({
+            ttl: 0,
+            protocol: '',
+            type: '',
+          }),
+      } as BasicParams));
       const paramsMock = new paramsMockType();
 
       const clientMock = {
@@ -158,7 +161,7 @@ describe('Kafka class', () => {
         price: 3,
         serialize: jest.fn(() => content),
       };
-      const paramsMockType = jest.fn<BasicParams>(() => content);
+      const paramsMockType = jest.fn<BasicParams, [string, string]>(() => content);
       const paramsMock = new paramsMockType();
 
       const clientMock = {
@@ -395,7 +398,7 @@ describe('Kafka class', () => {
           price: 3,
           serialize: jest.fn(() => paramsObject),
         };
-        const paramsMockType = jest.fn<BasicParams>(() => paramsObject);
+        const paramsMockType = jest.fn<BasicParams, [string, string]>(() => paramsObject);
         const paramsMock = new paramsMockType();
 
         const postMock = jest.fn((url: string, content: string, conf: any) =>
@@ -424,7 +427,7 @@ describe('Kafka class', () => {
           price: 3,
           serialize: jest.fn(() => paramsObject),
         };
-        const paramsMockType = jest.fn<BasicParams>(() => paramsObject);
+        const paramsMockType = jest.fn<BasicParams, [string, string]>(() => paramsObject);
         const paramsMock = new paramsMockType();
 
         const postMock = jest.fn((url: string, conf: any) =>
@@ -453,7 +456,7 @@ describe('Kafka class', () => {
           price: 3,
           serialize: jest.fn(() => paramsObject),
         };
-        const paramsMockType = jest.fn<BasicParams>(() => paramsObject);
+        const paramsMockType = jest.fn<BasicParams, [string, string]>(() => paramsObject);
         const paramsMock = new paramsMockType();
 
         const postMock = jest.fn((url: string, conf: any) =>

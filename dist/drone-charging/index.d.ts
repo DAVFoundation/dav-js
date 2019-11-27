@@ -12,4 +12,3 @@ import StartingMessageParams from './messages/StartingMessageParams';
 import StatusRequestMessageParams from './messages/StatusRequestMessageParams';
 import DroneStatusMessageParams from './messages/DroneStatusMessageParams';
 export { enums, NeedParams, NeedFilterParams, BidParams, MissionParams, ChargingArrivalMessageParams, ChargingCompleteMessageParams, ChargingStartedMessageParams, DeclineMessageParams, ProviderStatusMessageParams, StartingMessageParams, StatusRequestMessageParams, DroneStatusMessageParams, };
-//# sourceMappingURL=index.d.ts.map

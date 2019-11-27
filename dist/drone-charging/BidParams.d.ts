@@ -107,4 +107,3 @@ export default class BidParams extends BaseBidParams {
     equals(other: BidParams): boolean;
 }
 export {};
-//# sourceMappingURL=BidParams.d.ts.map

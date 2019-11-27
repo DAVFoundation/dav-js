@@ -20,4 +20,3 @@ export declare enum ContractTypes {
     davToken = "DAVToken",
     basicMission = "BasicMission"
 }
-//# sourceMappingURL=common-enums.d.ts.map

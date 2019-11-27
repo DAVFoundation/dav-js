@@ -13,4 +13,3 @@ export default class MissionPeerIdMessageParams extends BaseMessageParams {
     };
     deserialize(json: any): void;
 }
-//# sourceMappingURL=MissionPeerIdMessageParams.d.ts.map

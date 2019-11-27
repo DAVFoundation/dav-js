@@ -23,4 +23,3 @@ export default class KafkaMessageFactory {
         classType: new (...all: any[]) => any;
     }>): void;
 }
-//# sourceMappingURL=KafkaMessageFactory.d.ts.map
