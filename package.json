@@ -17,7 +17,7 @@
     "gulpfile.js"
   ],
   "engines": {
-    "node": "~9.0.0"
+    "node": "~11.0.0"
   },
   "main": "./dist",
   "types": "./dist",
