@@ -49,7 +49,10 @@ class Contracts {
         return Math.min(gasAmount + 100, 4000000);
     }
     static calculatePrice(price) {
-        return '150000000000000000';
+        if (Array.isArray(price)) {
+            price = price[0];
+        }
+        return price.value || price;
     }
     static generateMissionId(config) {
         const web3 = Contracts.initWeb3(config);
@@ -72,12 +75,16 @@ class Contracts {
         const { sign } = web3.eth.accounts.privateKeyToAccount(identityPrivateKey);
         const { v, r, s } = sign(REGISTRATION_REQUEST_HASH);
         const { encodeABI, estimateGas } = await contract.methods.register(davId, v, r, s);
+        const encodedABI = encodeABI();
+        const estimatedGas = await estimateGas({ from: walletAddress });
+        const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
+        const gasPrice = await web3.eth.getGasPrice();
         const tx = {
-            data: encodeABI(),
+            data: encodedABI,
             to: contractAddress,
             from: walletAddress,
-            gas: Contracts.toSafeGasLimit(await estimateGas({ from: walletAddress })),
-            gasPrice: await web3.eth.getGasPrice(),
+            gas: safeGasLimit,
+            gasPrice,
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
         const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
@@ -88,12 +95,16 @@ class Contracts {
         const { contract, contractAddress } = Contracts.getContract(common_enums_1.ContractTypes.davToken, web3, config);
         const missionContract = Contracts.getContract(common_enums_1.ContractTypes.basicMission, web3, config);
         const { encodeABI, estimateGas } = await contract.methods.approve(missionContract.contractAddress, TOKEN_AMOUNT);
+        const encodedABI = encodeABI();
+        const estimatedGas = await estimateGas({ from: davId, to: contractAddress });
+        const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
+        const gasPrice = await web3.eth.getGasPrice();
         const tx = {
-            data: encodeABI(),
+            data: encodedABI,
             to: contractAddress,
             from: davId,
-            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId, to: contractAddress })),
-            gasPrice: await web3.eth.getGasPrice(),
+            gas: safeGasLimit,
+            gasPrice,
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
         const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
@@ -104,17 +115,21 @@ class Contracts {
         const web3 = Contracts.initWeb3(config);
         const { contract, contractAddress } = Contracts.getContract(common_enums_1.ContractTypes.basicMission, web3, config);
         const { encodeABI, estimateGas } = await contract.methods.create(missionId, vehicleId, davId, TOKEN_AMOUNT);
+        const encodedABI = encodeABI();
+        const gasPrice = await web3.eth.getGasPrice();
+        const estimatedGas = await estimateGas({
+            from: davId,
+            to: contractAddress,
+            value: fullPrice,
+        });
+        const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
         const tx = {
-            data: encodeABI(),
+            data: encodedABI,
             to: contractAddress,
             from: davId,
-            gas: Contracts.toSafeGasLimit(await estimateGas({
-                from: davId,
-                to: contractAddress,
-                value: fullPrice,
-            })),
+            gas: safeGasLimit,
             value: fullPrice,
-            gasPrice: await web3.eth.getGasPrice(),
+            gasPrice,
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
         const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
@@ -124,12 +139,16 @@ class Contracts {
         const web3 = Contracts.initWeb3(config);
         const { contract, contractAddress } = Contracts.getContract(common_enums_1.ContractTypes.basicMission, web3, config);
         const { encodeABI, estimateGas } = await contract.methods.fulfilled(missionId);
+        const encodedABI = encodeABI();
+        const estimatedGas = await estimateGas({ from: davId });
+        const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
+        const gasPrice = await web3.eth.getGasPrice();
         const tx = {
-            data: encodeABI(),
+            data: encodedABI,
             to: contractAddress,
             from: davId,
-            gas: Contracts.toSafeGasLimit(await estimateGas({ from: davId })),
-            gasPrice: await web3.eth.getGasPrice(),
+            gas: safeGasLimit,
+            gasPrice,
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
         const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
