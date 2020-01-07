@@ -10,7 +10,7 @@ let contracts = {
     BasicMission: require('./contracts/BasicMission'),
 };
 const REGISTRATION_REQUEST_HASH = new Web3().utils.sha3('DAV Identity Registration');
-const TOKEN_AMOUNT = '1500000000000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
+const TOKEN_AMOUNT = '1500000000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
 class Contracts {
     static initWeb3(config) {
         return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
@@ -110,26 +110,26 @@ class Contracts {
         const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
         return transactionReceipt;
     }
-    static async startMission(missionId, davId, walletPrivateKey, vehicleId, price, config) {
-        const fullPrice = Contracts.calculatePrice(price);
+    static async startMission(missionId, davId, walletPublicKey, walletPrivateKey, vehicleId, config) {
         const web3 = Contracts.initWeb3(config);
         const { contract, contractAddress } = Contracts.getContract(common_enums_1.ContractTypes.basicMission, web3, config);
+        // Get nonce (count) of user tx
+        const nonce = await web3.eth.getTransactionCount(walletPublicKey);
         const { encodeABI, estimateGas } = await contract.methods.create(missionId, vehicleId, davId, TOKEN_AMOUNT);
         const encodedABI = encodeABI();
         const gasPrice = await web3.eth.getGasPrice();
         const estimatedGas = await estimateGas({
-            from: davId,
+            from: walletPublicKey,
             to: contractAddress,
-            value: fullPrice,
         });
         const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
         const tx = {
+            nonce: web3.utils.toHex(nonce),
             data: encodedABI,
             to: contractAddress,
-            from: davId,
-            gas: safeGasLimit,
-            value: fullPrice,
-            gasPrice,
+            from: walletPublicKey,
+            gas: web3.utils.toHex(safeGasLimit),
+            gasPrice: web3.utils.toHex(gasPrice),
         };
         const { rawTransaction } = await web3.eth.accounts.signTransaction(tx, walletPrivateKey);
         const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);

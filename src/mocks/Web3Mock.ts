@@ -21,7 +21,7 @@ class Accounts {
   }
 }
 
-class HttpProvider {}
+class HttpProvider { }
 
 export default class Web3Mock {
   public static providers = { HttpProvider };
@@ -31,5 +31,6 @@ export default class Web3Mock {
   }
   public utils = {
     sha3: (x: any) => x,
+    toHex: (x: any) => x,
   };
 }

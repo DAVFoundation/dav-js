@@ -30,7 +30,7 @@ export default class Mission<T extends MissionParams> {
     private _peerId: ID,
     private _params: T,
     private _config: IConfig,
-  ) {}
+  ) { }
 
   /**
    * @method signContract Used to transfer tokens to the basicMission contract in order to start the mission.
@@ -38,15 +38,16 @@ export default class Mission<T extends MissionParams> {
    * @returns Ethereum transaction receipt.
    */
   public async signContract(
+    walletPublicKey: string,
     walletPrivateKey: string,
   ): Promise<TransactionReceipt> {
     try {
       const transactionReceipt = await Contracts.startMission(
         this._params.id,
         this._params.neederDavId,
+        walletPublicKey,
         walletPrivateKey,
         this._params.vehicleId,
-        this._params.price,
         this._config,
       );
       return transactionReceipt;
@@ -97,10 +98,10 @@ export default class Mission<T extends MissionParams> {
     ); // Channel#4 or Channel#6
     const messageParamsStream: Observable<U> = kafkaMessageStream.filterType(
       filterType ||
-        KafkaMessageFactory.instance.getMessageTypes(
-          this._params.protocol,
-          MessageCategories.Message,
-        ),
+      KafkaMessageFactory.instance.getMessageTypes(
+        this._params.protocol,
+        MessageCategories.Message,
+      ),
     );
     const messageStream = messageParamsStream.map(
       (params: U) => new Message<U>(this._selfId, params, this._config),

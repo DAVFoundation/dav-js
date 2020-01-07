@@ -15,6 +15,7 @@ const configuration = new Config({});
 const MISSION_ID = '0xf3229680B0166F0812e0ECEAd69B1dd144334229';
 const MISSION_PRICE = [new Price('100000000000000000', PriceType.flat, '')];
 const DAV_ID = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
+const WALLET_PUBLIC_KEY = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
 const WALLET_PRIVATE_KEY =
   'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
 const IDENTITY_PRIVATE_KEY =
@@ -80,9 +81,9 @@ async function main(): Promise<void> {
       const receipt = await Contracts.startMission(
         MISSION_ID,
         DAV_ID,
+        WALLET_PUBLIC_KEY,
         WALLET_PRIVATE_KEY,
         VEHICLE_ID,
-        MISSION_PRICE,
         configuration,
       );
       sdkLogger(receipt);

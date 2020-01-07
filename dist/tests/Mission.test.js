@@ -134,6 +134,7 @@ describe('Mission class', () => {
         });
     });
     describe('signContract method', () => {
+        const publicKey = 'valid public key';
         const privateKey = 'valid private key';
         const contractsMock = {
             approveMission: jest.fn((dav, key, configParam) => Promise.resolve('')),
@@ -148,8 +149,8 @@ describe('Mission class', () => {
             // tslint:disable-next-line:variable-name
             const Mission = (await Promise.resolve().then(() => require('../Mission'))).default;
             const mission = new Mission(missionParams.id, null, missionParams, configuration);
-            await mission.signContract(privateKey);
-            expect(contractsMock.startMission).toHaveBeenCalledWith(missionParams.id, missionParams.neederDavId, privateKey, missionParams.vehicleId, missionParams.price, configuration);
+            await mission.signContract(publicKey, privateKey);
+            expect(contractsMock.startMission).toHaveBeenCalledWith(missionParams.id, missionParams.neederDavId, publicKey, privateKey, missionParams.vehicleId, configuration);
         });
         it('should fail due to blockchain exception', async () => {
             const web3Error = { msg: 'WEB3_ERROR' };

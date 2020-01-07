@@ -187,6 +187,7 @@ describe('Mission class', () => {
   });
 
   describe('signContract method', () => {
+    const publicKey = 'valid public key';
     const privateKey = 'valid private key';
     const contractsMock = {
       approveMission: jest.fn((dav: DavID, key: string, configParam: Config) =>
@@ -219,13 +220,13 @@ describe('Mission class', () => {
         missionParams,
         configuration,
       );
-      await mission.signContract(privateKey);
+      await mission.signContract(publicKey, privateKey);
       expect(contractsMock.startMission).toHaveBeenCalledWith(
         missionParams.id,
         missionParams.neederDavId,
+        publicKey,
         privateKey,
         missionParams.vehicleId,
-        missionParams.price,
         configuration,
       );
     });

@@ -24,6 +24,7 @@ export default class Web3Mock {
     readonly eth: any;
     utils: {
         sha3: (x: any) => any;
+        toHex: (x: any) => any;
     };
 }
 export {};

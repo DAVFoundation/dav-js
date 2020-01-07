@@ -9,6 +9,7 @@ describe('Contracts class', () => {
   const signedTransaction = { rawTransaction: 'RAW_TRANSACTION' };
   const REGISTERED_IDENTITY = 'REGISTERED_IDENTITY';
   const UNREGISTERED_IDENTITY = 'UNREGISTERED_IDENTITY';
+  const WALLET_PUBLIC_KEY = 'WALLET_PUBLIC_KEY';
   const WALLET_PRIVATE_KEY = 'WALLET_PRIVET_KEY';
   const IDENTITY_PRIVATE_KEY = 'IDENTITY_PRIVET_KEY';
   const WALLET_ADDRESS = 'WALLET_ADDRESS';
@@ -218,6 +219,8 @@ describe('Contracts class', () => {
       on: (type: string, cb: any) => jest.fn(cb(web3Error)),
     }));
     const signTransaction = jest.fn(() => signedTransaction);
+    const getTransactionCount = jest.fn(() => 0);
+    const toHex = jest.fn(i => i);
 
     beforeEach(() => {
       jest.clearAllMocks();
@@ -229,6 +232,7 @@ describe('Contracts class', () => {
       web3.eth.Contract.methods = { create };
       web3.eth.accounts = { signTransaction };
       web3.eth.sendSignedTransaction = sendSignedTransaction;
+      web3.eth.getTransactionCount = getTransactionCount;
     });
 
     it('should call relevant functions and return transaction receipt', async () => {
@@ -237,15 +241,16 @@ describe('Contracts class', () => {
         contracts.startMission(
           MISSION_ID,
           REGISTERED_IDENTITY,
+          WALLET_PUBLIC_KEY,
           WALLET_PRIVATE_KEY,
           VEHICLE_ID,
-          MISSION_PRICE,
           configuration,
         ),
       ).resolves.toBe(transactionReceipt);
       expect(create).toHaveBeenCalled();
       expect(signTransaction).toHaveBeenCalled();
       expect(sendSignedTransaction).toHaveBeenCalled();
+      expect(getTransactionCount).toHaveBeenCalled();
     });
 
     it('should call relevant functions and throw web3 error', async () => {
@@ -259,15 +264,16 @@ describe('Contracts class', () => {
         contracts.startMission(
           MISSION_ID,
           REGISTERED_IDENTITY,
+          WALLET_PUBLIC_KEY,
           WALLET_PRIVATE_KEY,
           VEHICLE_ID,
-          MISSION_PRICE,
           configuration,
         ),
       ).rejects.toBe(web3Error);
       expect(create).toHaveBeenCalled();
       expect(signTransaction).toHaveBeenCalled();
       expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();
+      expect(getTransactionCount).toHaveBeenCalled();
     });
   });
 
