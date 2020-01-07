@@ -62,12 +62,14 @@ export default class Mission<T extends MissionParams> {
    * @returns Ethereum transaction receipt object.
    */
   public async finalizeMission(
+    walletPublicKey: string,
     walletPrivateKey: string,
   ): Promise<TransactionReceipt> {
     try {
       const transactionReceipt = await Contracts.finalizeMission(
         this._params.id,
         this._params.neederDavId,
+        walletPublicKey,
         walletPrivateKey,
         this._config,
       );

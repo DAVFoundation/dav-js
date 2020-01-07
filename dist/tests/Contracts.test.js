@@ -214,7 +214,7 @@ describe('Contracts class', () => {
         });
         it('should call relevant functions and return start mission transaction receipt', async () => {
             const contracts = (await Promise.resolve().then(() => require('../Contracts'))).default;
-            await expect(contracts.finalizeMission(MISSION_ID, REGISTERED_IDENTITY, WALLET_PRIVATE_KEY, configuration)).resolves.toBe(transactionReceipt);
+            await expect(contracts.finalizeMission(MISSION_ID, REGISTERED_IDENTITY, WALLET_PUBLIC_KEY, WALLET_PRIVATE_KEY, configuration)).resolves.toBe(transactionReceipt);
             expect(fulfilled).toHaveBeenCalled();
             expect(signTransaction).toHaveBeenCalled();
             expect(sendSignedTransaction).toHaveBeenCalled();
@@ -226,7 +226,7 @@ describe('Contracts class', () => {
                 on: (type, cb) => jest.fn(cb(web3Error)),
             }));
             const contracts = (await Promise.resolve().then(() => require('../Contracts'))).default;
-            await expect(contracts.finalizeMission(MISSION_ID, REGISTERED_IDENTITY, WALLET_PRIVATE_KEY, configuration)).rejects.toBe(web3Error);
+            await expect(contracts.finalizeMission(MISSION_ID, REGISTERED_IDENTITY, WALLET_PUBLIC_KEY, WALLET_PRIVATE_KEY, configuration)).rejects.toBe(web3Error);
             expect(fulfilled).toHaveBeenCalled();
             expect(signTransaction).toHaveBeenCalled();
             expect(web3.eth.sendSignedTransaction).toHaveBeenCalled();

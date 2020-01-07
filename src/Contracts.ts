@@ -17,7 +17,7 @@ let contracts: ContractsArtifacts = {
 const REGISTRATION_REQUEST_HASH = new Web3().utils.sha3(
   'DAV Identity Registration',
 );
-const TOKEN_AMOUNT = '1500000000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
+const TOKEN_AMOUNT = '1500000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
 
 interface IContract {
   contract: Contract;
@@ -252,6 +252,7 @@ export default class Contracts {
   public static async finalizeMission(
     missionId: ID,
     davId: DavID,
+    walletPublicKey: string,
     walletPrivateKey: string,
     config: IConfig,
   ): Promise<TransactionReceipt> {
@@ -265,7 +266,10 @@ export default class Contracts {
       missionId,
     );
     const encodedABI = encodeABI();
-    const estimatedGas = await estimateGas({ from: davId });
+    const estimatedGas = await estimateGas({
+      from: walletPublicKey,
+      to: contractAddress,
+    });
     const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
     const gasPrice = await web3.eth.getGasPrice();
     const tx = {

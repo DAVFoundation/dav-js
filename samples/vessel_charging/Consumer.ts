@@ -159,6 +159,7 @@ export default class Consumer {
         printLine();
 
         const finalizeMissionTransactionReceipt = await mission.finalizeMission(
+          this._publicKey,
           this._privateKey,
         );
         console.log(

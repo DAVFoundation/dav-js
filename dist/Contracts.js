@@ -10,7 +10,7 @@ let contracts = {
     BasicMission: require('./contracts/BasicMission'),
 };
 const REGISTRATION_REQUEST_HASH = new Web3().utils.sha3('DAV Identity Registration');
-const TOKEN_AMOUNT = '1500000000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
+const TOKEN_AMOUNT = '1500000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
 class Contracts {
     static initWeb3(config) {
         return new Web3(new Web3.providers.HttpProvider(config.ethNodeUrl));
@@ -138,7 +138,7 @@ class Contracts {
     static async finalizeMission(missionId, davId, walletPublicKey, walletPrivateKey, config) {
         const web3 = Contracts.initWeb3(config);
         const { contract, contractAddress } = Contracts.getContract(common_enums_1.ContractTypes.basicMission, web3, config);
-        const { encodeABI, estimateGas } = contract.methods.fulfilled(missionId);
+        const { encodeABI, estimateGas } = await contract.methods.fulfilled(missionId);
         const encodedABI = encodeABI();
         const estimatedGas = await estimateGas({
             from: walletPublicKey,

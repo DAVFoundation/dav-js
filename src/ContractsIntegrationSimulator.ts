@@ -99,6 +99,7 @@ async function main(): Promise<void> {
       const receipt = await Contracts.finalizeMission(
         MISSION_ID,
         DAV_ID,
+        WALLET_PUBLIC_KEY,
         WALLET_PRIVATE_KEY,
         configuration,
       );

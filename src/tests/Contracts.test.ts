@@ -309,6 +309,7 @@ describe('Contracts class', () => {
         contracts.finalizeMission(
           MISSION_ID,
           REGISTERED_IDENTITY,
+          WALLET_PUBLIC_KEY,
           WALLET_PRIVATE_KEY,
           configuration,
         ),
@@ -329,6 +330,7 @@ describe('Contracts class', () => {
         contracts.finalizeMission(
           MISSION_ID,
           REGISTERED_IDENTITY,
+          WALLET_PUBLIC_KEY,
           WALLET_PRIVATE_KEY,
           configuration,
         ),

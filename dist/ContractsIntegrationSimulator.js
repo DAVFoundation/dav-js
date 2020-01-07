@@ -71,7 +71,7 @@ async function main() {
     const finalizeMission = async () => {
         sdkLogger_1.default('Finalizing mission...');
         try {
-            const receipt = await Contracts_1.default.finalizeMission(MISSION_ID, DAV_ID, WALLET_PRIVATE_KEY, configuration);
+            const receipt = await Contracts_1.default.finalizeMission(MISSION_ID, DAV_ID, WALLET_PUBLIC_KEY, WALLET_PRIVATE_KEY, configuration);
             sdkLogger_1.default(receipt);
             printLine();
         }
