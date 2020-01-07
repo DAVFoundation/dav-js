@@ -65,14 +65,14 @@
           "type": "address"
         },
         {
-          "name": "_tokenAmount",
+          "name": "_cost",
           "type": "uint256"
         }
       ],
       "name": "create",
       "outputs": [],
-      "payable": true,
-      "stateMutability": "payable",
+      "payable": false,
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -81,6 +81,10 @@
         {
           "name": "_missionId",
           "type": "bytes32"
+        },
+        {
+          "name": "_buyerId",
+          "type": "address"
         }
       ],
       "name": "fulfilled",
