@@ -81,10 +81,6 @@
         {
           "name": "_missionId",
           "type": "bytes32"
-        },
-        {
-          "name": "_buyerId",
-          "type": "address"
         }
       ],
       "name": "fulfilled",
