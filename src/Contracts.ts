@@ -17,7 +17,7 @@ let contracts: ContractsArtifacts = {
 const REGISTRATION_REQUEST_HASH = new Web3().utils.sha3(
   'DAV Identity Registration',
 );
-const TOKEN_AMOUNT = '1500000000000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
+const TOKEN_AMOUNT = '1500000000000000'; // TODO: TOKEN_AMOUNT need to be set by basicMission contract.
 
 interface IContract {
   contract: Contract;
@@ -199,18 +199,21 @@ export default class Contracts {
   public static async startMission(
     missionId: ID,
     davId: DavID,
+    walletPublicKey: string,
     walletPrivateKey: string,
     vehicleId: DavID,
-    price: IPrice[],
     config: IConfig,
   ): Promise<TransactionReceipt> {
-    const fullPrice = Contracts.calculatePrice(price);
     const web3 = Contracts.initWeb3(config);
     const { contract, contractAddress } = Contracts.getContract(
       ContractTypes.basicMission,
       web3,
       config,
     );
+
+    // Get nonce (count) of user tx
+    const nonce = await web3.eth.getTransactionCount(walletPublicKey);
+
     const { encodeABI, estimateGas } = await contract.methods.create(
       missionId,
       vehicleId,
@@ -220,27 +223,29 @@ export default class Contracts {
     const encodedABI = encodeABI();
     const gasPrice = await web3.eth.getGasPrice();
     const estimatedGas = await estimateGas({
-      from: davId,
+      from: walletPublicKey,
       to: contractAddress,
-      value: fullPrice,
     });
+
     const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
     const tx = {
+      nonce: web3.utils.toHex(nonce),
       data: encodedABI,
       to: contractAddress,
-      from: davId,
-      gas: safeGasLimit,
-      value: fullPrice,
-      gasPrice,
+      from: walletPublicKey,
+      gas: web3.utils.toHex(safeGasLimit),
+      gasPrice: web3.utils.toHex(gasPrice),
     };
-    const { rawTransaction } = await web3.eth.accounts.signTransaction(
-      tx,
-      walletPrivateKey,
-    );
-    const transactionReceipt = await Contracts.sendSignedTransaction(
-      web3,
-      rawTransaction,
-    );
+    const { rawTransaction } = await
+      web3.eth.accounts.signTransaction(
+        tx,
+        walletPrivateKey,
+      );
+    const transactionReceipt = await
+      Contracts.sendSignedTransaction(
+        web3,
+        rawTransaction,
+      );
     return transactionReceipt;
   }
 

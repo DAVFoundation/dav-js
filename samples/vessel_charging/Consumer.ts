@@ -25,10 +25,12 @@ const sdkConfiguration = {
 
 export default class Consumer {
   private _privateKey: string;
+  private _publicKey: string;
   public identity: Identity;
 
-  public async init(davId: string, privateKey: string) {
+  public async init(davId: string, _publicKey: string, privateKey: string) {
     this._privateKey = privateKey;
+    this._publicKey = _publicKey;
     const config = new Config(sdkConfiguration);
     const davSDK = SDKFactory(config);
     // try {
@@ -103,9 +105,7 @@ export default class Consumer {
         console.log('Vessel status message sent!');
         printLine();
 
-        const startMissionTransactionReceipt = await mission.signContract(
-          this._privateKey,
-        );
+        const startMissionTransactionReceipt = await mission.signContract(this._publicKey, this._privateKey);
         console.log(
           'Start mission transaction receipt:',
           startMissionTransactionReceipt,
@@ -175,7 +175,7 @@ export default class Consumer {
 async function main() {
   const consumer = new Consumer();
   await consumer.init(
-    '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6',
+    '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6', '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6',
     'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6',
   );
   await consumer.start();

@@ -23,6 +23,7 @@ class Web3Mock {
     constructor() {
         this.utils = {
             sha3: (x) => x,
+            toHex: (x) => x,
         };
     }
     get eth() {

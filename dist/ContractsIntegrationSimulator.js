@@ -15,6 +15,7 @@ const configuration = new Config_1.default({});
 const MISSION_ID = '0xf3229680B0166F0812e0ECEAd69B1dd144334229';
 const MISSION_PRICE = [new Price_1.default('100000000000000000', common_enums_1.PriceType.flat, '')];
 const DAV_ID = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
+const WALLET_PUBLIC_KEY = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
 const WALLET_PRIVATE_KEY = 'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
 const IDENTITY_PRIVATE_KEY = 'PRIVATE_KEY_FOR_0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
 const WALLET_ADDRESS = '0xFEDdDcBf94cB620d6D92D049b75fc7062a3E2Fc6';
@@ -59,7 +60,7 @@ async function main() {
     const startMission = async () => {
         sdkLogger_1.default('Starting mission...');
         try {
-            const receipt = await Contracts_1.default.startMission(MISSION_ID, DAV_ID, WALLET_PRIVATE_KEY, VEHICLE_ID, MISSION_PRICE, configuration);
+            const receipt = await Contracts_1.default.startMission(MISSION_ID, DAV_ID, WALLET_PUBLIC_KEY, WALLET_PRIVATE_KEY, VEHICLE_ID, configuration);
             sdkLogger_1.default(receipt);
             printLine();
         }

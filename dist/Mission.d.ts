@@ -21,7 +21,7 @@ export default class Mission<T extends MissionParams> {
      * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns Ethereum transaction receipt.
      */
-    signContract(walletPrivateKey: string): Promise<TransactionReceipt>;
+    signContract(walletPublicKey: string, walletPrivateKey: string): Promise<TransactionReceipt>;
     /**
      * @method finalizeMission Used to approve the mission is completed,
      * and transfer the tokens from the basicMission contract to the service provider.
