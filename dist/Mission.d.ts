@@ -28,7 +28,7 @@ export default class Mission<T extends MissionParams> {
      * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns Ethereum transaction receipt object.
      */
-    finalizeMission(walletPrivateKey: string): Promise<TransactionReceipt>;
+    finalizeMission(walletPublicKey: string, walletPrivateKey: string): Promise<TransactionReceipt>;
     /**
      * @method sendMessage Used to send message to the service consumer.
      * @param params message parameters.

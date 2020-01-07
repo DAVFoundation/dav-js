@@ -44,9 +44,9 @@ class Mission {
      * @param walletPrivateKey Ethereum wallet private key, to charge for the mission.
      * @returns Ethereum transaction receipt object.
      */
-    async finalizeMission(walletPrivateKey) {
+    async finalizeMission(walletPublicKey, walletPrivateKey) {
         try {
-            const transactionReceipt = await Contracts_1.default.finalizeMission(this._params.id, this._params.neederDavId, walletPrivateKey, this._config);
+            const transactionReceipt = await Contracts_1.default.finalizeMission(this._params.id, this._params.neederDavId, walletPublicKey, walletPrivateKey, this._config);
             return transactionReceipt;
         }
         catch (err) {

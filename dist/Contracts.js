@@ -135,12 +135,15 @@ class Contracts {
         const transactionReceipt = await Contracts.sendSignedTransaction(web3, rawTransaction);
         return transactionReceipt;
     }
-    static async finalizeMission(missionId, davId, walletPrivateKey, config) {
+    static async finalizeMission(missionId, davId, walletPublicKey, walletPrivateKey, config) {
         const web3 = Contracts.initWeb3(config);
         const { contract, contractAddress } = Contracts.getContract(common_enums_1.ContractTypes.basicMission, web3, config);
-        const { encodeABI, estimateGas } = await contract.methods.fulfilled(missionId);
+        const { encodeABI, estimateGas } = contract.methods.fulfilled(missionId);
         const encodedABI = encodeABI();
-        const estimatedGas = await estimateGas({ from: davId });
+        const estimatedGas = await estimateGas({
+            from: walletPublicKey,
+            to: contractAddress,
+        });
         const safeGasLimit = Contracts.toSafeGasLimit(estimatedGas);
         const gasPrice = await web3.eth.getGasPrice();
         const tx = {
